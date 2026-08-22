@@ -1,0 +1,20 @@
+import { Suspense } from 'react'
+import { InstructorManager } from '@/components/admin/instructor-manager'
+import { getInstructorsAction } from '@/actions/instructors'
+
+export default async function InstructorsPage() {
+  const instructors = await getInstructorsAction()
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h2 className="font-display text-3xl text-blk tracking-wide">Instructors</h2>
+        <p className="text-mu font-body text-sm mt-1">Manage academy teaching staff and their assignments.</p>
+      </div>
+
+      <Suspense fallback={<div>Loading instructors...</div>}>
+        <InstructorManager initialInstructors={instructors} />
+      </Suspense>
+    </div>
+  )
+}

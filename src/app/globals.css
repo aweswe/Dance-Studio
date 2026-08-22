@@ -1,0 +1,135 @@
+@import "tailwindcss";
+
+/* ═══ RHYTHMZZ DESIGN SYSTEM ═══════════════════════════════════════ */
+/* Colors, fonts, and variables from the HTML reference               */
+/* ═══════════════════════════════════════════════════════════════════ */
+
+@theme inline {
+  /* ── Brand Colors ── */
+  --color-blk: #0F0F0F;
+  --color-deep: #141414;
+  --color-bl: #2BB4D8;
+  --color-bl-light: #B8E4F0;
+  --color-bl-pale: #E8F7FC;
+  --color-wh: #ffffff;
+  --color-mu: #777777;
+  --color-light: #F7F9FB;
+  --color-off: #F2F2F2;
+  --color-green: #1DB954;
+  --color-gold: #F5A623;
+  --color-purp: #8B5CF6;
+
+  /* ── Fonts ── */
+  --font-display: var(--font-bebas-neue);
+  --font-body: var(--font-inter);
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #0F0F0F;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body), sans-serif;
+  background: var(--background);
+  color: var(--foreground);
+  overflow-x: hidden;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #2BB4D8;
+  border-radius: 3px;
+}
+
+/* ── Selection ── */
+::selection {
+  background: rgba(43, 180, 216, 0.2);
+  color: #0F0F0F;
+}
+
+/* ── Marquee Animation ── */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 20s linear infinite;
+}
+
+/* ── Section Labels ── */
+.section-label {
+  font-size: 10px;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  color: #2BB4D8;
+  margin-bottom: 12px;
+}
+
+.section-label-light {
+  color: #B8E4F0;
+}
+
+/* ── Heading Styles (matching Bebas Neue from reference) ── */
+.heading-display {
+  font-family: var(--font-display), sans-serif;
+  letter-spacing: 2px;
+  line-height: 0.93;
+}
+
+/* ── Programme Card Gradients ── */
+.card-fitness {
+  background: linear-gradient(135deg, #0F2236 0%, #1A3C5E 100%);
+  border: 1px solid rgba(43, 180, 216, 0.25);
+}
+
+.card-dance {
+  background: linear-gradient(135deg, #0F0F0F 0%, #1A1A1A 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.card-kuchipudi {
+  background: linear-gradient(135deg, #1a0a2e 0%, #2d1054 100%);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+}
+
+.card-kids {
+  background: linear-gradient(135deg, #0a1f0a 0%, #1a3a1a 100%);
+  border: 1px solid rgba(29, 185, 84, 0.25);
+}
+
+/* ── Fee Chip Variants ── */
+.fee-chip-blue {
+  background: rgba(43, 180, 216, 0.15);
+  border-color: rgba(43, 180, 216, 0.4);
+}
+
+.fee-chip-gold {
+  background: rgba(245, 166, 35, 0.12);
+  border-color: rgba(245, 166, 35, 0.35);
+}
+
+.fee-chip-purple {
+  background: rgba(139, 92, 246, 0.15);
+  border-color: rgba(139, 92, 246, 0.4);
+}
+
+.fee-chip-green {
+  background: rgba(29, 185, 84, 0.12);
+  border-color: rgba(29, 185, 84, 0.35);
+}
