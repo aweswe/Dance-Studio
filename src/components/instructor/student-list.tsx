@@ -10,7 +10,7 @@ interface StudentProps {
   name: string;
   student_id_display: string;
   phone: string;
-  batches: { name: string } | null;
+  batch: { name: string; days: string[] } | null;
 }
 
 export function StudentList({ students }: { students: StudentProps[] }) {
@@ -61,7 +61,7 @@ export function StudentList({ students }: { students: StudentProps[] }) {
                   <td className="py-4 text-mu">{student.student_id_display}</td>
                   <td className="py-4">{student.phone}</td>
                   <td className="py-4">
-                    {student.batches ? <Badge variant="default">{student.batches.name}</Badge> : "-"}
+                    {student.batch ? <Badge variant="default">{student.batch.name}</Badge> : "-"}
                   </td>
                 </tr>
               ))

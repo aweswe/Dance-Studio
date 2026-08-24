@@ -18,10 +18,12 @@ export default async function StudentsPage() {
           <h2 className="font-display text-3xl text-blk tracking-wide">Students</h2>
           <p className="text-mu font-body text-sm mt-1">Manage enrollments, statuses, and profiles.</p>
         </div>
-        <Button variant="outline" className="flex items-center gap-2">
-          <Download size={16} />
-          <span>Export CSV</span>
-        </Button>
+        <a href="/api/export?type=students">
+          <Button variant="outline" className="flex items-center gap-2">
+            <Download size={16} />
+            <span>Export CSV</span>
+          </Button>
+        </a>
       </div>
 
       <Suspense fallback={<TableSkeleton rows={8} columns={6} />}>

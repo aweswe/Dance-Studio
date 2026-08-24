@@ -34,7 +34,9 @@ export default async function AttendancePage() {
 
   const attSummary = attendanceSummary as any;
   const total = attSummary?.total_classes || 0;
-  const present = attSummary?.present_classes || 0;
+  const present = attSummary?.present_count || 0;
+  const absent = attSummary?.absent_count || 0;
+  const leave = attSummary?.leave_count || 0;
   const percentage = total > 0 ? Math.round((present / total) * 100) : 100;
 
   return (
@@ -68,8 +70,12 @@ export default async function AttendancePage() {
               <p className="text-sm text-mu">Present</p>
             </div>
             <div>
-              <p className="text-3xl font-bold text-red-500">{total - present}</p>
+              <p className="text-3xl font-bold text-red-500">{absent}</p>
               <p className="text-sm text-mu">Absent</p>
+            </div>
+            <div>
+              <p className="text-3xl font-bold text-gold">{leave}</p>
+              <p className="text-sm text-mu">On Leave</p>
             </div>
           </div>
         </Card>

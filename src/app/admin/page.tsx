@@ -1,24 +1,35 @@
 import { Suspense } from 'react'
-import { AnalyticsCards } from '@/components/admin/analytics-cards'
+import { AnalyticsCards, type AnalyticsData } from '@/components/admin/analytics-cards'
 import { createServerSupabase } from '@/lib/supabase/server'
 import { StatCardSkeleton } from '@/components/ui/skeleton'
 
+const EMPTY_ANALYTICS: AnalyticsData = {
+  active_students: 0,
+  enrollments_this_month: 0,
+  enrollments_last_month: 0,
+  revenue_this_month: 0,
+  avg_attendance_this_week: 0,
+  batch_occupancy: [],
+}
 
-
-async function getAnalytics() {
+async function getAnalytics(): Promise<AnalyticsData> {
   const supabase = await createServerSupabase()
   const { data, error } = await supabase.rpc('get_dashboard_analytics')
-  
+
   if (error || !data) {
-    return {
-      active_students: 0,
-      monthly_enrolments: 0,
-      monthly_revenue: 0,
-      attendance_rate: 0,
-      batch_occupancy: 0
-    }
+    console.error('get_dashboard_analytics failed:', error)
+    return EMPTY_ANALYTICS
   }
-  return data
+
+  const d = data as any
+  return {
+    active_students: d.active_students ?? 0,
+    enrollments_this_month: d.enrollments_this_month ?? 0,
+    enrollments_last_month: d.enrollments_last_month ?? 0,
+    revenue_this_month: d.revenue_this_month ?? 0,
+    avg_attendance_this_week: d.avg_attendance_this_week ?? 0,
+    batch_occupancy: Array.isArray(d.batch_occupancy) ? d.batch_occupancy : [],
+  }
 }
 
 export default async function AdminDashboardPage() {

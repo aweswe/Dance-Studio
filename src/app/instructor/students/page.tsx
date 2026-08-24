@@ -11,7 +11,7 @@ export default async function StudentsPage() {
   const supabase = await createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
 
-  if (!user) redirect(ROUTES.login);
+  if (!user) redirect(ROUTES.adminLogin);
 
   const { data: instructorData } = await supabase
     .from("instructors")
@@ -27,7 +27,7 @@ export default async function StudentsPage() {
   // Fetch all students in instructor's batches
   const { data: students } = await supabase
     .from("students")
-    .select("id, name, student_id_display, phone, batches(days)")
+    .select("id, name, student_id_display, phone, batch(name, days)")
     .in("batch_id", batchIds.length > 0 ? batchIds : ["00000000-0000-0000-0000-000000000000"])
     .order("name");
 

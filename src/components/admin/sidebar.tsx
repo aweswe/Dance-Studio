@@ -3,20 +3,21 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils/cn'
-import { 
-  LayoutDashboard, 
-  Users, 
-  GraduationCap, 
-  UserCircle, 
-  CalendarCheck, 
-  IndianRupee, 
-  MessageSquare, 
-  Calendar, 
-  Image as ImageIcon, 
-  Settings, 
+import {
+  LayoutDashboard,
+  Users,
+  GraduationCap,
+  UserCircle,
+  CalendarCheck,
+  IndianRupee,
+  MessageSquare,
+  Calendar,
+  Image as ImageIcon,
+  Settings,
   FileText,
   Menu,
-  X
+  X,
+  LogOut
 } from 'lucide-react'
 import { useState } from 'react'
 
@@ -113,8 +114,20 @@ export function Sidebar() {
             </div>
           ))}
         </nav>
+
+        <div className="p-4 border-t border-gray-200 shrink-0">
+          <form action="/auth/signout" method="post">
+            <button
+              type="submit"
+              className="flex w-full items-center gap-3 px-3 py-2 rounded-lg text-sm font-body text-mu hover:bg-gray-100 hover:text-blk transition-colors"
+            >
+              <LogOut size={18} />
+              Sign Out
+            </button>
+          </form>
+        </div>
       </div>
-      
+
       {/* Overlay */}
       {isOpen && (
         <div 

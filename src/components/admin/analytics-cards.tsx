@@ -3,15 +3,24 @@
 import { useRealtime } from '@/hooks/use-realtime'
 import { Users, TrendingUp, IndianRupee, UserCheck, LayoutGrid } from 'lucide-react'
 import { formatCurrency } from '@/lib/utils/format'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Card } from '@/components/ui/card'
 
-interface AnalyticsData {
+export interface BatchOccupancyRow {
+  batch_id: string
+  programme_name: string
+  capacity: number
+  enrolled: number
+  occupancy_percentage: number
+}
+
+export interface AnalyticsData {
   active_students: number
-  monthly_enrolments: number
-  monthly_revenue: number
-  attendance_rate: number
-  batch_occupancy: number
+  enrollments_this_month: number
+  enrollments_last_month: number
+  revenue_this_month: number
+  avg_attendance_this_week: number
+  batch_occupancy: BatchOccupancyRow[]
 }
 
 interface AnalyticsCardsProps {
@@ -29,42 +38,54 @@ export function AnalyticsCards({ initialData }: AnalyticsCardsProps) {
         setData(prev => ({
           ...prev,
           active_students: prev.active_students + 1,
-          monthly_enrolments: prev.monthly_enrolments + 1
+          enrollments_this_month: prev.enrollments_this_month + 1
         }))
       }
     }
   })
 
+  // Batch Occupancy card = average occupancy across batches
+  const rows = Array.isArray(data.batch_occupancy) ? data.batch_occupancy : []
+  const batchOccupancyPct = rows.length > 0
+    ? Math.round(rows.reduce((sum, r) => sum + (r.occupancy_percentage ?? 0), 0) / rows.length)
+    : 0
+
+  const enrolmentsDelta = data.enrollments_this_month - (data.enrollments_last_month ?? 0)
+
   const cards = [
     {
       title: 'Active Students',
-      value: data.active_students.toString(),
+      value: (data.active_students ?? 0).toString(),
       icon: Users,
       color: 'text-bl'
     },
     {
       title: 'New Enrolments',
-      value: data.monthly_enrolments.toString(),
-      subtitle: 'This Month',
+      value: (data.enrollments_this_month ?? 0).toString(),
+      subtitle: enrolmentsDelta >= 0
+        ? `This Month (+${enrolmentsDelta} vs last)`
+        : `This Month (${enrolmentsDelta} vs last)`,
       icon: TrendingUp,
       color: 'text-green'
     },
     {
       title: 'Revenue',
-      value: formatCurrency(data.monthly_revenue),
+      value: formatCurrency(data.revenue_this_month ?? 0),
       subtitle: 'This Month',
       icon: IndianRupee,
       color: 'text-gold'
     },
     {
       title: 'Attendance Rate',
-      value: `${Math.round(data.attendance_rate)}%`,
+      value: `${Math.round(data.avg_attendance_this_week ?? 0)}%`,
+      subtitle: 'This Week',
       icon: UserCheck,
       color: 'text-purp'
     },
     {
       title: 'Batch Occupancy',
-      value: `${Math.round(data.batch_occupancy)}%`,
+      value: `${batchOccupancyPct}%`,
+      subtitle: rows.length > 0 ? `Across ${rows.length} batches` : undefined,
       icon: LayoutGrid,
       color: 'text-blk'
     }

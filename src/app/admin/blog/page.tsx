@@ -1,8 +1,15 @@
 import { Suspense } from 'react'
 import { BlogEditor } from '@/components/admin/blog-editor'
 import { ListRowSkeleton } from '@/components/ui/skeleton'
+import { createServerSupabase } from '@/lib/supabase/server'
 
-export default function BlogPage() {
+export default async function BlogPage() {
+  const supabase = await createServerSupabase()
+  const { data: posts } = await supabase
+    .from('blog_posts')
+    .select('*')
+    .order('created_at', { ascending: false })
+
   return (
     <div className="space-y-6">
       <div>
@@ -17,7 +24,7 @@ export default function BlogPage() {
           ))}
         </div>
       }>
-        <BlogEditor />
+        <BlogEditor initialPosts={(posts ?? []) as any[]} />
       </Suspense>
     </div>
   )

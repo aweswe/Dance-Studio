@@ -46,22 +46,28 @@ SELECT v.* FROM (VALUES
 WHERE NOT EXISTS (SELECT 1 FROM instructors i WHERE i.name = v.name);
 
 -- ══ Seed: batches (reference windows, fixed UUIDs = app defaults) ══
-INSERT INTO batches (id, programme_id, instructor_id, days, time_start, time_end, capacity, enrolled_count, status)
+INSERT INTO batches (id, name, programme_id, instructor_id, days, time_start, time_end, capacity, enrolled_count, status)
 SELECT v.* FROM (VALUES
-  ('a1b2c3d4-4101-4000-8000-000000000001'::uuid, 'a1b2c3d4-4001-4000-8000-000000000001'::uuid, 'a1b2c3d4-5002-4000-8000-000000000002'::uuid, ARRAY['Monday','Tuesday','Wednesday'], '17:00:00', '18:00:00', 25, 16, 'active'),
-  ('a1b2c3d4-4102-4000-8000-000000000002'::uuid, 'a1b2c3d4-4001-4000-8000-000000000001'::uuid, 'a1b2c3d4-5003-4000-8000-000000000003'::uuid, ARRAY['Monday','Tuesday','Wednesday'], '18:00:00', '19:00:00', 25, 15, 'active'),
-  ('a1b2c3d4-4103-4000-8000-000000000003'::uuid, 'a1b2c3d4-4002-4000-8000-000000000002'::uuid, 'a1b2c3d4-5001-4000-8000-000000000001'::uuid, ARRAY['Monday','Tuesday','Wednesday'], '19:00:00', '20:00:00', 30, 20, 'active'),
-  ('a1b2c3d4-4104-4000-8000-000000000004'::uuid, 'a1b2c3d4-4002-4000-8000-000000000002'::uuid, 'a1b2c3d4-5004-4000-8000-000000000004'::uuid, ARRAY['Monday','Tuesday','Wednesday'], '20:00:00', '21:00:00', 30, 14, 'active'),
-  ('a1b2c3d4-4105-4000-8000-000000000005'::uuid, 'a1b2c3d4-4003-4000-8000-000000000003'::uuid, 'a1b2c3d4-5005-4000-8000-000000000005'::uuid, ARRAY['Monday','Tuesday','Wednesday','Thursday','Friday'], '09:30:00', '10:30:00', 25, 15, 'active'),
-  ('a1b2c3d4-4106-4000-8000-000000000006'::uuid, 'a1b2c3d4-4004-4000-8000-000000000004'::uuid, 'a1b2c3d4-5006-4000-8000-000000000006'::uuid, ARRAY['Friday','Saturday'], '18:30:00', '19:30:00', 15, 8, 'active')
-) AS v(id, programme_id, instructor_id, days, time_start, time_end, capacity, enrolled_count, status)
+  ('a1b2c3d4-4101-4000-8000-000000000001'::uuid, 'Kids Dance · Mon–Wed 5–6 PM', 'a1b2c3d4-4001-4000-8000-000000000001'::uuid, 'a1b2c3d4-5002-4000-8000-000000000002'::uuid, ARRAY['Monday','Tuesday','Wednesday'], '17:00:00'::time, '18:00:00'::time, 25, 16, 'active'::batch_status),
+  ('a1b2c3d4-4102-4000-8000-000000000002'::uuid, 'Kids Dance · Mon–Wed 6–7 PM', 'a1b2c3d4-4001-4000-8000-000000000001'::uuid, 'a1b2c3d4-5003-4000-8000-000000000003'::uuid, ARRAY['Monday','Tuesday','Wednesday'], '18:00:00'::time, '19:00:00'::time, 25, 15, 'active'::batch_status),
+  ('a1b2c3d4-4103-4000-8000-000000000003'::uuid, 'Adults Dance · Mon–Wed 7–8 PM', 'a1b2c3d4-4002-4000-8000-000000000002'::uuid, 'a1b2c3d4-5001-4000-8000-000000000001'::uuid, ARRAY['Monday','Tuesday','Wednesday'], '19:00:00'::time, '20:00:00'::time, 30, 20, 'active'::batch_status),
+  ('a1b2c3d4-4104-4000-8000-000000000004'::uuid, 'Adults Dance · Mon–Wed 8–9 PM', 'a1b2c3d4-4002-4000-8000-000000000002'::uuid, 'a1b2c3d4-5004-4000-8000-000000000004'::uuid, ARRAY['Monday','Tuesday','Wednesday'], '20:00:00'::time, '21:00:00'::time, 30, 14, 'active'::batch_status),
+  ('a1b2c3d4-4105-4000-8000-000000000005'::uuid, 'Mind & Body Fitness · Mon–Fri 9:30–10:30 AM', 'a1b2c3d4-4003-4000-8000-000000000003'::uuid, 'a1b2c3d4-5005-4000-8000-000000000005'::uuid, ARRAY['Monday','Tuesday','Wednesday','Thursday','Friday'], '09:30:00'::time, '10:30:00'::time, 25, 15, 'active'::batch_status),
+  ('a1b2c3d4-4106-4000-8000-000000000006'::uuid, 'Kuchipudi · Fri–Sat 6:30–7:30 PM', 'a1b2c3d4-4004-4000-8000-000000000004'::uuid, 'a1b2c3d4-5006-4000-8000-000000000006'::uuid, ARRAY['Friday','Saturday'], '18:30:00'::time, '19:30:00'::time, 15, 8, 'active'::batch_status)
+) AS v(id, name, programme_id, instructor_id, days, time_start, time_end, capacity, enrolled_count, status)
 WHERE NOT EXISTS (SELECT 1 FROM batches b WHERE b.id = v.id);
 
 -- ══ Seed: site content (stats + reference FAQs + testimonials) ══
+-- Key names match the app's data layer: getStats() reads stats_% scalar rows,
+-- getFAQs() reads 'faqs', getTestimonials() reads 'testimonials'.
+DELETE FROM site_content WHERE content_key IN ('faq', 'stats'); -- drop any legacy keys
 INSERT INTO site_content (content_key, content_value)
 VALUES
-  ('stats', '{"students_trained": 5000, "years_active": 15, "programmes_count": 4, "awards_count": 3}'::jsonb),
-  ('faq', $json$[
+  ('stats_students', '"5000+"'::jsonb),
+  ('stats_years', '"15+"'::jsonb),
+  ('stats_programmes', '"4"'::jsonb),
+  ('stats_awards', '"3"'::jsonb),
+  ('faqs', $json$[
     {"question": "Where are dance classes near Sainikpuri?", "answer": "Rhythmzz Academy of Dance is at Neredmet X Road Bus Stop, just 8 to 12 minutes from Sainikpuri by drive. We offer Kids Dance, Adults Dance, Mind and Body Fitness and Kuchipudi Classical. Call +91 90529 80859 to book a free trial."},
     {"question": "Is there a free trial class for dance classes in Secunderabad?", "answer": "Yes. Rhythmzz Academy of Dance offers one free trial class for all new students. No registration fee. Call or WhatsApp +91 90529 80859 to book your trial class."},
     {"question": "What are the dance class fees at Rhythmzz Academy?", "answer": "Kids Dance: 2000 rupees per month or 5000 rupees per quarter. Adults Dance: 2500 rupees per month or 6500 rupees per quarter. Mind and Body Fitness: 2500 rupees per month or 6500 rupees per quarter. Kuchipudi Classical: 2000 rupees per month or 5000 rupees per quarter. No registration fee."},
@@ -88,20 +94,34 @@ const realtime = `-- ══ Realtime: live updates for dashboards ══
 DO $$ BEGIN ALTER PUBLICATION supabase_realtime ADD TABLE attendance; EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 DO $$ BEGIN ALTER PUBLICATION supabase_realtime ADD TABLE fee_payments; EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 DO $$ BEGIN ALTER PUBLICATION supabase_realtime ADD TABLE studio_rentals; EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN ALTER PUBLICATION supabase_realtime ADD TABLE students; EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 `;
 
-const out =
+// Postgres has no IF NOT EXISTS for triggers or policies, so make the
+// migration statements re-runnable: drop-then-create per statement.
+// Table names may be schema-qualified (storage.objects), hence [\w.].
+const idempotize = (sql) =>
+  sql
+    .replace(/^CREATE TRIGGER (\w+) (.+?) ON ([\w.]+) (.+)$/gm,
+      'DROP TRIGGER IF EXISTS $1 ON $3;\nCREATE TRIGGER $1 $2 ON $3 $4')
+    .replace(/^CREATE POLICY (\w+) ON ([\w.]+) (.+)$/gm,
+      'DROP POLICY IF EXISTS $1 ON $2;\nCREATE POLICY $1 ON $2 $3');
+
+const out = idempotize(
   header +
-  read('001_create_tables.sql') +
-  '\n' +
-  roleColumn +
-  read('002_create_indexes.sql') +
-  '\n' +
-  read('003_rls_policies.sql') +
-  '\n' +
-  seed +
-  read('005_functions.sql') +
-  '\n' +
-  realtime;
+    read('001_create_tables.sql') +
+    '\n' +
+    roleColumn +
+    read('002_create_indexes.sql') +
+    '\n' +
+    read('003_rls_policies.sql') +
+    '\n' +
+    read('006_features.sql') + // adds batches.name before the seed inserts it
+    '\n' +
+    seed +
+    read('005_functions.sql') +
+    '\n' +
+    realtime
+);
 fs.writeFileSync('supabase/setup.sql', out);
 console.log('written supabase/setup.sql,', out.length, 'bytes');

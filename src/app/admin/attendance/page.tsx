@@ -1,6 +1,13 @@
-import { Card } from '@/components/ui/card'
+import { AttendanceReport } from '@/components/admin/attendance-report'
+import { createServerSupabase } from '@/lib/supabase/server'
 
-export default function AttendancePage() {
+export default async function AttendancePage() {
+  const supabase = await createServerSupabase()
+  const { data: batches } = await supabase
+    .from('batches')
+    .select('id, name, programme:programmes(name)')
+    .order('created_at', { ascending: false })
+
   return (
     <div className="space-y-6">
       <div>
@@ -8,10 +15,7 @@ export default function AttendancePage() {
         <p className="text-mu font-body text-sm mt-1">Monitor daily attendance records across all batches.</p>
       </div>
 
-      <Card className="p-12 text-center text-mu bg-light border-dashed">
-        <p>Attendance tracking module is under construction.</p>
-        <p className="text-sm mt-2">Filter by batch and date to view student attendance soon.</p>
-      </Card>
+      <AttendanceReport batches={(batches ?? []) as any[]} />
     </div>
   )
 }

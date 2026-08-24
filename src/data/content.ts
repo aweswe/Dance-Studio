@@ -57,7 +57,12 @@ export async function getFAQs() {
   return DEFAULT_FAQS;
 }
 
-export async function getBanner() {
+/**
+ * Banner is stored as {active, text, ctaLink} by the admin content editor.
+ * Returns the text (or null when hidden) — legacy plain-string banners are
+ * treated as active with no CTA.
+ */
+export async function getBanner(): Promise<string | null> {
   try {
     const supabase = getPublicSupabase();
     const { data } = await supabase
@@ -65,7 +70,11 @@ export async function getBanner() {
       .select('content_value')
       .eq('content_key', 'banner')
       .single();
-    if (data) return (data as any)?.content_value;
+    const value = (data as any)?.content_value;
+    if (value == null) return null;
+    if (typeof value === 'string') return value;
+    if (typeof value === 'object' && value.active && value.text) return value.text;
+    return null;
   } catch {}
   return null;
 }

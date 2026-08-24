@@ -20,7 +20,7 @@ export async function getBlogPosts() {
     const supabase = getPublicSupabase();
     const { data } = await supabase
       .from('blog_posts')
-      .select('id, title, slug, excerpt, cover_image_url, published_at, tags, author:instructors(name)')
+      .select('id, title, slug, excerpt, cover_image_url, published_at, tags')
       .eq('is_published', true)
       .order('published_at', { ascending: false });
     if (data && data.length > 0) return data;
@@ -33,7 +33,7 @@ export async function getBlogPostBySlug(slug: string) {
     const supabase = getPublicSupabase();
     const { data } = await supabase
       .from('blog_posts')
-      .select('*, author:instructors(name, photo_url, bio)')
+      .select('*')
       .eq('slug', slug)
       .eq('is_published', true)
       .single();

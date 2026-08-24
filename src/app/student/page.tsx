@@ -18,7 +18,7 @@ export default async function StudentDashboardPage() {
 
   const { data: studentData } = await supabase
     .from("students")
-    .select("id, name, programmes(*), batches(*)")
+    .select("id, name, programme:programmes(*), batch:batches(*)")
     .eq("auth_id", user.id)
     .single();
 
@@ -30,9 +30,23 @@ export default async function StudentDashboardPage() {
     .rpc("get_student_attendance_summary", { p_student_id: student.id });
 
   const attSummary = attendanceSummary as any;
-  const attendancePercentage = attSummary?.total_classes > 0 
-    ? Math.round((attSummary.present_count / attSummary.total_classes) * 100) 
+  const attendancePercentage = attSummary?.total_classes > 0
+    ? Math.round((attSummary.present_count / attSummary.total_classes) * 100)
     : 100;
+
+  // Fee status from the latest payment (same month+year rule as /student/fees)
+  const { data: payments } = await supabase
+    .from("fee_payments")
+    .select("paid_at")
+    .eq("student_id", student.id)
+    .order("paid_at", { ascending: false })
+    .limit(1);
+  const now = new Date();
+  const lastPaid = payments?.[0] ? new Date((payments[0] as any).paid_at) : null;
+  const feePaid =
+    !!lastPaid &&
+    lastPaid.getFullYear() === now.getFullYear() &&
+    lastPaid.getMonth() === now.getMonth();
 
   return (
     <div className="space-y-8">
@@ -58,8 +72,10 @@ export default async function StudentDashboardPage() {
           <div className="flex flex-col h-full justify-between">
             <div>
               <p className="text-sm text-mu mb-1 uppercase tracking-widest font-semibold">Current Batch</p>
-              <h3 className="font-display text-2xl mb-1">{student.batches?.days?.join(", ") || "Batch"}</h3>
-              <p className="text-sm">{student.programmes?.name}</p>
+              <h3 className="font-display text-2xl mb-1">
+                {student.batch?.name || student.batch?.days?.join(", ") || "No batch"}
+              </h3>
+              <p className="text-sm">{student.programme?.name}</p>
             </div>
             <Link href={`${ROUTES.student}/schedule`} className="text-bl text-sm font-semibold mt-4 hover:underline">
               View Schedule &rarr;
@@ -71,7 +87,9 @@ export default async function StudentDashboardPage() {
           <div className="flex flex-col h-full justify-between">
             <div>
               <p className="text-sm text-mu mb-1 uppercase tracking-widest font-semibold">Fee Status</p>
-              <Badge variant="green" className="mt-2">Paid</Badge>
+              <Badge variant={feePaid ? "green" : "outline"} className={feePaid ? "mt-2" : "mt-2 border-red-500 text-red-500"}>
+                {feePaid ? "Paid" : "Due"}
+              </Badge>
             </div>
             <Link href={`${ROUTES.student}/fees`} className="text-bl text-sm font-semibold mt-4 hover:underline">
               Manage Fees &rarr;
@@ -83,14 +101,16 @@ export default async function StudentDashboardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div>
           <h2 className="font-display text-2xl tracking-[2px] mb-4">Batch Schedule</h2>
-          {student.batches ? (
+          {student.batch ? (
             <Card>
               <div className="space-y-4">
                 <div className="flex justify-between items-center pb-4 border-b border-black/[.05]">
                   <div>
-                    <p className="font-semibold">{student.batches.days?.join(", ")}</p>
+                    <p className="font-semibold">
+                      {student.batch.name || student.batch.days?.join(", ")}
+                    </p>
                     <p className="text-sm text-mu">
-                      {formatTime(student.batches.time_start)} - {formatTime(student.batches.time_end)}
+                      {student.batch.days?.join(", ")} · {formatTime(student.batch.time_start)} - {formatTime(student.batch.time_end)}
                     </p>
                   </div>
                   <Badge variant="blue">Active</Badge>

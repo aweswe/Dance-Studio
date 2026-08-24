@@ -20,7 +20,7 @@ export default async function StudentLayout({
   // Fetch student details
   const { data: student } = await supabase
     .from("students")
-    .select("*, programmes(slug)")
+    .select("*, programme:programmes(slug)")
     .eq("auth_id", user.id)
     .single();
 
@@ -29,8 +29,8 @@ export default async function StudentLayout({
     redirect(ROUTES.home);
   }
 
-  // Check if they are enrolled in Kuchipudi
-  const isKuchipudi = (student as any)?.programmes?.slug === "kuchipudi" || (student as any)?.programme_id === "kuchipudi";
+  // Check if they are enrolled in Kuchipudi (by programme slug)
+  const isKuchipudi = (student as any)?.programme?.slug === "kuchipudi";
 
   return (
     <div className="min-h-screen bg-light flex">

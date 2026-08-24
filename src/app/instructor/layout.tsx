@@ -14,7 +14,7 @@ export default async function InstructorLayout({
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect(ROUTES.login);
+    redirect(ROUTES.adminLogin);
   }
 
   const { data: instructorData } = await supabase

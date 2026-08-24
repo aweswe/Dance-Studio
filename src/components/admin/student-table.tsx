@@ -13,22 +13,17 @@ import { formatDate } from '@/lib/utils/format'
 
 interface Student extends Record<string, unknown> {
   id: string
-  first_name?: string
-  last_name?: string
   name?: string
   phone: string
   status: string
   created_at: string
-  enrolments?: {
-    batch: {
+  batch?: {
+    name: string | null
+    days: string[]
+    programme: {
       name: string
-      programme: {
-        name: string
-      }
     }
-  }[]
-  programme?: { name: string }
-  batch?: { name: string }
+  } | null
 }
 
 interface StudentTableProps {
@@ -102,22 +97,19 @@ export function StudentTable({ initialData }: StudentTableProps) {
                 onClick={() => router.push(`/admin/students/${student.id}`)}
               >
                 <td className="px-6 py-4">
-                  <div className="font-medium text-blk">{student.name || `${student.first_name || ''} ${student.last_name || ''}`.trim()}</div>
+                  <div className="font-medium text-blk">{student.name}</div>
                 </td>
                 <td className="px-6 py-4 text-sm text-mu">{student.phone}</td>
                 <td className="px-6 py-4">
-                  {student.enrolments?.[0] ? (
+                  {student.batch ? (
                     <div>
-                      <div className="text-sm font-medium text-blk">{student.enrolments[0].batch?.programme?.name}</div>
-                      <div className="text-xs text-mu">{student.enrolments[0].batch?.name}</div>
-                    </div>
-                  ) : student.programme ? (
-                    <div>
-                      <div className="text-sm font-medium text-blk">{student.programme?.name}</div>
-                      <div className="text-xs text-mu">{student.batch?.name}</div>
+                      <div className="text-sm font-medium text-blk">{student.batch.programme?.name}</div>
+                      <div className="text-xs text-mu">
+                        {student.batch.name || student.batch.days?.join(', ')}
+                      </div>
                     </div>
                   ) : (
-                    <span className="text-sm text-mu italic">No enrolments</span>
+                    <span className="text-sm text-mu italic">No batch</span>
                   )}
                 </td>
                 <td className="px-6 py-4 text-sm text-mu">

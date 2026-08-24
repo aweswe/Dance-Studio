@@ -17,7 +17,7 @@ export default async function AttendancePage({
   const supabase = await createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
 
-  if (!user) redirect(ROUTES.login);
+  if (!user) redirect(ROUTES.adminLogin);
 
   const { data: instructorData } = await supabase
     .from("instructors")

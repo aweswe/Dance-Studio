@@ -15,14 +15,15 @@ export default async function ProgressPage() {
 
   const { data: studentData } = await supabase
     .from("students")
-    .select("id, programmes(slug)")
+    .select("id, programme:programmes(slug)")
     .eq("auth_id", user.id)
     .single();
 
   if (!studentData) redirect(ROUTES.home);
   const student = studentData as any;
 
-  if (student.programmes?.slug !== "kuchipudi" && student.programme_id !== "kuchipudi") {
+  // Progress is only for the Kuchipudi programme
+  if ((student.programme as any)?.slug !== "kuchipudi") {
     redirect(ROUTES.student);
   }
 

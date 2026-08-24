@@ -16,12 +16,12 @@ export default async function SchedulePage() {
 
   const { data: studentData } = await supabase
     .from("students")
-    .select("batches(*)")
+    .select("batch:batches(*)")
     .eq("auth_id", user.id)
     .single();
 
   const student = studentData as any;
-  const batch = student?.batches;
+  const batch = student?.batch;
   const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
   return (
@@ -38,7 +38,9 @@ export default async function SchedulePage() {
       ) : (
         <div className="grid grid-cols-1 gap-6">
           <Card>
-            <h2 className="font-display text-2xl mb-4">{batch.name}</h2>
+            <h2 className="font-display text-2xl mb-4">
+              {batch.name || `My Batch · ${batch.days?.join(", ")}`}
+            </h2>
             <div className="flex flex-col md:flex-row gap-8">
               <div className="flex-1">
                 <p className="text-sm text-mu uppercase tracking-widest font-semibold mb-2">Timings</p>

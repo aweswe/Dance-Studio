@@ -4,23 +4,110 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card } from '@/components/ui/card'
-import { Users, Clock, MapPin, MoreVertical, Plus } from 'lucide-react'
+import { Input } from '@/components/ui/input'
+import { Select } from '@/components/ui/select'
+import { Modal } from '@/components/ui/modal'
+import { Users, Clock, UserCircle, Plus } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { createProgramme, createBatch } from '@/actions/classes'
+import { formatTime } from '@/lib/utils/format'
 
-// Basic types for the UI
 type Programme = any
 type Batch = any
 type Instructor = any
 
-export function BatchManager({ 
-  initialProgrammes, 
+const ALL_DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+
+export function BatchManager({
+  initialProgrammes,
   initialBatches,
-  instructors 
-}: { 
-  initialProgrammes: Programme[], 
+  instructors
+}: {
+  initialProgrammes: Programme[],
   initialBatches: Batch[],
   instructors: Instructor[]
 }) {
+  const router = useRouter()
   const [activeTab, setActiveTab] = useState<'batches' | 'programmes'>('batches')
+  const [isBatchModalOpen, setIsBatchModalOpen] = useState(false)
+  const [isProgrammeModalOpen, setIsProgrammeModalOpen] = useState(false)
+  const [busy, setBusy] = useState(false)
+  const [feedback, setFeedback] = useState<{ ok: boolean; text: string } | null>(null)
+
+  // New batch form
+  const [batchForm, setBatchForm] = useState({
+    programmeId: '',
+    instructorId: '',
+    name: '',
+    days: [] as string[],
+    timeStart: '17:00',
+    timeEnd: '18:00',
+    capacity: '25',
+  })
+
+  // New programme form
+  const [progForm, setProgForm] = useState({
+    name: '',
+    description: '',
+    includes: '',
+    feesMonthly: '2000',
+    feesQuarterly: '5000',
+    ageGroup: '',
+  })
+
+  const toggleDay = (day: string) => {
+    setBatchForm((f) => ({
+      ...f,
+      days: f.days.includes(day) ? f.days.filter((d) => d !== day) : [...f.days, day],
+    }))
+  }
+
+  const submitBatch = async () => {
+    setBusy(true)
+    setFeedback(null)
+    const res = await createBatch({
+      programmeId: batchForm.programmeId,
+      instructorId: batchForm.instructorId,
+      name: batchForm.name,
+      days: batchForm.days,
+      timeStart: batchForm.timeStart,
+      timeEnd: batchForm.timeEnd,
+      capacity: Number(batchForm.capacity),
+      status: 'active',
+    })
+    setBusy(false)
+    if (res.success) {
+      setFeedback({ ok: true, text: 'Batch created' })
+      setIsBatchModalOpen(false)
+      setBatchForm({ programmeId: '', instructorId: '', name: '', days: [], timeStart: '17:00', timeEnd: '18:00', capacity: '25' })
+      router.refresh()
+    } else {
+      setFeedback({ ok: false, text: res.error ?? 'Could not create batch' })
+    }
+  }
+
+  const submitProgramme = async () => {
+    setBusy(true)
+    setFeedback(null)
+    const res = await createProgramme({
+      name: progForm.name,
+      description: progForm.description,
+      includes: progForm.includes.split(/[\n,]/).map((s) => s.trim()).filter(Boolean),
+      feesMonthly: Number(progForm.feesMonthly),
+      feesQuarterly: Number(progForm.feesQuarterly),
+      ageGroup: progForm.ageGroup,
+      isActive: true,
+    })
+    setBusy(false)
+    if (res.success) {
+      setFeedback({ ok: true, text: 'Programme created' })
+      setIsProgrammeModalOpen(false)
+      setProgForm({ name: '', description: '', includes: '', feesMonthly: '2000', feesQuarterly: '5000', ageGroup: '' })
+      router.refresh()
+    } else {
+      setFeedback({ ok: false, text: res.error ?? 'Could not create programme' })
+    }
+  }
 
   return (
     <div className="space-y-6">
@@ -47,11 +134,18 @@ export function BatchManager({
         <h3 className="font-display text-xl text-blk">
           {activeTab === 'batches' ? 'Active Batches' : 'Academy Programmes'}
         </h3>
-        <Button className="flex items-center gap-2">
+        <Button
+          className="flex items-center gap-2"
+          onClick={() => (activeTab === 'batches' ? setIsBatchModalOpen(true) : setIsProgrammeModalOpen(true))}
+        >
           <Plus size={16} />
           {activeTab === 'batches' ? 'New Batch' : 'New Programme'}
         </Button>
       </div>
+
+      {feedback && (
+        <p className={`text-sm ${feedback.ok ? 'text-green' : 'text-red-500'}`}>{feedback.text}</p>
+      )}
 
       {activeTab === 'batches' ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -60,11 +154,12 @@ export function BatchManager({
               <div className="flex justify-between items-start mb-4">
                 <div>
                   <Badge variant="outline" className="mb-2">{batch.programme?.name}</Badge>
-                  <h4 className="font-display text-2xl text-blk">{batch.name}</h4>
+                  <h4 className="font-display text-2xl text-blk">
+                    {batch.name || `${batch.programme?.name} · ${batch.days?.join(', ')}`}
+                  </h4>
                 </div>
-                <button className="text-mu hover:text-blk p-1"><MoreVertical size={16} /></button>
               </div>
-              
+
               <div className="space-y-3 mt-6">
                 <div className="flex items-center gap-3 text-sm text-mu">
                   <Users size={16} className="text-bl" />
@@ -72,8 +167,16 @@ export function BatchManager({
                 </div>
                 <div className="flex items-center gap-3 text-sm text-mu">
                   <Clock size={16} className="text-gold" />
-                  <span>{batch.time_slot} ({batch.days?.join(', ')})</span>
+                  <span>
+                    {formatTime(batch.time_start)} - {formatTime(batch.time_end)} ({batch.days?.join(', ')})
+                  </span>
                 </div>
+                {batch.instructor?.name && (
+                  <div className="flex items-center gap-3 text-sm text-mu">
+                    <UserCircle size={16} className="text-purp" />
+                    <span>{batch.instructor.name}</span>
+                  </div>
+                )}
               </div>
             </Card>
           ))}
@@ -87,8 +190,17 @@ export function BatchManager({
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {initialProgrammes?.map((prog: any) => (
             <Card key={prog.id} className="p-6">
-              <h4 className="font-display text-xl text-blk mb-2">{prog.name}</h4>
+              <div className="flex justify-between items-start mb-2">
+                <h4 className="font-display text-xl text-blk">{prog.name}</h4>
+                <Badge variant={prog.is_active ? 'green' : 'default'}>
+                  {prog.is_active ? 'ACTIVE' : 'INACTIVE'}
+                </Badge>
+              </div>
               <p className="text-sm text-mu line-clamp-2">{prog.description}</p>
+              <div className="mt-4 text-xs text-mu space-y-1">
+                <p>Monthly: ₹{prog.fees_monthly} · Quarterly: ₹{prog.fees_quarterly}</p>
+                {prog.age_group && <p>Ages: {prog.age_group}</p>}
+              </div>
             </Card>
           ))}
           {(!initialProgrammes || initialProgrammes.length === 0) && (
@@ -98,6 +210,154 @@ export function BatchManager({
           )}
         </div>
       )}
+
+      {/* New Batch modal */}
+      <Modal isOpen={isBatchModalOpen} onClose={() => setIsBatchModalOpen(false)} title="New Batch" size="lg">
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm text-mu mb-1">Programme</label>
+            <Select
+              value={batchForm.programmeId}
+              onChange={(e) => setBatchForm({ ...batchForm, programmeId: e.target.value })}
+              placeholder="Select a programme"
+              options={(initialProgrammes ?? []).map((p: any) => ({ value: p.id, label: p.name }))}
+            />
+          </div>
+          <div>
+            <label className="block text-sm text-mu mb-1">Instructor</label>
+            <Select
+              value={batchForm.instructorId}
+              onChange={(e) => setBatchForm({ ...batchForm, instructorId: e.target.value })}
+              placeholder="Select an instructor"
+              options={(instructors ?? []).map((i: any) => ({ value: i.id, label: i.name }))}
+            />
+          </div>
+          <div>
+            <label className="block text-sm text-mu mb-1">Batch Name</label>
+            <Input
+              placeholder="e.g., Kids Dance · Mon–Wed 5–6 PM"
+              value={batchForm.name}
+              onChange={(e) => setBatchForm({ ...batchForm, name: e.target.value })}
+            />
+          </div>
+          <div>
+            <label className="block text-sm text-mu mb-1">Days</label>
+            <div className="flex flex-wrap gap-2">
+              {ALL_DAYS.map((day) => (
+                <button
+                  key={day}
+                  type="button"
+                  onClick={() => toggleDay(day)}
+                  className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
+                    batchForm.days.includes(day)
+                      ? 'bg-bl text-wh border-bl'
+                      : 'border-gray-200 text-mu hover:border-bl'
+                  }`}
+                >
+                  {day.slice(0, 3)}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm text-mu mb-1">Start Time</label>
+              <Input
+                type="time"
+                value={batchForm.timeStart}
+                onChange={(e) => setBatchForm({ ...batchForm, timeStart: e.target.value })}
+              />
+            </div>
+            <div>
+              <label className="block text-sm text-mu mb-1">End Time</label>
+              <Input
+                type="time"
+                value={batchForm.timeEnd}
+                onChange={(e) => setBatchForm({ ...batchForm, timeEnd: e.target.value })}
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm text-mu mb-1">Capacity</label>
+            <Input
+              type="number"
+              min={1}
+              value={batchForm.capacity}
+              onChange={(e) => setBatchForm({ ...batchForm, capacity: e.target.value })}
+            />
+          </div>
+          <div className="flex gap-3 pt-2">
+            <Button onClick={submitBatch} disabled={busy}>
+              {busy ? 'Creating...' : 'Create Batch'}
+            </Button>
+            <Button variant="outline" onClick={() => setIsBatchModalOpen(false)}>Cancel</Button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* New Programme modal */}
+      <Modal isOpen={isProgrammeModalOpen} onClose={() => setIsProgrammeModalOpen(false)} title="New Programme" size="lg">
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm text-mu mb-1">Name</label>
+            <Input
+              placeholder="e.g., Bollywood Basics"
+              value={progForm.name}
+              onChange={(e) => setProgForm({ ...progForm, name: e.target.value })}
+            />
+          </div>
+          <div>
+            <label className="block text-sm text-mu mb-1">Description</label>
+            <textarea
+              className="w-full h-24 p-3 rounded-md border border-black/10 text-sm focus:outline-none focus:ring-2 focus:ring-bl resize-none"
+              value={progForm.description}
+              onChange={(e) => setProgForm({ ...progForm, description: e.target.value })}
+            />
+          </div>
+          <div>
+            <label className="block text-sm text-mu mb-1">What&apos;s Included (one per line or comma-separated)</label>
+            <textarea
+              className="w-full h-20 p-3 rounded-md border border-black/10 text-sm focus:outline-none focus:ring-2 focus:ring-bl resize-none"
+              value={progForm.includes}
+              onChange={(e) => setProgForm({ ...progForm, includes: e.target.value })}
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm text-mu mb-1">Monthly Fee (₹)</label>
+              <Input
+                type="number"
+                min={0}
+                value={progForm.feesMonthly}
+                onChange={(e) => setProgForm({ ...progForm, feesMonthly: e.target.value })}
+              />
+            </div>
+            <div>
+              <label className="block text-sm text-mu mb-1">Quarterly Fee (₹)</label>
+              <Input
+                type="number"
+                min={0}
+                value={progForm.feesQuarterly}
+                onChange={(e) => setProgForm({ ...progForm, feesQuarterly: e.target.value })}
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm text-mu mb-1">Age Group</label>
+            <Input
+              placeholder="e.g., 5+ Years"
+              value={progForm.ageGroup}
+              onChange={(e) => setProgForm({ ...progForm, ageGroup: e.target.value })}
+            />
+          </div>
+          <div className="flex gap-3 pt-2">
+            <Button onClick={submitProgramme} disabled={busy}>
+              {busy ? 'Creating...' : 'Create Programme'}
+            </Button>
+            <Button variant="outline" onClick={() => setIsProgrammeModalOpen(false)}>Cancel</Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

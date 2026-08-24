@@ -1,8 +1,15 @@
 import { Suspense } from 'react'
 import { GalleryManager } from '@/components/admin/gallery-manager'
 import { Skeleton } from '@/components/ui/skeleton'
+import { createServerSupabase } from '@/lib/supabase/server'
 
-export default function GalleryPage() {
+export default async function GalleryPage() {
+  const supabase = await createServerSupabase()
+  const { data: items } = await supabase
+    .from('gallery')
+    .select('*')
+    .order('sort_order', { ascending: true })
+
   return (
     <div className="space-y-6">
       <div>
@@ -17,7 +24,7 @@ export default function GalleryPage() {
           ))}
         </div>
       }>
-        <GalleryManager />
+        <GalleryManager initialItems={(items ?? []) as any[]} />
       </Suspense>
     </div>
   )

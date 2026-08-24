@@ -1,7 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   let response = NextResponse.next({
     request: { headers: request.headers },
   });
@@ -82,8 +82,8 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // Admin dashboard
-  if (pathname.startsWith("/admin")) {
+  // Admin dashboard (exclude the login page itself — it shares the prefix)
+  if (pathname.startsWith("/admin") && pathname !== "/admin-login") {
     if (!user) {
       return NextResponse.redirect(new URL("/admin-login", request.url));
     }

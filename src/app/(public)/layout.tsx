@@ -10,7 +10,7 @@ import { GsapProvider } from '@/components/motion/gsap-provider';
 // this layout, so awaiting getBanner() here would block the whole route shell.
 async function BannerFetcher() {
   const bannerContent = await getBanner();
-  return <AnnouncementBanner content={bannerContent} />;
+  return <AnnouncementBanner content={bannerContent ?? undefined} />;
 }
 
 export default function PublicLayout({ children }: { children: ReactNode }) {

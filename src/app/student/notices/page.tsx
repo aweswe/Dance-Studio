@@ -15,14 +15,14 @@ export default async function NoticesPage() {
 
   const { data: student } = await supabase
     .from("students")
-    .select("id, programme_id")
+    .select("id, programme_id, batch_id")
     .eq("auth_id", user.id)
     .single();
 
   if (!student) redirect(ROUTES.home);
 
-  // Fetch notices (broadcast_logs). In a real app we might filter based on recipients.
-  // We'll just fetch recent broadcast logs.
+  // RLS (`broadcast_logs_students_read`) returns only scoped broadcasts;
+  // the client filter below is belt-and-braces for legacy rows.
   const { data: notices } = await supabase
     .from("broadcast_logs")
     .select("*")
@@ -36,7 +36,11 @@ export default async function NoticesPage() {
         <p className="text-mu">Updates and announcements from Rhythmzz Academy.</p>
       </div>
 
-      <NoticeList notices={(notices || []) as any} />
+      <NoticeList
+        notices={(notices || []) as any}
+        programmeId={(student as any).programme_id}
+        batchId={(student as any).batch_id}
+      />
     </div>
   );
 }

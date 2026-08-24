@@ -16,7 +16,7 @@ export default async function FeesPage() {
 
   const { data: studentData } = await supabase
     .from("students")
-    .select("id, programmes(fees_monthly)")
+    .select("id, programme:programmes(fees_monthly)")
     .eq("auth_id", user.id)
     .single();
 
@@ -29,17 +29,21 @@ export default async function FeesPage() {
     .eq("student_id", student.id)
     .order("paid_at", { ascending: false });
 
-  // Check last payment date
+  // Paid when the latest payment lands in the current month AND year
+  const now = new Date();
   const lastPayment = (payments as any)?.[0];
-  const isPaidThisMonth = lastPayment 
-    ? new Date(lastPayment.paid_at).getMonth() === new Date().getMonth()
-    : false;
+  const lastPaid = lastPayment ? new Date(lastPayment.paid_at) : null;
+  const isPaidThisMonth =
+    !!lastPaid &&
+    lastPaid.getFullYear() === now.getFullYear() &&
+    lastPaid.getMonth() === now.getMonth();
 
   const status = isPaidThisMonth ? "Paid" : "Due";
-  const amountDue = student.programmes?.fees_monthly || 2500;
-  
-  const today = new Date();
-  const dueDate = new Date(today.getFullYear(), today.getMonth(), 5).toLocaleDateString("en-IN", {
+  const amountDue = student.programme?.fees_monthly || 2500;
+
+  // Due on the 5th of the current month — already past it? Next month's 5th.
+  const dueMonth = now.getDate() > 5 ? now.getMonth() + 1 : now.getMonth();
+  const dueDate = new Date(now.getFullYear(), dueMonth, 5).toLocaleDateString("en-IN", {
     day: "numeric", month: "short", year: "numeric"
   });
 

@@ -1,13 +1,18 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { createClient as createSupabaseAdminClient } from "@supabase/supabase-js";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "./types";
 
 /**
  * Server-side Supabase client with cookie-based auth.
  * Use in Server Components, Route Handlers, and Server Actions.
+ *
+ * The explicit return type matters: letting TS infer the return type of this
+ * async function makes supabase-js's conditional `Schema` generic collapse to
+ * `never` and every table access lose its row types.
  */
-export async function createServerSupabase() {
+export async function createServerSupabase(): Promise<SupabaseClient<Database>> {
   const cookieStore = await cookies();
 
   return createServerClient<Database>(

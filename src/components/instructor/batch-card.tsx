@@ -32,7 +32,7 @@ export function BatchCard({ batch }: BatchProps) {
         <div className="flex items-center gap-6">
           <div className="flex items-center gap-2 text-sm text-mu">
             <Users size={16} />
-            <span>{batch.current_enrollment}/{batch.capacity} Students</span>
+            <span>{batch.enrolled_count}/{batch.capacity} Students</span>
           </div>
           <div className="text-mu">
             {expanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}

@@ -41,3 +41,4 @@ dev-smoke*.log
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+supabase/.temp/

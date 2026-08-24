@@ -1,401 +1,870 @@
 /**
  * Database type definitions for Supabase.
- * 
- * TODO: Generate these automatically with:
- *   npx supabase gen types typescript --project-id <project-id> > src/lib/supabase/types.ts
- * 
- * For now, manually defined to match the migration schema.
+ *
+ * GENERATED from the live database (project pndbazmwnbqzkwwmmgaf). Regenerate with:
+ *   supabase gen types typescript --db-url "postgresql://postgres.pndbazmwnbqzkwwmmgaf:<password>@aws-0-ap-south-1.pooler.supabase.com:6543/postgres" --schema public > src/lib/supabase/types.ts
+ * then re-append the convenience aliases at the bottom of this file.
+ *
+ * The generated `Relationships` metadata is required by postgrest-js 2.x —
+ * without it, awaited query results collapse to `never`.
  */
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
 
-export type UserRole = "admin" | "instructor" | "student";
-export type AttendanceStatus = "present" | "absent" | "leave";
-export type PaymentSource = "razorpay" | "cash" | "upi_offline";
-export type BatchStatus = "active" | "paused" | "full";
-export type RentalStatus = "pending" | "confirmed" | "cancelled";
-export type GalleryType = "photo" | "video";
-
-export interface Database {
+export type Database = {
   public: {
     Tables: {
-      users: {
-        Row: {
-          id: string;
-          role: UserRole;
-          created_at: string;
-        };
-        Insert: {
-          id: string;
-          role?: UserRole;
-          created_at?: string;
-        };
-        Update: {
-          role?: UserRole;
-        };
-      };
-      programmes: {
-        Row: {
-          id: string;
-          name: string;
-          slug: string;
-          description: string | null;
-          includes: string[] | null;
-          fees_monthly: number | null;
-          fees_quarterly: number | null;
-          age_group: string | null;
-          is_active: boolean;
-          sort_order: number;
-          created_at: string;
-          updated_at: string;
-        };
-        Insert: {
-          id?: string;
-          name: string;
-          slug: string;
-          description?: string | null;
-          includes?: string[] | null;
-          fees_monthly?: number | null;
-          fees_quarterly?: number | null;
-          age_group?: string | null;
-          is_active?: boolean;
-          sort_order?: number;
-        };
-        Update: Partial<Database["public"]["Tables"]["programmes"]["Insert"]>;
-      };
-      instructors: {
-        Row: {
-          id: string;
-          auth_id: string | null;
-          name: string;
-          photo_url: string | null;
-          bio: string | null;
-          certifications: string[] | null;
-          email: string | null;
-          phone: string | null;
-          is_active: boolean;
-          created_at: string;
-          updated_at: string;
-        };
-        Insert: {
-          id?: string;
-          auth_id?: string | null;
-          name: string;
-          photo_url?: string | null;
-          bio?: string | null;
-          certifications?: string[] | null;
-          email?: string | null;
-          phone?: string | null;
-          is_active?: boolean;
-        };
-        Update: Partial<Database["public"]["Tables"]["instructors"]["Insert"]>;
-      };
-      batches: {
-        Row: {
-          id: string;
-          programme_id: string;
-          instructor_id: string | null;
-          days: string[];
-          time_start: string;
-          time_end: string;
-          capacity: number;
-          enrolled_count: number;
-          status: BatchStatus;
-          created_at: string;
-          updated_at: string;
-        };
-        Insert: {
-          id?: string;
-          programme_id: string;
-          instructor_id?: string | null;
-          days: string[];
-          time_start: string;
-          time_end: string;
-          capacity: number;
-          enrolled_count?: number;
-          status?: BatchStatus;
-        };
-        Update: Partial<Database["public"]["Tables"]["batches"]["Insert"]>;
-      };
-      students: {
-        Row: {
-          id: string;
-          auth_id: string | null;
-          name: string;
-          phone: string;
-          email: string | null;
-          programme_id: string | null;
-          batch_id: string | null;
-          student_id_display: string;
-          status: string;
-          join_date: string;
-          profile_photo_url: string | null;
-          display_name: string | null;
-          created_at: string;
-          updated_at: string;
-        };
-        Insert: {
-          id?: string;
-          auth_id?: string | null;
-          name: string;
-          phone: string;
-          email?: string | null;
-          programme_id?: string | null;
-          batch_id?: string | null;
-          student_id_display?: string;
-          status?: string;
-          join_date?: string;
-          profile_photo_url?: string | null;
-          display_name?: string | null;
-        };
-        Update: Partial<Database["public"]["Tables"]["students"]["Insert"]>;
-      };
       attendance: {
         Row: {
-          id: string;
-          student_id: string;
-          batch_id: string;
-          date: string;
-          status: AttendanceStatus;
-          marked_by: string | null;
-          created_at: string;
-        };
+          batch_id: string | null
+          created_at: string | null
+          date: string
+          id: string
+          marked_by: string | null
+          status: Database["public"]["Enums"]["attendance_status"]
+          student_id: string | null
+        }
         Insert: {
-          id?: string;
-          student_id: string;
-          batch_id: string;
-          date: string;
-          status: AttendanceStatus;
-          marked_by?: string | null;
-        };
-        Update: Partial<Database["public"]["Tables"]["attendance"]["Insert"]>;
-      };
-      fee_payments: {
-        Row: {
-          id: string;
-          student_id: string | null;
-          amount: number;
-          source: PaymentSource;
-          razorpay_payment_id: string | null;
-          payment_order_id: string | null;
-          receipt_url: string | null;
-          notes: string | null;
-          paid_at: string;
-          created_at: string;
-        };
-        Insert: {
-          id?: string;
-          student_id?: string | null;
-          amount: number;
-          source: PaymentSource;
-          razorpay_payment_id?: string | null;
-          payment_order_id?: string | null;
-          receipt_url?: string | null;
-          notes?: string | null;
-          paid_at?: string;
-        };
-        Update: Partial<Database["public"]["Tables"]["fee_payments"]["Insert"]>;
-      };
-      payment_orders: {
-        Row: {
-          id: string;
-          student_id: string | null;
-          razorpay_order_id: string;
-          amount: number;
-          currency: string;
-          status: string;
-          webhook_payload: Record<string, unknown> | null;
-          programme_id: string | null;
-          batch_id: string | null;
-          student_name: string | null;
-          student_phone: string | null;
-          student_email: string | null;
-          created_at: string;
-          updated_at: string;
-        };
-        Insert: {
-          id?: string;
-          student_id?: string | null;
-          razorpay_order_id: string;
-          amount: number;
-          currency?: string;
-          status?: string;
-          webhook_payload?: Record<string, unknown> | null;
-          programme_id?: string | null;
-          batch_id?: string | null;
-          student_name?: string | null;
-          student_phone?: string | null;
-          student_email?: string | null;
-        };
-        Update: Partial<Database["public"]["Tables"]["payment_orders"]["Insert"]>;
-      };
-      broadcast_logs: {
-        Row: {
-          id: string;
-          message: string;
-          template_name: string | null;
-          recipients: Record<string, unknown> | null;
-          recipient_count: number;
-          sent_by: string | null;
-          sent_at: string;
-        };
-        Insert: {
-          id?: string;
-          message: string;
-          template_name?: string | null;
-          recipients?: Record<string, unknown> | null;
-          recipient_count?: number;
-          sent_by?: string | null;
-        };
-        Update: Partial<Database["public"]["Tables"]["broadcast_logs"]["Insert"]>;
-      };
-      studio_rentals: {
-        Row: {
-          id: string;
-          name: string;
-          phone: string;
-          email: string | null;
-          preferred_date: string;
-          preferred_time_start: string;
-          preferred_time_end: string;
-          status: RentalStatus;
-          admin_notes: string | null;
-          created_at: string;
-          updated_at: string;
-        };
-        Insert: {
-          id?: string;
-          name: string;
-          phone: string;
-          email?: string | null;
-          preferred_date: string;
-          preferred_time_start: string;
-          preferred_time_end: string;
-          status?: RentalStatus;
-          admin_notes?: string | null;
-        };
-        Update: Partial<Database["public"]["Tables"]["studio_rentals"]["Insert"]>;
-      };
-      gallery: {
-        Row: {
-          id: string;
-          url: string;
-          thumbnail_url: string | null;
-          type: GalleryType;
-          title: string | null;
-          tags: string[] | null;
-          programme_id: string | null;
-          is_visible: boolean;
-          sort_order: number;
-          created_at: string;
-        };
-        Insert: {
-          id?: string;
-          url: string;
-          thumbnail_url?: string | null;
-          type: GalleryType;
-          title?: string | null;
-          tags?: string[] | null;
-          programme_id?: string | null;
-          is_visible?: boolean;
-          sort_order?: number;
-        };
-        Update: Partial<Database["public"]["Tables"]["gallery"]["Insert"]>;
-      };
-      site_content: {
-        Row: {
-          id: string;
-          content_key: string;
-          content_value: Record<string, unknown> | null;
-          updated_at: string;
-          updated_by: string | null;
-        };
-        Insert: {
-          id?: string;
-          content_key: string;
-          content_value?: Record<string, unknown> | null;
-          updated_by?: string | null;
-        };
+          batch_id?: string | null
+          created_at?: string | null
+          date: string
+          id?: string
+          marked_by?: string | null
+          status: Database["public"]["Enums"]["attendance_status"]
+          student_id?: string | null
+        }
         Update: {
-          content_value?: Record<string, unknown> | null;
-          updated_by?: string | null;
-        };
-      };
-      kuchipudi_progress: {
+          batch_id?: string | null
+          created_at?: string | null
+          date?: string
+          id?: string
+          marked_by?: string | null
+          status?: Database["public"]["Enums"]["attendance_status"]
+          student_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "attendance_batch_id_fkey"
+            columns: ["batch_id"]
+            isOneToOne: false
+            referencedRelation: "batches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "attendance_marked_by_fkey"
+            columns: ["marked_by"]
+            isOneToOne: false
+            referencedRelation: "instructors"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "attendance_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      batches: {
         Row: {
-          id: string;
-          student_id: string;
-          current_level: string;
-          modules_completed: Record<string, unknown>[];
-          certificate_urls: Record<string, string>;
-          updated_at: string;
-          updated_by: string | null;
-        };
+          capacity: number
+          created_at: string | null
+          days: string[] | null
+          enrolled_count: number | null
+          id: string
+          instructor_id: string | null
+          name: string | null
+          programme_id: string | null
+          status: Database["public"]["Enums"]["batch_status"] | null
+          time_end: string | null
+          time_start: string | null
+          updated_at: string | null
+        }
         Insert: {
-          id?: string;
-          student_id: string;
-          current_level?: string;
-          modules_completed?: Record<string, unknown>[];
-          certificate_urls?: Record<string, string>;
-          updated_by?: string | null;
-        };
-        Update: Partial<Database["public"]["Tables"]["kuchipudi_progress"]["Insert"]>;
-      };
+          capacity?: number
+          created_at?: string | null
+          days?: string[] | null
+          enrolled_count?: number | null
+          id?: string
+          instructor_id?: string | null
+          name?: string | null
+          programme_id?: string | null
+          status?: Database["public"]["Enums"]["batch_status"] | null
+          time_end?: string | null
+          time_start?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          capacity?: number
+          created_at?: string | null
+          days?: string[] | null
+          enrolled_count?: number | null
+          id?: string
+          instructor_id?: string | null
+          name?: string | null
+          programme_id?: string | null
+          status?: Database["public"]["Enums"]["batch_status"] | null
+          time_end?: string | null
+          time_start?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "batches_instructor_id_fkey"
+            columns: ["instructor_id"]
+            isOneToOne: false
+            referencedRelation: "instructors"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "batches_programme_id_fkey"
+            columns: ["programme_id"]
+            isOneToOne: false
+            referencedRelation: "programmes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       blog_posts: {
         Row: {
-          id: string;
-          title: string;
-          slug: string;
-          content: string | null;
-          excerpt: string | null;
-          cover_image_url: string | null;
-          meta_description: string | null;
-          tags: string[] | null;
-          is_published: boolean;
-          published_at: string | null;
-          author_id: string | null;
-          created_at: string;
-          updated_at: string;
-        };
+          author_id: string | null
+          content: string | null
+          cover_image_url: string | null
+          created_at: string | null
+          excerpt: string | null
+          id: string
+          is_published: boolean | null
+          meta_description: string | null
+          published_at: string | null
+          slug: string
+          tags: string[] | null
+          title: string
+          updated_at: string | null
+        }
         Insert: {
-          id?: string;
-          title: string;
-          slug: string;
-          content?: string | null;
-          excerpt?: string | null;
-          cover_image_url?: string | null;
-          meta_description?: string | null;
-          tags?: string[] | null;
-          is_published?: boolean;
-          published_at?: string | null;
-          author_id?: string | null;
-        };
-        Update: Partial<Database["public"]["Tables"]["blog_posts"]["Insert"]>;
-      };
-    };
+          author_id?: string | null
+          content?: string | null
+          cover_image_url?: string | null
+          created_at?: string | null
+          excerpt?: string | null
+          id?: string
+          is_published?: boolean | null
+          meta_description?: string | null
+          published_at?: string | null
+          slug: string
+          tags?: string[] | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          author_id?: string | null
+          content?: string | null
+          cover_image_url?: string | null
+          created_at?: string | null
+          excerpt?: string | null
+          id?: string
+          is_published?: boolean | null
+          meta_description?: string | null
+          published_at?: string | null
+          slug?: string
+          tags?: string[] | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blog_posts_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      broadcast_logs: {
+        Row: {
+          id: string
+          message: string
+          recipient_count: number | null
+          recipients: Json | null
+          sent_at: string | null
+          sent_by: string | null
+          template_name: string | null
+        }
+        Insert: {
+          id?: string
+          message: string
+          recipient_count?: number | null
+          recipients?: Json | null
+          sent_at?: string | null
+          sent_by?: string | null
+          template_name?: string | null
+        }
+        Update: {
+          id?: string
+          message?: string
+          recipient_count?: number | null
+          recipients?: Json | null
+          sent_at?: string | null
+          sent_by?: string | null
+          template_name?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "broadcast_logs_sent_by_fkey"
+            columns: ["sent_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fee_payments: {
+        Row: {
+          amount: number
+          created_at: string | null
+          id: string
+          notes: string | null
+          paid_at: string | null
+          payment_order_id: string | null
+          razorpay_payment_id: string | null
+          receipt_url: string | null
+          source: Database["public"]["Enums"]["payment_source"]
+          student_id: string | null
+        }
+        Insert: {
+          amount: number
+          created_at?: string | null
+          id?: string
+          notes?: string | null
+          paid_at?: string | null
+          payment_order_id?: string | null
+          razorpay_payment_id?: string | null
+          receipt_url?: string | null
+          source: Database["public"]["Enums"]["payment_source"]
+          student_id?: string | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string | null
+          id?: string
+          notes?: string | null
+          paid_at?: string | null
+          payment_order_id?: string | null
+          razorpay_payment_id?: string | null
+          receipt_url?: string | null
+          source?: Database["public"]["Enums"]["payment_source"]
+          student_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fee_payments_payment_order_id_fkey"
+            columns: ["payment_order_id"]
+            isOneToOne: false
+            referencedRelation: "payment_orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fee_payments_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gallery: {
+        Row: {
+          created_at: string | null
+          id: string
+          is_visible: boolean | null
+          programme_id: string | null
+          sort_order: number | null
+          tags: string[] | null
+          thumbnail_url: string | null
+          title: string | null
+          type: Database["public"]["Enums"]["gallery_type"]
+          url: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          is_visible?: boolean | null
+          programme_id?: string | null
+          sort_order?: number | null
+          tags?: string[] | null
+          thumbnail_url?: string | null
+          title?: string | null
+          type: Database["public"]["Enums"]["gallery_type"]
+          url: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          is_visible?: boolean | null
+          programme_id?: string | null
+          sort_order?: number | null
+          tags?: string[] | null
+          thumbnail_url?: string | null
+          title?: string | null
+          type?: Database["public"]["Enums"]["gallery_type"]
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gallery_programme_id_fkey"
+            columns: ["programme_id"]
+            isOneToOne: false
+            referencedRelation: "programmes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      instructors: {
+        Row: {
+          auth_id: string | null
+          bio: string | null
+          certifications: string[] | null
+          created_at: string | null
+          email: string | null
+          id: string
+          is_active: boolean | null
+          name: string
+          phone: string | null
+          photo_url: string | null
+          role: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          auth_id?: string | null
+          bio?: string | null
+          certifications?: string[] | null
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          phone?: string | null
+          photo_url?: string | null
+          role?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          auth_id?: string | null
+          bio?: string | null
+          certifications?: string[] | null
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          phone?: string | null
+          photo_url?: string | null
+          role?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      kuchipudi_progress: {
+        Row: {
+          certificate_urls: Json | null
+          current_level: string | null
+          id: string
+          modules_completed: Json | null
+          student_id: string | null
+          updated_at: string | null
+          updated_by: string | null
+        }
+        Insert: {
+          certificate_urls?: Json | null
+          current_level?: string | null
+          id?: string
+          modules_completed?: Json | null
+          student_id?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Update: {
+          certificate_urls?: Json | null
+          current_level?: string | null
+          id?: string
+          modules_completed?: Json | null
+          student_id?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kuchipudi_progress_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: true
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kuchipudi_progress_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payment_orders: {
+        Row: {
+          amount: number
+          batch_id: string | null
+          created_at: string | null
+          currency: string | null
+          id: string
+          programme_id: string | null
+          razorpay_order_id: string | null
+          status: string | null
+          student_email: string | null
+          student_id: string | null
+          student_name: string | null
+          student_phone: string | null
+          updated_at: string | null
+          webhook_payload: Json | null
+        }
+        Insert: {
+          amount: number
+          batch_id?: string | null
+          created_at?: string | null
+          currency?: string | null
+          id?: string
+          programme_id?: string | null
+          razorpay_order_id?: string | null
+          status?: string | null
+          student_email?: string | null
+          student_id?: string | null
+          student_name?: string | null
+          student_phone?: string | null
+          updated_at?: string | null
+          webhook_payload?: Json | null
+        }
+        Update: {
+          amount?: number
+          batch_id?: string | null
+          created_at?: string | null
+          currency?: string | null
+          id?: string
+          programme_id?: string | null
+          razorpay_order_id?: string | null
+          status?: string | null
+          student_email?: string | null
+          student_id?: string | null
+          student_name?: string | null
+          student_phone?: string | null
+          updated_at?: string | null
+          webhook_payload?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_orders_batch_id_fkey"
+            columns: ["batch_id"]
+            isOneToOne: false
+            referencedRelation: "batches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_orders_programme_id_fkey"
+            columns: ["programme_id"]
+            isOneToOne: false
+            referencedRelation: "programmes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_orders_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      programmes: {
+        Row: {
+          age_group: string | null
+          created_at: string | null
+          description: string | null
+          fees_monthly: number | null
+          fees_quarterly: number | null
+          id: string
+          includes: string[] | null
+          is_active: boolean | null
+          name: string
+          slug: string
+          sort_order: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          age_group?: string | null
+          created_at?: string | null
+          description?: string | null
+          fees_monthly?: number | null
+          fees_quarterly?: number | null
+          id?: string
+          includes?: string[] | null
+          is_active?: boolean | null
+          name: string
+          slug: string
+          sort_order?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          age_group?: string | null
+          created_at?: string | null
+          description?: string | null
+          fees_monthly?: number | null
+          fees_quarterly?: number | null
+          id?: string
+          includes?: string[] | null
+          is_active?: boolean | null
+          name?: string
+          slug?: string
+          sort_order?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      site_content: {
+        Row: {
+          content_key: string
+          content_value: Json | null
+          id: string
+          updated_at: string | null
+          updated_by: string | null
+        }
+        Insert: {
+          content_key: string
+          content_value?: Json | null
+          id?: string
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Update: {
+          content_key?: string
+          content_value?: Json | null
+          id?: string
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "site_content_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      students: {
+        Row: {
+          auth_id: string | null
+          batch_id: string | null
+          created_at: string | null
+          display_name: string | null
+          email: string | null
+          id: string
+          join_date: string | null
+          name: string
+          phone: string | null
+          profile_photo_url: string | null
+          programme_id: string | null
+          status: string | null
+          student_id_display: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          auth_id?: string | null
+          batch_id?: string | null
+          created_at?: string | null
+          display_name?: string | null
+          email?: string | null
+          id?: string
+          join_date?: string | null
+          name: string
+          phone?: string | null
+          profile_photo_url?: string | null
+          programme_id?: string | null
+          status?: string | null
+          student_id_display?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          auth_id?: string | null
+          batch_id?: string | null
+          created_at?: string | null
+          display_name?: string | null
+          email?: string | null
+          id?: string
+          join_date?: string | null
+          name?: string
+          phone?: string | null
+          profile_photo_url?: string | null
+          programme_id?: string | null
+          status?: string | null
+          student_id_display?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "students_batch_id_fkey"
+            columns: ["batch_id"]
+            isOneToOne: false
+            referencedRelation: "batches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "students_programme_id_fkey"
+            columns: ["programme_id"]
+            isOneToOne: false
+            referencedRelation: "programmes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      studio_rentals: {
+        Row: {
+          admin_notes: string | null
+          created_at: string | null
+          email: string | null
+          id: string
+          name: string
+          phone: string
+          preferred_date: string
+          preferred_time_end: string
+          preferred_time_start: string
+          status: Database["public"]["Enums"]["rental_status"] | null
+          updated_at: string | null
+        }
+        Insert: {
+          admin_notes?: string | null
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          name: string
+          phone: string
+          preferred_date: string
+          preferred_time_end: string
+          preferred_time_start: string
+          status?: Database["public"]["Enums"]["rental_status"] | null
+          updated_at?: string | null
+        }
+        Update: {
+          admin_notes?: string | null
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          name?: string
+          phone?: string
+          preferred_date?: string
+          preferred_time_end?: string
+          preferred_time_start?: string
+          status?: Database["public"]["Enums"]["rental_status"] | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      users: {
+        Row: {
+          created_at: string | null
+          id: string
+          role: Database["public"]["Enums"]["user_role"]
+        }
+        Insert: {
+          created_at?: string | null
+          id: string
+          role?: Database["public"]["Enums"]["user_role"]
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["user_role"]
+        }
+        Relationships: []
+      }
+    }
+    Views: {
+      [_ in never]: never
+    }
     Functions: {
-      get_user_role: {
-        Args: Record<string, never>;
-        Returns: string;
-      };
-      get_dashboard_analytics: {
-        Args: Record<string, never>;
-        Returns: Record<string, unknown>;
-      };
-      get_student_attendance_summary: {
-        Args: { p_student_id: string };
-        Returns: Record<string, unknown>;
-      };
       check_consecutive_absences: {
-        Args: { p_student_id: string; p_threshold: number };
-        Returns: boolean;
-      };
-      increment_batch_enrollment: {
-        Args: { p_batch_id: string };
-        Returns: boolean;
-      };
+        Args: { p_student_id: string; p_threshold: number }
+        Returns: boolean
+      }
       decrement_batch_enrollment: {
-        Args: { p_batch_id: string };
-        Returns: boolean;
-      };
-    };
-  };
+        Args: { p_batch_id: string }
+        Returns: boolean
+      }
+      get_dashboard_analytics: { Args: never; Returns: Json }
+      get_student_attendance_summary: {
+        Args: { p_student_id: string }
+        Returns: Json
+      }
+      get_user_role: { Args: never; Returns: string }
+      increment_batch_enrollment: {
+        Args: { p_batch_id: string }
+        Returns: boolean
+      }
+    }
+    Enums: {
+      attendance_status: "present" | "absent" | "leave"
+      batch_status: "active" | "paused" | "full"
+      gallery_type: "photo" | "video"
+      payment_source: "razorpay" | "cash" | "upi_offline"
+      rental_status: "pending" | "confirmed" | "cancelled"
+      user_role: "admin" | "instructor" | "student"
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
 }
+
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
+
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
+
+export type Tables<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+      Row: infer R
+    }
+    ? R
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+        Row: infer R
+      }
+      ? R
+      : never
+    : never
+
+export type TablesInsert<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Insert: infer I
+    }
+    ? I
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Insert: infer I
+      }
+      ? I
+      : never
+    : never
+
+export type TablesUpdate<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Update: infer U
+    }
+    ? U
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Update: infer U
+      }
+      ? U
+      : never
+    : never
+
+export type Enums<
+  DefaultSchemaEnumNameOrOptions extends
+    | keyof DefaultSchema["Enums"]
+    | { schema: keyof DatabaseWithoutInternals },
+  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    : never = never,
+> = DefaultSchemaEnumNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
+    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+    : never
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof DefaultSchema["CompositeTypes"]
+    | { schema: keyof DatabaseWithoutInternals },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+    : never
+
+export const Constants = {
+  public: {
+    Enums: {
+      attendance_status: ["present", "absent", "leave"],
+      batch_status: ["active", "paused", "full"],
+      gallery_type: ["photo", "video"],
+      payment_source: ["razorpay", "cash", "upi_offline"],
+      rental_status: ["pending", "confirmed", "cancelled"],
+      user_role: ["admin", "instructor", "student"],
+    },
+  },
+} as const
+
+
+// Convenience aliases (not part of the generated output)
+export type UserRole = Database["public"]["Enums"]["user_role"];
+export type AttendanceStatus = Database["public"]["Enums"]["attendance_status"];
+export type PaymentSource = Database["public"]["Enums"]["payment_source"];
+export type BatchStatus = Database["public"]["Enums"]["batch_status"];
+export type RentalStatus = Database["public"]["Enums"]["rental_status"];
+export type GalleryType = Database["public"]["Enums"]["gallery_type"];

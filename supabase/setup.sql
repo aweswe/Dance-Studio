@@ -85,6 +85,7 @@ CREATE TABLE IF NOT EXISTS programmes (
     updated_at TIMESTAMPTZ DEFAULT now()
 );
 COMMENT ON TABLE programmes IS 'Dance programmes offered by the academy';
+DROP TRIGGER IF EXISTS update_programmes_updated_at ON programmes;
 CREATE TRIGGER update_programmes_updated_at BEFORE UPDATE ON programmes FOR EACH ROW EXECUTE FUNCTION set_updated_at();
 
 -- 3. instructors
@@ -102,6 +103,7 @@ CREATE TABLE IF NOT EXISTS instructors (
     updated_at TIMESTAMPTZ DEFAULT now()
 );
 COMMENT ON TABLE instructors IS 'Instructor profiles';
+DROP TRIGGER IF EXISTS update_instructors_updated_at ON instructors;
 CREATE TRIGGER update_instructors_updated_at BEFORE UPDATE ON instructors FOR EACH ROW EXECUTE FUNCTION set_updated_at();
 
 -- 4. batches
@@ -119,6 +121,7 @@ CREATE TABLE IF NOT EXISTS batches (
     updated_at TIMESTAMPTZ DEFAULT now()
 );
 COMMENT ON TABLE batches IS 'Batches/classes for each programme';
+DROP TRIGGER IF EXISTS update_batches_updated_at ON batches;
 CREATE TRIGGER update_batches_updated_at BEFORE UPDATE ON batches FOR EACH ROW EXECUTE FUNCTION set_updated_at();
 
 -- 5. students
@@ -150,7 +153,9 @@ BEGIN
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
+DROP TRIGGER IF EXISTS set_student_id_display ON students;
 CREATE TRIGGER set_student_id_display BEFORE INSERT ON students FOR EACH ROW EXECUTE FUNCTION generate_student_id_display();
+DROP TRIGGER IF EXISTS update_students_updated_at ON students;
 CREATE TRIGGER update_students_updated_at BEFORE UPDATE ON students FOR EACH ROW EXECUTE FUNCTION set_updated_at();
 
 -- 6. attendance
@@ -184,6 +189,7 @@ CREATE TABLE IF NOT EXISTS payment_orders (
     updated_at TIMESTAMPTZ DEFAULT now()
 );
 COMMENT ON TABLE payment_orders IS 'Payment initiation orders (Razorpay)';
+DROP TRIGGER IF EXISTS update_payment_orders_updated_at ON payment_orders;
 CREATE TRIGGER update_payment_orders_updated_at BEFORE UPDATE ON payment_orders FOR EACH ROW EXECUTE FUNCTION set_updated_at();
 
 -- 7. fee_payments
@@ -228,6 +234,7 @@ CREATE TABLE IF NOT EXISTS studio_rentals (
     updated_at TIMESTAMPTZ DEFAULT now()
 );
 COMMENT ON TABLE studio_rentals IS 'Studio rental requests from users';
+DROP TRIGGER IF EXISTS update_studio_rentals_updated_at ON studio_rentals;
 CREATE TRIGGER update_studio_rentals_updated_at BEFORE UPDATE ON studio_rentals FOR EACH ROW EXECUTE FUNCTION set_updated_at();
 
 -- 11. gallery
@@ -254,6 +261,7 @@ CREATE TABLE IF NOT EXISTS site_content (
     updated_by UUID REFERENCES users(id) ON DELETE SET NULL
 );
 COMMENT ON TABLE site_content IS 'Dynamic CMS content for the website';
+DROP TRIGGER IF EXISTS update_site_content_updated_at ON site_content;
 CREATE TRIGGER update_site_content_updated_at BEFORE UPDATE ON site_content FOR EACH ROW EXECUTE FUNCTION set_updated_at();
 
 -- 13. kuchipudi_progress
@@ -267,6 +275,7 @@ CREATE TABLE IF NOT EXISTS kuchipudi_progress (
     updated_by UUID REFERENCES users(id) ON DELETE SET NULL
 );
 COMMENT ON TABLE kuchipudi_progress IS 'Progress tracking for Kuchipudi students';
+DROP TRIGGER IF EXISTS update_kuchipudi_progress_updated_at ON kuchipudi_progress;
 CREATE TRIGGER update_kuchipudi_progress_updated_at BEFORE UPDATE ON kuchipudi_progress FOR EACH ROW EXECUTE FUNCTION set_updated_at();
 
 -- 14. blog_posts
@@ -286,6 +295,7 @@ CREATE TABLE IF NOT EXISTS blog_posts (
     updated_at TIMESTAMPTZ DEFAULT now()
 );
 COMMENT ON TABLE blog_posts IS 'Blog posts for the website';
+DROP TRIGGER IF EXISTS update_blog_posts_updated_at ON blog_posts;
 CREATE TRIGGER update_blog_posts_updated_at BEFORE UPDATE ON blog_posts FOR EACH ROW EXECUTE FUNCTION set_updated_at();
 
 -- Missing column: instructors.role (the app selects it)
@@ -364,23 +374,33 @@ ALTER TABLE kuchipudi_progress ENABLE ROW LEVEL SECURITY;
 ALTER TABLE blog_posts ENABLE ROW LEVEL SECURITY;
 
 -- 1. users
+DROP POLICY IF EXISTS users_read_own ON users;
 CREATE POLICY users_read_own ON users FOR SELECT USING (id = (SELECT auth.uid()));
+DROP POLICY IF EXISTS users_read_admin ON users;
 CREATE POLICY users_read_admin ON users FOR SELECT USING (public.get_user_role() = 'admin');
 
 -- 2. programmes
+DROP POLICY IF EXISTS programmes_read_active ON programmes;
 CREATE POLICY programmes_read_active ON programmes FOR SELECT USING (is_active = true OR public.get_user_role() = 'admin');
+DROP POLICY IF EXISTS programmes_admin_all ON programmes;
 CREATE POLICY programmes_admin_all ON programmes FOR ALL USING (public.get_user_role() = 'admin');
 
 -- 3. batches
+DROP POLICY IF EXISTS batches_read_active ON batches;
 CREATE POLICY batches_read_active ON batches FOR SELECT USING (status != 'paused' OR public.get_user_role() = 'admin');
+DROP POLICY IF EXISTS batches_admin_all ON batches;
 CREATE POLICY batches_admin_all ON batches FOR ALL USING (public.get_user_role() = 'admin');
 
 -- 4. instructors
+DROP POLICY IF EXISTS instructors_read_active ON instructors;
 CREATE POLICY instructors_read_active ON instructors FOR SELECT USING (is_active = true OR public.get_user_role() = 'admin');
+DROP POLICY IF EXISTS instructors_admin_all ON instructors;
 CREATE POLICY instructors_admin_all ON instructors FOR ALL USING (public.get_user_role() = 'admin');
 
 -- 5. students
+DROP POLICY IF EXISTS students_read_own ON students;
 CREATE POLICY students_read_own ON students FOR SELECT USING (auth_id = (SELECT auth.uid()));
+DROP POLICY IF EXISTS students_read_instructor ON students;
 CREATE POLICY students_read_instructor ON students FOR SELECT USING (
     public.get_user_role() = 'instructor' AND batch_id IN (
         SELECT id FROM batches WHERE instructor_id = (
@@ -388,12 +408,15 @@ CREATE POLICY students_read_instructor ON students FOR SELECT USING (
         )
     )
 );
+DROP POLICY IF EXISTS students_admin_all ON students;
 CREATE POLICY students_admin_all ON students FOR ALL USING (public.get_user_role() = 'admin');
 
 -- 6. attendance
+DROP POLICY IF EXISTS attendance_read_own ON attendance;
 CREATE POLICY attendance_read_own ON attendance FOR SELECT USING (
     student_id IN (SELECT id FROM students WHERE auth_id = (SELECT auth.uid()))
 );
+DROP POLICY IF EXISTS attendance_instructor_read_write ON attendance;
 CREATE POLICY attendance_instructor_read_write ON attendance FOR ALL USING (
     public.get_user_role() = 'instructor' AND batch_id IN (
         SELECT id FROM batches WHERE instructor_id = (
@@ -401,36 +424,49 @@ CREATE POLICY attendance_instructor_read_write ON attendance FOR ALL USING (
         )
     )
 );
+DROP POLICY IF EXISTS attendance_admin_all ON attendance;
 CREATE POLICY attendance_admin_all ON attendance FOR ALL USING (public.get_user_role() = 'admin');
 
 -- 7. fee_payments
+DROP POLICY IF EXISTS fee_payments_read_own ON fee_payments;
 CREATE POLICY fee_payments_read_own ON fee_payments FOR SELECT USING (
     student_id IN (SELECT id FROM students WHERE auth_id = (SELECT auth.uid()))
 );
+DROP POLICY IF EXISTS fee_payments_admin_all ON fee_payments;
 CREATE POLICY fee_payments_admin_all ON fee_payments FOR ALL USING (public.get_user_role() = 'admin');
 
 -- 8. payment_orders
+DROP POLICY IF EXISTS payment_orders_admin_all ON payment_orders;
 CREATE POLICY payment_orders_admin_all ON payment_orders FOR ALL USING (public.get_user_role() = 'admin');
 
 -- 9. broadcast_logs
+DROP POLICY IF EXISTS broadcast_logs_admin_all ON broadcast_logs;
 CREATE POLICY broadcast_logs_admin_all ON broadcast_logs FOR ALL USING (public.get_user_role() = 'admin');
 
 -- 10. studio_rentals
+DROP POLICY IF EXISTS studio_rentals_insert_anon ON studio_rentals;
 CREATE POLICY studio_rentals_insert_anon ON studio_rentals FOR INSERT WITH CHECK (true);
+DROP POLICY IF EXISTS studio_rentals_admin_all ON studio_rentals;
 CREATE POLICY studio_rentals_admin_all ON studio_rentals FOR ALL USING (public.get_user_role() = 'admin');
 
 -- 11. gallery
+DROP POLICY IF EXISTS gallery_read_visible ON gallery;
 CREATE POLICY gallery_read_visible ON gallery FOR SELECT USING (is_visible = true OR public.get_user_role() = 'admin');
+DROP POLICY IF EXISTS gallery_admin_all ON gallery;
 CREATE POLICY gallery_admin_all ON gallery FOR ALL USING (public.get_user_role() = 'admin');
 
 -- 12. site_content
+DROP POLICY IF EXISTS site_content_read_all ON site_content;
 CREATE POLICY site_content_read_all ON site_content FOR SELECT USING (true);
+DROP POLICY IF EXISTS site_content_admin_all ON site_content;
 CREATE POLICY site_content_admin_all ON site_content FOR ALL USING (public.get_user_role() = 'admin');
 
 -- 13. kuchipudi_progress
+DROP POLICY IF EXISTS kuchipudi_progress_read_own ON kuchipudi_progress;
 CREATE POLICY kuchipudi_progress_read_own ON kuchipudi_progress FOR SELECT USING (
     student_id IN (SELECT id FROM students WHERE auth_id = (SELECT auth.uid()))
 );
+DROP POLICY IF EXISTS kuchipudi_progress_instructor_read ON kuchipudi_progress;
 CREATE POLICY kuchipudi_progress_instructor_read ON kuchipudi_progress FOR SELECT USING (
     public.get_user_role() = 'instructor' AND student_id IN (
         SELECT id FROM students WHERE batch_id IN (
@@ -440,11 +476,62 @@ CREATE POLICY kuchipudi_progress_instructor_read ON kuchipudi_progress FOR SELEC
         )
     )
 );
+DROP POLICY IF EXISTS kuchipudi_progress_admin_all ON kuchipudi_progress;
 CREATE POLICY kuchipudi_progress_admin_all ON kuchipudi_progress FOR ALL USING (public.get_user_role() = 'admin');
 
 -- 14. blog_posts
+DROP POLICY IF EXISTS blog_posts_read_published ON blog_posts;
 CREATE POLICY blog_posts_read_published ON blog_posts FOR SELECT USING (is_published = true OR public.get_user_role() = 'admin');
+DROP POLICY IF EXISTS blog_posts_admin_all ON blog_posts;
 CREATE POLICY blog_posts_admin_all ON blog_posts FOR ALL USING (public.get_user_role() = 'admin');
+
+-- 006_features.sql
+-- Batches display name, gallery storage bucket, student notices RLS.
+
+-- 1. batches.name — display label rendered across the UI
+ALTER TABLE batches ADD COLUMN IF NOT EXISTS name TEXT;
+
+-- Backfill names for the seeded batches (fixed UUIDs = app defaults)
+UPDATE batches b
+SET name = v.name
+FROM (VALUES
+  ('a1b2c3d4-4101-4000-8000-000000000001'::uuid, 'Kids Dance · Mon–Wed 5–6 PM'),
+  ('a1b2c3d4-4102-4000-8000-000000000002'::uuid, 'Kids Dance · Mon–Wed 6–7 PM'),
+  ('a1b2c3d4-4103-4000-8000-000000000003'::uuid, 'Adults Dance · Mon–Wed 7–8 PM'),
+  ('a1b2c3d4-4104-4000-8000-000000000004'::uuid, 'Adults Dance · Mon–Wed 8–9 PM'),
+  ('a1b2c3d4-4105-4000-8000-000000000005'::uuid, 'Mind & Body Fitness · Mon–Fri 9:30–10:30 AM'),
+  ('a1b2c3d4-4106-4000-8000-000000000006'::uuid, 'Kuchipudi · Fri–Sat 6:30–7:30 PM')
+) AS v(id, name)
+WHERE b.id = v.id AND b.name IS NULL;
+
+-- 2. Gallery storage bucket (public read; admin uploads via server action)
+INSERT INTO storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+VALUES ('gallery', 'gallery', true, 10485760, ARRAY['image/jpeg','image/png','image/webp','video/mp4'])
+ON CONFLICT (id) DO NOTHING;
+
+DROP POLICY IF EXISTS gallery_storage_public_read ON storage.objects;
+CREATE POLICY gallery_storage_public_read ON storage.objects FOR SELECT USING (bucket_id = 'gallery');
+DROP POLICY IF EXISTS gallery_storage_authenticated_insert ON storage.objects;
+CREATE POLICY gallery_storage_authenticated_insert ON storage.objects FOR INSERT TO authenticated WITH CHECK (bucket_id = 'gallery');
+DROP POLICY IF EXISTS gallery_storage_authenticated_update ON storage.objects;
+CREATE POLICY gallery_storage_authenticated_update ON storage.objects FOR UPDATE TO authenticated USING (bucket_id = 'gallery');
+DROP POLICY IF EXISTS gallery_storage_authenticated_delete ON storage.objects;
+CREATE POLICY gallery_storage_authenticated_delete ON storage.objects FOR DELETE TO authenticated USING (bucket_id = 'gallery');
+
+-- 3. Students can read broadcasts scoped to them (all / their programme / their batch)
+DROP POLICY IF EXISTS broadcast_logs_students_read ON broadcast_logs;
+CREATE POLICY broadcast_logs_students_read ON broadcast_logs FOR SELECT USING (
+    public.get_user_role() = 'student'
+    AND (
+        recipients->>'scope' = 'all'
+        OR (recipients->>'scope' = 'programme' AND (recipients->>'scopeId')::uuid IN (
+            SELECT programme_id FROM students WHERE auth_id = (SELECT auth.uid()) AND programme_id IS NOT NULL
+        ))
+        OR (recipients->>'scope' = 'batch' AND (recipients->>'scopeId')::uuid IN (
+            SELECT batch_id FROM students WHERE auth_id = (SELECT auth.uid()) AND batch_id IS NOT NULL
+        ))
+    )
+);
 
 -- ══ Seed: programmes (reference fees & ages, fixed UUIDs = app defaults) ══
 INSERT INTO programmes (id, name, slug, description, includes, fees_monthly, fees_quarterly, age_group, is_active, sort_order)
@@ -471,22 +558,28 @@ SELECT v.* FROM (VALUES
 WHERE NOT EXISTS (SELECT 1 FROM instructors i WHERE i.name = v.name);
 
 -- ══ Seed: batches (reference windows, fixed UUIDs = app defaults) ══
-INSERT INTO batches (id, programme_id, instructor_id, days, time_start, time_end, capacity, enrolled_count, status)
+INSERT INTO batches (id, name, programme_id, instructor_id, days, time_start, time_end, capacity, enrolled_count, status)
 SELECT v.* FROM (VALUES
-  ('a1b2c3d4-4101-4000-8000-000000000001'::uuid, 'a1b2c3d4-4001-4000-8000-000000000001'::uuid, 'a1b2c3d4-5002-4000-8000-000000000002'::uuid, ARRAY['Monday','Tuesday','Wednesday'], '17:00:00', '18:00:00', 25, 16, 'active'),
-  ('a1b2c3d4-4102-4000-8000-000000000002'::uuid, 'a1b2c3d4-4001-4000-8000-000000000001'::uuid, 'a1b2c3d4-5003-4000-8000-000000000003'::uuid, ARRAY['Monday','Tuesday','Wednesday'], '18:00:00', '19:00:00', 25, 15, 'active'),
-  ('a1b2c3d4-4103-4000-8000-000000000003'::uuid, 'a1b2c3d4-4002-4000-8000-000000000002'::uuid, 'a1b2c3d4-5001-4000-8000-000000000001'::uuid, ARRAY['Monday','Tuesday','Wednesday'], '19:00:00', '20:00:00', 30, 20, 'active'),
-  ('a1b2c3d4-4104-4000-8000-000000000004'::uuid, 'a1b2c3d4-4002-4000-8000-000000000002'::uuid, 'a1b2c3d4-5004-4000-8000-000000000004'::uuid, ARRAY['Monday','Tuesday','Wednesday'], '20:00:00', '21:00:00', 30, 14, 'active'),
-  ('a1b2c3d4-4105-4000-8000-000000000005'::uuid, 'a1b2c3d4-4003-4000-8000-000000000003'::uuid, 'a1b2c3d4-5005-4000-8000-000000000005'::uuid, ARRAY['Monday','Tuesday','Wednesday','Thursday','Friday'], '09:30:00', '10:30:00', 25, 15, 'active'),
-  ('a1b2c3d4-4106-4000-8000-000000000006'::uuid, 'a1b2c3d4-4004-4000-8000-000000000004'::uuid, 'a1b2c3d4-5006-4000-8000-000000000006'::uuid, ARRAY['Friday','Saturday'], '18:30:00', '19:30:00', 15, 8, 'active')
-) AS v(id, programme_id, instructor_id, days, time_start, time_end, capacity, enrolled_count, status)
+  ('a1b2c3d4-4101-4000-8000-000000000001'::uuid, 'Kids Dance · Mon–Wed 5–6 PM', 'a1b2c3d4-4001-4000-8000-000000000001'::uuid, 'a1b2c3d4-5002-4000-8000-000000000002'::uuid, ARRAY['Monday','Tuesday','Wednesday'], '17:00:00'::time, '18:00:00'::time, 25, 16, 'active'::batch_status),
+  ('a1b2c3d4-4102-4000-8000-000000000002'::uuid, 'Kids Dance · Mon–Wed 6–7 PM', 'a1b2c3d4-4001-4000-8000-000000000001'::uuid, 'a1b2c3d4-5003-4000-8000-000000000003'::uuid, ARRAY['Monday','Tuesday','Wednesday'], '18:00:00'::time, '19:00:00'::time, 25, 15, 'active'::batch_status),
+  ('a1b2c3d4-4103-4000-8000-000000000003'::uuid, 'Adults Dance · Mon–Wed 7–8 PM', 'a1b2c3d4-4002-4000-8000-000000000002'::uuid, 'a1b2c3d4-5001-4000-8000-000000000001'::uuid, ARRAY['Monday','Tuesday','Wednesday'], '19:00:00'::time, '20:00:00'::time, 30, 20, 'active'::batch_status),
+  ('a1b2c3d4-4104-4000-8000-000000000004'::uuid, 'Adults Dance · Mon–Wed 8–9 PM', 'a1b2c3d4-4002-4000-8000-000000000002'::uuid, 'a1b2c3d4-5004-4000-8000-000000000004'::uuid, ARRAY['Monday','Tuesday','Wednesday'], '20:00:00'::time, '21:00:00'::time, 30, 14, 'active'::batch_status),
+  ('a1b2c3d4-4105-4000-8000-000000000005'::uuid, 'Mind & Body Fitness · Mon–Fri 9:30–10:30 AM', 'a1b2c3d4-4003-4000-8000-000000000003'::uuid, 'a1b2c3d4-5005-4000-8000-000000000005'::uuid, ARRAY['Monday','Tuesday','Wednesday','Thursday','Friday'], '09:30:00'::time, '10:30:00'::time, 25, 15, 'active'::batch_status),
+  ('a1b2c3d4-4106-4000-8000-000000000006'::uuid, 'Kuchipudi · Fri–Sat 6:30–7:30 PM', 'a1b2c3d4-4004-4000-8000-000000000004'::uuid, 'a1b2c3d4-5006-4000-8000-000000000006'::uuid, ARRAY['Friday','Saturday'], '18:30:00'::time, '19:30:00'::time, 15, 8, 'active'::batch_status)
+) AS v(id, name, programme_id, instructor_id, days, time_start, time_end, capacity, enrolled_count, status)
 WHERE NOT EXISTS (SELECT 1 FROM batches b WHERE b.id = v.id);
 
 -- ══ Seed: site content (stats + reference FAQs + testimonials) ══
+-- Key names match the app's data layer: getStats() reads stats_% scalar rows,
+-- getFAQs() reads 'faqs', getTestimonials() reads 'testimonials'.
+DELETE FROM site_content WHERE content_key IN ('faq', 'stats'); -- drop any legacy keys
 INSERT INTO site_content (content_key, content_value)
 VALUES
-  ('stats', '{"students_trained": 5000, "years_active": 15, "programmes_count": 4, "awards_count": 3}'::jsonb),
-  ('faq', $json$[
+  ('stats_students', '"5000+"'::jsonb),
+  ('stats_years', '"15+"'::jsonb),
+  ('stats_programmes', '"4"'::jsonb),
+  ('stats_awards', '"3"'::jsonb),
+  ('faqs', $json$[
     {"question": "Where are dance classes near Sainikpuri?", "answer": "Rhythmzz Academy of Dance is at Neredmet X Road Bus Stop, just 8 to 12 minutes from Sainikpuri by drive. We offer Kids Dance, Adults Dance, Mind and Body Fitness and Kuchipudi Classical. Call +91 90529 80859 to book a free trial."},
     {"question": "Is there a free trial class for dance classes in Secunderabad?", "answer": "Yes. Rhythmzz Academy of Dance offers one free trial class for all new students. No registration fee. Call or WhatsApp +91 90529 80859 to book your trial class."},
     {"question": "What are the dance class fees at Rhythmzz Academy?", "answer": "Kids Dance: 2000 rupees per month or 5000 rupees per quarter. Adults Dance: 2500 rupees per month or 6500 rupees per quarter. Mind and Body Fitness: 2500 rupees per month or 6500 rupees per quarter. Kuchipudi Classical: 2000 rupees per month or 5000 rupees per quarter. No registration fee."},
@@ -682,3 +775,4 @@ $$ LANGUAGE plpgsql;
 DO $$ BEGIN ALTER PUBLICATION supabase_realtime ADD TABLE attendance; EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 DO $$ BEGIN ALTER PUBLICATION supabase_realtime ADD TABLE fee_payments; EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 DO $$ BEGIN ALTER PUBLICATION supabase_realtime ADD TABLE studio_rentals; EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN ALTER PUBLICATION supabase_realtime ADD TABLE students; EXCEPTION WHEN duplicate_object THEN NULL; END $$;

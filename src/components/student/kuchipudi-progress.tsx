@@ -21,7 +21,10 @@ export function KuchipudiProgress({ progress }: { progress: ProgressData | null 
   }
 
   const levels = ["Foundation", "Intermediate", "Advanced"];
-  const currentIdx = levels.indexOf(progress.current_level);
+  // Stored levels may differ in case ("foundation" vs "Foundation")
+  const currentIdx = levels.findIndex(
+    (l) => l.toLowerCase() === (progress.current_level || "").toLowerCase()
+  );
 
   return (
     <div className="space-y-8">

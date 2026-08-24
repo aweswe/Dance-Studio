@@ -1,45 +1,196 @@
 'use client'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { Upload, X, ArrowUp, ArrowDown } from 'lucide-react'
+import { Input } from '@/components/ui/input'
+import { Modal } from '@/components/ui/modal'
+import { Upload, X, ArrowUp, ArrowDown, Eye, EyeOff } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { uploadMedia, toggleVisibility, deleteMedia, reorderMedia } from '@/actions/gallery'
 
-export function GalleryManager() {
-  // Mock data
-  const [items, setItems] = useState([
-    { id: '1', url: 'https://images.unsplash.com/photo-1547153760-18fc86324498', tag: 'Kuchipudi' },
-    { id: '2', url: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad', tag: 'Zumba' },
-  ])
+interface GalleryItem {
+  id: string
+  url: string
+  type: 'photo' | 'video'
+  title: string | null
+  tags: string[] | null
+  is_visible: boolean
+  sort_order: number
+}
+
+export function GalleryManager({ initialItems }: { initialItems: GalleryItem[] }) {
+  const router = useRouter()
+  const fileRef = useRef<HTMLInputElement>(null)
+  const [busy, setBusy] = useState(false)
+  const [feedback, setFeedback] = useState<{ ok: boolean; text: string } | null>(null)
+  const [pendingFile, setPendingFile] = useState<File | null>(null)
+  const [isUploadOpen, setIsUploadOpen] = useState(false)
+  const [title, setTitle] = useState('')
+  const [tags, setTags] = useState('')
+
+  const items = initialItems || []
+
+  const onPickFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] ?? null
+    setPendingFile(file)
+    if (file) setIsUploadOpen(true)
+    e.target.value = ''
+  }
+
+  const doUpload = async () => {
+    if (!pendingFile) return
+    setBusy(true)
+    setFeedback(null)
+    const fd = new FormData()
+    fd.append('file', pendingFile)
+    fd.append('title', title)
+    fd.append('tags', tags)
+    const res = await uploadMedia(fd)
+    setBusy(false)
+    if (res.success) {
+      setFeedback({ ok: true, text: 'Uploaded' })
+      setIsUploadOpen(false)
+      setPendingFile(null)
+      setTitle('')
+      setTags('')
+      router.refresh()
+    } else {
+      setFeedback({ ok: false, text: res.error ?? 'Upload failed' })
+    }
+  }
+
+  const doToggle = async (id: string) => {
+    await toggleVisibility(id)
+    router.refresh()
+  }
+
+  const doDelete = async (id: string) => {
+    await deleteMedia(id)
+    router.refresh()
+  }
+
+  const doMove = async (index: number, delta: -1 | 1) => {
+    const target = index + delta
+    if (target < 0 || target >= items.length) return
+    const reordered = [...items]
+    const [moved] = reordered.splice(index, 1)
+    reordered.splice(target, 0, moved)
+    await reorderMedia(reordered.map((it, i) => ({ id: it.id, sort_order: i + 1 })))
+    router.refresh()
+  }
 
   return (
     <div className="space-y-6">
-      <Card className="p-12 text-center border-dashed bg-light hover:bg-gray-50 transition-colors cursor-pointer">
+      {feedback && (
+        <p className={`text-sm ${feedback.ok ? 'text-green' : 'text-red-500'}`}>{feedback.text}</p>
+      )}
+
+      <div
+        role="button"
+        tabIndex={0}
+        className="bg-white rounded-2xl border border-black/[.07] p-12 text-center border-dashed bg-light hover:bg-gray-50 transition-colors cursor-pointer"
+        onClick={() => fileRef.current?.click()}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault()
+            fileRef.current?.click()
+          }
+        }}
+      >
         <Upload size={32} className="mx-auto text-mu mb-4" />
-        <h4 className="font-medium text-blk">Click or drag images to upload</h4>
-        <p className="text-sm text-mu mt-1">Supported formats: JPG, PNG, WEBP. Max size: 5MB.</p>
-      </Card>
+        <h4 className="font-medium text-blk">Click to upload images or videos</h4>
+        <p className="text-sm text-mu mt-1">Supported formats: JPG, PNG, WEBP, MP4. Max size: 10MB.</p>
+        <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp,video/mp4" className="hidden" onChange={onPickFile} />
+      </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {items.map((item, i) => (
           <div key={item.id} className="relative group rounded-lg overflow-hidden border border-gray-200 bg-wh">
             <div className="aspect-square relative">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={item.url} alt="Gallery item" className="object-cover w-full h-full" />
-              
+              {item.type === 'video' ? (
+                <video src={item.url} className="object-cover w-full h-full" muted />
+              ) : (
+                /* eslint-disable-next-line @next/next/no-img-element */
+                <img src={item.url} alt={item.title || 'Gallery item'} className="object-cover w-full h-full" />
+              )}
+
               <div className="absolute inset-0 bg-blk/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                <button className="p-2 bg-wh rounded-full text-blk hover:text-bl"><ArrowUp size={16} /></button>
-                <button className="p-2 bg-wh rounded-full text-blk hover:text-bl"><ArrowDown size={16} /></button>
+                <button
+                  className="p-2 bg-wh rounded-full text-blk hover:text-bl disabled:opacity-40"
+                  onClick={() => doMove(i, -1)}
+                  disabled={i === 0}
+                  aria-label="Move up"
+                >
+                  <ArrowUp size={16} />
+                </button>
+                <button
+                  className="p-2 bg-wh rounded-full text-blk hover:text-bl disabled:opacity-40"
+                  onClick={() => doMove(i, 1)}
+                  disabled={i === items.length - 1}
+                  aria-label="Move down"
+                >
+                  <ArrowDown size={16} />
+                </button>
               </div>
             </div>
-            
+
             <div className="p-3 flex justify-between items-center bg-wh">
-              <span className="text-xs font-medium text-blk">{item.tag}</span>
-              <button className="text-red-500 hover:bg-red-50 p-1 rounded"><X size={14}/></button>
+              <span className="text-xs font-medium text-blk truncate">
+                {item.title || item.tags?.[0] || item.type}
+              </span>
+              <div className="flex items-center gap-1 shrink-0">
+                <button
+                  className="p-1 rounded text-mu hover:text-bl hover:bg-black/5"
+                  onClick={() => doToggle(item.id)}
+                  aria-label={item.is_visible ? 'Hide from site' : 'Show on site'}
+                >
+                  {item.is_visible ? <Eye size={14} /> : <EyeOff size={14} />}
+                </button>
+                <button className="p-1 rounded text-red-500 hover:bg-red-50" onClick={() => doDelete(item.id)} aria-label="Delete">
+                  <X size={14} />
+                </button>
+              </div>
             </div>
           </div>
         ))}
       </div>
+
+      {items.length === 0 && (
+        <div className="py-12 text-center text-mu bg-light rounded-[16px]">
+          No media yet. Upload the first photo or video above.
+        </div>
+      )}
+
+      <Modal isOpen={isUploadOpen} onClose={() => { setIsUploadOpen(false); setPendingFile(null) }} title="Upload Media" size="md">
+        <div className="space-y-4">
+          <p className="text-sm text-mu truncate">
+            {pendingFile?.name} · {pendingFile ? `${(pendingFile.size / (1024 * 1024)).toFixed(1)} MB` : ''}
+          </p>
+          <div>
+            <label className="block text-sm text-mu mb-1">Title</label>
+            <Input
+              placeholder="e.g., Annual Recital 2026"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
+          </div>
+          <div>
+            <label className="block text-sm text-mu mb-1">Tags (comma-separated)</label>
+            <Input
+              placeholder="Kuchipudi, Recital"
+              value={tags}
+              onChange={(e) => setTags(e.target.value)}
+            />
+          </div>
+          <div className="flex gap-3 pt-2">
+            <Button onClick={doUpload} disabled={busy}>
+              {busy ? 'Uploading...' : 'Upload'}
+            </Button>
+            <Button variant="outline" onClick={() => { setIsUploadOpen(false); setPendingFile(null) }}>Cancel</Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }
