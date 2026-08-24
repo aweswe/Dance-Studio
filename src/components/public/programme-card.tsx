@@ -5,9 +5,10 @@ import { formatCurrency } from '@/lib/utils/format';
 
 interface ProgrammeCardProps {
   programme: any; // Using any for simplicity in this task, should be properly typed from DB
+  schedule?: { days: string; time: string; instructor?: string };
 }
 
-export function ProgrammeCard({ programme }: ProgrammeCardProps) {
+export function ProgrammeCard({ programme, schedule }: ProgrammeCardProps) {
   const theme = PROGRAMME_THEMES[programme.slug as keyof typeof PROGRAMME_THEMES] || PROGRAMME_THEMES['adults-dance'];
   const includes = Array.isArray(programme.includes) ? programme.includes : [];
 
@@ -42,7 +43,16 @@ export function ProgrammeCard({ programme }: ProgrammeCardProps) {
             </li>
           ))}
         </ul>
-        
+
+        {schedule && (
+          <div className="bg-white/5 rounded-lg py-3 px-4 mb-5">
+            <p className="text-[11px] text-white/50 mb-1 tracking-[0.5px]">Class schedule</p>
+            <strong className="text-xs text-white/85 font-semibold block">
+              {schedule.days} · {schedule.time}{schedule.instructor ? ` · by ${schedule.instructor}` : ''}
+            </strong>
+          </div>
+        )}
+
         <div className="flex gap-3 flex-wrap mb-6">
           {programme.fees_monthly && (
             <div className={cn("rounded-lg py-2.5 px-4 text-center border", theme.chip)}>
@@ -58,8 +68,8 @@ export function ProgrammeCard({ programme }: ProgrammeCardProps) {
           )}
         </div>
         
-        <Link 
-          href={ROUTES.enrol}
+        <Link
+          href={`${ROUTES.enrol}?programme=${programme.slug}`}
           className={cn("block w-full text-center text-[11px] font-semibold tracking-[2px] uppercase py-3.5 transition-all", theme.button)}
         >
           Enrol Now

@@ -14,6 +14,7 @@ export async function processEnrolment(data: any) {
   
   const feeAmount = programme.fees_monthly || 2500;
   const razorpay = getRazorpay();
+  if (!razorpay) throw new Error('PAYMENTS_UNAVAILABLE');
   const order = await razorpay.orders.create({
     amount: feeAmount * 100,
     currency: 'INR',

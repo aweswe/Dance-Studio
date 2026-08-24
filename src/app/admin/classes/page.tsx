@@ -2,6 +2,7 @@ import { Suspense } from 'react'
 import { BatchManager } from '@/components/admin/batch-manager'
 import { getProgrammesAction, getBatchesAction } from '@/actions/classes'
 import { getInstructorsAction } from '@/actions/instructors'
+import { TableSkeleton } from '@/components/ui/skeleton'
 
 
 
@@ -18,7 +19,7 @@ export default async function ClassesPage() {
         <p className="text-mu font-body text-sm mt-1">Manage all academy programmes and active batches.</p>
       </div>
 
-      <Suspense fallback={<div>Loading classes data...</div>}>
+      <Suspense fallback={<TableSkeleton rows={6} columns={5} />}>
         <BatchManager 
           initialProgrammes={programmes}
           initialBatches={batches}

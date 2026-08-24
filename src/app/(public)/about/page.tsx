@@ -1,26 +1,34 @@
 import { Metadata } from 'next';
-import Image from 'next/image';
 import { getInstructors } from '@/data/instructors';
 import { InstructorCard } from '@/components/public/instructor-card';
-import { Award, Target, Heart, Star, Users } from 'lucide-react';
+import { Award, Target, Heart } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'About Us',
-  description: 'Learn about Rhythmzz Academy of Dance, our journey, our expert instructors, and our mission to spread the joy of dance in Secunderabad.',
+  description:
+    'Rhythmzz Academy of Dance — teaching dance at Neredmet X Road, Secunderabad since 2010. Founded in 2013 by Nitish. 5,000+ students trained across 4 programmes.',
+  alternates: { canonical: 'https://www.rhythmzzdance.com/about' },
 };
 
 const STATS = [
-  { value: "10+", label: "Years Experience" },
-  { value: "5000+", label: "Students Taught" },
-  { value: "15+", label: "Dance Styles" },
-  { value: "2", label: "Studio Branches" },
+  { value: "15+", label: "Years Teaching" },
+  { value: "5000+", label: "Students Trained" },
+  { value: "4", label: "Programmes" },
+  { value: "3", label: "International Awards" },
 ];
 
 const TIMELINE = [
-  { year: "2013", title: "The Beginning", desc: "Started as a small dance crew with a passion for hip-hop and contemporary dance." },
-  { year: "2015", title: "First Studio", desc: "Opened our first studio space in Secunderabad, offering classes in 3 core styles." },
-  { year: "2018", title: "Expanding Horizons", desc: "Introduced Kuchipudi and fitness programs, expanding our instructor team." },
-  { year: "2023", title: "New Flagship Studio", desc: "Launched our premium, state-of-the-art facility to accommodate our growing community." },
+  { year: "2010", title: "Teaching Begins", desc: "Nitish starts teaching dance in Secunderabad — a young dancer, a crew, and a first batch of students." },
+  { year: "2013", title: "The Academy Opens", desc: "Rhythmzz Academy of Dance is founded at Neredmet X Road, with structured classes in multiple styles." },
+  { year: "2014", title: "First International Honour", desc: "The academy earns recognition at IAO USA for its choreography and performance work." },
+  { year: "2017", title: "The International Stage", desc: "Nitish represents India at the nATFEST International Contemporary Dance Festival in Sri Lanka." },
+  { year: "Today", title: "Four Programmes, One Studio", desc: "Kids, Adults, Fitness and Kuchipudi — classes six days a week, 6 AM to 9 PM, at Neredmet X Road." },
+];
+
+const AWARDS = [
+  { name: "IAO USA", year: "2014" },
+  { name: "Art Unites", year: null },
+  { name: "Indywood", year: null },
 ];
 
 export default async function AboutPage() {
@@ -31,10 +39,13 @@ export default async function AboutPage() {
       {/* Hero */}
       <section className="bg-blk text-white py-24 px-6 md:px-16 relative overflow-hidden">
         <div className="max-w-4xl mx-auto text-center relative z-10">
-          <div className="text-[10px] tracking-[5px] uppercase text-bll mb-4">Our Story</div>
-          <h1 className="heading-display text-5xl md:text-7xl mb-6">MORE THAN JUST A DANCE STUDIO</h1>
-          <p className="text-white/70 text-lg md:text-xl leading-relaxed">
-            We are a community of movers, dreamers, and artists dedicated to the universal language of dance.
+          <div className="text-[10px] tracking-[5px] uppercase text-bl-light mb-4">Our Story</div>
+          <h1 className="heading-display text-5xl md:text-7xl mb-6">
+            FROM A DANCE CREW TO SECUNDERABAD&apos;S OWN ACADEMY
+          </h1>
+          <p className="text-white/70 text-base md:text-lg leading-relaxed max-w-2xl mx-auto">
+            Teaching since 2010, founded in 2013 — 5,000+ students trained across four programmes
+            at Neredmet X Road, Secunderabad.
           </p>
         </div>
         {/* Subtle background decoration */}
@@ -48,19 +59,24 @@ export default async function AboutPage() {
             <h2 className="heading-display text-4xl mb-6">OUR VISION</h2>
             <div className="space-y-4 text-mu leading-relaxed">
               <p>
-                Founded on the belief that dance is for everyone, Rhythmzz Academy was created to be a safe, inspiring space where individuals can explore their creative potential through movement.
+                Rhythmzz Academy of Dance began in 2010, when Nitish started teaching dance in
+                Secunderabad as a young dancer with a crew and a handful of students. In 2013 it
+                became a full academy at Neredmet X Road — and today it is the studio where
+                thousands of students across Secunderabad learn to move.
               </p>
               <p>
-                Whether it&apos;s a 4-year-old taking their first ballet steps, a working professional seeking a fun fitness routine, or an aspiring artist training for stage, we provide the guidance, space, and community to help them thrive.
+                From a 5-year-old taking a first dance class to a working professional unwinding
+                with Zumba, every student gets structured, level-based training — and, when they
+                are ready, a place on the stage.
               </p>
             </div>
-            
+
             <div className="grid grid-cols-2 gap-6 mt-10">
               <div className="flex gap-4">
                 <Target className="text-bl shrink-0" size={24} />
                 <div>
                   <h4 className="text-[11px] font-bold tracking-[1px] uppercase mb-1">Mission</h4>
-                  <p className="text-xs text-mu">To inspire and nurture dancers of all levels.</p>
+                  <p className="text-xs text-mu">To train every student to perform, not just to learn steps.</p>
                 </div>
               </div>
               <div className="flex gap-4">
@@ -72,13 +88,22 @@ export default async function AboutPage() {
               </div>
             </div>
           </div>
-          
+
+          {/* Brand tiles — stand-ins for studio photography */}
           <div className="grid grid-cols-2 gap-4">
-            <div className="h-64 bg-off rounded-2xl relative overflow-hidden mt-8">
-              <Image src="/images/about-1.jpg" alt="Dance Studio" fill className="object-cover" />
+            <div className="h-64 rounded-2xl relative overflow-hidden bg-blk flex flex-col items-center justify-center text-center p-6 mt-8">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_30%,rgba(43,180,216,0.28)_0%,transparent_70%)]" />
+              <span className="heading-display text-3xl text-white relative z-10">THE STUDIO</span>
+              <span className="text-[10px] tracking-[2px] uppercase text-bl-light relative z-10 mt-2">
+                Mirrors · Sprung Floor · Sound
+              </span>
             </div>
-            <div className="h-64 bg-off rounded-2xl relative overflow-hidden">
-              <Image src="/images/about-2.jpg" alt="Performance" fill className="object-cover" />
+            <div className="h-64 rounded-2xl relative overflow-hidden bg-blk flex flex-col items-center justify-center text-center p-6">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_30%,rgba(138,92,246,0.3)_0%,transparent_70%)]" />
+              <span className="heading-display text-3xl text-white relative z-10">THE STAGE</span>
+              <span className="text-[10px] tracking-[2px] uppercase text-white/40 relative z-10 mt-2">
+                Shows &amp; Festivals Since 2014
+              </span>
             </div>
           </div>
         </div>
@@ -102,7 +127,7 @@ export default async function AboutPage() {
           <div className="text-center mb-16">
             <h2 className="heading-display text-4xl">OUR JOURNEY</h2>
           </div>
-          
+
           <div className="space-y-8 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-black/10 before:to-transparent">
             {TIMELINE.map((item, idx) => (
               <div key={idx} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
@@ -122,13 +147,14 @@ export default async function AboutPage() {
       <section className="py-24 px-6 md:px-16 bg-white border-t border-black/5">
         <div className="max-w-7xl mx-auto">
           <div className="mb-16 text-center">
-            <div className="text-[10px] tracking-[5px] uppercase text-bl mb-3">The Experts</div>
+            <div className="text-[10px] tracking-[5px] uppercase text-bl mb-3">The Instructors</div>
             <h2 className="heading-display text-4xl md:text-5xl">MEET OUR INSTRUCTORS</h2>
             <p className="text-mu mt-4 max-w-xl mx-auto">
-              Our team of certified, passionate professionals bring years of training, stage experience, and teaching expertise.
+              Certified professionals with years of training, stage experience, and teaching
+              expertise.
             </p>
           </div>
-          
+
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {((instructors ?? []) as any[]).map((instructor: any) => (
               <InstructorCard key={instructor.id} instructor={instructor} />
@@ -136,18 +162,21 @@ export default async function AboutPage() {
           </div>
         </div>
       </section>
-      
+
       {/* Awards */}
       <section className="py-16 px-6 md:px-16 bg-blk text-white">
         <div className="max-w-7xl mx-auto text-center">
-          <h2 className="heading-display text-3xl mb-10">AWARDS & RECOGNITION</h2>
+          <h2 className="heading-display text-3xl mb-10">AWARDS &amp; RECOGNITION</h2>
           <div className="flex flex-wrap justify-center gap-12">
-            {[1,2,3].map((i) => (
-              <div key={i} className="flex flex-col items-center">
+            {AWARDS.map((a) => (
+              <div key={a.name} className="flex flex-col items-center">
                 <div className="w-20 h-20 rounded-full border border-white/20 flex items-center justify-center mb-4">
                   <Award className="text-gold" size={32} />
                 </div>
-                <div className="text-[11px] font-bold tracking-[2px] uppercase">Best Studio {2020 + i}</div>
+                <div className="text-[11px] font-bold tracking-[2px] uppercase">{a.name}</div>
+                {a.year && (
+                  <div className="text-[10px] tracking-[2px] uppercase text-white/40 mt-1">{a.year}</div>
+                )}
               </div>
             ))}
           </div>

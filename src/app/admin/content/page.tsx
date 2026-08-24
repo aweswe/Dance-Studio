@@ -1,5 +1,6 @@
 import { Suspense } from 'react'
 import { ContentEditor } from '@/components/admin/content-editor'
+import { CardSkeleton } from '@/components/ui/skeleton'
 
 export default function ContentPage() {
   return (
@@ -9,7 +10,7 @@ export default function ContentPage() {
         <p className="text-mu font-body text-sm mt-1">Update global stats, FAQ, and site-wide announcements.</p>
       </div>
 
-      <Suspense fallback={<div>Loading content...</div>}>
+      <Suspense fallback={<CardSkeleton />}>
         <ContentEditor />
       </Suspense>
     </div>

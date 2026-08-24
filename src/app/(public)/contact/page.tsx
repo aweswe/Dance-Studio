@@ -1,24 +1,18 @@
 import { Metadata } from 'next';
 import { MapPin, Phone, Mail, Clock, Map } from 'lucide-react';
-import { ACADEMY } from '@/lib/utils/constants';
+import { ACADEMY, HOURS, AREAS_SERVED } from '@/lib/utils/constants';
+import { formatTime } from '@/lib/utils/format';
+
+const hoursLabel = `${HOURS.days[0]} – ${HOURS.days[HOURS.days.length - 1]}: ${formatTime(`${HOURS.opens}:00`)} – ${formatTime(`${HOURS.closes}:00`)}`;
 
 export const metadata: Metadata = {
   title: 'Contact Us',
   description: `Get in touch with Rhythmzz Academy of Dance. Located in ${ACADEMY.address.landmark}, ${ACADEMY.address.city}. Call ${ACADEMY.phoneDisplay} to book a trial class.`,
+  alternates: { canonical: 'https://www.rhythmzzdance.com/contact' },
 };
 
-const NEARBY_AREAS = [
-  "Neredmet",
-  "Sainikpuri",
-  "AS Rao Nagar",
-  "Yapral",
-  "Malkajgiri",
-  "Vayupuri",
-  "Defense Colony",
-  "ECIL",
-  "Kapra",
-  "Ammuguda"
-];
+// Reference neighbourhoods — 8–15 minutes by drive from the studio.
+const NEARBY_AREAS = [...AREAS_SERVED, 'Secunderabad', 'Hyderabad'];
 
 export default function ContactPage() {
   return (
@@ -79,8 +73,8 @@ export default function ContactPage() {
               <div>
                 <h4 className="text-[12px] font-bold tracking-[2px] uppercase mb-2">Operating Hours</h4>
                 <p className="text-sm text-mu leading-relaxed">
-                  Monday - Friday: 6:00 AM - 9:00 PM<br />
-                  Saturday - Sunday: 7:00 AM - 8:00 PM
+                  {hoursLabel}<br />
+                  Sunday: By appointment
                 </p>
               </div>
             </div>
@@ -103,7 +97,9 @@ export default function ContactPage() {
           <Map className="text-bl mb-6" size={32} />
           <h3 className="heading-display text-3xl mb-4">EASY ACCESS FROM</h3>
           <p className="text-sm text-mu mb-8 leading-relaxed">
-            Located in the heart of Secunderabad, our academy is easily accessible from many nearby neighborhoods. We serve students from all across the area.
+            Our studio at Neredmet X Road is 8–15 minutes from most of East Hyderabad by drive.
+            Students come to us from Sainikpuri, AS Rao Nagar, Yapral, Malkajgiri, Kapra and
+            Hastinapuri every day.
           </p>
           <div className="flex flex-wrap gap-2">
             {NEARBY_AREAS.map((area, idx) => (

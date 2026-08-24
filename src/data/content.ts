@@ -8,11 +8,13 @@ const DEFAULT_STATS = [
 ];
 
 const DEFAULT_FAQS = [
-  { question: 'Do I need prior dance experience to join?', answer: 'Not at all! We have beginner-friendly batches for both kids and adults across all dance styles.' },
-  { question: 'What should I wear to class?', answer: 'Comfortable workout or dance attire (t-shirt, track pants or leggings) and clean dance sneakers or bare feet for classical classes.' },
-  { question: 'Can I attend a trial class before enrolling?', answer: 'Yes! We offer a free trial class for prospective students. Contact us on WhatsApp to schedule your trial.' },
-  { question: 'What is the fee payment cycle?', answer: 'Fees are payable monthly by the 5th of each month, or quarterly with an attractive discount.' },
-  { question: 'Where is Rhythmzz Academy located?', answer: 'We are located at Plot 597, 3rd Floor, Above ICICI ATM, Neredmet X Road Bus Stop, Secunderabad.' },
+  { question: 'Where are dance classes near Sainikpuri?', answer: 'Rhythmzz Academy of Dance is at Neredmet X Road Bus Stop, just 8 to 12 minutes from Sainikpuri by drive. We offer Kids Dance, Adults Dance, Mind and Body Fitness and Kuchipudi Classical. Call +91 90529 80859 to book a free trial.' },
+  { question: 'Is there a free trial class for dance classes in Secunderabad?', answer: 'Yes. Rhythmzz Academy of Dance offers one free trial class for all new students. No registration fee. Call or WhatsApp +91 90529 80859 to book your trial class.' },
+  { question: 'What are the dance class fees at Rhythmzz Academy?', answer: 'Kids Dance: 2000 rupees per month or 5000 rupees per quarter. Adults Dance: 2500 rupees per month or 6500 rupees per quarter. Mind and Body Fitness: 2500 rupees per month or 6500 rupees per quarter. Kuchipudi Classical: 2000 rupees per month or 5000 rupees per quarter. No registration fee.' },
+  { question: 'Does Rhythmzz offer Kuchipudi classes near AS Rao Nagar?', answer: 'Yes. Rhythmzz Academy of Dance offers certified Kuchipudi Classical Dance classes at Neredmet X Road, about 10 to 14 minutes from AS Rao Nagar. Classes run every Friday and Saturday 6:30 to 7:30 PM. Taught by Srusti, a certified Kuchipudi instructor.' },
+  { question: 'Are there Zumba classes near Neredmet?', answer: 'Yes. Rhythmzz Academy of Dance offers Zumba as part of the Mind and Body Fitness programme at Neredmet X Road, Secunderabad. Classes run Monday to Friday, 9:30 to 10:30 AM. 2500 rupees per month.' },
+  { question: 'Can I rent a dance studio in Secunderabad?', answer: 'Yes. Rhythmzz Academy of Dance offers studio rental at Neredmet X Road, Secunderabad. Rates are 1000 rupees per hour on weekdays and 1500 rupees per hour on weekends. The studio is fully air-conditioned with mirrors, a dance floor, and a sound system. WhatsApp +91 90529 80859 to check availability.' },
+  { question: 'Which areas does Rhythmzz Academy serve?', answer: 'Rhythmzz Academy of Dance at Neredmet X Road serves students from Sainikpuri, AS Rao Nagar, Yapral, Malkajgiri, Hastinapuri, Kapra and surrounding areas in Secunderabad and East Hyderabad. Most students are within 15 minutes by drive.' },
 ];
 
 export async function getSiteContent(key: string) {

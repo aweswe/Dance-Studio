@@ -5,9 +5,9 @@ interface TestimonialCardProps {
 }
 
 export function TestimonialCard({ testimonial }: TestimonialCardProps) {
-  // Try to parse testimonial if it's JSON or just use default format
-  // Assuming simple object structure for this exercise
-  const { name = 'Student', text = 'Great experience!', rating = 5 } = testimonial || {};
+  const { name = 'Student', quote, text, rating = 5, programme } = testimonial || {};
+  // Defaults use `quote`; legacy rows may carry `text`.
+  const quoteText = quote ?? text ?? 'Great experience!';
 
   return (
     <div className="bg-white p-8 rounded-2xl border border-black/5 shadow-sm">
@@ -16,14 +16,14 @@ export function TestimonialCard({ testimonial }: TestimonialCardProps) {
           <Star key={i} size={16} fill={i < rating ? "currentColor" : "none"} strokeWidth={i < rating ? 0 : 1} />
         ))}
       </div>
-      <p className="text-sm text-blk leading-[1.78] mb-6 italic">&quot;{text}&quot;</p>
+      <p className="text-sm text-blk leading-[1.78] mb-6 italic">&quot;{quoteText}&quot;</p>
       <div className="flex items-center gap-3">
         <div className="w-10 h-10 rounded-full bg-off flex items-center justify-center text-blk font-bold text-sm">
           {name.charAt(0)}
         </div>
         <div>
           <h5 className="text-[12px] font-bold text-blk uppercase tracking-wider">{name}</h5>
-          <p className="text-[10px] text-mu uppercase tracking-widest">Student</p>
+          <p className="text-[10px] text-mu uppercase tracking-widest">{programme ?? 'Rhythmzz Student'}</p>
         </div>
       </div>
     </div>

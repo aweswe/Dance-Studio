@@ -5,7 +5,8 @@ import { StudioRentalForm } from '@/components/public/studio-rental-form';
 
 export const metadata: Metadata = {
   title: 'Dance Studio Rental Secunderabad',
-  description: 'Rent our premium dance studios in Secunderabad for rehearsals, workshops, and shoots. Features AC, mirrors, professional floors, and sound systems.',
+  description: 'Rent our dance studio at Neredmet X Road, Secunderabad — ₹1,000/hr weekdays, ₹1,500/hr weekends. Air-conditioned with mirrors, sprung floor and sound.',
+  alternates: { canonical: 'https://www.rhythmzzdance.com/studio-rental' },
 };
 
 export default function StudioRentalPage() {
@@ -14,10 +15,12 @@ export default function StudioRentalPage() {
       {/* Hero */}
       <section className="bg-blk text-white py-24 px-6 md:px-16 relative">
         <div className="max-w-4xl mx-auto text-center relative z-10">
-          <div className="text-[10px] tracking-[5px] uppercase text-bll mb-4">Premium Spaces</div>
+          <div className="text-[10px] tracking-[5px] uppercase text-bl mb-4">Book The Space</div>
           <h1 className="heading-display text-5xl md:text-7xl mb-6">STUDIO RENTAL</h1>
           <p className="text-white/70 text-lg leading-relaxed">
-            Need a space to rehearse, shoot a video, or host a workshop? Our state-of-the-art studios in Secunderabad are available for hourly rentals.
+            A fully-equipped dance and fitness studio at Neredmet X Road, Secunderabad — available
+            for rehearsals, workshops, auditions, fitness sessions, and private coaching.
+            Air-conditioned, mirrored, and ready when you are.
           </p>
         </div>
       </section>
@@ -33,9 +36,11 @@ export default function StudioRentalPage() {
             <div className="grid grid-cols-2 gap-6">
               {[
                 { icon: Wind, label: "Fully Air Conditioned" },
-                { icon: Maximize, label: "Wall-to-Wall Mirrors" },
-                { icon: MonitorPlay, label: "Professional Sprung Floors" },
-                { icon: Music, label: "Premium Sound System" },
+                { icon: Maximize, label: "Floor-to-Ceiling Mirrors" },
+                { icon: MonitorPlay, label: "Marley Dance Floor" },
+                { icon: Music, label: "Bluetooth Sound System" },
+                { icon: MonitorPlay, label: "Changing Rooms" },
+                { icon: Maximize, label: "Central Location" },
               ].map((Feature, idx) => (
                 <div key={idx} className="flex gap-4 items-start bg-off p-6 rounded-2xl">
                   <Feature.icon className="text-bl shrink-0" size={24} />

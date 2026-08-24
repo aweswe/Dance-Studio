@@ -1,7 +1,7 @@
 import { Suspense } from 'react'
 import { AnalyticsCards } from '@/components/admin/analytics-cards'
 import { createServerSupabase } from '@/lib/supabase/server'
-import { Skeleton } from '@/components/ui/skeleton'
+import { StatCardSkeleton } from '@/components/ui/skeleton'
 
 
 
@@ -31,22 +31,15 @@ export default async function AdminDashboardPage() {
         <p className="text-mu font-body text-sm mt-1">Welcome back. Here is what is happening today.</p>
       </div>
 
-      <Suspense fallback={<AnalyticsSkeleton />}>
+      <Suspense fallback={
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <StatCardSkeleton key={i} />
+          ))}
+        </div>
+      }>
         <AnalyticsCards initialData={initialData} />
       </Suspense>
-    </div>
-  )
-}
-
-function AnalyticsSkeleton() {
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-      {Array.from({ length: 5 }).map((_, i) => (
-        <div key={i} className="bg-wh p-6 rounded-[16px] shadow-sm border border-gray-100">
-          <Skeleton className="h-4 w-24 mb-4" />
-          <Skeleton className="h-10 w-16" />
-        </div>
-      ))}
     </div>
   )
 }

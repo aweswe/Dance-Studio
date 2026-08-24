@@ -1,6 +1,7 @@
 import { Suspense } from 'react'
 import { InstructorManager } from '@/components/admin/instructor-manager'
 import { getInstructorsAction } from '@/actions/instructors'
+import { CardSkeleton } from '@/components/ui/skeleton'
 
 export default async function InstructorsPage() {
   const instructors = await getInstructorsAction()
@@ -12,7 +13,7 @@ export default async function InstructorsPage() {
         <p className="text-mu font-body text-sm mt-1">Manage academy teaching staff and their assignments.</p>
       </div>
 
-      <Suspense fallback={<div>Loading instructors...</div>}>
+      <Suspense fallback={<CardSkeleton />}>
         <InstructorManager initialInstructors={instructors} />
       </Suspense>
     </div>

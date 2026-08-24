@@ -30,7 +30,9 @@ export function GalleryClient({ images }: { images: ImageType[] }) {
         {categories.map(cat => (
           <button
             key={cat}
+            type="button"
             onClick={() => setFilter(cat)}
+            aria-pressed={filter === cat}
             className={cn(
               "px-4 py-2 text-[11px] font-bold tracking-[1.5px] uppercase rounded-full transition-all border",
               filter === cat 
@@ -70,8 +72,15 @@ export function GalleryClient({ images }: { images: ImageType[] }) {
 
       {/* Lightbox */}
       {lightboxImage && (
-        <div className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4">
-          <button 
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={lightboxImage.alt || 'Gallery image'}
+          className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
+        >
+          <button
+            type="button"
+            aria-label="Close image"
             className="absolute top-6 right-6 text-white/70 hover:text-white"
             onClick={() => setLightboxImage(null)}
           >

@@ -1,6 +1,10 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Bebas_Neue, Inter } from "next/font/google";
 import "./globals.css";
+
+export const viewport: Viewport = {
+  themeColor: "#2BB4D8",
+};
 
 const bebasNeue = Bebas_Neue({
   weight: "400",
@@ -23,12 +27,13 @@ export const metadata: Metadata = {
     template: "%s | Rhythmzz Academy of Dance",
   },
   description:
-    "Rhythmzz Academy of Dance — Secunderabad's premier dance studio near Neredmet X Road. Kids Dance, Adults Dance, Mind & Body Fitness, Kuchipudi Classical. Free trial class. Call +91 90529 80859.",
+    "Rhythmzz Academy of Dance — dance classes at Neredmet X Road, Secunderabad since 2010. Kids Dance, Adults Dance, Mind & Body Fitness, Kuchipudi Classical. Free trial class. Call +91 90529 80859.",
   keywords: [
     "dance classes Secunderabad",
     "dance classes Neredmet",
     "dance classes Sainikpuri",
     "dance classes AS Rao Nagar",
+    "dance classes Yapral",
     "kids dance classes Hyderabad",
     "adults dance classes Hyderabad",
     "Zumba classes Secunderabad",
@@ -37,6 +42,7 @@ export const metadata: Metadata = {
     "Bollywood dance Secunderabad",
     "Hip Hop dance classes Hyderabad",
     "dance academy Secunderabad",
+    "dance studio Hyderabad",
     "Rhythmzz Academy of Dance",
   ],
   authors: [{ name: "Rhythmzz Academy of Dance" }],
@@ -55,7 +61,7 @@ export const metadata: Metadata = {
     title:
       "Rhythmzz Academy of Dance | Dance & Fitness Classes in Secunderabad",
     description:
-      "Secunderabad's most trusted dance studio near Neredmet X Road. Kids Dance, Adults Dance, Mind & Body Fitness, Kuchipudi Classical. Free trial class. +91 90529 80859.",
+      "Dance and fitness classes at Neredmet X Road, Secunderabad — Kids Dance, Adults Dance, Mind & Body Fitness, Kuchipudi Classical. Free trial class. +91 90529 80859.",
     images: [
       {
         url: "/og-image.jpg",

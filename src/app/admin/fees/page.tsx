@@ -2,6 +2,7 @@ import { Suspense } from 'react'
 import { FeeTable } from '@/components/admin/fee-table'
 import { Button } from '@/components/ui/button'
 import { Download } from 'lucide-react'
+import { TableSkeleton } from '@/components/ui/skeleton'
 
 export default function FeesPage() {
   return (
@@ -17,7 +18,7 @@ export default function FeesPage() {
         </Button>
       </div>
 
-      <Suspense fallback={<div>Loading fees data...</div>}>
+      <Suspense fallback={<TableSkeleton rows={6} columns={5} />}>
         <FeeTable />
       </Suspense>
     </div>

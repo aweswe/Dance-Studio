@@ -6,9 +6,16 @@ export async function middleware(request: NextRequest) {
     request: { headers: request.headers },
   });
 
+  // Without Supabase env (local dev) there is no session to check — the
+  // dashboard layouts perform their own auth redirects. Constructing a
+  // client with placeholder values here would only stall every request.
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    return response;
+  }
+
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    process.env.NEXT_PUBLIC_SUPABASE_URL || "https://placeholder-project.supabase.co",
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "placeholder-anon-key-for-build-prerendering",
     {
       cookies: {
         getAll() {
@@ -29,10 +36,14 @@ export async function middleware(request: NextRequest) {
     },
   );
 
-  // Refresh session token
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // Refresh session token.
+  // With no Supabase env configured (local dev), getUser() rejects — treat
+  // that as "no user" so protected routes still redirect instead of 500ing.
+  let user = null;
+  try {
+    const { data } = await supabase.auth.getUser();
+    user = data.user;
+  } catch {}
 
   const { pathname } = request.nextUrl;
 

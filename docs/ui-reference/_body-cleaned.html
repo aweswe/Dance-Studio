@@ -1,0 +1,844 @@
+<body>
+
+<!-- UPI BOOKING MODAL -->
+<div class="upi-modal-bg" id="upiModal">
+  <div class="upi-modal">
+    <button class="upi-modal-close" onclick="closeUpiModal()">&#x2715;</button>
+
+    <!-- STEP 1: Student Info -->
+    <div id="upi-step1">
+      <div class="step-dots">
+        <div class="step-dot on"></div><div class="step-dot"></div><div class="step-dot"></div>
+      </div>
+      <h3 id="modal-prog-title">Book Your Spot</h3>
+      <p class="upi-modal-sub">Step 1 of 3 &mdash; Your details</p>
+      <div class="upi-form">
+        <input type="text" id="upi-name" placeholder="Full Name *">
+        <input type="tel" id="upi-phone" placeholder="WhatsApp Number *">
+        <input type="number" id="upi-age" placeholder="Age *" min="4" max="80">
+        <select id="upi-batch"><option value="">Select Batch *</option></select>
+        <button class="upi-proceed" onclick="upiGoStep2()">Next &mdash; Review &#8594;</button>
+      </div>
+    </div>
+
+    <!-- STEP 2: Summary -->
+    <div id="upi-step2" style="display:none">
+      <div class="step-dots">
+        <div class="step-dot"></div><div class="step-dot on"></div><div class="step-dot"></div>
+      </div>
+      <h3>Confirm Details</h3>
+      <p class="upi-modal-sub">Step 2 of 3 &mdash; Check before paying</p>
+      <div class="upi-summary">
+        <p>Booking summary</p>
+        <div class="sum-row"><span>Name</span><span id="sum-name">—</span></div>
+        <div class="sum-row"><span>WhatsApp</span><span id="sum-phone">—</span></div>
+        <div class="sum-row"><span>Age</span><span id="sum-age">—</span></div>
+        <div class="sum-row"><span>Programme</span><span id="sum-prog">—</span></div>
+        <div class="sum-row"><span>Batch</span><span id="sum-batch">—</span></div>
+        <div class="sum-row"><span>Plan</span><span id="sum-plan">—</span></div>
+        <div class="sum-total"><span>Total</span><span id="sum-total">&#8377;0</span></div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <button class="btn-back" onclick="upiGoStep1()">&#8592; Back</button>
+        <button class="upi-proceed" style="flex:2;border-radius:8px" onclick="upiGoStep3()">Pay Now &#8594;</button>
+      </div>
+    </div>
+
+    <!-- STEP 3: Payment -->
+    <div id="upi-step3" style="display:none">
+      <div class="step-dots">
+        <div class="step-dot"></div><div class="step-dot"></div><div class="step-dot on"></div>
+      </div>
+      <h3>Complete Payment</h3>
+      <p class="upi-modal-sub">Step 3 of 3 &mdash; Pay via UPI</p>
+      <a id="upi-pay-link" href="#" class="upi-proceed" style="display:block;border-radius:8px;margin-bottom:8px;font-size:13px" target="_blank">
+        &#128242;&nbsp; Open UPI App to Pay
+      </a>
+      <div class="desktop-note" id="desktop-note">
+        On a laptop? Open this page on your phone to pay via UPI,<br>
+        or scan the studio QR code at the reception.<br>
+        Then WhatsApp us your screenshot: <strong>+91 90529 80859</strong>
+      </div>
+      <div class="upi-or">or</div>
+      <a href="https://wa.me/919052980859" class="upi-wa-step3" target="_blank">
+        &#128172;&nbsp; WhatsApp to Pay Manually
+      </a>
+      <p class="upi-secure">After paying, send your payment screenshot to WhatsApp +91 90529 80859. Your booking is confirmed once we receive it. We reply within 2 hours.</p>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo"><img alt="Rhythmzz Academy of Dance — Dance & Fitness Classes in Secunderabad" src="data:image/png;base64,[STRIPPED]" alt="Rhythmzz Academy of Dance"></div>
+  <ul class="nav-links">
+    <li><a href="#programs">Programs</a></li>
+    <li><a href="#schedule">Schedule</a></li>
+    <li><a href="#trainers">Trainers</a></li>
+    <li><a href="#gear">Gear</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="#rental">Rent Studio</a></li>
+  </ul>
+  <div class="nav-right">
+    <a href="#join" class="nav-cta outline">Teach With Us</a>
+    <a href="#programs" class="nav-cta fill">Book a Class</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-orb1"></div>
+  <div class="hero-orb2"></div>
+  
+  <img src="data:image/png;base64,[STRIPPED]" alt="Rhythmzz Academy of Dance Logo" style="height:200px;width:auto;position:relative;z-index:2;margin:0 auto 20px;filter:none;display:block;">
+  <h1 aria-hidden="true">MOVE<br><span>DIFFERENT</span></h1>
+  <h2 class="sr-only" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">Dance Classes in Secunderabad — Kids Dance, Adults Dance, Fitness &amp; Kuchipudi at Rhythmzz Academy, Neredmet X Road</h2>
+  <p class="hero-tag" itemscope itemtype="https://schema.org/LocalBusiness">Secunderabad · Dance &amp; Fitness Classes · Neredmet X Road</p>
+  <div class="hero-btns">
+    <a href="#programs" class="btn-bl">Book Your Class</a>
+    <a href="#schedule" class="btn-out">View Schedule</a>
+  </div>
+  <div class="scroll-hint"><div class="scroll-line"></div>SCROLL</div>
+</section>
+
+<!-- MARQUEE -->
+<div class="mq">
+  <div class="mqi">
+    <span>Zumba</span><span class="dot">&#183;</span><span>Yoga</span><span class="dot">&#183;</span><span>Pilates</span><span class="dot">&#183;</span><span>HIIT</span><span class="dot">&#183;</span><span>Bollywood</span><span class="dot">&#183;</span><span>Hip Hop</span><span class="dot">&#183;</span><span>Contemporary</span><span class="dot">&#183;</span><span>Kuchipudi</span><span class="dot">&#183;</span><span>Strength Training</span><span class="dot">&#183;</span><span>Core Conditioning</span><span class="dot">&#183;</span><span>Tabata</span><span class="dot">&#183;</span><span>Mobility</span><span class="dot">&#183;</span>
+    <span>Zumba</span><span class="dot">&#183;</span><span>Yoga</span><span class="dot">&#183;</span><span>Pilates</span><span class="dot">&#183;</span><span>HIIT</span><span class="dot">&#183;</span><span>Bollywood</span><span class="dot">&#183;</span><span>Hip Hop</span><span class="dot">&#183;</span><span>Contemporary</span><span class="dot">&#183;</span><span>Kuchipudi</span><span class="dot">&#183;</span><span>Strength Training</span><span class="dot">&#183;</span><span>Core Conditioning</span><span class="dot">&#183;</span><span>Tabata</span><span class="dot">&#183;</span><span>Mobility</span><span class="dot">&#183;</span>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat"><div class="stat-n">15+</div><p class="stat-l">Years Teaching</p></div>
+  <div class="stat"><div class="stat-n">5000+</div><p class="stat-l">Students Trained</p></div>
+  <div class="stat"><div class="stat-n">5</div><p class="stat-l">Expert Trainers</p></div>
+  <div class="stat"><div class="stat-n">4</div><p class="stat-l">Programme Types</p></div>
+</div>
+
+<!-- PRICING -->
+<section class="upi-section" id="programs">
+  <p class="lbl">Pricing &amp; booking</p>
+  <h2 class="ttl ttl-w">Dance &amp; Fitness Classes in Secunderabad — Simple, Transparent Pricing.</h2>
+  <p class="bdy bdy-w" style="margin-top:14px">Select a programme, pick your plan, fill your details, and pay instantly with PhonePe, Google Pay, Paytm or any UPI app. No gateway. No extra charges.</p>
+
+  <div class="upi-grid">
+
+    <!-- KIDS DANCE -->
+    <div class="upi-card" id="card-kids">
+      <p class="upi-prog">Kids Dance</p>
+      <p class="upi-name">KIDS DANCE<br>PROGRAMME</p>
+      <p class="upi-desc">Bollywood &middot; Hip Hop &middot; Contemporary &middot; Performance Training. Ages 5+. Taught by Deepak.</p>
+      <div class="upi-prices">
+        <button class="upi-price-btn" data-prog="kids" data-plan="Drop-in" data-amt="300" onclick="upiSelPlan(this)">
+          <span class="amt">&#8377;300</span><span class="plan-lbl">Drop-in</span><span class="save-lbl">Single class</span>
+        </button>
+        <button class="upi-price-btn sel" data-prog="kids" data-plan="Monthly" data-amt="2000" onclick="upiSelPlan(this)">
+          <span class="amt">&#8377;2,000</span><span class="plan-lbl">Monthly</span>
+        </button>
+        <button class="upi-price-btn" data-prog="kids" data-plan="Quarterly" data-amt="5000" onclick="upiSelPlan(this)">
+          <span class="amt">&#8377;5,000</span><span class="plan-lbl">Quarterly</span><span class="save-lbl">Save &#8377;1,000</span>
+        </button>
+      </div>
+      <button class="upi-pay-btn" onclick="openUpiModal('Kids Dance','kids')">Book &amp; Pay &#8594;</button>
+      <div class="upi-or">or</div>
+      <a href="https://wa.me/919052980859?text=Hi%2C%20I%20want%20to%20book%20Kids%20Dance" class="upi-wa" target="_blank">WhatsApp to Enquire</a>
+      <p class="upi-note">Mon &ndash; Wed &nbsp;&middot;&nbsp; 5&ndash;6 PM &amp; 6&ndash;7 PM</p>
+    </div>
+
+    <!-- ADULTS DANCE -->
+    <div class="upi-card" id="card-adults">
+      <p class="upi-prog">Adults Dance</p>
+      <p class="upi-name">ADULTS DANCE<br>PROGRAMME</p>
+      <p class="upi-desc">Bollywood &middot; Contemporary &middot; Hip Hop &middot; Choreography. Age 16+. Led by Nitish.</p>
+      <div class="upi-prices">
+        <button class="upi-price-btn" data-prog="adults" data-plan="Drop-in" data-amt="300" onclick="upiSelPlan(this)">
+          <span class="amt">&#8377;300</span><span class="plan-lbl">Drop-in</span><span class="save-lbl">Single class</span>
+        </button>
+        <button class="upi-price-btn sel" data-prog="adults" data-plan="Monthly" data-amt="2500" onclick="upiSelPlan(this)">
+          <span class="amt">&#8377;2,500</span><span class="plan-lbl">Monthly</span>
+        </button>
+        <button class="upi-price-btn" data-prog="adults" data-plan="Quarterly" data-amt="6500" onclick="upiSelPlan(this)">
+          <span class="amt">&#8377;6,500</span><span class="plan-lbl">Quarterly</span><span class="save-lbl">Save &#8377;1,000</span>
+        </button>
+      </div>
+      <button class="upi-pay-btn" onclick="openUpiModal('Adults Dance','adults')">Book &amp; Pay &#8594;</button>
+      <div class="upi-or">or</div>
+      <a href="https://wa.me/919052980859?text=Hi%2C%20I%20want%20to%20book%20Adults%20Dance" class="upi-wa" target="_blank">WhatsApp to Enquire</a>
+      <p class="upi-note">Mon &ndash; Wed &nbsp;&middot;&nbsp; 7&ndash;8 PM &amp; 8&ndash;9 PM</p>
+    </div>
+
+    <!-- MIND & BODY FITNESS -->
+    <div class="upi-card" id="card-fitness">
+      <p class="upi-prog">Mind &amp; Body Fitness</p>
+      <p class="upi-name">MIND &amp; BODY<br>FITNESS</p>
+      <p class="upi-desc">Zumba &middot; Yoga &middot; Pilates &middot; HIIT &middot; Strength &middot; Tabata &middot; Core &middot; Mobility. Led by Shailaja.</p>
+      <div class="upi-prices">
+        <button class="upi-price-btn" data-prog="fitness" data-plan="Drop-in" data-amt="300" onclick="upiSelPlan(this)">
+          <span class="amt">&#8377;300</span><span class="plan-lbl">Drop-in</span><span class="save-lbl">Single class</span>
+        </button>
+        <button class="upi-price-btn sel" data-prog="fitness" data-plan="Monthly" data-amt="2500" onclick="upiSelPlan(this)">
+          <span class="amt">&#8377;2,500</span><span class="plan-lbl">Monthly</span>
+        </button>
+        <button class="upi-price-btn" data-prog="fitness" data-plan="Quarterly" data-amt="6500" onclick="upiSelPlan(this)">
+          <span class="amt">&#8377;6,500</span><span class="plan-lbl">Quarterly</span><span class="save-lbl">Save &#8377;1,000</span>
+        </button>
+      </div>
+      <button class="upi-pay-btn" onclick="openUpiModal('Mind &amp; Body Fitness','fitness')">Book &amp; Pay &#8594;</button>
+      <div class="upi-or">or</div>
+      <a href="https://wa.me/919052980859?text=Hi%2C%20I%20want%20to%20join%20Mind%20and%20Body%20Fitness" class="upi-wa" target="_blank">WhatsApp to Enquire</a>
+      <p class="upi-note">Mon &ndash; Fri &nbsp;&middot;&nbsp; Morning &nbsp;&middot;&nbsp; Rotating schedule</p>
+    </div>
+
+    <!-- KUCHIPUDI -->
+    <div class="upi-card" id="card-kuchipudi">
+      <p class="upi-prog">Kuchipudi Classical</p>
+      <p class="upi-name">KUCHIPUDI<br>CLASSICAL</p>
+      <p class="upi-desc">Level-based certified programme. Foundation to Advanced. Taught by Srusti. Enrolment only.</p>
+      <div class="upi-prices">
+        
+        <button class="upi-price-btn sel" data-prog="kuchipudi" data-plan="Monthly" data-amt="2000" onclick="upiSelPlan(this)">
+          <span class="amt">&#8377;2,000</span><span class="plan-lbl">Monthly</span>
+        </button>
+        <button class="upi-price-btn" data-prog="kuchipudi" data-plan="Quarterly" data-amt="5000" onclick="upiSelPlan(this)">
+          <span class="amt">&#8377;5,000</span><span class="plan-lbl">Quarterly</span><span class="save-lbl">Save &#8377;1,000</span>
+        </button>
+      </div>
+      <button class="upi-pay-btn" onclick="openUpiModal('Kuchipudi Classical','kuchipudi')">Enrol &amp; Pay &#8594;</button>
+      <div class="upi-or">or</div>
+      <a href="https://wa.me/919052980859?text=Hi%2C%20I%20want%20to%20enquire%20about%20Kuchipudi" class="upi-wa" target="_blank">WhatsApp to Enquire</a>
+      <p class="upi-note">Fri &amp; Sat &nbsp;&middot;&nbsp; 6:30&ndash;7:30 PM &nbsp;&middot;&nbsp; Seats limited</p>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- LOCAL SEO NEIGHBOURHOODS SECTION -->
+<section class="sec" style="background:var(--light);padding:48px 64px 40px" id="near-you">
+  <div style="text-align:center;margin-bottom:32px">
+    <p class="lbl">Close to you</p>
+    <h2 class="ttl" style="font-size:clamp(24px,3vw,38px)">Dance Classes Near Sainikpuri, Neredmet, AS Rao Nagar &amp; Yapral</h2>
+    <p class="bdy" style="max-width:640px;margin:16px auto 0">Our studio at Neredmet X Road is 8&ndash;15 minutes from most of East Hyderabad by drive. Students come to us from Sainikpuri, AS Rao Nagar, Yapral, Malkajgiri, Kapra, and Hastinapuri every day.</p>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;max-width:900px;margin:0 auto">
+    <div style="background:var(--wh);padding:18px 16px;border:1px solid #E8E8E8;text-align:center">
+      <p style="font-size:16px;font-weight:700;color:var(--blk);margin-bottom:4px">Sainikpuri</p>
+      <p style="font-size:12px;color:var(--mu)">8&ndash;12 min by drive</p>
+    </div>
+    <div style="background:var(--wh);padding:18px 16px;border:1px solid #E8E8E8;text-align:center">
+      <p style="font-size:16px;font-weight:700;color:var(--blk);margin-bottom:4px">AS Rao Nagar</p>
+      <p style="font-size:12px;color:var(--mu)">10&ndash;14 min by drive</p>
+    </div>
+    <div style="background:var(--wh);padding:18px 16px;border:1px solid #E8E8E8;text-align:center">
+      <p style="font-size:16px;font-weight:700;color:var(--blk);margin-bottom:4px">Yapral</p>
+      <p style="font-size:12px;color:var(--mu)">12&ndash;15 min by drive</p>
+    </div>
+    <div style="background:var(--wh);padding:18px 16px;border:1px solid #E8E8E8;text-align:center">
+      <p style="font-size:16px;font-weight:700;color:var(--blk);margin-bottom:4px">Neredmet</p>
+      <p style="font-size:12px;color:var(--mu)">Right at our door</p>
+    </div>
+    <div style="background:var(--wh);padding:18px 16px;border:1px solid #E8E8E8;text-align:center">
+      <p style="font-size:16px;font-weight:700;color:var(--blk);margin-bottom:4px">Malkajgiri</p>
+      <p style="font-size:12px;color:var(--mu)">10&ndash;12 min by drive</p>
+    </div>
+    <div style="background:var(--wh);padding:18px 16px;border:1px solid #E8E8E8;text-align:center">
+      <p style="font-size:16px;font-weight:700;color:var(--blk);margin-bottom:4px">Kapra</p>
+      <p style="font-size:12px;color:var(--mu)">12&ndash;15 min by drive</p>
+    </div>
+  </div>
+  <div style="text-align:center;margin-top:24px">
+    <a href="https://wa.me/919052980859?text=Hi%2C%20I%20want%20to%20book%20a%20free%20trial%20class" target="_blank" style="display:inline-block;padding:12px 28px;background:var(--bl);color:var(--wh);font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;text-decoration:none">Book Free Trial Class &#8594;</a>
+  </div>
+</section>
+
+<!-- SCHEDULE -->
+<section class="sec sec-lt" id="schedule">
+  <div class="sec-hdr">
+    <div><p class="lbl">Weekly timetable</p><h2 class="ttl">This week&#39;s classes.</h2></div>
+    <p style="font-size:13px;color:var(--mu)">Filter by programme &#183; Click Book to reserve your spot</p>
+  </div>
+  <div class="sch-filters">
+    <button class="sf on" onclick="ft('all',this)">All Classes</button>
+    <button class="sf" onclick="ft('fitness',this)">Mind &amp; Body Fitness</button>
+    <button class="sf" onclick="ft('dance-kids',this)">Kids Dance</button>
+    <button class="sf" onclick="ft('dance-adults',this)">Adults Dance</button>
+    <button class="sf" onclick="ft('kuchipudi',this)">Kuchipudi</button>
+  </div>
+
+  <!-- MONDAY -->
+  <div class="day-block">
+    <p class="day-label">MONDAY</p>
+    <div class="cl-list">
+      <div class="cl-row fitness" data-cat="fitness"><p class="cl-time">9:30 AM</p><div><p class="cl-name">Mind &amp; Body Fitness</p><p class="cl-cat">Zumba / Yoga / Strength &#183; Rotating</p></div><div class="cl-trainer"><div class="tr-av" style="background:var(--bl)">S</div><p class="tr-nm">Shailaja</p></div><p class="cl-dur">60 min</p><a href="#" class="cl-bk" onclick="om('Mind &amp; Body Fitness','Monday 9:30&#8211;10:30 AM')">Book &#8594;</a></div>
+      <div class="cl-row dance-kids" data-cat="dance-kids"><p class="cl-time">5:00 PM</p><div><p class="cl-name">Kids Dance &#8212; Batch 1</p><p class="cl-cat">Bollywood / Hip Hop / Contemporary</p></div><div class="cl-trainer"><div class="tr-av" style="background:var(--bl)">D</div><p class="tr-nm">Deepak</p></div><p class="cl-dur">60 min</p><a href="#" class="cl-bk" onclick="om('Kids Dance &#8212; Batch 1','Monday 5:00&#8211;6:00 PM')">Book &#8594;</a></div>
+      <div class="cl-row dance-kids" data-cat="dance-kids"><p class="cl-time">6:00 PM</p><div><p class="cl-name">Kids Dance &#8212; Batch 2</p><p class="cl-cat">Bollywood / Hip Hop / Contemporary</p></div><div class="cl-trainer"><div class="tr-av" style="background:var(--green)">K</div><p class="tr-nm">Kajal</p></div><p class="cl-dur">60 min</p><a href="#" class="cl-bk" onclick="om('Kids Dance &#8212; Batch 2','Monday 6:00&#8211;7:00 PM')">Book &#8594;</a></div>
+      <div class="cl-row dance-adults" data-cat="dance-adults"><p class="cl-time">7:00 PM</p><div><p class="cl-name">Adults Dance &#8212; Batch 1</p><p class="cl-cat">Bollywood / Contemporary / Hip Hop</p></div><div class="cl-trainer"><div class="tr-av" style="background:var(--gold)">N</div><p class="tr-nm">Nitish</p></div><p class="cl-dur">60 min</p><a href="#" class="cl-bk" onclick="om('Adults Dance &#8212; Batch 1','Monday 7:00&#8211;8:00 PM')">Book &#8594;</a></div>
+      <div class="cl-row dance-adults" data-cat="dance-adults"><p class="cl-time">8:00 PM</p><div><p class="cl-name">Adults Dance &#8212; Batch 2</p><p class="cl-cat">Choreography &amp; Performance</p></div><div class="cl-trainer"><div class="tr-av" style="background:var(--gold)">P</div><p class="tr-nm">Pranith</p></div><p class="cl-dur">60 min</p><a href="#" class="cl-bk" onclick="om('Adults Dance &#8212; Batch 2','Monday 8:00&#8211;9:00 PM')">Book &#8594;</a></div>
+    </div>
+  </div>
+
+  <!-- TUESDAY -->
+  <div class="day-block">
+    <p class="day-label">TUESDAY</p>
+    <div class="cl-list">
+      <div class="cl-row fitness" data-cat="fitness"><p class="cl-time">9:30 AM</p><div><p class="cl-name">Mind &amp; Body Fitness</p><p class="cl-cat">Tabata / HIIT / Core &#183; Rotating</p></div><div class="cl-trainer"><div class="tr-av" style="background:var(--bl)">S</div><p class="tr-nm">Shailaja</p></div><p class="cl-dur">60 min</p><a href="#" class="cl-bk" onclick="om('Mind &amp; Body Fitness','Tuesday 9:30&#8211;10:30 AM')">Book &#8594;</a></div>
+      <div class="cl-row dance-kids" data-cat="dance-kids"><p class="cl-time">5:00 PM</p><div><p class="cl-name">Kids Dance &#8212; Batch 1</p><p class="cl-cat">Hip Hop &amp; Performance Training</p></div><div class="cl-trainer"><div class="tr-av" style="background:var(--bl)">D</div><p class="tr-nm">Deepak</p></div><p class="cl-dur">60 min</p><a href="#" class="cl-bk" onclick="om('Kids Dance &#8212; Batch 1','Tuesday 5:00&#8211;6:00 PM')">Book &#8594;</a></div>
+      <div class="cl-row dance-kids" data-cat="dance-kids"><p class="cl-time">6:00 PM</p><div><p class="cl-name">Kids Dance &#8212; Batch 2</p><p class="cl-cat">Hip Hop &amp; Performance Training</p></div><div class="cl-trainer"><div class="tr-av" style="background:var(--green)">K</div><p class="tr-nm">Kajal</p></div><p class="cl-dur">60 min</p><a href="#" class="cl-bk" onclick="om('Kids Dance &#8212; Batch 2','Tuesday 6:00&#8211;7:00 PM')">Book &#8594;</a></div>
+      <div class="cl-row dance-adults" data-cat="dance-adults"><p class="cl-time">7:00 PM</p><div><p class="cl-name">Adults Dance &#8212; Batch 1</p><p class="cl-cat">Contemporary &amp; Choreography</p></div><div class="cl-trainer"><div class="tr-av" style="background:var(--gold)">N</div><p class="tr-nm">Nitish</p></div><p class="cl-dur">60 min</p><a href="#" class="cl-bk" onclick="om('Adults Dance &#8212; Batch 1','Tuesday 7:00&#8211;8:00 PM')">Book &#8594;</a></div>
+      <div class="cl-row dance-adults" data-cat="dance-adults"><p class="cl-time">8:00 PM</p><div><p class="cl-name">Adults Dance &#8212; Batch 2</p><p class="cl-cat">Hip Hop &amp; Freestyle</p></div><div class="cl-trainer"><div class="tr-av" style="background:var(--gold)">P</div><p class="tr-nm">Pranith</p></div><p class="cl-dur">60 min</p><a href="#" class="cl-bk" onclick="om('Adults Dance &#8212; Batch 2','Tuesday 8:00&#8211;9:00 PM')">Book &#8594;</a></div>
+    </div>
+  </div>
+
+  <!-- WEDNESDAY -->
+  <div class="day-block">
+    <p class="day-label">WEDNESDAY</p>
+    <div class="cl-list">
+      <div class="cl-row fitness" data-cat="fitness"><p class="cl-time">9:30 AM</p><div><p class="cl-name">Mind &amp; Body Fitness</p><p class="cl-cat">Yoga / Pilates / Mobility &#183; Rotating</p></div><div class="cl-trainer"><div class="tr-av" style="background:var(--bl)">S</div><p class="tr-nm">Shailaja</p></div><p class="cl-dur">60 min</p><a href="#" class="cl-bk" onclick="om('Mind &amp; Body Fitness','Wednesday 9:30&#8211;10:30 AM')">Book &#8594;</a></div>
+      <div class="cl-row dance-kids" data-cat="dance-kids"><p class="cl-time">5:00 PM</p><div><p class="cl-name">Kids Dance &#8212; Batch 1</p><p class="cl-cat">Bollywood &amp; Stage Performance</p></div><div class="cl-trainer"><div class="tr-av" style="background:var(--bl)">D</div><p class="tr-nm">Deepak</p></div><p class="cl-dur">60 min</p><a href="#" class="cl-bk" onclick="om('Kids Dance &#8212; Batch 1','Wednesday 5:00&#8211;6:00 PM')">Book &#8594;</a></div>
+      <div class="cl-row dance-kids" data-cat="dance-kids"><p class="cl-time">6:00 PM</p><div><p class="cl-name">Kids Dance &#8212; Batch 2</p><p class="cl-cat">Bollywood &amp; Stage Performance</p></div><div class="cl-trainer"><div class="tr-av" style="background:var(--green)">K</div><p class="tr-nm">Kajal</p></div><p class="cl-dur">60 min</p><a href="#" class="cl-bk" onclick="om('Kids Dance &#8212; Batch 2','Wednesday 6:00&#8211;7:00 PM')">Book &#8594;</a></div>
+      <div class="cl-row dance-adults" data-cat="dance-adults"><p class="cl-time">7:00 PM</p><div><p class="cl-name">Adults Dance &#8212; Batch 1</p><p class="cl-cat">Bollywood &amp; Group Choreography</p></div><div class="cl-trainer"><div class="tr-av" style="background:var(--gold)">N</div><p class="tr-nm">Nitish</p></div><p class="cl-dur">60 min</p><a href="#" class="cl-bk" onclick="om('Adults Dance &#8212; Batch 1','Wednesday 7:00&#8211;8:00 PM')">Book &#8594;</a></div>
+      <div class="cl-row dance-adults" data-cat="dance-adults"><p class="cl-time">8:00 PM</p><div><p class="cl-name">Adults Dance &#8212; Batch 2</p><p class="cl-cat">Bollywood &amp; Group Choreography</p></div><div class="cl-trainer"><div class="tr-av" style="background:var(--gold)">P</div><p class="tr-nm">Pranith</p></div><p class="cl-dur">60 min</p><a href="#" class="cl-bk" onclick="om('Adults Dance &#8212; Batch 2','Wednesday 8:00&#8211;9:00 PM')">Book &#8594;</a></div>
+    </div>
+  </div>
+
+  <!-- THURSDAY + FRIDAY -->
+  <div class="day-block">
+    <p class="day-label">THURSDAY</p>
+    <div class="cl-list">
+      <div class="cl-row fitness" data-cat="fitness"><p class="cl-time">9:30 AM</p><div><p class="cl-name">Mind &amp; Body Fitness</p><p class="cl-cat">Strength / Functional / Core &#183; Rotating</p></div><div class="cl-trainer"><div class="tr-av" style="background:var(--bl)">S</div><p class="tr-nm">Shailaja</p></div><p class="cl-dur">60 min</p><a href="#" class="cl-bk" onclick="om('Mind &amp; Body Fitness','Thursday 9:30&#8211;10:30 AM')">Book &#8594;</a></div>
+    </div>
+  </div>
+
+  <div class="day-block">
+    <p class="day-label">FRIDAY</p>
+    <div class="cl-list">
+      <div class="cl-row fitness" data-cat="fitness"><p class="cl-time">9:30 AM</p><div><p class="cl-name">Mind &amp; Body Fitness</p><p class="cl-cat">Zumba / Tabata &#183; Rotating</p></div><div class="cl-trainer"><div class="tr-av" style="background:var(--bl)">S</div><p class="tr-nm">Shailaja</p></div><p class="cl-dur">60 min</p><a href="#" class="cl-bk" onclick="om('Mind &amp; Body Fitness','Friday 9:30&#8211;10:30 AM')">Book &#8594;</a></div>
+      <div class="cl-row kuchipudi" data-cat="kuchipudi"><p class="cl-time">6:30 PM</p><div><p class="cl-name">Kuchipudi Classical</p><p class="cl-cat">All levels &#183; Monthly enrolment</p></div><div class="cl-trainer"><div class="tr-av" style="background:var(--purp)">Sr</div><p class="tr-nm">Srusti</p></div><p class="cl-dur">60 min</p><a href="#" class="cl-bk" onclick="om('Kuchipudi Classical','Friday 6:30&#8211;7:30 PM')">Enrol &#8594;</a></div>
+    </div>
+  </div>
+
+  <div class="day-block">
+    <p class="day-label">SATURDAY</p>
+    <div class="cl-list">
+      <div class="cl-row kuchipudi" data-cat="kuchipudi"><p class="cl-time">6:30 PM</p><div><p class="cl-name">Kuchipudi Classical</p><p class="cl-cat">All levels &#183; Monthly enrolment</p></div><div class="cl-trainer"><div class="tr-av" style="background:var(--purp)">Sr</div><p class="tr-nm">Srusti</p></div><p class="cl-dur">60 min</p><a href="#" class="cl-bk" onclick="om('Kuchipudi Classical','Saturday 6:30&#8211;7:30 PM')">Enrol &#8594;</a></div>
+    </div>
+  </div>
+
+  <div class="sch-legend">
+    <p style="font-size:11px;color:var(--mu);font-weight:500">Key:</p>
+    <div class="leg"><div class="leg-d" style="background:var(--bl)"></div>Mind &amp; Body Fitness</div>
+    <div class="leg"><div class="leg-d" style="background:var(--green)"></div>Kids Dance</div>
+    <div class="leg"><div class="leg-d" style="background:var(--gold)"></div>Adults Dance</div>
+    <div class="leg"><div class="leg-d" style="background:var(--purp)"></div>Kuchipudi</div>
+    <p style="font-size:11px;color:var(--mu);margin-left:auto">Fitness timings set by trainer weekly &#183; <a href="https://wa.me/919052980859" style="color:var(--bl)">WhatsApp us</a> for exact slots</p>
+  </div>
+</section>
+
+<!-- TRAINERS -->
+<section class="sec sec-lt" id="trainers">
+  <p class="lbl">Meet the team</p>
+  <h2 class="ttl">Your trainers.</h2>
+  <p class="bdy">Certified, experienced, and genuinely invested in every student&rsquo;s growth.</p>
+  <div class="tr-grid" style="margin-top:48px">
+    <div class="tr-card">
+      <div class="tr-ava" style="background:#2BB4D8">N</div>
+      <h3 class="tr-nm">NITISH</h3>
+      <p class="tr-sty">Adults Dance &mdash; Founder</p>
+      <p class="tr-bio">Founder and Artistic Director. ISPTD certified. 8+ years of teaching. International performer. Has trained 1,000+ students across Hyderabad. Leads adult dance and contemporary.</p>
+    </div>
+    <div class="tr-card">
+      <div class="tr-ava" style="background:#1DB954">D</div>
+      <h3 class="tr-nm">DEEPAK</h3>
+      <p class="tr-sty">Kids Dance Specialist</p>
+      <p class="tr-bio">Dedicated kids dance instructor. Specialises in Bollywood, Hip Hop and Contemporary for students aged 5 and above. Creates a fun, structured, confidence-building environment for young dancers.</p>
+    </div>
+    <div class="tr-card">
+      <div class="tr-ava" style="background:var(--bl)">S</div>
+      <h3 class="tr-nm">SHAILAJA</h3>
+      <p class="tr-sty">Mind &amp; Body Fitness</p>
+      <p class="tr-bio">Certified fitness and dance instructor leading the full Mind &amp; Body programme &mdash; Zumba, Yoga, Pilates, HIIT, Strength and more. No experience required. All levels welcome.</p>
+    </div>
+    <div class="tr-card">
+      <div class="tr-ava" style="background:#8B5CF6;font-size:18px">Sr</div>
+      <h3 class="tr-nm">SRUSTI</h3>
+      <p class="tr-sty">Kuchipudi Classical</p>
+      <p class="tr-bio">Certified Kuchipudi performer trained in the Andhra classical tradition. Runs level-based certified batches from Foundation through Advanced with formal certification at each stage.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="sec sec-dk" id="about">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center">
+    <div>
+      <p class="lbl">Our story</p>
+      <h2 class="ttl ttl-w">15+ years of teaching<br>Hyderabad to dance.</h2>
+      <p class="bdy bdy-w" style="margin-bottom:20px">Rhythmzz Academy of Dance was founded by Nitish at Neredmet X Road, Secunderabad. What began with a handful of neighbourhood students has grown into one of East Hyderabad&#39;s most trusted dance and fitness academies.</p>
+      <p class="bdy bdy-w">We&#39;ve represented India internationally, performed at Amazon and IPL events, organised the Hyderabad Dance Premier League with 1,500+ participants, and trained over 5,000 students &#8212; from 5-year-olds discovering dance for the first time to adults rediscovering movement after years away.</p>
+      <div style="display:flex;gap:16px;margin-top:28px;flex-wrap:wrap">
+        <a href="#programs" class="btn-bl">Join a Class</a>
+        <a href="#contact" class="btn-out">Learn More</a>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div style="background:rgba(43,180,216,.1);border:1px solid rgba(43,180,216,.2);border-radius:12px;padding:28px 20px;text-align:center">
+        <div style="font-family:Bebas Neue,sans-serif;font-size:42px;color:var(--bl)">2017</div>
+        <div style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-top:4px">Represented India<br>International Festival</div>
+      </div>
+      <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:28px 20px;text-align:center">
+        <div style="font-family:Bebas Neue,sans-serif;font-size:42px;color:var(--wh)">200+</div>
+        <div style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-top:4px">Stage<br>Performances</div>
+      </div>
+      <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:28px 20px;text-align:center">
+        <div style="font-family:Bebas Neue,sans-serif;font-size:42px;color:var(--wh)">5000+</div>
+        <div style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-top:4px">Students<br>Trained</div>
+      </div>
+      <div style="background:rgba(43,180,216,.1);border:1px solid rgba(43,180,216,.2);border-radius:12px;padding:28px 20px;text-align:center">
+        <div style="font-family:Bebas Neue,sans-serif;font-size:42px;color:var(--bl)">15+</div>
+        <div style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-top:4px">Years<br>Teaching</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- FOUNDERS -->
+<section class="sec sec-dk" id="founders" style="padding:56px 64px;border-top:1px solid rgba(255,255,255,.06)">
+  <div style="max-width:900px;margin:0 auto">
+    <p class="lbl" style="color:var(--bl);text-align:center;margin-bottom:6px">The people behind Rhythmzz</p>
+    <h2 class="ttl ttl-w" style="text-align:center;font-size:clamp(22px,3vw,36px);margin-bottom:40px">Founded with passion.<br>Built on hard work.</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+
+      <!-- Nitish -->
+      <div style="background:rgba(43,180,216,.07);border:1px solid rgba(43,180,216,.18);border-radius:14px;padding:32px 28px">
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px">
+          <div style="width:52px;height:52px;border-radius:50%;background:var(--bl);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--wh);flex-shrink:0">N</div>
+          <div>
+            <p style="font-size:16px;font-weight:700;color:var(--wh);margin:0">Nitish Kumar</p>
+            <p style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--bl);margin:3px 0 0">Founder &amp; Artistic Director</p>
+          </div>
+        </div>
+        <p style="font-size:13px;color:rgba(255,255,255,.65);line-height:1.7;margin:0">Started dancing professionally at 16, Nitish completed his Diploma in Performance &amp; Dance from ISPTD Bangalore. He is a contemporary expert, senior instructor, and choreographer for colleges, schools, and corporate events. Winner of Art Unites, Indywood Film Carnival awards, and a 2017 representative of India at nATFEST International Contemporary Dance Festival, Sri Lanka.</p>
+      </div>
+
+      <!-- Amulya -->
+      <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:32px 28px">
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px">
+          <div style="width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--wh);flex-shrink:0">A</div>
+          <div>
+            <p style="font-size:16px;font-weight:700;color:var(--wh);margin:0">Amulya Rajendran</p>
+            <p style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.4);margin:3px 0 0">Co-Founder &amp; Legal Advisor</p>
+          </div>
+        </div>
+        <p style="font-size:13px;color:rgba(255,255,255,.65);line-height:1.7;margin:0">Amulya Rajendran is the co-founder and legal advisor of Rhythmzz Academy of Dance, associated with the studio since its very inception. A Masters graduate in Business Law from National Law School of India University, she brings the strategic and legal backbone that has helped Rhythmzz grow into one of Secunderabad&#39;s most trusted dance academies.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- GEAR -->
+<section class="gear-sec" id="gear">
+  <div class="sec-hdr">
+    <div>
+      <p class="lbl">Rhythmzz Gear</p>
+      <h2 class="ttl">Wear the brand.</h2>
+    </div>
+    <p class="bdy">Every Rhythmzz trainer wears our gear in every class. Designed for dancers — moisture-wicking, full range of movement, built to last.</p>
+  </div>
+
+  <div class="gear-filters">
+    <button class="sc-btn on" onclick="fs('all',this)">All</button>
+    <button class="sc-btn" onclick="fs('teen',this)">Teen</button>
+    <button class="sc-btn" onclick="fs('women',this)">Women</button>
+    <button class="sc-btn" onclick="fs('men',this)">Men</button>
+  </div>
+
+  <div class="gear-grid">
+
+    <!-- TEEN -->
+    <div class="scard" data-cat="teen">
+      <p class="scard-cat">Teen &mdash; Ages 10 to 18</p>
+      <p class="scard-name">DANCE TEE</p>
+      <p class="scard-desc">Lightweight moisture-wicking crew-neck tee with Rhythmzz logo. Perfect for all studio styles. Available in black and white.</p>
+      <p class="scard-sizes">XS &middot; S &middot; M &middot; L</p>
+      <p class="scard-price">&#8377;599</p>
+      <a href="https://wa.me/919052980859?text=Hi%2C%20I%20want%20to%20order%20the%20Teen%20Dance%20Tee" class="scard-btn" target="_blank">Order via WhatsApp</a>
+    </div>
+
+    <div class="scard" data-cat="teen">
+      <p class="scard-cat">Teen &mdash; Ages 10 to 18</p>
+      <p class="scard-name">DANCE SHORTS</p>
+      <p class="scard-desc">Flexible stretch-fabric shorts built for full range of movement. Drawstring waist. Rhythmzz branding on the left leg.</p>
+      <p class="scard-sizes">XS &middot; S &middot; M &middot; L</p>
+      <p class="scard-price">&#8377;549</p>
+      <a href="https://wa.me/919052980859?text=Hi%2C%20I%20want%20to%20order%20Teen%20Dance%20Shorts" class="scard-btn" target="_blank">Order via WhatsApp</a>
+    </div>
+
+    <!-- WOMEN -->
+    <div class="scard" data-cat="women">
+      <p class="scard-cat">Women</p>
+      <p class="scard-name">SPORTS BRA</p>
+      <p class="scard-desc">Medium-to-high support sports bra with moisture-wicking fabric. Rhythmzz logo on the back band. Designed for dance and fitness.</p>
+      <p class="scard-sizes">XS &middot; S &middot; M &middot; L &middot; XL</p>
+      <p class="scard-price">&#8377;699</p>
+      <a href="https://wa.me/919052980859?text=Hi%2C%20I%20want%20to%20order%20the%20Women%20Sports%20Bra" class="scard-btn" target="_blank">Order via WhatsApp</a>
+    </div>
+
+    <div class="scard" data-cat="women">
+      <p class="scard-cat">Women</p>
+      <p class="scard-name">DANCE JACKET</p>
+      <p class="scard-desc">Technical zip-front jacket with thumb holes and Rhythmzz branding. Perfect for warm-up, cool-down, and the commute to class.</p>
+      <p class="scard-sizes">S &middot; M &middot; L &middot; XL</p>
+      <p class="scard-price">&#8377;1,299</p>
+      <a href="https://wa.me/919052980859?text=Hi%2C%20I%20want%20to%20order%20the%20Women%20Dance%20Jacket" class="scard-btn" target="_blank">Order via WhatsApp</a>
+    </div>
+
+    <div class="scard" data-cat="women">
+      <p class="scard-cat">Women</p>
+      <p class="scard-name">ACTIVE SHORTS</p>
+      <p class="scard-desc">Stretch-fabric active shorts with inner liner. Suitable for every class style from Zumba to Contemporary.</p>
+      <p class="scard-sizes">XS &middot; S &middot; M &middot; L</p>
+      <p class="scard-price">&#8377;649</p>
+      <a href="https://wa.me/919052980859?text=Hi%2C%20I%20want%20to%20order%20Women%20Active%20Shorts" class="scard-btn" target="_blank">Order via WhatsApp</a>
+    </div>
+
+    <!-- MEN -->
+    <div class="scard" data-cat="men">
+      <p class="scard-cat">Men</p>
+      <p class="scard-name">TRACK TEE</p>
+      <p class="scard-desc">The official Rhythmzz trainer uniform top. Moisture-wicking performance tee with Rhythmzz logo on the chest. Built to move in.</p>
+      <p class="scard-sizes">S &middot; M &middot; L &middot; XL &middot; XXL</p>
+      <p class="scard-price">&#8377;649</p>
+      <a href="https://wa.me/919052980859?text=Hi%2C%20I%20want%20to%20order%20the%20Men%20Track%20Tee" class="scard-btn" target="_blank">Order via WhatsApp</a>
+    </div>
+
+    <div class="scard" data-cat="men">
+      <p class="scard-cat">Men</p>
+      <p class="scard-name">TRACK PANTS</p>
+      <p class="scard-desc">Full-length dance track pants with zip ankle. Relaxed fit with full range of movement. The go-to studio bottom for every male student.</p>
+      <p class="scard-sizes">S &middot; M &middot; L &middot; XL &middot; XXL</p>
+      <p class="scard-price">&#8377;899</p>
+      <a href="https://wa.me/919052980859?text=Hi%2C%20I%20want%20to%20order%20Men%20Track%20Pants" class="scard-btn" target="_blank">Order via WhatsApp</a>
+    </div>
+
+    <div class="scard" data-cat="men">
+      <p class="scard-cat">Men</p>
+      <p class="scard-name">RHYTHMZZ HOODIE</p>
+      <p class="scard-desc">Premium fleece hoodie with Rhythmzz embossed logo. The most requested item in the range. Worn by trainers and students alike.</p>
+      <p class="scard-sizes">S &middot; M &middot; L &middot; XL</p>
+      <p class="scard-price">&#8377;1,499</p>
+      <a href="https://wa.me/919052980859?text=Hi%2C%20I%20want%20to%20order%20the%20Rhythmzz%20Hoodie" class="scard-btn" target="_blank">Order via WhatsApp</a>
+    </div>
+
+  </div>
+
+  <p class="gear-note">
+    All items available at the studio in Neredmet &nbsp;&middot;&nbsp; 
+    India-wide delivery within 5&ndash;7 days &nbsp;&middot;&nbsp; 
+    <a href="https://wa.me/919052980859?text=Hi%2C%20I%20want%20to%20order%20Rhythmzz%20gear" target="_blank">WhatsApp us to order &#8594;</a>
+  </p>
+</section>
+
+<!-- JOIN AS TRAINER -->
+<section class="join-sec" id="join">
+  <div>
+    <p class="lbl" style="color:rgba(0,0,0,.38)">Join the team</p>
+    <h2 class="ttl">Teach under the<br>Rhythmzz brand.</h2>
+    <p class="bdy" style="color:rgba(0,0,0,.5);max-width:400px">Zero rent. Built-in students. Your own profile and booking page. Teach at our studio or partner venues across Hyderabad.</p>
+    <div class="jp">
+      <div class="jperk"><div class="jpn" style="font-size:32px;line-height:1.1">High %</div><p class="jpl">Revenue share</p></div>
+      <div class="jperk"><div class="jpn">&#8377;0</div><p class="jpl">Rent to pay</p></div>
+      <div class="jperk"><div class="jpn">3</div><p class="jpl">Trainer tiers</p></div>
+    </div>
+  </div>
+  <div style="text-align:center">
+    <p style="font-size:13px;color:rgba(0,0,0,.45);max-width:240px;line-height:1.65;margin-bottom:20px">Apply to become a Rhythmzz trainer. We&#39;ll reach out via WhatsApp within 48 hours.</p>
+    <a href="https://wa.me/919052980859?text=Hi%2C%20I%20want%20to%20apply%20as%20a%20trainer%20at%20Rhythmzz%20Academy" class="btn-blk" target="_blank">Apply to Teach</a>
+  </div>
+</section>
+
+
+<!-- STUDIO RENTAL -->
+<section class="sec" id="rental" style="background:var(--blk);padding:72px 64px">
+  <div style="max-width:900px;margin:0 auto">
+    <p class="lbl" style="color:var(--bl)">Book the space</p>
+    <h2 class="ttl ttl-w" style="font-size:clamp(28px,4vw,48px);margin-bottom:16px">Your Vision. Our Stage.</h2>
+    <p class="bdy bdy-w" style="max-width:600px;margin-bottom:40px">A fully-equipped dance and fitness studio at Neredmet X Road, Secunderabad — available for rehearsals, workshops, auditions, fitness sessions, and private coaching. Air-conditioned, mirrored, and ready when you are.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:40px">
+      <div style="background:rgba(43,180,216,.08);border:1px solid rgba(43,180,216,.2);border-radius:12px;padding:28px 24px">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:44px;color:var(--bl);line-height:1">&#8377;1,000<span style="font-size:18px;color:rgba(255,255,255,.5)">/hr</span></div>
+        <div style="font-size:13px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.8);margin-top:8px">Weekdays</div>
+        <p style="font-size:12px;color:rgba(255,255,255,.45);margin-top:6px;line-height:1.5">Monday to Friday &nbsp;&middot;&nbsp; Subject to availability</p>
+      </div>
+      <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:28px 24px">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:44px;color:var(--wh);line-height:1">&#8377;1,500<span style="font-size:18px;color:rgba(255,255,255,.5)">/hr</span></div>
+        <div style="font-size:13px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.8);margin-top:8px">Weekends</div>
+        <p style="font-size:12px;color:rgba(255,255,255,.45);margin-top:6px;line-height:1.5">Saturday &amp; Sunday &nbsp;&middot;&nbsp; Book in advance</p>
+      </div>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:36px">
+      <span style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:7px 16px;font-size:12px;color:rgba(255,255,255,.65);letter-spacing:.5px">&#10003;&nbsp; Washroom</span>
+      <span style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:7px 16px;font-size:12px;color:rgba(255,255,255,.65);letter-spacing:.5px">&#10003;&nbsp; Floor-to-Ceiling Mirrors</span>
+      <span style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:7px 16px;font-size:12px;color:rgba(255,255,255,.65);letter-spacing:.5px">&#10003;&nbsp; Marley Dance Floor</span>
+      <span style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:7px 16px;font-size:12px;color:rgba(255,255,255,.65);letter-spacing:.5px">&#10003;&nbsp; Bluetooth Sound System</span>
+      <span style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:7px 16px;font-size:12px;color:rgba(255,255,255,.65);letter-spacing:.5px">&#10003;&nbsp; Changing Rooms</span>
+      <span style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:7px 16px;font-size:12px;color:rgba(255,255,255,.65);letter-spacing:.5px">&#10003;&nbsp; Central Location</span>
+    </div>
+    <a href="https://wa.me/919052980859?text=Hi%2C%20I%27d%20like%20to%20book%20the%20studio%20for%20rent%20at%20Rhythmzz%20Academy" target="_blank" style="display:inline-block;padding:14px 32px;background:var(--bl);color:var(--wh);font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;text-decoration:none;border-radius:2px">Check Availability on WhatsApp &#8594;</a>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="sec" id="contact">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:64px">
+    <div>
+      <p class="lbl">Find us</p>
+      <h2 class="ttl">Come visit.<br>We&#39;re easy to find.</h2>
+      <p class="bdy" style="margin-bottom:24px">Located at Neredmet X Road Bus Stop, Secunderabad &#8212; directly above the ICICI ATM. Minutes from Sainikpuri, AS Rao Nagar and Yapral.</p>
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <div style="width:36px;height:36px;background:var(--blp);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px">&#128205;</div>
+          <div><p style="font-size:13px;font-weight:600;color:var(--blk);margin-bottom:2px">Studio Address</p><p style="font-size:13px;color:var(--mu);line-height:1.5">Plot 597, 3rd Floor, Above ICICI ATM,<br>Neredmet X Road Bus Stop,<br>Secunderabad, Hyderabad &#8212; 500094</p></div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:center">
+          <div style="width:36px;height:36px;background:var(--blp);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px">&#128222;</div>
+          <div><p style="font-size:13px;font-weight:600;color:var(--blk);margin-bottom:2px">Phone / WhatsApp</p><a href="tel:+919052980859" style="font-size:14px;color:var(--bl);font-weight:600;text-decoration:none">+91 90529 80859</a></div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:center">
+          <div style="width:36px;height:36px;background:var(--blp);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px">&#128337;</div>
+          <div><p style="font-size:13px;font-weight:600;color:var(--blk);margin-bottom:2px">Studio Hours</p><p style="font-size:13px;color:var(--mu)">Mon&#8211;Sat: 5:00 AM &#8211; 9:00 PM &nbsp;&#183;&nbsp; Sun: By appointment</p></div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:center">
+          <div style="width:36px;height:36px;background:var(--blp);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px">&#128248;</div>
+          <div><p style="font-size:13px;font-weight:600;color:var(--blk);margin-bottom:2px">Instagram</p><a href="https://instagram.com/rhythmzzdance.live" style="font-size:13px;color:var(--bl);text-decoration:none" target="_blank">@rhythmzzdance.live</a></div>
+        </div>
+      </div>
+      <div style="margin-top:28px;display:flex;gap:10px;flex-wrap:wrap">
+        <a href="https://wa.me/919052980859" class="btn-bl" target="_blank">WhatsApp Us</a>
+        <a href="https://maps.google.com/?q=Neredmet+X+Road+Secunderabad" class="btn-out" target="_blank" style="color:var(--blk);border-color:rgba(0,0,0,.18)">Get Directions</a>
+      </div>
+    </div>
+    <div>
+      <div style="background:var(--light);border-radius:12px;padding:32px">
+        <h3 style="font-family:Bebas Neue,sans-serif;font-size:24px;letter-spacing:2px;color:var(--blk);margin-bottom:20px">Send us a message</h3>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <input type="text" placeholder="Full Name *" style="padding:12px 14px;border:1px solid #DDD;border-radius:6px;font-family:Inter,sans-serif;font-size:13px;outline:none;width:100%">
+          <input type="tel" placeholder="WhatsApp Number *" style="padding:12px 14px;border:1px solid #DDD;border-radius:6px;font-family:Inter,sans-serif;font-size:13px;outline:none;width:100%">
+          <select style="padding:12px 14px;border:1px solid #DDD;border-radius:6px;font-family:Inter,sans-serif;font-size:13px;outline:none;width:100%;color:#777">
+            <option>I am interested in...</option>
+            <option>Mind &amp; Body Fitness</option>
+            <option>Kids Dance</option>
+            <option>Adults Dance</option>
+            <option>Kuchipudi Classical</option>
+            <option>Teaching at Rhythmzz</option>
+            <option>Corporate / Group Booking</option>
+            <option>Other</option>
+          </select>
+          <textarea placeholder="Your message (optional)" rows="3" style="padding:12px 14px;border:1px solid #DDD;border-radius:6px;font-family:Inter,sans-serif;font-size:13px;outline:none;width:100%;resize:none"></textarea>
+          <button onclick="alert('Thank you! We will reply on WhatsApp within 2 hours.')" style="background:var(--blk);color:var(--wh);font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:14px;border:none;cursor:pointer;border-radius:6px;transition:background .2s" onmouseover="this.style.background='#2BB4D8'" onmouseout="this.style.background='#0F0F0F'">Send Enquiry &#8594;</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="fl">
+    <img src="data:image/png;base64,[STRIPPED]" alt="Rhythmzz Academy of Dance">
+    <p class="fd">Dance · Fitness · Community. Neredmet X Road, Secunderabad, Hyderabad.</p>
+    <p class="fsc">Feel The Beat!</p>
+  </div>
+  <div>
+    <p class="fct">Programmes</p>
+    <ul class="fll">
+      <li><a href="#programs">Mind &amp; Body Fitness</a></li>
+      <li><a href="#programs">Kids Dance</a></li>
+      <li><a href="#programs">Adults Dance</a></li>
+      <li><a href="#programs">Kuchipudi Classical</a></li>
+    </ul>
+  </div>
+  <div>
+    <p class="fct">Studio</p>
+    <ul class="fll">
+      <li><a href="#schedule">Class Schedule</a></li>
+      <li><a href="#trainers">Our Trainers</a></li>
+      <li><a href="#about">About Rhythmzz</a></li>
+      <li><a href="#join">Teach With Us</a></li>
+    </ul>
+  </div>
+  <div>
+    <p class="fct">Connect</p>
+    <ul class="fll">
+      <li><a href="https://wa.me/919052980859" target="_blank">WhatsApp</a></li>
+      <li><a href="https://instagram.com/rhythmzzdance.live" target="_blank">Instagram</a></li>
+      <li><a href="tel:+919052980859">+91 90529 80859</a></li>
+      <li><a href="https://rhythmzzdance.com">rhythmzzdance.com</a></li>
+    </ul>
+  </div>
+  <div class="fb">
+    <p>&#169; 2026 Rhythmzz Academy of Dance, Secunderabad, Hyderabad. All rights reserved.</p>
+    <p>Payments secured by Razorpay</p>
+  </div>
+</footer>
+
+<!-- RAZORPAY SDK -->
+
+<script>
+var LOGO="data:image/png;base64,[STRIPPED]";
+document.querySelectorAll("img[src='LOGO_DATA']").forEach(function(i){i.src=LOGO});
+
+/* ── CONFIG ── Replace with your actual UPI ID ─────────────────────────────── */
+var UPI_ID   = 'YOURUPIID';          /* e.g.  nitish@ybl  or  9052980859@paytm  */
+var UPI_NAME = 'Rhythmzz Academy';
+
+/* ── Batch options per programme ─────────────────────────────────────────── */
+var upiProgBatches = {
+  kids:      ['Batch 1 — 5:00 to 6:00 PM','Batch 2 — 6:00 to 7:00 PM'],
+  adults:    ['Batch 1 — 7:00 to 8:00 PM','Batch 2 — 8:00 to 9:00 PM'],
+  fitness:   ['Morning session (exact time confirmed on WhatsApp)'],
+  kuchipudi: ['Friday 6:30 to 7:30 PM','Saturday 6:30 to 7:30 PM','Both days — Fri & Sat']
+};
+
+/* ── State ───────────────────────────────────────────────────────────────── */
+var upiState = {prog:'',progKey:'',plan:'Monthly',amt:0,name:'',phone:'',age:'',batch:''};
+
+/* ── Plan selector on cards ──────────────────────────────────────────────── */
+function upiSelPlan(btn){
+  var card = btn.closest('.upi-card');
+  card.querySelectorAll('.upi-price-btn').forEach(function(b){b.classList.remove('sel');});
+  btn.classList.add('sel');
+}
+
+/* ── Open modal ──────────────────────────────────────────────────────────── */
+function openUpiModal(progName, progKey){
+  var card = document.getElementById('card-'+progKey);
+  var sel  = card ? card.querySelector('.upi-price-btn.sel') : null;
+  upiState.prog    = progName;
+  upiState.progKey = progKey;
+  upiState.plan    = sel ? sel.dataset.plan : 'Monthly';
+  upiState.amt     = sel ? parseInt(sel.dataset.amt) : 0;
+
+  document.getElementById('modal-prog-title').textContent = progName;
+
+  var batchSel = document.getElementById('upi-batch');
+  batchSel.innerHTML = '<option value="">Select Batch *</option>';
+  (upiProgBatches[progKey]||[]).forEach(function(b){
+    var o=document.createElement('option');o.value=b;o.textContent=b;batchSel.appendChild(o);
+  });
+
+  document.getElementById('upi-name').value  = '';
+  document.getElementById('upi-phone').value = '';
+  document.getElementById('upi-age').value   = '';
+
+  upiGoStep1();
+  document.getElementById('upiModal').classList.add('open');
+  return false;
+}
+
+function closeUpiModal(){ document.getElementById('upiModal').classList.remove('open'); }
+document.getElementById('upiModal').addEventListener('click',function(e){if(e.target===this)closeUpiModal();});
+
+function upiGoStep1(){
+  document.getElementById('upi-step1').style.display='block';
+  document.getElementById('upi-step2').style.display='none';
+  document.getElementById('upi-step3').style.display='none';
+}
+
+function upiGoStep2(){
+  var name  = document.getElementById('upi-name').value.trim();
+  var phone = document.getElementById('upi-phone').value.trim();
+  var age   = document.getElementById('upi-age').value.trim();
+  var batch = document.getElementById('upi-batch').value;
+  if(!name||!phone||!age||!batch){
+    alert('Please fill in all fields to continue.');
+    return;
+  }
+  upiState.name=name; upiState.phone=phone; upiState.age=age; upiState.batch=batch;
+  document.getElementById('sum-name').textContent  = name;
+  document.getElementById('sum-phone').textContent = phone;
+  document.getElementById('sum-age').textContent   = age+' years';
+  document.getElementById('sum-prog').textContent  = upiState.prog;
+  document.getElementById('sum-batch').textContent = batch;
+  document.getElementById('sum-plan').textContent  = upiState.plan;
+  document.getElementById('sum-total').textContent = '\u20B9'+upiState.amt.toLocaleString('en-IN');
+  document.getElementById('upi-step1').style.display='none';
+  document.getElementById('upi-step2').style.display='block';
+  document.getElementById('upi-step3').style.display='none';
+}
+
+function upiGoStep3(){
+  var note = upiState.prog+' '+upiState.plan+' - '+upiState.name;
+  var upiUrl = 'upi://pay'
+    +'?pa='+encodeURIComponent(UPI_ID)
+    +'&pn='+encodeURIComponent(UPI_NAME)
+    +'&am='+upiState.amt
+    +'&cu=INR'
+    +'&tn='+encodeURIComponent(note);
+  document.getElementById('upi-pay-link').href = upiUrl;
+  var isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+  document.getElementById('desktop-note').style.display = isMobile ? 'none' : 'block';
+  document.getElementById('upi-step1').style.display='none';
+  document.getElementById('upi-step2').style.display='none';
+  document.getElementById('upi-step3').style.display='block';
+  /* Log booking data */
+  try{
+    console.log('=== RHYTHMZZ BOOKING ===');
+    console.log(JSON.stringify({
+      name:upiState.name, phone:upiState.phone, age:upiState.age,
+      programme:upiState.prog, batch:upiState.batch,
+      plan:upiState.plan, amount:upiState.amt,
+      timestamp:new Date().toISOString()
+    },null,2));
+  }catch(e){}
+}
+
+/* ── Schedule filter ─────────────────────────────────────────────────────── */
+function ft(cat,btn){
+  document.querySelectorAll('.sf').forEach(function(b){b.classList.remove('on');});
+  btn.classList.add('on');
+  document.querySelectorAll('.cl-row').forEach(function(r){
+    r.style.display=(cat==='all'||r.dataset.cat===cat)?'grid':'none';
+  });
+  document.querySelectorAll('.day-block').forEach(function(d){
+    var vis=Array.from(d.querySelectorAll('.cl-row')).some(function(r){return r.style.display!=='none';});
+    d.style.display=vis?'block':'none';
+  });
+}
+
+/* ── Shop filter ─────────────────────────────────────────────────────────── */
+function fs(cat,btn){
+  document.querySelectorAll('.sc-btn').forEach(function(b){b.classList.remove('on');});
+  btn.classList.add('on');
+  document.querySelectorAll('.scard').forEach(function(c){
+    c.style.display=(cat==='all'||c.dataset.cat===cat)?'block':'none';
+  });
+}
+</script>
+
+<!-- LOCAL SEO CONTENT — crawlable geographic relevance signals -->
+<section style="display:none" aria-hidden="true" id="local-seo-content">
+  <h2>Dance Classes Near You in Secunderabad and Hyderabad</h2>
+  <p>Rhythmzz Academy of Dance is located at Neredmet X Road Bus Stop, Secunderabad — serving students from Sainikpuri, AS Rao Nagar, Yapral, Neredmet, Malkajgiri, Kapra, Hastinapuri, and all of East Hyderabad.</p>
+  <h3>Dance Classes Near Sainikpuri</h3>
+  <p>Looking for dance classes near Sainikpuri? Rhythmzz Academy of Dance is just 8–12 minutes away at Neredmet X Road. Kids Dance, Adults Dance, Zumba, and Kuchipudi. Call +91 90529 80859.</p>
+  <h3>Dance Classes Near AS Rao Nagar</h3>
+  <p>Students from AS Rao Nagar reach Rhythmzz Academy in 10–14 minutes. We offer Kids Dance, Adults Dance, Mind and Body Fitness, and Kuchipudi Classical. Free trial class available.</p>
+  <h3>Dance Classes Near Yapral</h3>
+  <p>Yapral students are welcome at Rhythmzz Academy of Dance, Neredmet X Road — just 12–15 minutes away. Book your free trial today on WhatsApp: +91 90529 80859.</p>
+  <h3>Dance Classes Near Neredmet</h3>
+  <p>Rhythmzz Academy of Dance is right at Neredmet X Road Bus Stop — the most accessible dance studio in the area. Kids Dance, Adults Dance, Zumba, Yoga, Pilates, HIIT, and Kuchipudi.</p>
+  <h3>Zumba Classes in Secunderabad</h3>
+  <p>Zumba classes in Secunderabad at Rhythmzz Academy. Morning sessions Monday to Friday. Part of our Mind and Body Fitness programme. ₹2,500 per month.</p>
+  <h3>Kids Dance Classes in Secunderabad</h3>
+  <p>Kids dance classes in Secunderabad for children aged 5 and above. Bollywood, Hip Hop, Contemporary, and Performance Training. Monday to Wednesday, 5–7 PM. Led by Deepak. ₹2,000/month.</p>
+  <h3>Kuchipudi Classes in Secunderabad</h3>
+  <p>Certified Kuchipudi Classical Dance classes in Secunderabad at Rhythmzz Academy. Level-based programme from Foundation to Advanced. Friday and Saturday, 6:30–7:30 PM. Taught by Srusti.</p>
+</section>
+
+</body>
+</html>

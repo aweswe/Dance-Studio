@@ -5,12 +5,12 @@ const DEFAULT_POSTS = [
     id: "b1b2c3d4-0001-0000-0000-000000000001",
     title: "Welcome to Rhythmzz Academy of Dance",
     slug: "welcome-to-rhythmzz-dance-academy",
-    excerpt: "Discover the vibrant world of dance in Secunderabad with our certified instructors, welcoming community, and state-of-the-art studio facilities.",
-    content: "<p>Welcome to Rhythmzz Academy of Dance, Secunderabad's premier dance institution located near Neredmet X Road. Since 2013, our mission has been to ignite a lifelong passion for dance and movement across all ages.</p><p>Whether you're looking for energetic Kids Dance classes, soulful Kuchipudi Classical training, fun Adults Dance choreography, or energizing Mind & Body Fitness (Zumba & Yoga), our studio has a place for you.</p>",
+    excerpt: "Discover dance in Secunderabad at Rhythmzz Academy of Dance — certified instructors, four programmes and a free trial class at Neredmet X Road.",
+    content: "<p>Welcome to Rhythmzz Academy of Dance at Neredmet X Road, Secunderabad. Founded in 2013 and teaching since 2010, we train dancers of every age across four programmes.</p><p>Looking for Kids Dance classes, Kuchipudi Classical training, Adults Dance choreography, or Mind & Body Fitness (Zumba & Yoga)? Our studio has a place for you — and your first class is a free trial.</p>",
     cover_image_url: null,
     published_at: "2026-01-01T00:00:00.000Z",
     tags: ["News", "Dance Classes", "Secunderabad"],
-    author: { name: "Rhythmzz Academy", photo_url: null, bio: "Premier dance studio in Secunderabad since 2013." },
+    author: { name: "Rhythmzz Academy", photo_url: null, bio: "Dance and fitness studio at Neredmet X Road, Secunderabad since 2013." },
     is_published: true,
   }
 ];

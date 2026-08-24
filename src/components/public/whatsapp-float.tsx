@@ -1,22 +1,28 @@
 'use client';
 
 import { MessageCircle } from 'lucide-react';
-import { ACADEMY } from '@/lib/utils/constants';
+import { usePathname } from 'next/navigation';
+import { whatsappLink } from '@/lib/utils/format';
 
 export function WhatsappFloat() {
-  const handleClick = () => {
-    // Optionally contextualize message based on pathname if needed
-    const text = encodeURIComponent('Hi, I would like to know more about the classes at Rhythmzz Academy.');
-    window.open(`https://wa.me/919052980859?text=${text}`, '_blank');
-  };
+  const pathname = usePathname();
+
+  // Contextual message depending on where the visitor is.
+  const message = pathname === '/enrol'
+    ? 'Hi, I am trying to book a class at Rhythmzz Academy and need a hand.'
+    : pathname?.startsWith('/programmes')
+      ? 'Hi, I would like to know more about a programme at Rhythmzz Academy.'
+      : 'Hi, I would like to know more about the classes at Rhythmzz Academy.';
 
   return (
-    <button 
-      onClick={handleClick}
+    <a
+      href={whatsappLink(message)}
+      target="_blank"
+      rel="noopener noreferrer"
       className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-green text-white rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform duration-300"
-      aria-label="Contact on WhatsApp"
+      aria-label="Chat with Rhythmzz Academy on WhatsApp"
     >
       <MessageCircle size={28} />
-    </button>
+    </a>
   );
 }

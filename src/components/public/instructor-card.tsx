@@ -28,6 +28,18 @@ export function InstructorCard({ instructor }: InstructorCardProps) {
       <p className="text-sm text-mu leading-relaxed">
         {instructor.bio}
       </p>
+      {Array.isArray(instructor.certifications) && instructor.certifications.length > 0 && (
+        <div className="flex flex-wrap justify-center gap-2 mt-5">
+          {instructor.certifications.map((cert: string, i: number) => (
+            <span
+              key={i}
+              className="text-[9px] tracking-[1.5px] uppercase font-semibold text-bl bg-bl/10 border border-bl/20 rounded-full px-3 py-1"
+            >
+              {cert}
+            </span>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

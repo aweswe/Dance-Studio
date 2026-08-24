@@ -4,7 +4,8 @@ import { GalleryClient } from '@/components/public/gallery-client';
 
 export const metadata: Metadata = {
   title: 'Gallery',
-  description: 'Explore photos from our dance classes, performances, events, and state-of-the-art studios in Secunderabad.',
+  description: 'Photos from our dance classes, performances and events at Neredmet X Road, Secunderabad.',
+  alternates: { canonical: 'https://www.rhythmzzdance.com/gallery' },
 };
 
 export default async function GalleryPage() {

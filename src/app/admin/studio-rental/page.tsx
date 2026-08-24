@@ -1,5 +1,6 @@
 import { Suspense } from 'react'
 import { RentalCalendar } from '@/components/admin/rental-calendar'
+import { CardSkeleton } from '@/components/ui/skeleton'
 
 export default function StudioRentalPage() {
   return (
@@ -9,7 +10,7 @@ export default function StudioRentalPage() {
         <p className="text-mu font-body text-sm mt-1">Manage external studio bookings and internal time blocks.</p>
       </div>
 
-      <Suspense fallback={<div>Loading calendar...</div>}>
+      <Suspense fallback={<CardSkeleton />}>
         <RentalCalendar />
       </Suspense>
     </div>

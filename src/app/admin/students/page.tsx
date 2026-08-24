@@ -3,6 +3,7 @@ import { StudentTable } from '@/components/admin/student-table'
 import { getStudentsAction } from '@/actions/students'
 import { Button } from '@/components/ui/button'
 import { Download } from 'lucide-react'
+import { TableSkeleton } from '@/components/ui/skeleton'
 
 
 
@@ -23,7 +24,7 @@ export default async function StudentsPage() {
         </Button>
       </div>
 
-      <Suspense fallback={<div>Loading students...</div>}>
+      <Suspense fallback={<TableSkeleton rows={8} columns={6} />}>
         <StudentTable initialData={initialData} />
       </Suspense>
     </div>

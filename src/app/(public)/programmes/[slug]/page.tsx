@@ -3,7 +3,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getProgrammes, getProgrammeBySlug } from '@/data/programmes';
+import { getBatches } from '@/data/batches';
 import { CheckCircle2, Clock, Calendar, IndianRupee, MapPin } from 'lucide-react';
+import { formatTime } from '@/lib/utils/format';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -36,17 +38,35 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   
   return {
     title: programme.name,
-    description: programme.description || `Join our ${programme.name} classes in Secunderabad. Perfect for ${programme.age_group || 'all ages'}.`,
+    description: programme.description || `Join our ${programme.name} classes in Secunderabad. Free trial class at Neredmet X Road.`,
+    alternates: { canonical: `https://www.rhythmzzdance.com/programmes/${slug}` },
   };
 }
 
+// Grounded per-programme facts (batch windows and leads from the studio schedule).
+const PROGRAMME_NOTES: Record<string, string> = {
+  'kids-dance':
+    'Kids Dance at Rhythmzz runs Monday to Wednesday, 5 to 7 PM, in two batches taught by Deepak and Kajal — Bollywood, Hip Hop and Contemporary, with stage performance training built in. Children from age 5 are welcome.',
+  'adults-dance':
+    'Adults Dance runs Monday to Wednesday, 7 to 9 PM, in two batches led by Nitish — Bollywood, Contemporary, Hip Hop and group choreography. No prior dance experience required.',
+  'mind-body-fitness':
+    'Mind & Body Fitness runs weekday mornings, 9:30 to 10:30 AM, with Shailaja — Zumba, Yoga, Pilates, HIIT, strength, Tabata, core and mobility on a rotating weekly schedule.',
+  kuchipudi:
+    'Kuchipudi Classical is a level-based, certified programme taught by Srusti on Fridays and Saturdays, 6:30 to 7:30 PM — Foundation through Advanced, with formal certification at each stage. Seats are limited.',
+};
+
 export default async function ProgrammeDetailPage({ params }: Props) {
   const { slug } = await params;
-  const programme: any = await getProgrammeBySlug(slug);
-  
+  const [programmeRaw, allBatches] = await Promise.all([getProgrammeBySlug(slug), getBatches()]);
+  const programme: any = programmeRaw;
+
   if (!programme) {
     notFound();
   }
+
+  const programmeBatches = (allBatches ?? []).filter(
+    (b: any) => b.programme?.slug === slug || b.programme_id === programme.id,
+  );
 
   const courseSchema = {
     "@context": "https://schema.org",
@@ -100,11 +120,11 @@ export default async function ProgrammeDetailPage({ params }: Props) {
           <div>
             <h2 className="heading-display text-3xl mb-6">ABOUT THIS PROGRAMME</h2>
             <div className="prose prose-sm md:prose-base prose-neutral max-w-none text-mu">
+              <p>{PROGRAMME_NOTES[slug] ?? programme.description}</p>
               <p>
-                Our {programme.name} program is designed to provide comprehensive training in a supportive and energetic environment. Whether you are a beginner taking your first steps or an experienced dancer looking to refine your technique, our expert instructors are here to guide you.
-              </p>
-              <p>
-                Located near Neredmet X Road, Secunderabad, we are easily accessible for students from Sainikpuri, AS Rao Nagar, and surrounding areas.
+                The studio is at Neredmet X Road Bus Stop, Secunderabad — 8–15 minutes by drive
+                from Sainikpuri, AS Rao Nagar and Yapral. Your first class is a free trial, with no
+                registration fee.
               </p>
             </div>
           </div>
@@ -127,9 +147,15 @@ export default async function ProgrammeDetailPage({ params }: Props) {
           {/* Batches / Schedule */}
           <div>
             <h2 className="heading-display text-3xl mb-6">CLASS SCHEDULE</h2>
-            {programme.batches && programme.batches.length > 0 ? (
+            {(programmeBatches.length > 0
+              ? programmeBatches
+              : ((programme.batches ?? []) as any[])
+            ).length > 0 ? (
               <div className="space-y-4">
-                {programme.batches.map((batch: any, idx: number) => (
+                {(programmeBatches.length > 0
+                  ? programmeBatches
+                  : ((programme.batches ?? []) as any[])
+                ).map((batch: any, idx: number) => (
                   <div key={idx} className="flex flex-col sm:flex-row sm:items-center justify-between p-6 bg-light border border-black/5 rounded-2xl gap-4">
                     <div className="flex flex-col gap-2">
                       <div className="flex items-center gap-2 text-blk font-semibold">
@@ -138,7 +164,7 @@ export default async function ProgrammeDetailPage({ params }: Props) {
                       </div>
                       <div className="flex items-center gap-2 text-mu text-sm">
                         <Clock size={16} />
-                        {batch.time_start} - {batch.time_end}
+                        {formatTime(batch.time_start)} – {formatTime(batch.time_end)}
                       </div>
                     </div>
                     {batch.instructor && (

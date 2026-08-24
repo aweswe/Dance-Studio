@@ -10,14 +10,22 @@ export async function POST(req: Request) {
     if (!result.success) return NextResponse.json({ error: 'Invalid data' }, { status: 400 });
     
     const data = result.data;
+
+    const razorpay = getRazorpay();
+    if (!razorpay) {
+      return NextResponse.json(
+        { error: 'PAYMENTS_UNAVAILABLE', message: 'Online payments are not configured yet. Please book via WhatsApp.' },
+        { status: 503 },
+      );
+    }
+
     const supabase = await createServerSupabase();
-    
+
     const { data: programmeData } = await supabase.from('programmes').select('fees_monthly').eq('id', data.programmeId).single();
     const programme = programmeData as any;
     if (!programme) return NextResponse.json({ error: 'Programme not found' }, { status: 404 });
-    
+
     const feeAmount = programme.fees_monthly || 2500;
-    const razorpay = getRazorpay();
     const order = await razorpay.orders.create({
       amount: feeAmount * 100,
       currency: 'INR',

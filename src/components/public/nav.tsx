@@ -20,7 +20,7 @@ export function Nav() {
       <ul className="hidden md:flex gap-6 list-none m-0 p-0">
         {[
           { name: 'Programmes', href: ROUTES.programmes },
-          { name: 'Schedule', href: '#schedule' },
+          { name: 'Schedule', href: `${ROUTES.home}#schedule` },
           { name: 'Gallery', href: ROUTES.gallery },
           { name: 'About', href: ROUTES.about },
           { name: 'Contact', href: ROUTES.contact },
@@ -53,21 +53,23 @@ export function Nav() {
       </div>
 
       {/* Mobile Menu Button */}
-      <button 
+      <button
         className="md:hidden p-2 text-blk"
         onClick={() => setIsOpen(!isOpen)}
         aria-label="Toggle menu"
+        aria-expanded={isOpen}
+        aria-controls="mobile-menu"
       >
         {isOpen ? <X size={24} /> : <Menu size={24} />}
       </button>
 
       {/* Mobile Menu */}
       {isOpen && (
-        <div className="absolute top-full left-0 right-0 bg-white border-b border-black/5 p-6 flex flex-col gap-6 md:hidden shadow-lg">
+        <div id="mobile-menu" className="absolute top-full left-0 right-0 bg-white border-b border-black/5 p-6 flex flex-col gap-6 md:hidden shadow-lg">
           <ul className="flex flex-col gap-4 list-none m-0 p-0">
             {[
               { name: 'Programmes', href: ROUTES.programmes },
-              { name: 'Schedule', href: '#schedule' },
+              { name: 'Schedule', href: `${ROUTES.home}#schedule` },
               { name: 'Gallery', href: ROUTES.gallery },
               { name: 'About', href: ROUTES.about },
               { name: 'Contact', href: ROUTES.contact },

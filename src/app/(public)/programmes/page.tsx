@@ -1,0 +1,84 @@
+import { Metadata } from 'next';
+import Link from 'next/link';
+
+import { getProgrammes } from '@/data/programmes';
+import { getBatches } from '@/data/batches';
+import { ProgrammeCard } from '@/components/public/programme-card';
+import { scheduleFor } from '@/lib/utils/schedule';
+import { ROUTES } from '@/lib/utils/constants';
+
+export const metadata: Metadata = {
+  title: 'Dance & Fitness Programmes | Rhythmzz Academy of Dance',
+  description:
+    'Kids dance, adult dance, mind & body fitness and Kuchipudi classes at Neredmet X Road, Secunderabad. Fees from ₹2,000 a month, no registration fee, free trial class.',
+  alternates: { canonical: 'https://www.rhythmzzdance.com/programmes' },
+};
+
+export default async function ProgrammesPage() {
+  const [programmes, batches] = await Promise.all([getProgrammes(), getBatches()]);
+
+  const itemListSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'Dance and fitness programmes at Rhythmzz Academy of Dance',
+    itemListElement: programmes.map((p: any, i: number) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: p.name,
+      url: `https://www.rhythmzzdance.com/programmes/${p.slug}`,
+    })),
+  };
+
+  return (
+    <div className="bg-white">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }}
+      />
+
+      {/* Hero band */}
+      <section className="bg-blk text-white py-20 px-6 md:px-16 text-center">
+        <div className="max-w-3xl mx-auto">
+          <div className="text-[10px] tracking-[5px] uppercase text-bl-light mb-3">
+            Four Programmes · One Studio
+          </div>
+          <h1 className="heading-display text-5xl md:text-7xl mb-6">
+            KIDS · ADULTS · FITNESS · CLASSICAL
+          </h1>
+          <p className="text-white/70 text-base leading-relaxed max-w-2xl mx-auto">
+            Fees from ₹2,000 a month. No registration fee. Your first class is on us — book a free
+            trial at Neredmet X Road, Secunderabad.
+          </p>
+        </div>
+      </section>
+
+      {/* Programme grid */}
+      <section className="py-24 px-6 md:px-16">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
+          {programmes.map((prog: any) => (
+            <ProgrammeCard
+              key={prog.id ?? prog.slug}
+              programme={prog}
+              schedule={scheduleFor(prog, batches)}
+            />
+          ))}
+        </div>
+
+        {/* Not sure? CTA */}
+        <div className="max-w-3xl mx-auto mt-16 text-center bg-light border border-black/5 rounded-2xl p-10">
+          <h2 className="heading-display text-3xl mb-3">NOT SURE WHICH ONE?</h2>
+          <p className="text-sm text-mu mb-6">
+            Come for a free trial class and we&apos;ll help you find the right batch. No
+            registration fee, no commitment.
+          </p>
+          <Link
+            href={ROUTES.enrol}
+            className="inline-block bg-blk text-white text-[11px] font-semibold tracking-[2px] uppercase py-4 px-10 hover:bg-bl transition-all"
+          >
+            Book a Free Trial
+          </Link>
+        </div>
+      </section>
+    </div>
+  );
+}
