@@ -77,7 +77,7 @@ export function AttendanceMarker({ batches, initialBatchId }: AttendanceMarkerPr
   };
 
   if (batches.length === 0) {
-    return <Card><p className="text-mu">You have no assigned classes.</p></Card>;
+    return <Card><p className="text-ink-2">You have no assigned classes.</p></Card>;
   }
 
   return (
@@ -85,8 +85,8 @@ export function AttendanceMarker({ batches, initialBatchId }: AttendanceMarkerPr
       <div className="flex flex-col md:flex-row gap-4 mb-8">
         <div className="flex-1">
           <label className="block text-sm font-semibold mb-2">Select Batch</label>
-          <select 
-            className="w-full p-3 rounded-lg border border-black/10 bg-white"
+          <select
+            className="w-full p-3 rounded-lg border border-line bg-surface focus-visible:focus-ring"
             value={selectedBatchId}
             onChange={handleBatchChange}
           >
@@ -97,9 +97,9 @@ export function AttendanceMarker({ batches, initialBatchId }: AttendanceMarkerPr
         </div>
         <div className="flex-1">
           <label className="block text-sm font-semibold mb-2">Date</label>
-          <input 
-            type="date" 
-            className="w-full p-3 rounded-lg border border-black/10 bg-white"
+          <input
+            type="date"
+            className="w-full p-3 rounded-lg border border-line bg-surface focus-visible:focus-ring"
             value={date}
             onChange={(e) => setDate(e.target.value)}
           />
@@ -107,7 +107,7 @@ export function AttendanceMarker({ batches, initialBatchId }: AttendanceMarkerPr
       </div>
 
       {message && (
-        <div className={`p-4 rounded-lg mb-6 ${message.type === "success" ? "bg-green/10 text-green" : "bg-red-500/10 text-red-600"}`}>
+        <div className={`p-4 rounded-lg mb-6 ${message.type === "success" ? "bg-green/10 text-green" : "bg-danger/10 text-danger-deep"}`}>
           {message.text}
         </div>
       )}
@@ -115,29 +115,29 @@ export function AttendanceMarker({ batches, initialBatchId }: AttendanceMarkerPr
       <div className="space-y-3 mb-8">
         {students.length > 0 ? (
           students.map(student => (
-            <div key={student.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-black/5 rounded-lg gap-4">
+            <div key={student.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-canvas-muted-2 rounded-lg gap-4">
               <span className="font-medium">{student.name}</span>
-              
-              <div className="flex bg-white rounded-lg border border-black/10 overflow-hidden">
+
+              <div className="flex bg-surface rounded-lg border border-line overflow-hidden">
                 <button
-                  className={cn("flex-1 flex items-center justify-center gap-1.5 px-4 py-2 text-sm font-semibold transition-colors", 
-                    attendance[student.id] === "present" ? "bg-green text-white" : "hover:bg-black/5"
+                  className={cn("flex-1 flex items-center justify-center gap-1.5 px-4 py-2 text-sm font-semibold transition-colors focus-visible:focus-ring active:scale-[0.98]",
+                    attendance[student.id] === "present" ? "bg-green text-white" : "hover:bg-canvas-muted-2"
                   )}
                   onClick={() => handleStatusChange(student.id, "present")}
                 >
                   <Check size={16} /> Present
                 </button>
                 <button
-                  className={cn("flex-1 flex items-center justify-center gap-1.5 px-4 py-2 text-sm font-semibold transition-colors border-l border-r border-black/10", 
-                    attendance[student.id] === "absent" ? "bg-red-500 text-white" : "hover:bg-black/5"
+                  className={cn("flex-1 flex items-center justify-center gap-1.5 px-4 py-2 text-sm font-semibold transition-colors border-l border-r border-line focus-visible:focus-ring active:scale-[0.98]",
+                    attendance[student.id] === "absent" ? "bg-danger text-white" : "hover:bg-canvas-muted-2"
                   )}
                   onClick={() => handleStatusChange(student.id, "absent")}
                 >
                   <X size={16} /> Absent
                 </button>
                 <button
-                  className={cn("flex-1 flex items-center justify-center gap-1.5 px-4 py-2 text-sm font-semibold transition-colors", 
-                    attendance[student.id] === "leave" ? "bg-gold text-black" : "hover:bg-black/5"
+                  className={cn("flex-1 flex items-center justify-center gap-1.5 px-4 py-2 text-sm font-semibold transition-colors focus-visible:focus-ring active:scale-[0.98]",
+                    attendance[student.id] === "leave" ? "bg-gold text-black" : "hover:bg-canvas-muted-2"
                   )}
                   onClick={() => handleStatusChange(student.id, "leave")}
                 >
@@ -147,7 +147,7 @@ export function AttendanceMarker({ batches, initialBatchId }: AttendanceMarkerPr
             </div>
           ))
         ) : (
-          <p className="text-mu text-center py-4">No students found in this batch.</p>
+          <p className="text-ink-2 text-center py-4">No students found in this batch.</p>
         )}
       </div>
 

@@ -20,11 +20,11 @@ export function WhoOwes({ students }: { students: WhoOwesStudent[] }) {
   const [state, setState] = useState<Record<string, string>>({})
 
   return (
-    <div className="bg-wh rounded-[16px] shadow-sm border border-amber-200 overflow-hidden">
-      <div className="p-4 border-b border-amber-200 bg-amber-50 flex items-center justify-between">
+    <div className="bg-surface rounded-card border border-line overflow-hidden">
+      <div className="p-4 border-b border-gold/30 bg-gold/10 flex items-center justify-between">
         <div>
-          <h3 className="font-display text-lg text-blk tracking-wide">Who Owes This Month</h3>
-          <p className="text-sm text-mu mt-0.5">
+          <h3 className="font-display text-lg text-ink tracking-wide">Who Owes This Month</h3>
+          <p className="text-sm text-ink-2 mt-0.5">
             {students.length === 0
               ? 'Everyone is covered — no pending fees right now.'
               : `${students.length} active student${students.length === 1 ? '' : 's'} with the current month uncovered.`}
@@ -36,19 +36,19 @@ export function WhoOwes({ students }: { students: WhoOwesStudent[] }) {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-light border-b border-gray-200">
-                <th className="px-6 py-3 text-xs font-display tracking-[2px] text-mu uppercase">Student</th>
-                <th className="px-6 py-3 text-xs font-display tracking-[2px] text-mu uppercase">Programme</th>
-                <th className="px-6 py-3 text-xs font-display tracking-[2px] text-mu uppercase">Amount</th>
-                <th className="px-6 py-3 text-xs font-display tracking-[2px] text-mu uppercase">Contact</th>
+              <tr className="bg-canvas-muted border-b border-line-strong">
+                <th className="px-6 py-3 text-xs font-display tracking-[2px] text-ink-2 uppercase">Student</th>
+                <th className="px-6 py-3 text-xs font-display tracking-[2px] text-ink-2 uppercase">Programme</th>
+                <th className="px-6 py-3 text-xs font-display tracking-[2px] text-ink-2 uppercase">Amount</th>
+                <th className="px-6 py-3 text-xs font-display tracking-[2px] text-ink-2 uppercase">Contact</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-line-subtle">
               {students.map((s) => (
-                <tr key={s.id} className="hover:bg-light/50 transition-colors">
-                  <td className="px-6 py-3 font-medium text-blk">{s.name}</td>
-                  <td className="px-6 py-3 text-sm text-mu">{s.programmeName}</td>
-                  <td className="px-6 py-3 font-medium">{formatCurrency(s.amount)}</td>
+                <tr key={s.id} className="hover:bg-canvas-muted transition-colors">
+                  <td className="px-6 py-3 font-medium text-ink">{s.name}</td>
+                  <td className="px-6 py-3 text-sm text-ink-2">{s.programmeName}</td>
+                  <td className="px-6 py-3 font-medium text-ink">{formatCurrency(s.amount)}</td>
                   <td className="px-6 py-3">
                     <div className="flex items-center gap-2">
                       <a

@@ -112,15 +112,15 @@ export function BlogEditor({ initialPosts }: { initialPosts: Post[] }) {
     const isNew = editingId === 'new'
     return (
       <Card className="p-6">
-        <h3 className="font-display text-xl text-blk mb-6">{isNew ? 'Create New Post' : 'Edit Post'}</h3>
+        <h3 className="font-display text-xl text-ink mb-6">{isNew ? 'Create New Post' : 'Edit Post'}</h3>
 
         {feedback && (
-          <p className={`mb-4 text-sm ${feedback.ok ? 'text-green' : 'text-red-500'}`}>{feedback.text}</p>
+          <p className={`mb-4 text-sm ${feedback.ok ? 'text-green-ink' : 'text-danger'}`}>{feedback.text}</p>
         )}
 
         <div className="space-y-4">
           <div>
-            <label className="block text-sm text-mu mb-1">Title</label>
+            <label className="block text-sm text-ink-2 mb-1">Title</label>
             <Input
               placeholder="Enter post title"
               value={form.title}
@@ -128,7 +128,7 @@ export function BlogEditor({ initialPosts }: { initialPosts: Post[] }) {
             />
           </div>
           <div>
-            <label className="block text-sm text-mu mb-1">Excerpt</label>
+            <label className="block text-sm text-ink-2 mb-1">Excerpt</label>
             <Input
               placeholder="Brief summary"
               value={form.excerpt}
@@ -136,7 +136,7 @@ export function BlogEditor({ initialPosts }: { initialPosts: Post[] }) {
             />
           </div>
           <div>
-            <label className="block text-sm text-mu mb-1">Cover Image URL</label>
+            <label className="block text-sm text-ink-2 mb-1">Cover Image URL</label>
             <Input
               placeholder="https://..."
               value={form.coverImageUrl}
@@ -144,7 +144,7 @@ export function BlogEditor({ initialPosts }: { initialPosts: Post[] }) {
             />
           </div>
           <div>
-            <label className="block text-sm text-mu mb-1">Meta Description</label>
+            <label className="block text-sm text-ink-2 mb-1">Meta Description</label>
             <Input
               placeholder="SEO summary (optional)"
               value={form.metaDescription}
@@ -152,7 +152,7 @@ export function BlogEditor({ initialPosts }: { initialPosts: Post[] }) {
             />
           </div>
           <div>
-            <label className="block text-sm text-mu mb-1">Tags (comma-separated)</label>
+            <label className="block text-sm text-ink-2 mb-1">Tags (comma-separated)</label>
             <Input
               placeholder="Kuchipudi, Fitness"
               value={form.tags}
@@ -160,35 +160,35 @@ export function BlogEditor({ initialPosts }: { initialPosts: Post[] }) {
             />
           </div>
           <div>
-            <label className="block text-sm text-mu mb-1">Content (HTML)</label>
+            <label className="block text-sm text-ink-2 mb-1">Content (HTML)</label>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               <textarea
-                className="w-full h-96 p-3 rounded-md border border-gray-200 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-bl resize-none"
+                className="w-full h-96 bg-surface border border-line-strong rounded-control px-4 py-3 text-sm text-ink placeholder:text-ink-3 focus:outline-none focus:border-bl/50 focus:ring-1 focus:ring-bl/20 transition-all font-mono resize-none"
                 placeholder="<h2>Heading</h2>&#10;<p>Write your post content here (HTML)...</p>"
                 value={form.content}
                 onChange={(e) => setForm({ ...form, content: e.target.value })}
               />
-              <div className="h-96 overflow-y-auto rounded-md border border-gray-200 bg-light/50 p-4">
-                <p className="text-[10px] font-display tracking-[2px] text-mu uppercase mb-2">Live Preview</p>
+              <div className="h-96 overflow-y-auto rounded-md border border-line-strong bg-canvas-muted/50 p-4">
+                <p className="text-[10px] font-display tracking-[2px] text-ink-2 uppercase mb-2">Live Preview</p>
                 {form.content.trim() ? (
                   <div
-                    className="prose prose-neutral max-w-none prose-headings:font-display prose-headings:font-normal prose-a:text-bl prose-img:rounded-xl text-sm"
+                    className="prose prose-neutral max-w-none prose-headings:font-display prose-headings:font-normal prose-a:text-bl-ink prose-img:rounded-xl text-sm"
                     dangerouslySetInnerHTML={{ __html: form.content }}
                   />
                 ) : (
-                  <p className="text-sm text-mu italic">Start typing to preview the post.</p>
+                  <p className="text-sm text-ink-2 italic">Start typing to preview the post.</p>
                 )}
               </div>
             </div>
           </div>
-          <div className="flex gap-3 pt-4 border-t border-gray-100">
+          <div className="flex gap-3 pt-4 border-t border-line-subtle">
             <Button onClick={() => save(true)} disabled={busy}>
               {busy ? 'Saving...' : 'Publish Post'}
             </Button>
             <Button variant="outline" onClick={() => save(false)} disabled={busy}>
               Save as Draft
             </Button>
-            <Button variant="outline" onClick={() => setEditingId(null)} className="ml-auto text-mu">Cancel</Button>
+            <Button variant="outline" onClick={() => setEditingId(null)} className="ml-auto text-ink-2">Cancel</Button>
           </div>
         </div>
       </Card>
@@ -204,19 +204,19 @@ export function BlogEditor({ initialPosts }: { initialPosts: Post[] }) {
       </div>
 
       {feedback && (
-        <p className={`text-sm ${feedback.ok ? 'text-green' : 'text-red-500'}`}>{feedback.text}</p>
+        <p className={`text-sm ${feedback.ok ? 'text-green-ink' : 'text-danger'}`}>{feedback.text}</p>
       )}
 
       <div className="space-y-4">
         {posts.map((post) => (
           <Card key={post.id} className="p-4 flex items-center justify-between">
             <div>
-              <h4 className="font-medium text-blk">{post.title}</h4>
+              <h4 className="font-medium text-ink">{post.title}</h4>
               <div className="flex items-center gap-3 mt-1">
                 <Badge variant={post.is_published ? 'green' : 'default'} className="text-[10px]">
                   {post.is_published ? 'PUBLISHED' : 'DRAFT'}
                 </Badge>
-                <span className="text-xs text-mu">
+                <span className="text-xs text-ink-2">
                   {post.is_published && post.published_at
                     ? formatDate(post.published_at)
                     : formatDate(post.created_at)}
@@ -224,10 +224,10 @@ export function BlogEditor({ initialPosts }: { initialPosts: Post[] }) {
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <button className="p-2 text-mu hover:text-bl rounded-full hover:bg-light" onClick={() => openEdit(post)}>
+              <button aria-label="Edit post" className="p-2 text-ink-2 hover:text-bl rounded-full hover:bg-canvas-muted focus-visible:focus-ring active:scale-[0.98]" onClick={() => openEdit(post)}>
                 <Edit size={16} />
               </button>
-              <button className="p-2 text-mu hover:text-red-500 rounded-full hover:bg-light" onClick={() => setPendingDelete(post)}>
+              <button aria-label="Delete post" className="p-2 text-ink-2 hover:text-danger rounded-full hover:bg-canvas-muted focus-visible:focus-ring active:scale-[0.98]" onClick={() => setPendingDelete(post)}>
                 <Trash2 size={16} />
               </button>
             </div>
@@ -235,7 +235,7 @@ export function BlogEditor({ initialPosts }: { initialPosts: Post[] }) {
         ))}
 
         {posts.length === 0 && (
-          <div className="py-12 text-center text-mu bg-light rounded-[16px]">
+          <div className="py-12 text-center text-ink-2 bg-canvas-muted rounded-[16px]">
             No posts yet. Write the first one.
           </div>
         )}

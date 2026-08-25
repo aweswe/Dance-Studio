@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Bebas_Neue, Inter } from "next/font/google";
+import { Big_Shoulders, Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SITE_URL } from "@/lib/utils/constants";
 import "./globals.css";
@@ -8,9 +8,8 @@ export const viewport: Viewport = {
   themeColor: "#2BB4D8",
 };
 
-const bebasNeue = Bebas_Neue({
-  weight: "400",
-  variable: "--font-bebas-neue",
+const displayFace = Big_Shoulders({
+  variable: "--font-display-face",
   subsets: ["latin"],
   display: "swap",
 });
@@ -101,8 +100,18 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en-IN"
-      className={`${bebasNeue.variable} ${inter.variable} h-full antialiased`}
+      suppressHydrationWarning
+      className={`${displayFace.variable} ${inter.variable} h-full antialiased`}
     >
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('rhythmzz-theme');
+if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches))
+document.documentElement.classList.add('dark');}catch(e){}})()`,
+          }}
+        />
+      </head>
       <body className="min-h-full flex flex-col font-body">
         {children}
         <Analytics />

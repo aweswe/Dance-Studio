@@ -54,7 +54,7 @@ export default async function FeesPage() {
     <div className="space-y-8">
       <div>
         <h1 className="font-display text-4xl tracking-[2px] mb-2">Fee Management</h1>
-        <p className="text-mu">View and manage your fee payments.</p>
+        <p className="text-ink-2">View and manage your fee payments.</p>
       </div>
 
       <FeeStatusCard

@@ -1,6 +1,7 @@
 "use client";
 
 import { Card } from "@/components/ui/card";
+import { EmptyState } from "@/components/ui/empty-state";
 import { formatDate } from "@/lib/utils/format";
 
 interface Notice {
@@ -45,7 +46,7 @@ export function NoticeList({
   if (visible.length === 0) {
     return (
       <Card>
-        <p className="text-mu">No notices found.</p>
+        <EmptyState title="No notices found" />
       </Card>
     );
   }
@@ -58,7 +59,7 @@ export function NoticeList({
             <h3 className="font-semibold">
               {(notice.template_name && NOTICE_TITLES[notice.template_name]) || "Academy Notice"}
             </h3>
-            <span className="text-xs text-mu">{formatDate(notice.sent_at)}</span>
+            <span className="text-xs text-ink-2">{formatDate(notice.sent_at)}</span>
           </div>
           <p className="text-sm whitespace-pre-wrap">{notice.message}</p>
         </Card>

@@ -54,15 +54,15 @@ export default async function StudentDetailPage({ params }: { params: Promise<{ 
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-4">
-        <Link href="/admin/students" className="p-2 border border-gray-200 rounded-full text-mu hover:bg-light hover:text-blk transition-colors">
+        <Link href="/admin/students" aria-label="Back to students" className="p-2 border border-line-strong rounded-full text-ink-2 hover:bg-canvas-muted hover:text-ink transition-colors focus-visible:focus-ring active:scale-[0.98]">
           <ArrowLeft size={16} />
         </Link>
         <div>
-          <h2 className="font-display text-3xl text-blk tracking-wide flex items-center gap-3">
+          <h2 className="font-display text-3xl text-ink tracking-wide flex items-center gap-3">
             {student.name}
             <Badge variant={student.status === 'active' ? 'green' : 'default'} className="text-xs">{student.status.toUpperCase()}</Badge>
           </h2>
-          <p className="text-mu font-body text-sm mt-1">
+          <p className="text-ink-2 font-body text-sm mt-1">
             {student.student_id_display} · Joined {formatDate(student.join_date, 'long')}
           </p>
         </div>
@@ -70,17 +70,17 @@ export default async function StudentDetailPage({ params }: { params: Promise<{ 
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <Card className="p-6 col-span-1 lg:col-span-1 h-fit space-y-6">
-          <h3 className="font-display text-xl text-blk border-b border-gray-100 pb-2">Profile Details</h3>
+          <h3 className="font-display text-xl text-ink border-b border-line-subtle pb-2">Profile Details</h3>
 
           <div className="space-y-4">
             <div className="flex items-start gap-3 text-sm">
-              <Phone size={16} className="text-mu mt-0.5" />
+              <Phone size={16} className="text-ink-2 mt-0.5" />
               <div>
-                <p className="font-medium text-blk flex items-center gap-2">
+                <p className="font-medium text-ink flex items-center gap-2">
                   {student.phone}
                   <a
                     href={telLink(student.phone)}
-                    className="p-1 rounded text-mu hover:text-bl hover:bg-black/5 transition-colors"
+                    className="p-1 rounded text-ink-2 hover:text-bl hover:bg-line-subtle transition-colors focus-visible:focus-ring active:scale-[0.98]"
                     aria-label="Call student"
                   >
                     <Phone size={13} />
@@ -89,29 +89,29 @@ export default async function StudentDetailPage({ params }: { params: Promise<{ 
                     href={`https://wa.me/91${String(student.phone).replace(/\D/g, '').replace(/^91/, '')}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="p-1 rounded text-mu hover:text-green hover:bg-black/5 transition-colors"
+                    className="p-1 rounded text-ink-2 hover:text-green hover:bg-line-subtle transition-colors focus-visible:focus-ring active:scale-[0.98]"
                     aria-label="WhatsApp student"
                   >
                     <MessageCircle size={13} />
                   </a>
                 </p>
-                <p className="text-xs text-mu">Primary Contact</p>
+                <p className="text-xs text-ink-2">Primary Contact</p>
               </div>
             </div>
 
             <div className="flex items-start gap-3 text-sm">
-              <Mail size={16} className="text-mu mt-0.5" />
+              <Mail size={16} className="text-ink-2 mt-0.5" />
               <div>
-                <p className="font-medium text-blk">{student.email || '—'}</p>
-                <p className="text-xs text-mu">Email</p>
+                <p className="font-medium text-ink">{student.email || '—'}</p>
+                <p className="text-xs text-ink-2">Email</p>
               </div>
             </div>
 
             <div className="flex items-start gap-3 text-sm">
-              <Calendar size={16} className="text-mu mt-0.5" />
+              <Calendar size={16} className="text-ink-2 mt-0.5" />
               <div>
-                <p className="font-medium text-blk">{formatDate(student.join_date, 'long')}</p>
-                <p className="text-xs text-mu">Join Date</p>
+                <p className="font-medium text-ink">{formatDate(student.join_date, 'long')}</p>
+                <p className="text-xs text-ink-2">Join Date</p>
               </div>
             </div>
           </div>
@@ -134,12 +134,12 @@ export default async function StudentDetailPage({ params }: { params: Promise<{ 
           {isKuchipudi && <KuchipudiAdmin studentId={id} initialProgress={kuchipudiProgress as any} />}
 
           <Card className="p-6">
-            <h3 className="font-display text-xl text-blk border-b border-gray-100 pb-2 mb-4">Enrolment</h3>
+            <h3 className="font-display text-xl text-ink border-b border-line-subtle pb-2 mb-4">Enrolment</h3>
             {student.batch ? (
-              <div className="bg-light rounded-lg p-4 flex items-center justify-between">
+              <div className="bg-canvas-muted rounded-lg p-4 flex items-center justify-between">
                 <div>
-                  <h4 className="font-medium text-blk">{student.batch.programme?.name || 'Programme'}</h4>
-                  <p className="text-sm text-mu">
+                  <h4 className="font-medium text-ink">{student.batch.programme?.name || 'Programme'}</h4>
+                  <p className="text-sm text-ink-2">
                     {student.batch.name || student.batch.days?.join(', ')}
                     {student.batch.time_start && ` · ${formatTime(student.batch.time_start)} - ${formatTime(student.batch.time_end)}`}
                   </p>
@@ -149,26 +149,26 @@ export default async function StudentDetailPage({ params }: { params: Promise<{ 
                 </Badge>
               </div>
             ) : (
-              <div className="text-center py-6 text-sm text-mu">No batch assigned.</div>
+              <div className="text-center py-6 text-sm text-ink-2">No batch assigned.</div>
             )}
           </Card>
 
           <Card className="p-6">
-            <h3 className="font-display text-xl text-blk border-b border-gray-100 pb-2 mb-4">Recent Payments</h3>
+            <h3 className="font-display text-xl text-ink border-b border-line-subtle pb-2 mb-4">Recent Payments</h3>
             {payments && payments.length > 0 ? (
-              <div className="divide-y divide-gray-100">
+              <div className="divide-y divide-line-subtle">
                 {(payments as any[]).map((p) => (
                   <div key={p.id} className="py-3 flex items-center justify-between">
                     <div>
-                      <p className="font-medium text-blk">{formatCurrency(p.amount)}</p>
-                      <p className="text-xs text-mu">{formatDate(p.paid_at, 'long')}{p.notes ? ` · ${p.notes}` : ''}</p>
+                      <p className="font-medium text-ink">{formatCurrency(p.amount)}</p>
+                      <p className="text-xs text-ink-2">{formatDate(p.paid_at, 'long')}{p.notes ? ` · ${p.notes}` : ''}</p>
                     </div>
                     <Badge variant="outline">{p.source.toUpperCase()}</Badge>
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="text-center py-6 text-sm text-mu">
+              <div className="text-center py-6 text-sm text-ink-2">
                 No recent payments found.
               </div>
             )}

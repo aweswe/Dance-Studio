@@ -35,7 +35,7 @@ export default async function StudentsPage() {
     <div className="space-y-6">
       <div>
         <h1 className="font-display text-4xl tracking-[2px] mb-2">Student Roster</h1>
-        <p className="text-mu">View students enrolled in your assigned batches.</p>
+        <p className="text-ink-2">View students enrolled in your assigned batches.</p>
       </div>
 
       <StudentList students={(students || []) as any} />

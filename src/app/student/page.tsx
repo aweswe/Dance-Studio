@@ -3,6 +3,8 @@ import { redirect } from "next/navigation";
 import { ROUTES } from "@/lib/utils/constants";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { PageHeader } from "@/components/ui/page-header";
+import { KpiNumber } from "@/components/ui/kpi-number";
 import Link from "next/link";
 import { formatTime } from "@/lib/utils/format";
 
@@ -51,21 +53,24 @@ export default async function StudentDashboardPage() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="font-display text-4xl tracking-[2px] mb-2">Welcome back, {student.name?.split(" ")[0]}!</h1>
-        <p className="text-mu">Here is what is happening with your classes.</p>
-      </div>
+      <PageHeader
+        label="Student Portal"
+        title={`Welcome back, ${student.name?.split(" ")[0] || "dancer"}!`}
+        description="Here is what is happening with your classes."
+      />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card>
           <div className="flex flex-col h-full justify-between">
             <div>
-              <p className="text-sm text-mu mb-1 uppercase tracking-widest font-semibold">Attendance</p>
-              <p className="font-display text-5xl">
-                {hasAttendance ? `${attendancePercentage}%` : <span className="text-3xl text-mu">No classes marked yet</span>}
-              </p>
+              <p className="text-sm text-ink-2 mb-1 uppercase tracking-widest font-semibold">Attendance</p>
+              {hasAttendance ? (
+                <KpiNumber value={`${attendancePercentage}%`} className="text-5xl" />
+              ) : (
+                <p className="font-display text-3xl text-ink-2">No classes marked yet</p>
+              )}
             </div>
-            <Link href={`${ROUTES.student}/attendance`} className="text-bl text-sm font-semibold mt-4 hover:underline">
+            <Link href={`${ROUTES.student}/attendance`} className="text-bl-ink text-sm font-semibold mt-4 hover:text-bl transition-colors focus-visible:focus-ring rounded-sm">
               View Details &rarr;
             </Link>
           </div>
@@ -74,13 +79,13 @@ export default async function StudentDashboardPage() {
         <Card>
           <div className="flex flex-col h-full justify-between">
             <div>
-              <p className="text-sm text-mu mb-1 uppercase tracking-widest font-semibold">Current Batch</p>
+              <p className="text-sm text-ink-2 mb-1 uppercase tracking-widest font-semibold">Current Batch</p>
               <h3 className="font-display text-2xl mb-1">
                 {student.batch?.name || student.batch?.days?.join(", ") || "No batch"}
               </h3>
-              <p className="text-sm">{student.programme?.name}</p>
+              <p className="text-sm text-ink-2">{student.programme?.name}</p>
             </div>
-            <Link href={`${ROUTES.student}/schedule`} className="text-bl text-sm font-semibold mt-4 hover:underline">
+            <Link href={`${ROUTES.student}/schedule`} className="text-bl-ink text-sm font-semibold mt-4 hover:text-bl transition-colors focus-visible:focus-ring rounded-sm">
               View Schedule &rarr;
             </Link>
           </div>
@@ -89,12 +94,15 @@ export default async function StudentDashboardPage() {
         <Card>
           <div className="flex flex-col h-full justify-between">
             <div>
-              <p className="text-sm text-mu mb-1 uppercase tracking-widest font-semibold">Fee Status</p>
-              <Badge variant={feePaid ? "green" : "outline"} className={feePaid ? "mt-2" : "mt-2 border-red-500 text-red-500"}>
+              <p className="text-sm text-ink-2 mb-1 uppercase tracking-widest font-semibold">Fee Status</p>
+              <Badge
+                variant={feePaid ? "green" : "outline"}
+                className={feePaid ? "mt-2" : "mt-2 border-danger text-danger"}
+              >
                 {feePaid ? "Paid" : "Due"}
               </Badge>
             </div>
-            <Link href={`${ROUTES.student}/fees`} className="text-bl text-sm font-semibold mt-4 hover:underline">
+            <Link href={`${ROUTES.student}/fees`} className="text-bl-ink text-sm font-semibold mt-4 hover:text-bl transition-colors focus-visible:focus-ring rounded-sm">
               Manage Fees &rarr;
             </Link>
           </div>
@@ -103,16 +111,16 @@ export default async function StudentDashboardPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div>
-          <h2 className="font-display text-2xl tracking-[2px] mb-4">Batch Schedule</h2>
+          <h2 className="font-display text-2xl tracking-[2px] mb-4 text-ink">Batch Schedule</h2>
           {student.batch ? (
             <Card>
               <div className="space-y-4">
-                <div className="flex justify-between items-center pb-4 border-b border-black/[.05]">
+                <div className="flex justify-between items-center pb-4 border-b border-line-subtle">
                   <div>
-                    <p className="font-semibold">
+                    <p className="font-semibold text-ink">
                       {student.batch.name || student.batch.days?.join(", ")}
                     </p>
-                    <p className="text-sm text-mu">
+                    <p className="text-sm text-ink-2">
                       {student.batch.days?.join(", ")} · {formatTime(student.batch.time_start)} - {formatTime(student.batch.time_end)}
                     </p>
                   </div>
@@ -122,21 +130,21 @@ export default async function StudentDashboardPage() {
             </Card>
           ) : (
             <Card>
-              <p className="text-mu">You are not assigned to a batch yet.</p>
+              <p className="text-ink-2">You are not assigned to a batch yet.</p>
             </Card>
           )}
         </div>
 
         <div>
-          <h2 className="font-display text-2xl tracking-[2px] mb-4">Quick Actions</h2>
+          <h2 className="font-display text-2xl tracking-[2px] mb-4 text-ink">Quick Actions</h2>
           <Card className="flex flex-col gap-3">
-            <Link href={`${ROUTES.student}/fees`} className="w-full text-center border border-black/[.18] text-blk hover:border-bl hover:text-bl font-semibold text-[11px] tracking-[2px] uppercase py-3 rounded">
+            <Link href={`${ROUTES.student}/fees`} className="w-full inline-flex items-center justify-center text-center border border-line-strong text-ink hover:border-bl-ink hover:text-bl-ink font-semibold text-[11px] tracking-[2px] uppercase py-3 rounded transition-all active:scale-[0.98] focus-visible:focus-ring">
               Pay Monthly Fees
             </Link>
-            <Link href={`${ROUTES.student}/attendance`} className="w-full text-center border border-black/[.18] text-blk hover:border-bl hover:text-bl font-semibold text-[11px] tracking-[2px] uppercase py-3 rounded">
+            <Link href={`${ROUTES.student}/attendance`} className="w-full inline-flex items-center justify-center text-center border border-line-strong text-ink hover:border-bl-ink hover:text-bl-ink font-semibold text-[11px] tracking-[2px] uppercase py-3 rounded transition-all active:scale-[0.98] focus-visible:focus-ring">
               Check Attendance Records
             </Link>
-            <Link href={`${ROUTES.student}/notices`} className="w-full text-center border border-black/[.18] text-blk hover:border-bl hover:text-bl font-semibold text-[11px] tracking-[2px] uppercase py-3 rounded">
+            <Link href={`${ROUTES.student}/notices`} className="w-full inline-flex items-center justify-center text-center border border-line-strong text-ink hover:border-bl-ink hover:text-bl-ink font-semibold text-[11px] tracking-[2px] uppercase py-3 rounded transition-all active:scale-[0.98] focus-visible:focus-ring">
               View Academy Notices
             </Link>
           </Card>

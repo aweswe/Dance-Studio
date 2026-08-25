@@ -83,13 +83,13 @@ export function ContentEditor({
   return (
     <div className="space-y-6">
       {feedback && (
-        <p className={`text-sm ${feedback.ok ? 'text-green' : 'text-red-500'}`}>{feedback.text}</p>
+        <p className={`text-sm ${feedback.ok ? 'text-green-ink' : 'text-danger'}`}>{feedback.text}</p>
       )}
 
       <Card className="p-6">
-        <div className="flex items-center gap-3 mb-6 border-b border-gray-100 pb-4">
+        <div className="flex items-center gap-3 mb-6 border-b border-line-subtle pb-4">
           <Settings className="text-bl" size={20} />
-          <h3 className="font-display text-xl text-blk">Announcement Banner</h3>
+          <h3 className="font-display text-xl text-ink">Announcement Banner</h3>
         </div>
 
         <div className="space-y-4">
@@ -97,14 +97,14 @@ export function ContentEditor({
             <input
               type="checkbox"
               id="banner-active"
-              className="rounded text-bl focus:ring-bl"
+              className="rounded text-bl focus:ring-bl focus-visible:focus-ring active:scale-[0.98]"
               checked={banner.active}
               onChange={(e) => setBanner({ ...banner, active: e.target.checked })}
             />
-            <label htmlFor="banner-active" className="text-sm font-medium text-blk">Show banner on website</label>
+            <label htmlFor="banner-active" className="text-sm font-medium text-ink">Show banner on website</label>
           </div>
           <div>
-            <label className="block text-sm text-mu mb-1">Banner Text</label>
+            <label className="block text-sm text-ink-2 mb-1">Banner Text</label>
             <Input
               placeholder="e.g., Early bird registrations open for Summer Camp!"
               value={banner.text}
@@ -112,7 +112,7 @@ export function ContentEditor({
             />
           </div>
           <div>
-            <label className="block text-sm text-mu mb-1">Call to Action Link (Optional)</label>
+            <label className="block text-sm text-ink-2 mb-1">Call to Action Link (Optional)</label>
             <Input
               placeholder="/contact"
               value={banner.ctaLink}
@@ -124,26 +124,26 @@ export function ContentEditor({
       </Card>
 
       <Card className="p-6">
-        <div className="flex items-center gap-3 mb-6 border-b border-gray-100 pb-4">
+        <div className="flex items-center gap-3 mb-6 border-b border-line-subtle pb-4">
           <Settings className="text-bl" size={20} />
-          <h3 className="font-display text-xl text-blk">Homepage Stats</h3>
+          <h3 className="font-display text-xl text-ink">Homepage Stats</h3>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
-            <label className="block text-sm text-mu mb-1">Students Trained</label>
+            <label className="block text-sm text-ink-2 mb-1">Students Trained</label>
             <Input value={stats.students} onChange={(e) => setStats({ ...stats, students: e.target.value })} />
           </div>
           <div>
-            <label className="block text-sm text-mu mb-1">Years of Experience</label>
+            <label className="block text-sm text-ink-2 mb-1">Years of Experience</label>
             <Input value={stats.years} onChange={(e) => setStats({ ...stats, years: e.target.value })} />
           </div>
           <div>
-            <label className="block text-sm text-mu mb-1">Programmes</label>
+            <label className="block text-sm text-ink-2 mb-1">Programmes</label>
             <Input value={stats.programmes} onChange={(e) => setStats({ ...stats, programmes: e.target.value })} />
           </div>
           <div>
-            <label className="block text-sm text-mu mb-1">Awards</label>
+            <label className="block text-sm text-ink-2 mb-1">Awards</label>
             <Input value={stats.awards} onChange={(e) => setStats({ ...stats, awards: e.target.value })} />
           </div>
         </div>
@@ -153,9 +153,9 @@ export function ContentEditor({
       </Card>
 
       <Card className="p-6">
-        <div className="flex items-center gap-3 mb-6 border-b border-gray-100 pb-4">
+        <div className="flex items-center gap-3 mb-6 border-b border-line-subtle pb-4">
           <Settings className="text-bl" size={20} />
-          <h3 className="font-display text-xl text-blk">FAQs</h3>
+          <h3 className="font-display text-xl text-ink">FAQs</h3>
         </div>
 
         <div className="space-y-4">
@@ -181,7 +181,7 @@ export function ContentEditor({
                   }}
                 />
                 <button
-                  className="p-2 text-mu hover:text-red-500 rounded-md hover:bg-red-50 shrink-0"
+                  className="p-2 text-ink-2 hover:text-danger rounded-md hover:bg-danger/10 shrink-0 focus-visible:focus-ring active:scale-[0.98]"
                   onClick={() => setFaqs(faqs.filter((_, j) => j !== i))}
                   aria-label="Remove FAQ"
                 >

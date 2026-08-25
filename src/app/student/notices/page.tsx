@@ -33,7 +33,7 @@ export default async function NoticesPage() {
     <div className="space-y-6">
       <div>
         <h1 className="font-display text-4xl tracking-[2px] mb-2">Notices</h1>
-        <p className="text-mu">Updates and announcements from Rhythmzz Academy.</p>
+        <p className="text-ink-2">Updates and announcements from Rhythmzz Academy.</p>
       </div>
 
       <NoticeList

@@ -28,12 +28,12 @@ export default async function SchedulePage() {
     <div className="space-y-6">
       <div>
         <h1 className="font-display text-4xl tracking-[2px] mb-2">Class Schedule</h1>
-        <p className="text-mu">Your current batch timings and days.</p>
+        <p className="text-ink-2">Your current batch timings and days.</p>
       </div>
 
       {!batch ? (
         <Card>
-          <p className="text-mu">You are not assigned to a batch yet.</p>
+          <p className="text-ink-2">You are not assigned to a batch yet.</p>
         </Card>
       ) : (
         <div className="grid grid-cols-1 gap-6">
@@ -43,15 +43,15 @@ export default async function SchedulePage() {
             </h2>
             <div className="flex flex-col md:flex-row gap-8">
               <div className="flex-1">
-                <p className="text-sm text-mu uppercase tracking-widest font-semibold mb-2">Timings</p>
+                <p className="text-sm text-ink-2 uppercase tracking-widest font-semibold mb-2">Timings</p>
                 <p className="text-lg font-medium">
                   {formatTime(batch.time_start)} - {formatTime(batch.time_end)}
                 </p>
               </div>
               <div className="flex-2">
-                <p className="text-sm text-mu uppercase tracking-widest font-semibold mb-3">Weekly Routine</p>
+                <p className="text-sm text-ink-2 uppercase tracking-widest font-semibold mb-3">Weekly Routine</p>
                 {!batch.days || batch.days.length === 0 ? (
-                  <p className="text-sm text-mu">Class days not set yet — contact the academy for timings.</p>
+                  <p className="text-sm text-ink-2">Class days not set yet — contact the academy for timings.</p>
                 ) : (
                 <div className="flex flex-wrap gap-2">
                   {daysOfWeek.map((day) => {
@@ -61,8 +61,8 @@ export default async function SchedulePage() {
                         key={day}
                         className={`px-4 py-2 rounded-lg text-sm font-semibold border ${
                           isClassDay
-                            ? "bg-bl/10 border-bl/20 text-bl"
-                            : "bg-black/5 border-transparent text-mu opacity-50"
+                            ? "bg-bl/10 border-bl/20 text-bl-ink"
+                            : "bg-canvas-muted-2 border-transparent text-ink-2 opacity-50"
                         }`}
                       >
                         {day.substring(0, 3)}

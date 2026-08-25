@@ -15,7 +15,7 @@ export default function Loading() {
       {/* Main grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <CardSkeleton />
-        <div className="bg-white rounded-2xl border border-black/5 overflow-hidden">
+        <div className="bg-surface rounded-2xl border border-line-subtle overflow-hidden">
           {[1, 2, 3, 4].map((i) => (
             <ListRowSkeleton key={i} />
           ))}

@@ -2,7 +2,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 export default function Loading() {
   return (
-    <div className="flex-1 bg-white">
+    <div className="flex-1 bg-canvas">
       {/* Cover band */}
       <section className="bg-blk py-20 px-6 md:px-16">
         <div className="max-w-3xl mx-auto flex flex-col items-center text-center">

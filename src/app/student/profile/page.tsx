@@ -25,7 +25,7 @@ export default async function ProfilePage() {
     <div className="space-y-6">
       <div>
         <h1 className="font-display text-4xl tracking-[2px] mb-2">My Profile</h1>
-        <p className="text-mu">Your contact details — used for fees, notices, and WhatsApp updates.</p>
+        <p className="text-ink-2">Your contact details — used for fees, notices, and WhatsApp updates.</p>
       </div>
 
       <ProfileForm

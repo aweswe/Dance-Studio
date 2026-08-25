@@ -5,6 +5,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import { prefersMotion } from './reduced-motion';
+import { DURATION, EASE } from './tokens';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -57,8 +58,8 @@ export function Reveal({
         {
           y: 0,
           opacity: 1,
-          duration: 0.9,
-          ease: 'power3.out',
+          duration: DURATION.scroll,
+          ease: EASE.out,
           delay,
           stagger: stagger ?? 0,
           clearProps: 'transform',

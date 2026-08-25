@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { AlertCircle } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { loadRazorpayScript, openRazorpayCheckout } from '@/lib/razorpay/checkout';
-import { Spinner } from '@/components/ui/skeleton';
 
 interface PayNowButtonProps {
   amount: number;
@@ -66,16 +66,16 @@ export function PayNowButton({ amount }: PayNowButtonProps) {
 
   return (
     <div className="flex flex-col gap-2 items-start">
-      <button
+      <Button
         onClick={pay}
         disabled={busy}
-        className="inline-flex items-center justify-center gap-2 bg-bl text-wh font-semibold text-[11px] tracking-[2px] uppercase px-8 py-4 rounded hover:bg-bl/90 transition-colors disabled:opacity-60"
+        isLoading={busy}
+        className="px-8 py-4 rounded"
       >
-        {busy && <Spinner className="w-4 h-4" />}
         {busy ? 'Opening payment…' : 'Pay Now'}
-      </button>
+      </Button>
       {error && (
-        <div className="flex gap-2 items-start bg-red-50 border border-red-200 rounded-lg p-3 text-xs text-red-700 leading-relaxed">
+        <div className="flex gap-2 items-start bg-danger/10 border border-danger/30 rounded-lg p-3 text-xs text-danger leading-relaxed">
           <AlertCircle size={14} className="shrink-0 mt-0.5" />
           <span>{error}</span>
         </div>

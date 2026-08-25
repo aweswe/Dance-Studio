@@ -19,13 +19,13 @@ export function Stats({ stats }: StatsProps) {
   }, {});
 
   return (
-    <section className="grid grid-cols-2 md:grid-cols-4 bg-white border-b border-black/5">
+    <section className="grid grid-cols-2 md:grid-cols-4 bg-canvas border-b border-line">
       {DEFAULT_STATS.map((stat, i) => (
-        <div key={i} className="text-center py-8 px-5 border-b md:border-b-0 border-r border-black/5 last:border-r-0 md:last:border-r-0 md:[&:nth-child(even)]:border-r">
+        <div key={i} className="text-center py-8 px-5 border-b md:border-b-0 border-r border-line last:border-r-0 md:last:border-r-0 md:[&:nth-child(even)]:border-r">
           <div className="heading-display text-5xl text-bl mb-1">
             <CountUp value={valueByKey[stat.key] || stat.value} />
           </div>
-          <div className="text-[10px] tracking-[2px] uppercase text-mu mt-1">{stat.label}</div>
+          <div className="text-[10px] tracking-[2px] uppercase text-ink-2 mt-1">{stat.label}</div>
         </div>
       ))}
     </section>

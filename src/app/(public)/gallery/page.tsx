@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { getGalleryImages } from '@/data/gallery';
 import { GalleryClient } from '@/components/public/gallery-client';
 import { SITE_URL } from '@/lib/utils/constants';
+import { Reveal } from '@/components/motion/reveal';
 
 export const metadata: Metadata = {
   title: 'Gallery',
@@ -22,7 +23,7 @@ export default async function GalleryPage() {
   };
 
   return (
-    <div className="bg-white">
+    <div className="bg-canvas text-ink">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -36,7 +37,9 @@ export default async function GalleryPage() {
       </section>
 
       <section className="py-20 px-6 md:px-16 max-w-7xl mx-auto min-h-[60vh]">
-        <GalleryClient images={images} />
+        <Reveal y={20}>
+          <GalleryClient images={images} />
+        </Reveal>
       </section>
     </div>
   );

@@ -94,13 +94,13 @@ export function GalleryManager({ initialItems }: { initialItems: GalleryItem[] }
   return (
     <div className="space-y-6">
       {feedback && (
-        <p className={`text-sm ${feedback.ok ? 'text-green' : 'text-red-500'}`}>{feedback.text}</p>
+        <p className={`text-sm ${feedback.ok ? 'text-green-ink' : 'text-danger'}`}>{feedback.text}</p>
       )}
 
       <div
         role="button"
         tabIndex={0}
-        className="bg-white rounded-2xl border border-black/[.07] p-12 text-center border-dashed bg-light hover:bg-gray-50 transition-colors cursor-pointer"
+        className="bg-surface rounded-2xl border border-line p-12 text-center border-dashed hover:bg-canvas-muted transition-colors cursor-pointer focus-visible:focus-ring"
         onClick={() => fileRef.current?.click()}
         onKeyDown={(e) => {
           if (e.key === 'Enter' || e.key === ' ') {
@@ -109,15 +109,15 @@ export function GalleryManager({ initialItems }: { initialItems: GalleryItem[] }
           }
         }}
       >
-        <Upload size={32} className="mx-auto text-mu mb-4" />
-        <h4 className="font-medium text-blk">Click to upload images or videos</h4>
-        <p className="text-sm text-mu mt-1">Supported formats: JPG, PNG, WEBP, MP4. Max size: 10MB.</p>
+        <Upload size={32} className="mx-auto text-ink-2 mb-4" />
+        <h4 className="font-medium text-ink">Click to upload images or videos</h4>
+        <p className="text-sm text-ink-2 mt-1">Supported formats: JPG, PNG, WEBP, MP4. Max size: 10MB.</p>
         <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp,video/mp4" className="hidden" onChange={onPickFile} />
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {items.map((item, i) => (
-          <div key={item.id} className="relative group rounded-lg overflow-hidden border border-gray-200 bg-wh">
+          <div key={item.id} className="relative group rounded-lg overflow-hidden border border-line-strong bg-surface">
             <div className="aspect-square relative">
               {item.type === 'video' ? (
                 <video src={item.url} className="object-cover w-full h-full" muted />
@@ -128,7 +128,7 @@ export function GalleryManager({ initialItems }: { initialItems: GalleryItem[] }
 
               <div className="absolute inset-0 bg-blk/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                 <button
-                  className="p-2 bg-wh rounded-full text-blk hover:text-bl disabled:opacity-40"
+                  className="p-2 bg-wh rounded-full text-blk hover:text-bl disabled:opacity-40 focus-visible:focus-ring active:scale-[0.98]"
                   onClick={() => doMove(i, -1)}
                   disabled={i === 0}
                   aria-label="Move up"
@@ -136,7 +136,7 @@ export function GalleryManager({ initialItems }: { initialItems: GalleryItem[] }
                   <ArrowUp size={16} />
                 </button>
                 <button
-                  className="p-2 bg-wh rounded-full text-blk hover:text-bl disabled:opacity-40"
+                  className="p-2 bg-wh rounded-full text-blk hover:text-bl disabled:opacity-40 focus-visible:focus-ring active:scale-[0.98]"
                   onClick={() => doMove(i, 1)}
                   disabled={i === items.length - 1}
                   aria-label="Move down"
@@ -146,20 +146,20 @@ export function GalleryManager({ initialItems }: { initialItems: GalleryItem[] }
               </div>
             </div>
 
-            <div className="p-3 flex justify-between items-center bg-wh">
-              <span className="text-xs font-medium text-blk truncate">
+            <div className="p-3 flex justify-between items-center bg-surface">
+              <span className="text-xs font-medium text-ink truncate">
                 {item.title || item.tags?.[0] || item.type}
               </span>
               <div className="flex items-center gap-1 shrink-0">
                 <button
-                  className="p-1 rounded text-mu hover:text-bl hover:bg-black/5"
+                  className="p-1 rounded text-ink-2 hover:text-bl hover:bg-line-subtle focus-visible:focus-ring active:scale-[0.98]"
                   onClick={() => doToggle(item.id)}
                   aria-label={item.is_visible ? 'Hide from site' : 'Show on site'}
                 >
                   {item.is_visible ? <Eye size={14} /> : <EyeOff size={14} />}
                 </button>
                 <button
-                  className="p-1 rounded text-red-500 hover:bg-red-50"
+                  className="p-1 rounded text-danger hover:bg-danger/10 focus-visible:focus-ring active:scale-[0.98]"
                   onClick={() => setPendingDelete(item)}
                   aria-label="Delete"
                 >
@@ -172,7 +172,7 @@ export function GalleryManager({ initialItems }: { initialItems: GalleryItem[] }
       </div>
 
       {items.length === 0 && (
-        <div className="py-12 text-center text-mu bg-light rounded-[16px]">
+        <div className="py-12 text-center text-ink-2 bg-canvas-muted rounded-[16px]">
           No media yet. Upload the first photo or video above.
         </div>
       )}
@@ -190,11 +190,11 @@ export function GalleryManager({ initialItems }: { initialItems: GalleryItem[] }
 
       <Modal isOpen={isUploadOpen} onClose={() => { setIsUploadOpen(false); setPendingFile(null) }} title="Upload Media" size="md">
         <div className="space-y-4">
-          <p className="text-sm text-mu truncate">
+          <p className="text-sm text-ink-2 truncate">
             {pendingFile?.name} · {pendingFile ? `${(pendingFile.size / (1024 * 1024)).toFixed(1)} MB` : ''}
           </p>
           <div>
-            <label className="block text-sm text-mu mb-1">Title</label>
+            <label className="block text-sm text-ink-2 mb-1">Title</label>
             <Input
               placeholder="e.g., Annual Recital 2026"
               value={title}
@@ -202,7 +202,7 @@ export function GalleryManager({ initialItems }: { initialItems: GalleryItem[] }
             />
           </div>
           <div>
-            <label className="block text-sm text-mu mb-1">Tags (comma-separated)</label>
+            <label className="block text-sm text-ink-2 mb-1">Tags (comma-separated)</label>
             <Input
               placeholder="Kuchipudi, Recital"
               value={tags}

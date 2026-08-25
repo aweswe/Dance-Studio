@@ -21,8 +21,8 @@ export default async function StudentsPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="font-display text-3xl text-blk tracking-wide">Students</h2>
-          <p className="text-mu font-body text-sm mt-1">Manage enrollments, statuses, and profiles.</p>
+          <h2 className="font-display text-3xl text-ink tracking-wide">Students</h2>
+          <p className="text-ink-2 font-body text-sm mt-1">Manage enrollments, statuses, and profiles.</p>
         </div>
         <div className="flex items-center gap-3">
           <AddStudentModal

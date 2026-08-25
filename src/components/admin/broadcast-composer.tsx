@@ -58,11 +58,11 @@ export function BroadcastComposer({
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <div className="lg:col-span-2 space-y-6">
         <Card className="p-6">
-          <h3 className="font-display text-xl text-blk mb-6">Compose Message</h3>
+          <h3 className="font-display text-xl text-ink mb-6">Compose Message</h3>
 
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-blk mb-1">Target Audience</label>
+              <label className="block text-sm font-medium text-ink mb-1">Target Audience</label>
               <Select
                 value={scope}
                 onChange={(e) => updateScope(e.target.value, e.target.value === 'all' ? '' : scopeId)}
@@ -76,7 +76,7 @@ export function BroadcastComposer({
 
             {scope !== 'all' && (
               <div>
-                <label className="block text-sm font-medium text-blk mb-1">
+                <label className="block text-sm font-medium text-ink mb-1">
                   {scope === 'programme' ? 'Programme' : 'Batch'}
                 </label>
                 <Select
@@ -96,19 +96,19 @@ export function BroadcastComposer({
             )}
 
             <div>
-              <label className="block text-sm font-medium text-blk mb-1">Message Content</label>
+              <label className="block text-sm font-medium text-ink mb-1">Message Content</label>
               <textarea
-                className="w-full h-40 p-3 rounded-md border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-bl resize-none"
+                className="w-full h-40 bg-surface border border-line-strong rounded-control px-4 py-3 text-sm text-ink placeholder:text-ink-3 focus:outline-none focus:border-bl/50 focus:ring-1 focus:ring-bl/20 transition-all resize-none"
                 placeholder="Type your broadcast message here..."
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 maxLength={1000}
               />
-              <p className="text-xs text-mu mt-1 text-right">{message.length}/1000</p>
+              <p className="text-xs text-ink-2 mt-1 text-right">{message.length}/1000</p>
             </div>
 
             {result && (
-              <p className={`text-sm ${result.ok ? 'text-green' : 'text-red-500'}`}>{result.text}</p>
+              <p className={`text-sm ${result.ok ? 'text-green-ink' : 'text-danger'}`}>{result.text}</p>
             )}
 
             <Button
@@ -123,19 +123,19 @@ export function BroadcastComposer({
       </div>
 
       <div className="space-y-6">
-        <Card className="p-6 bg-light border-dashed">
+        <Card className="p-6 bg-canvas-muted border-dashed">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-full bg-blp flex items-center justify-center text-bl">
+            <div className="w-10 h-10 rounded-full bg-bl-pale flex items-center justify-center text-bl">
               <Users size={20} />
             </div>
             <div>
-              <h4 className="font-medium text-blk">Estimated Reach</h4>
-              <p className="text-sm text-mu">
+              <h4 className="font-medium text-ink">Estimated Reach</h4>
+              <p className="text-sm text-ink-2">
                 {reach === null ? 'Pick a target to estimate' : `${reach} Students`}
               </p>
             </div>
           </div>
-          <p className="text-xs text-mu">
+          <p className="text-xs text-ink-2">
             The actual number of recipients will depend on valid phone numbers and WhatsApp opt-in status.
           </p>
         </Card>

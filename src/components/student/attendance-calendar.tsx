@@ -65,12 +65,12 @@ export function AttendanceCalendar({ records }: AttendanceCalendarProps) {
       <div className="flex items-center justify-between mb-6">
         <h3 className="font-semibold text-lg">{monthNames[month]} {year}</h3>
         <div className="flex gap-2">
-          <button onClick={prevMonth} className="p-2 hover:bg-black/5 rounded-full"><ChevronLeft size={20} /></button>
-          <button onClick={nextMonth} className="p-2 hover:bg-black/5 rounded-full"><ChevronRight size={20} /></button>
+          <button onClick={prevMonth} aria-label="Previous month" className="p-2 hover:bg-canvas-muted-2 rounded-full focus-visible:focus-ring active:scale-[0.98]"><ChevronLeft size={20} /></button>
+          <button onClick={nextMonth} aria-label="Next month" className="p-2 hover:bg-canvas-muted-2 rounded-full focus-visible:focus-ring active:scale-[0.98]"><ChevronRight size={20} /></button>
         </div>
       </div>
 
-      <div className="grid grid-cols-7 gap-1 mb-2 text-center text-xs font-semibold text-mu">
+      <div className="grid grid-cols-7 gap-1 mb-2 text-center text-xs font-semibold text-ink-2">
         {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map(day => (
           <div key={day} className="py-2">{day}</div>
         ))}
@@ -84,11 +84,11 @@ export function AttendanceCalendar({ records }: AttendanceCalendarProps) {
               key={idx}
               className={cn(
                 "h-10 w-10 mx-auto flex items-center justify-center rounded-full text-sm",
-                day ? "hover:bg-black/5 cursor-default" : "",
+                day ? "hover:bg-canvas-muted-2 cursor-default" : "",
                 {
-                  "bg-green/15 text-green font-bold": status === "present",
-                  "bg-red-500/15 text-red-600 font-bold": status === "absent",
-                  "bg-gold/15 text-gold font-bold": status === "leave",
+                  "bg-green/15 text-green-ink font-bold": status === "present",
+                  "bg-danger/15 text-danger font-bold": status === "absent",
+                  "bg-gold/15 text-gold-ink font-bold": status === "leave",
                 }
               )}
             >
@@ -100,12 +100,12 @@ export function AttendanceCalendar({ records }: AttendanceCalendarProps) {
 
       <div className="mt-6 flex gap-4 justify-center text-xs">
         <div className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-full bg-green/40"></div>Present</div>
-        <div className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-full bg-red-500/40"></div>Absent</div>
+        <div className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-full bg-danger/40"></div>Absent</div>
         <div className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-full bg-gold/40"></div>Leave</div>
       </div>
 
       {monthRecordCount === 0 && (
-        <p className="mt-4 text-center text-xs text-mu">No classes marked this month yet.</p>
+        <p className="mt-4 text-center text-xs text-ink-2">No classes marked this month yet.</p>
       )}
     </Card>
   );

@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input'
 import { Select } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Search, Filter, MoreVertical, Phone, MessageCircle } from 'lucide-react'
+import { Search, Filter, Phone, MessageCircle } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { usePagination } from '@/hooks/use-pagination'
 import { getStudentsAction } from '@/actions/students'
@@ -54,10 +54,10 @@ export function StudentTable({ initialData }: StudentTableProps) {
   })
 
   return (
-    <div className="bg-white rounded-[16px] shadow-sm border border-black/[.07] overflow-hidden">
-      <div className="p-4 border-b border-black/[.07] flex flex-col sm:flex-row gap-4 justify-between items-center bg-light/50">
+    <div className="bg-surface rounded-card border border-line overflow-hidden">
+      <div className="p-4 border-b border-line flex flex-col sm:flex-row gap-4 justify-between items-center bg-canvas-muted/50">
         <div className="relative w-full sm:max-w-xs">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-mu" size={18} />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-2" size={18} />
           <Input
             placeholder="Search name or phone..."
             value={search}
@@ -66,7 +66,7 @@ export function StudentTable({ initialData }: StudentTableProps) {
           />
         </div>
         <div className="flex items-center gap-3 w-full sm:w-auto">
-          <div className="flex items-center gap-2 text-sm text-mu font-medium">
+          <div className="flex items-center gap-2 text-sm text-ink-2 font-medium">
             <Filter size={16} /> Filter:
           </div>
           <Select
@@ -82,7 +82,7 @@ export function StudentTable({ initialData }: StudentTableProps) {
       </div>
 
       {error && (
-        <div className="mx-4 mt-4 px-4 py-3 rounded-lg bg-red-50 border border-red-200 text-sm text-red-600">
+        <div className="mx-4 mt-4 px-4 py-3 rounded-lg bg-danger/10 border border-danger/30 text-sm text-danger">
           Could not load students: {error}
         </div>
       )}
@@ -90,31 +90,30 @@ export function StudentTable({ initialData }: StudentTableProps) {
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="bg-light border-b border-black/[.07]">
-              <th className="px-6 py-4 text-xs font-display tracking-[2px] text-mu uppercase">Name</th>
-              <th className="px-6 py-4 text-xs font-display tracking-[2px] text-mu uppercase">Phone</th>
-              <th className="px-6 py-4 text-xs font-display tracking-[2px] text-mu uppercase">Programme & Batch</th>
-              <th className="px-6 py-4 text-xs font-display tracking-[2px] text-mu uppercase">Join Date</th>
-              <th className="px-6 py-4 text-xs font-display tracking-[2px] text-mu uppercase">Status</th>
-              <th className="px-6 py-4 text-right"></th>
+            <tr className="bg-canvas-muted border-b border-line">
+              <th className="px-6 py-4 text-xs font-display tracking-[2px] text-ink-2 uppercase">Name</th>
+              <th className="px-6 py-4 text-xs font-display tracking-[2px] text-ink-2 uppercase">Phone</th>
+              <th className="px-6 py-4 text-xs font-display tracking-[2px] text-ink-2 uppercase">Programme & Batch</th>
+              <th className="px-6 py-4 text-xs font-display tracking-[2px] text-ink-2 uppercase">Join Date</th>
+              <th className="px-6 py-4 text-xs font-display tracking-[2px] text-ink-2 uppercase">Status</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-black/[.05]">
+          <tbody className="divide-y divide-line-subtle">
             {data.map((student) => (
               <tr
                 key={student.id}
-                className="hover:bg-light transition-colors cursor-pointer"
+                className="hover:bg-canvas-muted transition-colors cursor-pointer"
                 onClick={() => router.push(`/admin/students/${student.id}`)}
               >
                 <td className="px-6 py-4">
-                  <div className="font-medium text-blk flex items-center gap-2">
+                  <div className="font-medium text-ink flex items-center gap-2">
                     {student.name}
                     {student.auth_id && (
                       <Badge variant="green" className="text-[10px] px-2 py-0.5">PORTAL</Badge>
                     )}
                   </div>
                 </td>
-                <td className="px-6 py-4 text-sm text-mu">
+                <td className="px-6 py-4 text-sm text-ink-2">
                   <div className="flex items-center gap-1">
                     <span>{student.phone}</span>
                     {/* Click-to-call / WhatsApp — stop propagation so the row nav doesn't fire */}
@@ -122,7 +121,7 @@ export function StudentTable({ initialData }: StudentTableProps) {
                       href={telLink(student.phone)}
                       onClick={(e) => e.stopPropagation()}
                       aria-label={`Call ${student.name ?? 'student'}`}
-                      className="p-1 rounded text-mu hover:text-bl hover:bg-black/5 transition-colors"
+                      className="p-1 rounded text-ink-2 hover:text-bl hover:bg-canvas-muted-2 transition-colors"
                     >
                       <Phone size={13} />
                     </a>
@@ -132,7 +131,7 @@ export function StudentTable({ initialData }: StudentTableProps) {
                       target="_blank"
                       rel="noreferrer"
                       aria-label={`WhatsApp ${student.name ?? 'student'}`}
-                      className="p-1 rounded text-mu hover:text-green hover:bg-black/5 transition-colors"
+                      className="p-1 rounded text-ink-2 hover:text-green hover:bg-canvas-muted-2 transition-colors"
                     >
                       <MessageCircle size={13} />
                     </a>
@@ -141,16 +140,16 @@ export function StudentTable({ initialData }: StudentTableProps) {
                 <td className="px-6 py-4">
                   {student.batch ? (
                     <div>
-                      <div className="text-sm font-medium text-blk">{student.batch.programme?.name}</div>
-                      <div className="text-xs text-mu">
+                      <div className="text-sm font-medium text-ink">{student.batch.programme?.name}</div>
+                      <div className="text-xs text-ink-2">
                         {student.batch.name || student.batch.days?.join(', ')}
                       </div>
                     </div>
                   ) : (
-                    <span className="text-sm text-mu italic">No batch</span>
+                    <span className="text-sm text-ink-2 italic">No batch</span>
                   )}
                 </td>
-                <td className="px-6 py-4 text-sm text-mu">
+                <td className="px-6 py-4 text-sm text-ink-2">
                   {formatDate(student.created_at)}
                 </td>
                 <td className="px-6 py-4">
@@ -158,16 +157,11 @@ export function StudentTable({ initialData }: StudentTableProps) {
                     {student.status.toUpperCase()}
                   </Badge>
                 </td>
-                <td className="px-6 py-4 text-right">
-                  <button className="p-2 text-mu hover:text-blk transition-colors rounded-full hover:bg-black/5">
-                    <MoreVertical size={18} />
-                  </button>
-                </td>
               </tr>
             ))}
             {data.length === 0 && !isLoading && (
               <tr>
-                <td colSpan={6} className="px-6 py-12 text-center text-mu">
+                <td colSpan={5} className="px-6 py-12 text-center text-ink-2">
                   No students found.
                 </td>
               </tr>
@@ -177,7 +171,7 @@ export function StudentTable({ initialData }: StudentTableProps) {
       </div>
 
       {hasMore && (
-        <div className="p-4 border-t border-black/[.07] flex justify-center">
+        <div className="p-4 border-t border-line flex justify-center">
           <Button
             variant="outline"
             onClick={() => loadMore()}

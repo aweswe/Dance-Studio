@@ -37,7 +37,7 @@ export default async function ProgressPage() {
     <div className="space-y-6">
       <div>
         <h1 className="font-display text-4xl tracking-[2px] mb-2">Kuchipudi Progress</h1>
-        <p className="text-mu">Track your learning journey and modules.</p>
+        <p className="text-ink-2">Track your learning journey and modules.</p>
       </div>
 
       <KuchipudiProgress progress={progress as any} />

@@ -104,8 +104,8 @@ export function DashboardPanels({
             <IndianRupee size={20} />
           </div>
           <div>
-            <h3 className="font-display text-xl text-blk">Revenue — Last 6 Months</h3>
-            <p className="text-xs text-mu">From the fee ledger (online + offline)</p>
+            <h3 className="font-display text-xl text-ink">Revenue — Last 6 Months</h3>
+            <p className="text-xs text-ink-2">From the fee ledger (online + offline)</p>
           </div>
         </div>
 
@@ -114,8 +114,8 @@ export function DashboardPanels({
             const y = CHART_H - f * CHART_H
             return (
               <g key={f}>
-                <line x1={0} x2={CHART_W} y1={y} y2={y} stroke="rgba(0,0,0,0.06)" strokeDasharray="4 4" />
-                <text x={0} y={y - 4} fontSize={10} fill="#8a8a8a">
+                <line x1={0} x2={CHART_W} y1={y} y2={y} stroke="var(--line)" strokeDasharray="4 4" />
+                <text x={0} y={y - 4} fontSize={10} fill="var(--ink-2)">
                   {formatCurrency(Math.round(maxTotal * f))}
                 </text>
               </g>
@@ -133,7 +133,7 @@ export function DashboardPanels({
                   width={BAR_W}
                   height={h}
                   rx={4}
-                  fill={p.total > 0 ? '#2BB4D8' : 'rgba(0,0,0,0.06)'}
+                  fill={p.total > 0 ? 'var(--bl)' : 'var(--line)'}
                 >
                   <title>{`${p.label}: ${formatCurrency(p.total)}`}</title>
                 </rect>
@@ -142,12 +142,12 @@ export function DashboardPanels({
                   y={CHART_H - h - 6}
                   fontSize={10}
                   textAnchor="middle"
-                  fill="#2a2a2a"
+                  fill="var(--ink)"
                   fontWeight={600}
                 >
                   {p.total > 0 ? `₹${p.total >= 1000 ? `${(p.total / 1000).toFixed(1)}k` : p.total}` : ''}
                 </text>
-                <text x={x + BAR_W / 2} y={CHART_H + 18} fontSize={11} textAnchor="middle" fill="#8a8a8a">
+                <text x={x + BAR_W / 2} y={CHART_H + 18} fontSize={11} textAnchor="middle" fill="var(--ink-2)">
                   {p.label}
                 </text>
               </g>
@@ -159,30 +159,30 @@ export function DashboardPanels({
       {/* Pending-items feed */}
       <Card className="p-6">
         <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 rounded-full bg-blp flex items-center justify-center text-bl">
+          <div className="w-10 h-10 rounded-full bg-bl-pale flex items-center justify-center text-bl">
             <ClipboardList size={20} />
           </div>
           <div>
-            <h3 className="font-display text-xl text-blk">Needs Attention</h3>
-            <p className="text-xs text-mu">Pending approvals and unmarked classes</p>
+            <h3 className="font-display text-xl text-ink">Needs Attention</h3>
+            <p className="text-xs text-ink-2">Pending approvals and unmarked classes</p>
           </div>
         </div>
 
         <div className="space-y-3">
           {pendingRentals.length === 0 && unmarkedToday.length === 0 && newEnquiries.length === 0 && (
-            <p className="text-sm text-mu py-4 text-center">Nothing pending. 🎉</p>
+            <p className="text-sm text-ink-2 py-4 text-center">Nothing pending. 🎉</p>
           )}
 
           {pendingRentals.map((r) => (
             <a
               key={r.id}
               href="/admin/studio-rental"
-              className="flex items-start gap-3 rounded-lg border border-gold/30 bg-gold/5 p-3 hover:bg-gold/10 transition-colors"
+              className="flex items-start gap-3 rounded-lg border border-gold/30 bg-gold/5 p-3 hover:bg-gold/10 transition-colors focus-visible:focus-ring"
             >
               <CalendarClock size={16} className="text-gold mt-0.5 shrink-0" />
               <div className="text-sm">
-                <p className="font-medium text-blk">Rental request: {r.name}</p>
-                <p className="text-xs text-mu">{formatDate(r.preferred_date, 'long')} — awaiting approval</p>
+                <p className="font-medium text-ink">Rental request: {r.name}</p>
+                <p className="text-xs text-ink-2">{formatDate(r.preferred_date, 'long')} — awaiting approval</p>
               </div>
             </a>
           ))}
@@ -191,12 +191,12 @@ export function DashboardPanels({
             <a
               key={b.id}
               href="/admin/attendance"
-              className="flex items-start gap-3 rounded-lg border border-bl/20 bg-blp/30 p-3 hover:bg-blp/50 transition-colors"
+              className="flex items-start gap-3 rounded-lg border border-bl/20 bg-bl-pale/30 p-3 hover:bg-bl-pale/50 transition-colors focus-visible:focus-ring"
             >
               <ClipboardList size={16} className="text-bl mt-0.5 shrink-0" />
               <div className="text-sm">
-                <p className="font-medium text-blk">{b.programmeName} — {b.name}</p>
-                <p className="text-xs text-mu">Attendance not marked yet today</p>
+                <p className="font-medium text-ink">{b.programmeName} — {b.name}</p>
+                <p className="text-xs text-ink-2">Attendance not marked yet today</p>
               </div>
             </a>
           ))}
@@ -205,12 +205,12 @@ export function DashboardPanels({
             <a
               key={e.id}
               href="/admin/enquiries"
-              className="flex items-start gap-3 rounded-lg border border-purp/30 bg-purp/5 p-3 hover:bg-purp/10 transition-colors"
+              className="flex items-start gap-3 rounded-lg border border-purp/30 bg-purp/5 p-3 hover:bg-purp/10 transition-colors focus-visible:focus-ring"
             >
               <Mail size={16} className="text-purp mt-0.5 shrink-0" />
               <div className="text-sm">
-                <p className="font-medium text-blk">Enquiry from {e.name}</p>
-                <p className="text-xs text-mu">{e.phone} — awaiting reply</p>
+                <p className="font-medium text-ink">Enquiry from {e.name}</p>
+                <p className="text-xs text-ink-2">{e.phone} — awaiting reply</p>
               </div>
             </a>
           ))}
@@ -224,30 +224,30 @@ export function DashboardPanels({
             <UserCheck size={20} />
           </div>
           <div>
-            <h3 className="font-display text-xl text-blk">Attendance This Month — By Batch</h3>
-            <p className="text-xs text-mu">Present ÷ total marks recorded this month</p>
+            <h3 className="font-display text-xl text-ink">Attendance This Month — By Batch</h3>
+            <p className="text-xs text-ink-2">Present ÷ total marks recorded this month</p>
           </div>
         </div>
 
         {batchAttendance.length === 0 ? (
-          <p className="text-sm text-mu py-4 text-center">No attendance marked this month yet.</p>
+          <p className="text-sm text-ink-2 py-4 text-center">No attendance marked this month yet.</p>
         ) : (
           <div className="space-y-4">
             {batchAttendance.map((b) => (
               <div key={b.id} className="flex items-center gap-4">
                 <div className="w-56 shrink-0">
-                  <p className="text-sm font-medium text-blk truncate">{b.programmeName}</p>
-                  <p className="text-xs text-mu truncate">{b.name}</p>
+                  <p className="text-sm font-medium text-ink truncate">{b.programmeName}</p>
+                  <p className="text-xs text-ink-2 truncate">{b.name}</p>
                 </div>
-                <div className="flex-1 h-3 rounded-full bg-black/5 overflow-hidden">
+                <div className="flex-1 h-3 rounded-full bg-line overflow-hidden">
                   <div
-                    className={`h-full rounded-full transition-all ${b.rate >= 80 ? 'bg-green' : b.rate >= 60 ? 'bg-gold' : 'bg-red-400'}`}
+                    className={`h-full rounded-full transition-all ${b.rate >= 80 ? 'bg-green' : b.rate >= 60 ? 'bg-gold' : 'bg-danger'}`}
                     style={{ width: `${Math.max(b.rate, 2)}%` }}
                   />
                 </div>
                 <div className="w-24 text-right shrink-0">
-                  <span className="font-display text-lg text-blk">{b.rate}%</span>
-                  <span className="text-xs text-mu ml-1">({b.marked} marks)</span>
+                  <span className="font-display text-lg text-ink">{b.rate}%</span>
+                  <span className="text-xs text-ink-2 ml-1">({b.marked} marks)</span>
                 </div>
               </div>
             ))}

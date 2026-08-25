@@ -15,8 +15,8 @@ export default async function ClassesPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="font-display text-3xl text-blk tracking-wide">Classes & Batches</h2>
-        <p className="text-mu font-body text-sm mt-1">Manage all academy programmes and active batches.</p>
+        <h2 className="font-display text-3xl text-ink tracking-wide">Classes & Batches</h2>
+        <p className="text-ink-2 font-body text-sm mt-1">Manage all academy programmes and active batches.</p>
       </div>
 
       <Suspense fallback={<TableSkeleton rows={6} columns={5} />}>

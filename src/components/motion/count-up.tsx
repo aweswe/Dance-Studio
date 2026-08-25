@@ -5,6 +5,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import { prefersMotion } from './reduced-motion';
+import { DURATION, EASE } from './tokens';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -14,10 +15,11 @@ interface CountUpProps {
   className?: string;
 }
 
-function parseValue(value: string): { num: number; suffix: string } {
-  const match = value.match(/^([\d,]+)(.*)$/);
-  if (!match) return { num: 0, suffix: value };
-  return { num: parseInt(match[1].replace(/,/g, ''), 10), suffix: match[2] };
+function parseValue(value: string): { prefix: string; num: number; suffix: string } {
+  // "5000+", "₹12,000", "92%" — capture any leading non-digit prefix (currency)
+  const match = value.match(/^([^0-9]*)([\d,]+)(.*)$/);
+  if (!match) return { prefix: '', num: 0, suffix: value };
+  return { prefix: match[1], num: parseInt(match[2].replace(/,/g, ''), 10), suffix: match[3] };
 }
 
 /**
@@ -27,7 +29,7 @@ function parseValue(value: string): { num: number; suffix: string } {
  */
 export function CountUp({ value, className }: CountUpProps) {
   const ref = useRef<HTMLSpanElement>(null);
-  const { num, suffix } = parseValue(value);
+  const { prefix, num, suffix } = parseValue(value);
 
   useGSAP(
     () => {
@@ -37,11 +39,11 @@ export function CountUp({ value, className }: CountUpProps) {
       const counter = { n: 0 };
       gsap.to(counter, {
         n: num,
-        duration: 1.6,
-        ease: 'power2.out',
+        duration: DURATION.beat,
+        ease: EASE.beat,
         scrollTrigger: { trigger: el, start: 'top 92%', once: true },
         onUpdate: () => {
-          el.textContent = `${Math.round(counter.n).toLocaleString('en-IN')}${suffix}`;
+          el.textContent = `${prefix}${Math.round(counter.n).toLocaleString('en-IN')}${suffix}`;
         },
       });
     },

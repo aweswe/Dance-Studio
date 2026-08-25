@@ -9,8 +9,8 @@ export default async function InstructorsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="font-display text-3xl text-blk tracking-wide">Instructors</h2>
-        <p className="text-mu font-body text-sm mt-1">Manage academy teaching staff and their assignments.</p>
+        <h2 className="font-display text-3xl text-ink tracking-wide">Instructors</h2>
+        <p className="text-ink-2 font-body text-sm mt-1">Manage academy teaching staff and their assignments.</p>
       </div>
 
       <Suspense fallback={<CardSkeleton />}>

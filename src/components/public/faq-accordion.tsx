@@ -24,18 +24,18 @@ export function FAQAccordion({ faqs }: FAQAccordionProps) {
         const buttonId = `faq-button-${i}`;
         const panelId = `faq-panel-${i}`;
         return (
-          <div key={i} className="border border-black/10 rounded-xl overflow-hidden bg-white">
+          <div key={i} className="border border-line-strong rounded-tile overflow-hidden bg-surface">
             <button
               type="button"
               id={buttonId}
               aria-expanded={isOpen}
               aria-controls={panelId}
-              className="w-full text-left p-6 flex justify-between items-center gap-4 hover:bg-off/50 transition-colors cursor-pointer"
+              className="w-full text-left p-6 flex justify-between items-center gap-4 hover:bg-canvas-muted/50 transition-colors cursor-pointer focus-visible:focus-ring"
               onClick={() => toggle(i)}
             >
-              <h4 className="font-semibold text-sm md:text-base text-blk pr-4">{faq.question}</h4>
+              <h4 className="font-semibold text-sm md:text-base text-ink pr-4">{faq.question}</h4>
               <ChevronDown
-                className={cn("shrink-0 text-mu transition-transform duration-300", isOpen ? "rotate-180" : "rotate-0")}
+                className={cn("shrink-0 text-ink-2 transition-transform duration-300", isOpen ? "rotate-180" : "rotate-0")}
                 size={20}
               />
             </button>
@@ -49,7 +49,7 @@ export function FAQAccordion({ faqs }: FAQAccordionProps) {
                 isOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
               )}
             >
-              <p className="p-6 pt-0 text-sm text-mu leading-relaxed border-t border-transparent">
+              <p className="p-6 pt-0 text-sm text-ink-2 leading-relaxed border-t border-transparent">
                 {faq.answer}
               </p>
             </div>

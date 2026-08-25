@@ -11,8 +11,8 @@ export default async function AttendancePage() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="font-display text-3xl text-blk tracking-wide">Attendance</h2>
-        <p className="text-mu font-body text-sm mt-1">Monitor daily attendance records across all batches.</p>
+        <h2 className="font-display text-3xl text-ink tracking-wide">Attendance</h2>
+        <p className="text-ink-2 font-body text-sm mt-1">Monitor daily attendance records across all batches.</p>
       </div>
 
       <AttendanceReport batches={(batches ?? []) as any[]} />

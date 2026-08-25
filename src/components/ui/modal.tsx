@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 
@@ -14,42 +14,81 @@ interface ModalProps {
 
 export function Modal({ isOpen, onClose, title, children, size = "md" }: ModalProps) {
   const overlayRef = useRef<HTMLDivElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const restoreFocusRef = useRef<HTMLElement | null>(null);
+  const [closing, setClosing] = useState(false);
+  const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
 
+  // Derived-from-props phase machine (render-phase adjustment):
+  // opening cancels a pending exit; closing starts the exit animation.
+  if (prevIsOpen !== isOpen) {
+    setPrevIsOpen(isOpen);
+    if (isOpen) setClosing(false);
+    else setClosing(true);
+  }
+
+  // Rendered = open or mid-exit; unmounts after the exit animation finishes.
+  const rendered = isOpen || closing;
+
+  // Unmount after the exit completes (reduced-motion makes the CSS exit
+  // instant; the timeout still fires so the unmount is never skipped).
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
+    if (!closing) return;
+    const t = setTimeout(() => {
+      setClosing(false);
+      restoreFocusRef.current?.focus?.();
+    }, 250);
+    return () => clearTimeout(t);
+  }, [closing]);
+
+  // Body scroll lock for the whole visible lifetime (including the exit).
+  useEffect(() => {
+    if (!rendered) return;
+    document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = "";
     };
-  }, [isOpen]);
+  }, [rendered]);
 
+  // Escape closes; autofocus the close button on open. Runs before the
+  // focus timer fires, so the captured element is still the opener.
   useEffect(() => {
+    if (!isOpen) return;
+    restoreFocusRef.current = document.activeElement as HTMLElement | null;
     function handleEscape(e: KeyboardEvent) {
       if (e.key === "Escape") onClose();
     }
-    if (isOpen) {
-      document.addEventListener("keydown", handleEscape);
-    }
-    return () => document.removeEventListener("keydown", handleEscape);
+    document.addEventListener("keydown", handleEscape);
+    const t = setTimeout(() => closeButtonRef.current?.focus(), 0);
+    return () => {
+      document.removeEventListener("keydown", handleEscape);
+      clearTimeout(t);
+    };
   }, [isOpen, onClose]);
 
-  if (!isOpen) return null;
+  if (!rendered) return null;
 
   return (
     <div
       ref={overlayRef}
+      role="dialog"
+      aria-modal="true"
+      aria-label={title ?? undefined}
       className="fixed inset-0 z-[1000] flex items-center justify-center p-4"
       onClick={(e) => {
         if (e.target === overlayRef.current) onClose();
       }}
     >
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
       <div
         className={cn(
-          "relative bg-white rounded-2xl shadow-2xl w-full max-h-[90vh] overflow-y-auto",
+          "absolute inset-0 bg-black/60 backdrop-blur-sm",
+          closing ? "animate-overlay-out" : "animate-overlay-in",
+        )}
+      />
+      <div
+        className={cn(
+          "relative bg-surface rounded-card shadow-overlay border border-line w-full max-h-[90vh] overflow-y-auto",
+          closing ? "animate-panel-out" : "animate-panel-in",
           {
             "max-w-sm": size === "sm",
             "max-w-lg": size === "md",
@@ -57,16 +96,27 @@ export function Modal({ isOpen, onClose, title, children, size = "md" }: ModalPr
           },
         )}
       >
-        {title && (
-          <div className="flex items-center justify-between px-6 py-4 border-b border-black/[.07]">
-            <h2 className="font-display text-xl tracking-wider">{title}</h2>
+        {title ? (
+          <div className="flex items-center justify-between px-6 py-4 border-b border-line">
+            <h2 className="font-display text-xl tracking-wider text-ink">{title}</h2>
             <button
+              ref={closeButtonRef}
               onClick={onClose}
-              className="text-mu hover:text-blk transition-colors p-1"
+              aria-label="Close dialog"
+              className="text-ink-2 hover:text-ink transition-colors p-1 rounded focus-visible:focus-ring active:scale-95"
             >
               <X className="w-4 h-4" />
             </button>
           </div>
+        ) : (
+          <button
+            ref={closeButtonRef}
+            onClick={onClose}
+            aria-label="Close dialog"
+            className="absolute top-4 right-4 z-10 text-ink-2 hover:text-ink transition-colors p-1 rounded focus-visible:focus-ring active:scale-95"
+          >
+            <X className="w-4 h-4" />
+          </button>
         )}
         <div className="p-6">{children}</div>
       </div>

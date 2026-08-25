@@ -15,7 +15,7 @@ async function BannerFetcher() {
 
 export default function PublicLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="flex flex-col min-h-screen bg-white text-blk font-body overflow-x-hidden">
+    <div className="flex flex-col min-h-screen bg-canvas text-ink font-body overflow-x-hidden">
       <a
         href="#main"
         className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[1000] focus:bg-blk focus:text-white focus:px-4 focus:py-2 focus:text-xs focus:uppercase focus:tracking-widest"

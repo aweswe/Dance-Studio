@@ -4,7 +4,8 @@ import { useRealtime } from '@/hooks/use-realtime'
 import { Users, TrendingUp, IndianRupee, UserCheck, LayoutGrid } from 'lucide-react'
 import { formatCurrency } from '@/lib/utils/format'
 import { useState } from 'react'
-import { Card } from '@/components/ui/card'
+import { SpotlightCard } from '@/components/ui/spotlight'
+import { KpiNumber } from '@/components/ui/kpi-number'
 
 export interface BatchOccupancyRow {
   batch_id: string
@@ -87,25 +88,29 @@ export function AnalyticsCards({ initialData }: AnalyticsCardsProps) {
       value: `${batchOccupancyPct}%`,
       subtitle: rows.length > 0 ? `Across ${rows.length} batches` : undefined,
       icon: LayoutGrid,
-      color: 'text-blk'
+      color: 'text-ink'
     }
   ]
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
       {cards.map((card, i) => (
-        <Card key={i} className="p-6">
+        <SpotlightCard
+          key={i}
+          tone="pale"
+          className="h-full bg-surface rounded-card border border-line p-6"
+        >
           <div className="flex items-start justify-between mb-4">
-            <h3 className="font-body text-sm font-medium text-mu">{card.title}</h3>
+            <h3 className="font-body text-sm font-medium text-ink-2">{card.title}</h3>
             <card.icon size={20} className={card.color} />
           </div>
           <div className="flex items-baseline gap-2">
-            <span className="font-display text-4xl text-blk">{card.value}</span>
+            <KpiNumber value={card.value} className="text-4xl text-ink" />
             {card.subtitle && (
-              <span className="font-body text-xs text-mu">{card.subtitle}</span>
+              <span className="font-body text-xs text-ink-2">{card.subtitle}</span>
             )}
           </div>
-        </Card>
+        </SpotlightCard>
       ))}
     </div>
   )

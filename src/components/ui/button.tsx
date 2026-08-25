@@ -15,14 +15,14 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         disabled={disabled || isLoading}
         className={cn(
-          "inline-flex items-center justify-center gap-2 font-semibold tracking-[2px] uppercase transition-all disabled:opacity-50 disabled:cursor-not-allowed",
+          "inline-flex items-center justify-center gap-2 font-semibold tracking-[2px] uppercase transition-all active:scale-[0.98] focus-visible:focus-ring disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100",
           {
-            "bg-bl text-white hover:opacity-85": variant === "primary",
+            "bg-bl text-white hover:bg-bl-deep": variant === "primary",
             "bg-blk text-white hover:bg-bl": variant === "secondary",
-            "bg-transparent border border-black/[.18] text-blk hover:border-bl hover:text-bl":
+            "bg-transparent border border-line-strong text-ink hover:border-bl-ink hover:text-bl-ink":
               variant === "outline",
-            "bg-transparent text-mu hover:text-blk": variant === "ghost",
-            "bg-red-500 text-white hover:bg-red-600": variant === "danger",
+            "bg-transparent text-ink-2 hover:text-ink": variant === "ghost",
+            "bg-danger text-white hover:bg-danger-deep": variant === "danger",
           },
           {
             "text-[10px] px-4 py-2": size === "sm",

@@ -19,7 +19,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
         {label && (
           <label
             htmlFor={selectId}
-            className="text-[10px] tracking-[2px] uppercase text-mu mb-2 block"
+            className="text-[10px] tracking-[2px] uppercase text-ink-2 mb-2 block"
           >
             {label}
           </label>
@@ -28,11 +28,11 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
           ref={ref}
           id={selectId}
           className={cn(
-            "w-full bg-white border border-black/10 rounded px-4 py-3 text-sm text-blk appearance-none",
+            "w-full bg-surface border border-line-strong rounded-control px-4 py-3 text-sm text-ink appearance-none disabled:opacity-60",
             "focus:outline-none focus:border-bl/50 focus:ring-1 focus:ring-bl/20 transition-all",
-            "bg-[url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23777%22%20stroke-width%3D%222%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%2F%3E%3C%2Fsvg%3E')]",
+            "bg-[url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22var%28--ink-2%29%22%20stroke-width%3D%222%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%2F%3E%3C%2Fsvg%3E')]",
             "bg-no-repeat bg-[right_12px_center]",
-            error && "border-red-400 focus:border-red-400",
+            error && "border-danger focus:border-danger focus:ring-danger/20",
             className,
           )}
           {...props}
@@ -49,7 +49,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
           ))}
         </select>
         {error && (
-          <p className="text-xs text-red-500 mt-1">{error}</p>
+          <p className="text-xs text-danger mt-1">{error}</p>
         )}
       </div>
     );

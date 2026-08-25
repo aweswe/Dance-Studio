@@ -62,14 +62,14 @@ export function RentalCalendar({ initialRentals }: { initialRentals: Rental[] })
 
   const phoneLinks = (r: Rental) => (
     <span className="inline-flex items-center gap-1">
-      <a href={telLink(r.phone)} className="hover:text-blk" aria-label={`Call ${r.name}`}>
+      <a href={telLink(r.phone)} className="hover:text-ink focus-visible:focus-ring active:scale-[0.98]" aria-label={`Call ${r.name}`}>
         <Phone size={12} />
       </a>
       <a
         href={`https://wa.me/91${r.phone.replace(/\D/g, '').replace(/^91/, '')}`}
         target="_blank"
         rel="noreferrer"
-        className="hover:text-green"
+        className="hover:text-green focus-visible:focus-ring active:scale-[0.98]"
         aria-label={`WhatsApp ${r.name}`}
       >
         <MessageCircle size={12} />
@@ -89,14 +89,14 @@ export function RentalCalendar({ initialRentals }: { initialRentals: Rental[] })
   const monthKey = (day: number) => `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`
 
   const monthGrid = (
-    <Card className="p-6 bg-wh">
+    <Card className="p-6 bg-surface">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="font-display text-xl text-blk">
+        <h3 className="font-display text-xl text-ink">
           {new Date(year, month, 1).toLocaleDateString('en-IN', { month: 'long', year: 'numeric' })}
         </h3>
         <div className="flex items-center gap-2">
           <button
-            className="p-1.5 rounded-full border border-gray-200 text-mu hover:border-bl transition-colors"
+            className="p-1.5 rounded-full border border-line-strong text-ink-2 hover:border-bl transition-colors focus-visible:focus-ring active:scale-[0.98]"
             onClick={() => shiftMonth(-1)}
             aria-label="Previous month"
           >
@@ -106,7 +106,7 @@ export function RentalCalendar({ initialRentals }: { initialRentals: Rental[] })
             Today
           </Button>
           <button
-            className="p-1.5 rounded-full border border-gray-200 text-mu hover:border-bl transition-colors"
+            className="p-1.5 rounded-full border border-line-strong text-ink-2 hover:border-bl transition-colors focus-visible:focus-ring active:scale-[0.98]"
             onClick={() => shiftMonth(1)}
             aria-label="Next month"
           >
@@ -117,13 +117,13 @@ export function RentalCalendar({ initialRentals }: { initialRentals: Rental[] })
 
       <div className="grid grid-cols-7 gap-1 mb-1">
         {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((d) => (
-          <div key={d} className="text-center text-[10px] font-display tracking-[2px] text-mu uppercase py-1">{d}</div>
+          <div key={d} className="text-center text-[10px] font-display tracking-[2px] text-ink-2 uppercase py-1">{d}</div>
         ))}
       </div>
 
       <div className="grid grid-cols-7 gap-1">
         {Array.from({ length: firstWeekday }).map((_, i) => (
-          <div key={`pad-${i}`} className="min-h-[96px] bg-light/40 rounded-lg" />
+          <div key={`pad-${i}`} className="min-h-[96px] bg-canvas-muted/40 rounded-lg" />
         ))}
         {Array.from({ length: daysInMonth }).map((_, i) => {
           const day = i + 1
@@ -136,53 +136,53 @@ export function RentalCalendar({ initialRentals }: { initialRentals: Rental[] })
             <div
               key={key}
               className={`min-h-[96px] rounded-lg border p-1.5 flex flex-col gap-1 ${
-                isToday ? 'border-bl bg-blp/20' : 'border-gray-100 bg-light/40'
+                isToday ? 'border-bl bg-bl-pale/20' : 'border-line-subtle bg-canvas-muted/40'
               }`}
             >
-              <span className={`text-[11px] font-semibold ${isToday ? 'text-bl' : 'text-mu'}`}>{day}</span>
+              <span className={`text-[11px] font-semibold ${isToday ? 'text-bl-ink' : 'text-ink-2'}`}>{day}</span>
               {dayRentals.slice(0, 3).map((r) => (
                 <div
                   key={r.id}
                   title={`${r.name} · ${formatTime(r.preferred_time_start)} - ${formatTime(r.preferred_time_end)}`}
                   className={`text-[10px] leading-tight px-1.5 py-1 rounded truncate ${
                     r.status === 'confirmed'
-                      ? 'bg-green/15 text-green'
+                      ? 'bg-green/15 text-green-ink'
                       : r.status === 'cancelled'
-                        ? 'bg-gray-200 text-mu line-through'
-                        : 'bg-gold/15 text-gold'
+                        ? 'bg-line-strong text-ink-2 line-through'
+                        : 'bg-gold/15 text-gold-ink'
                   }`}
                 >
                   {r.preferred_time_start.slice(0, 5)} {r.name}
                 </div>
               ))}
               {dayRentals.length > 3 && (
-                <span className="text-[10px] text-mu">+{dayRentals.length - 3} more</span>
+                <span className="text-[10px] text-ink-2">+{dayRentals.length - 3} more</span>
               )}
             </div>
           )
         })}
       </div>
 
-      <div className="flex items-center gap-4 mt-4 text-xs text-mu">
+      <div className="flex items-center gap-4 mt-4 text-xs text-ink-2">
         <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-gold/30" /> Pending</span>
         <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-green/30" /> Confirmed</span>
-        <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-gray-200" /> Declined</span>
+        <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-line-strong" /> Declined</span>
       </div>
     </Card>
   )
 
   // ---------- List view ----------
   const listView = (
-    <Card className="p-6 min-h-[600px] bg-light border-dashed">
+    <Card className="p-6 min-h-[600px] bg-canvas-muted border-dashed">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="font-display text-xl text-blk">Requests</h3>
+        <h3 className="font-display text-xl text-ink">Requests</h3>
         <div className="flex gap-2">
           {(['pending', 'confirmed', 'cancelled', 'all'] as const).map((f) => (
             <button
               key={f}
               onClick={() => setFilter(f)}
-              className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
-                filter === f ? 'bg-bl text-wh border-bl' : 'border-gray-200 text-mu hover:border-bl'
+              className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors focus-visible:focus-ring active:scale-[0.98] ${
+                filter === f ? 'bg-bl text-wh border-bl' : 'border-line-strong text-ink-2 hover:border-bl'
               }`}
             >
               {f.charAt(0).toUpperCase() + f.slice(1)}
@@ -192,24 +192,24 @@ export function RentalCalendar({ initialRentals }: { initialRentals: Rental[] })
       </div>
 
       {rentals.filter((r) => filter === 'all' || r.status === filter).length === 0 ? (
-        <div className="text-center text-mu py-16">
+        <div className="text-center text-ink-2 py-16">
           <CalendarIcon size={48} className="mx-auto mb-4 opacity-50" />
           <p>No {filter === 'all' ? '' : filter + ' '}requests.</p>
         </div>
       ) : (
         <div className="space-y-4">
           {rentals.filter((r) => filter === 'all' || r.status === filter).map((r) => (
-            <div key={r.id} className="bg-white rounded-xl border border-gray-100 p-4">
+            <div key={r.id} className="bg-surface rounded-xl border border-line-subtle p-4">
               <div className="flex justify-between items-start mb-2">
                 <div>
-                  <h4 className="font-medium text-blk">{r.name}</h4>
-                  <span className="text-xs font-medium text-gold bg-gold/10 px-2 py-1 rounded">
+                  <h4 className="font-medium text-ink">{r.name}</h4>
+                  <span className="text-xs font-medium text-gold-ink bg-gold/10 px-2 py-1 rounded">
                     {r.status.toUpperCase()}
                   </span>
                 </div>
-                <div className="text-xs text-mu">Requested {formatDate(r.created_at)}</div>
+                <div className="text-xs text-ink-2">Requested {formatDate(r.created_at)}</div>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-sm text-mu mb-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-sm text-ink-2 mb-4">
                 <div className="flex items-center gap-1">{phoneLinks(r)} <span>{r.phone}</span></div>
                 {r.email && <div className="flex items-center gap-1"><Mail size={12} /> {r.email}</div>}
                 <div className="flex items-center gap-1"><CalendarIcon size={12} /> {formatDate(r.preferred_date, 'long')}</div>
@@ -219,7 +219,7 @@ export function RentalCalendar({ initialRentals }: { initialRentals: Rental[] })
               </div>
 
               {results[r.id] && (
-                <p className={`mb-3 text-xs ${results[r.id].ok ? 'text-green' : 'text-red-500'}`}>
+                <p className={`mb-3 text-xs ${results[r.id].ok ? 'text-green-ink' : 'text-danger'}`}>
                   {results[r.id].text}
                 </p>
               )}
@@ -257,8 +257,8 @@ export function RentalCalendar({ initialRentals }: { initialRentals: Rental[] })
           <button
             key={v}
             onClick={() => setView(v)}
-            className={`px-4 py-1.5 rounded-full text-xs font-medium border transition-colors ${
-              view === v ? 'bg-bl text-wh border-bl' : 'border-gray-200 text-mu hover:border-bl'
+            className={`px-4 py-1.5 rounded-full text-xs font-medium border transition-colors focus-visible:focus-ring active:scale-[0.98] ${
+              view === v ? 'bg-bl text-wh border-bl' : 'border-line-strong text-ink-2 hover:border-bl'
             }`}
           >
             {v === 'month' ? 'Month View' : 'List View'}
@@ -273,14 +273,14 @@ export function RentalCalendar({ initialRentals }: { initialRentals: Rental[] })
 
         {view === 'list' && (
           <div className="space-y-4">
-            <h3 className="font-display text-xl text-blk">Pending Requests</h3>
+            <h3 className="font-display text-xl text-ink">Pending Requests</h3>
             {rentals.filter((r) => r.status === 'pending').map((r) => (
               <Card key={r.id} className="p-4">
                 <div className="flex justify-between items-start mb-2">
-                  <h4 className="font-medium text-blk">{r.name}</h4>
+                  <h4 className="font-medium text-ink">{r.name}</h4>
                   <Badge variant="gold" className="text-[10px]">PENDING</Badge>
                 </div>
-                <div className="space-y-1 mb-3 text-sm text-mu">
+                <div className="space-y-1 mb-3 text-sm text-ink-2">
                   <div className="flex items-center gap-1">{phoneLinks(r)} <span>{r.phone}</span></div>
                   <div className="flex items-center gap-1"><CalendarIcon size={12} /> {formatDate(r.preferred_date, 'long')}</div>
                   <div className="flex items-center gap-1"><Clock size={12} /> {formatTime(r.preferred_time_start)} - {formatTime(r.preferred_time_end)}</div>
@@ -305,7 +305,7 @@ export function RentalCalendar({ initialRentals }: { initialRentals: Rental[] })
               </Card>
             ))}
             {rentals.filter((r) => r.status === 'pending').length === 0 && (
-              <Card className="p-4 text-sm text-mu text-center">Nothing pending. 🎉</Card>
+              <Card className="p-4 text-sm text-ink-2 text-center">Nothing pending. 🎉</Card>
             )}
           </div>
         )}

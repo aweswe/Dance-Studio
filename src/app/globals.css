@@ -1,11 +1,13 @@
 @import "tailwindcss";
 
 /* ═══ RHYTHMZZ DESIGN SYSTEM ═══════════════════════════════════════ */
-/* Colors, fonts, and variables from the HTML reference               */
-/* ═══════════════════════════════════════════════════════════════════ */
+/* Frozen brand palette + semantic tokens (light default, .dark additive) */
+
+/* Class-based dark mode (light is the default; toggle adds .dark on <html>) */
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme inline {
-  /* ── Brand Colors ── */
+  /* ── Brand Colors (FROZEN — do not change these values) ── */
   --color-blk: #0F0F0F;
   --color-deep: #141414;
   --color-bl: #2BB4D8;
@@ -19,14 +21,119 @@
   --color-gold: #F5A623;
   --color-purp: #8B5CF6;
 
+  /* ── Semantic (flip with .dark; light values ≡ pre-redesign look) ── */
+  --color-canvas: var(--canvas);
+  --color-canvas-muted: var(--canvas-muted);
+  --color-canvas-muted-2: var(--canvas-muted-2);
+  --color-surface: var(--surface);
+  --color-bl-pale-surface: var(--bl-pale-surface);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-line: var(--line);
+  --color-line-subtle: var(--line-subtle);
+  --color-line-strong: var(--line-strong);
+  --color-bl-ink: var(--bl-ink);
+  --color-gold-ink: var(--gold-ink);
+  --color-green-ink: var(--green-ink);
+  --color-bl-deep: var(--bl-deep);
+  --color-danger: var(--danger);
+  --color-danger-deep: var(--danger-deep);
+
   /* ── Fonts ── */
-  --font-display: var(--font-bebas-neue);
+  --font-display: var(--font-display-face);
   --font-body: var(--font-inter);
+
+  /* ── Radius scale ── */
+  --radius-control: 4px;
+  --radius-chip: 8px;
+  --radius-tile: 12px;
+  --radius-card: 16px;
+
+  /* ── Depth (border-first: shadows only for floating layers) ── */
+  --shadow-pop: 0 8px 24px -12px rgb(15 15 15 / 0.18);
+  --shadow-overlay: 0 24px 64px -16px rgb(15 15 15 / 0.35);
+
+  /* ── Motion ── */
+  --ease-out-snap: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-scroll: cubic-bezier(0.33, 1, 0.68, 1);
+
+  /* ── Type scale (fluid display + label/micro) ── */
+  --text-display-hero: clamp(3.75rem, 10vw, 7.5rem);
+  --text-display-hero--line-height: 1;
+  --text-display-1: clamp(3rem, 6vw, 4.5rem);
+  --text-display-1--line-height: 1;
+  --text-display-2: clamp(2.25rem, 4vw, 3.75rem);
+  --text-display-2--line-height: 1.05;
+  --text-display-3: clamp(1.5rem, 2.5vw, 1.875rem);
+  --text-display-3--line-height: 1.1;
+  --text-label: 0.625rem;
+  --text-label--letter-spacing: 0.5em;
+  --text-micro: 0.5625rem;
+  --text-micro--letter-spacing: 0.25em;
 }
 
+/* ── Semantic values (light = today's exact look) ── */
 :root {
+  color-scheme: light;
   --background: #ffffff;
-  --foreground: #0F0F0F;
+  --foreground: #0f0f0f;
+
+  --canvas: #ffffff;
+  --canvas-muted: #f7f9fb; /* light */
+  --canvas-muted-2: #f2f2f2; /* off */
+  --surface: #ffffff;
+  --bl-pale-surface: #e8f7fc;
+
+  --ink: #0f0f0f;
+  --ink-2: #777777;
+  --ink-3: color-mix(in oklch, #777777 55%, #ffffff);
+
+  --line: color-mix(in oklch, #0f0f0f 7%, #ffffff); /* black/[.07] */
+  --line-subtle: color-mix(in oklch, #0f0f0f 5%, #ffffff); /* black/5 */
+  --line-strong: color-mix(in oklch, #0f0f0f 10%, #ffffff); /* black/10 */
+
+  /* Ink variants — same hues darkened for small text on light (AA) */
+  --bl-ink: color-mix(in oklch, #2bb4d8 52%, #0f0f0f);
+  --gold-ink: color-mix(in oklch, #f5a623 45%, #0f0f0f);
+  --green-ink: color-mix(in oklch, #1db954 55%, #0f0f0f);
+
+  /* Interaction */
+  --bl-deep: color-mix(in oklch, #2bb4d8 85%, #0f0f0f); /* replaces #22a0c4 hover */
+  --danger: #ef4444;
+  --danger-deep: #dc2626;
+
+  /* Static alias for SVG attribute references (charts) */
+  --bl: #2bb4d8;
+}
+
+/* ── Dark variant (all values derived from the frozen palette) ── */
+.dark {
+  color-scheme: dark;
+  --background: #0f0f0f;
+  --foreground: #ffffff;
+
+  --canvas: #0f0f0f;
+  --canvas-muted: #141414;
+  --canvas-muted-2: color-mix(in oklch, #141414 55%, #0f0f0f);
+  --surface: #141414;
+  --bl-pale-surface: color-mix(in oklch, #2bb4d8 18%, #141414);
+
+  --ink: #ffffff;
+  --ink-2: color-mix(in oklch, #777777 62%, #ffffff);
+  --ink-3: color-mix(in oklch, #ffffff 45%, #141414);
+
+  --line: color-mix(in oklch, #ffffff 12%, #141414);
+  --line-subtle: color-mix(in oklch, #ffffff 8%, #141414);
+  --line-strong: color-mix(in oklch, #ffffff 20%, #141414);
+
+  --bl-ink: #2bb4d8;
+  --gold-ink: #f5a623;
+  --green-ink: #1db954;
+
+  --bl-deep: #22a0c4;
+  --danger: #ef4444;
+  --danger-deep: #dc2626;
 }
 
 html {
@@ -35,9 +142,18 @@ html {
 
 body {
   font-family: var(--font-body), sans-serif;
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--canvas);
+  color: var(--ink);
   overflow-x: hidden;
+}
+
+/* ── Theme transition (one-shot class added by ThemeToggle) ── */
+html.theme-transition,
+html.theme-transition *,
+html.theme-transition *::before,
+html.theme-transition *::after {
+  transition-property: background-color, border-color, color, fill, stroke, box-shadow;
+  transition-duration: 250ms;
 }
 
 /* ── Scrollbar ── */
@@ -45,17 +161,26 @@ body {
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: var(--canvas);
 }
 ::-webkit-scrollbar-thumb {
-  background: #2BB4D8;
+  background: #2bb4d8;
   border-radius: 3px;
 }
 
 /* ── Selection ── */
 ::selection {
   background: rgba(43, 180, 216, 0.2);
-  color: #0F0F0F;
+  color: #0f0f0f;
+}
+.dark ::selection {
+  color: #ffffff;
+}
+
+/* ── Focus ring (standard for every interactive element) ── */
+@utility focus-ring {
+  outline: 2px solid color-mix(in oklch, #2bb4d8 60%, transparent);
+  outline-offset: 2px;
 }
 
 /* ── Marquee Animation ── */
@@ -103,44 +228,135 @@ body {
   );
 }
 
-/* Respect reduced motion: freeze all decorative animation */
+/* ── Overlay / panel enter animations (lightbox, popovers) ── */
+@keyframes overlay-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-overlay-in {
+  animation: overlay-in 250ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-panel-in {
+  animation: panel-in 250ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes overlay-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes panel-out {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+}
+
+.animate-overlay-out {
+  animation: overlay-out 250ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-panel-out {
+  animation: panel-out 250ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ── Respect reduced motion: global kill switch for ALL motion ── */
 @media (prefers-reduced-motion: reduce) {
-  .skeleton-shimmer,
-  .animate-pulse,
-  .animate-spin,
-  .animate-marquee {
-    animation: none;
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 
 /* ── Section Labels ── */
-.section-label {
+@utility section-label {
   font-size: 10px;
   letter-spacing: 5px;
   text-transform: uppercase;
-  color: #2BB4D8;
+  color: var(--bl-ink);
   margin-bottom: 12px;
 }
 
 .section-label-light {
-  color: #B8E4F0;
+  color: #b8e4f0;
 }
 
-/* ── Heading Styles (matching Bebas Neue from reference) ── */
+/* ── Heading Styles (display face) ── */
 .heading-display {
   font-family: var(--font-display), sans-serif;
-  letter-spacing: 2px;
-  line-height: 0.93;
+  letter-spacing: 1px;
+  line-height: 1;
+  font-weight: 500;
+}
+
+/* ── Spotlight hover (the signature) ── */
+.spotlight {
+  position: relative;
+  overflow: hidden;
+}
+.spotlight::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(
+    260px circle at var(--spot-x, 50%) var(--spot-y, 30%),
+    rgba(43, 180, 216, 0.22),
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 250ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.spotlight:hover::before,
+.spotlight:focus-within::before {
+  opacity: 1;
+}
+.spotlight-pale::before {
+  background: radial-gradient(
+    260px circle at var(--spot-x, 50%) var(--spot-y, 30%),
+    rgba(43, 180, 216, 0.1),
+    transparent 70%
+  );
 }
 
 /* ── Programme Card Gradients ── */
 .card-fitness {
-  background: linear-gradient(135deg, #0F2236 0%, #1A3C5E 100%);
+  background: linear-gradient(135deg, #0f2236 0%, #1a3c5e 100%);
   border: 1px solid rgba(43, 180, 216, 0.25);
 }
 
 .card-dance {
-  background: linear-gradient(135deg, #0F0F0F 0%, #1A1A1A 100%);
+  background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 

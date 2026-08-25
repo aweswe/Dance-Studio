@@ -15,8 +15,8 @@ export function BatchCard({ batch }: BatchProps) {
 
   return (
     <Card className="transition-all duration-200">
-      <div 
-        className="flex flex-col md:flex-row md:items-center justify-between gap-4 cursor-pointer"
+      <div
+        className="flex flex-col md:flex-row md:items-center justify-between gap-4 cursor-pointer focus-visible:focus-ring active:scale-[0.98]"
         onClick={() => setExpanded(!expanded)}
       >
         <div>
@@ -24,41 +24,41 @@ export function BatchCard({ batch }: BatchProps) {
             <h3 className="font-display text-2xl">{batch.name}</h3>
             <Badge variant="blue">{batch.status}</Badge>
           </div>
-          <p className="text-sm text-mu">
+          <p className="text-sm text-ink-2">
             {batch.days.join(", ")} | {formatTime(batch.time_start)} - {formatTime(batch.time_end)}
           </p>
         </div>
         
         <div className="flex items-center gap-6">
-          <div className="flex items-center gap-2 text-sm text-mu">
+          <div className="flex items-center gap-2 text-sm text-ink-2">
             <Users size={16} />
             <span>{batch.enrolled_count}/{batch.capacity} Students</span>
           </div>
-          <div className="text-mu">
+          <div className="text-ink-2">
             {expanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
           </div>
         </div>
       </div>
 
       {expanded && (
-        <div className="mt-6 pt-6 border-t border-black/5">
+        <div className="mt-6 pt-6 border-t border-line-subtle">
           <h4 className="font-semibold text-sm mb-3">Student Roster</h4>
           {batch.students && batch.students.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
               {batch.students.map((student: any) => (
-                <div key={student.id} className="p-3 bg-black/5 rounded-lg flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center font-bold text-xs">
+                <div key={student.id} className="p-3 bg-canvas-muted-2 rounded-lg flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-surface flex items-center justify-center font-bold text-xs">
                     {student.name.charAt(0)}
                   </div>
                   <div className="overflow-hidden">
                     <p className="text-sm font-semibold truncate">{student.name}</p>
-                    <p className="text-xs text-mu truncate">{student.student_id_display}</p>
+                    <p className="text-xs text-ink-2 truncate">{student.student_id_display}</p>
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-sm text-mu">No students enrolled yet.</p>
+            <p className="text-sm text-ink-2">No students enrolled yet.</p>
           )}
         </div>
       )}

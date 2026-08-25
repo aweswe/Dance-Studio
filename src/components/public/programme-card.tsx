@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { cn } from '@/lib/utils/cn';
 import { ROUTES, PROGRAMME_THEMES } from '@/lib/utils/constants';
 import { formatCurrency } from '@/lib/utils/format';
+import { SpotlightCard } from '@/components/ui/spotlight';
 
 interface ProgrammeCardProps {
   programme: any; // Using any for simplicity in this task, should be properly typed from DB
@@ -13,7 +14,7 @@ export function ProgrammeCard({ programme, schedule }: ProgrammeCardProps) {
   const includes = Array.isArray(programme.includes) ? programme.includes : [];
 
   return (
-    <div className={cn("rounded-2xl overflow-hidden relative", theme.card)}>
+    <SpotlightCard className={cn("rounded-2xl h-full", theme.card)}>
       {/* Accent Circle */}
       <div className={cn("absolute -top-5 -right-5 w-[120px] h-[120px] rounded-full opacity-10", theme.accent)} />
       
@@ -70,11 +71,11 @@ export function ProgrammeCard({ programme, schedule }: ProgrammeCardProps) {
         
         <Link
           href={`${ROUTES.enrol}?programme=${programme.slug}`}
-          className={cn("block w-full text-center text-[11px] font-semibold tracking-[2px] uppercase py-3.5 transition-all", theme.button)}
+          className={cn("block w-full text-center text-[11px] font-semibold tracking-[2px] uppercase py-3.5 transition-all focus-visible:focus-ring active:scale-[0.98]", theme.button)}
         >
           Enrol Now
         </Link>
       </div>
-    </div>
+    </SpotlightCard>
   );
 }

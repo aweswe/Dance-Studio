@@ -3,6 +3,7 @@ import { AnalyticsCards, type AnalyticsData } from '@/components/admin/analytics
 import { DashboardPanels } from '@/components/admin/dashboard-panels'
 import { createServerSupabase } from '@/lib/supabase/server'
 import { StatCardSkeleton } from '@/components/ui/skeleton'
+import { PageHeader } from '@/components/ui/page-header'
 
 const EMPTY_ANALYTICS: AnalyticsData = {
   active_students: 0,
@@ -155,10 +156,11 @@ export default async function AdminDashboardPage() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h2 className="font-display text-3xl text-blk tracking-wide">Overview</h2>
-        <p className="text-mu font-body text-sm mt-1">Welcome back. Here is what is happening today.</p>
-      </div>
+      <PageHeader
+        label="Overview"
+        title="Admin Dashboard"
+        description="Welcome back. Here is what is happening today."
+      />
 
       <Suspense fallback={
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">

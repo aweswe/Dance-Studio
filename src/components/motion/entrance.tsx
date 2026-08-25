@@ -4,6 +4,7 @@ import { useRef, ReactNode, CSSProperties } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { prefersMotion } from './reduced-motion';
+import { DURATION, EASE } from './tokens';
 
 interface EntranceProps {
   children: ReactNode;
@@ -35,8 +36,8 @@ export function Entrance({ children, className, style, delay = 0.15, stagger = 0
         {
           y: 0,
           opacity: 1,
-          duration: 0.8,
-          ease: 'power3.out',
+          duration: DURATION.entrance,
+          ease: EASE.out,
           delay,
           stagger,
           clearProps: 'transform',

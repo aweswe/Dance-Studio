@@ -53,14 +53,14 @@ export function InstructorManager({ initialInstructors }: { initialInstructors: 
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h3 className="font-display text-xl text-blk">All Instructors</h3>
+        <h3 className="font-display text-xl text-ink">All Instructors</h3>
         <Button className="flex items-center gap-2" onClick={() => setIsOpen(true)}>
           <Plus size={16} /> Add Instructor
         </Button>
       </div>
 
       {feedback && (
-        <p className={`text-sm ${feedback.ok ? 'text-green' : 'text-red-500'}`}>{feedback.text}</p>
+        <p className={`text-sm ${feedback.ok ? 'text-green-ink' : 'text-danger'}`}>{feedback.text}</p>
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -68,11 +68,11 @@ export function InstructorManager({ initialInstructors }: { initialInstructors: 
           <Card key={instructor.id} className="p-6">
             <div className="flex justify-between items-start mb-4">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-light border border-gray-200 flex items-center justify-center font-display text-xl text-bl">
+                <div className="w-12 h-12 rounded-full bg-canvas-muted border border-line-strong flex items-center justify-center font-display text-xl text-bl">
                   {instructor.name.charAt(0)}
                 </div>
                 <div>
-                  <h4 className="font-display text-xl text-blk">{instructor.name}</h4>
+                  <h4 className="font-display text-xl text-ink">{instructor.name}</h4>
                   <Badge variant={instructor.is_active ? 'green' : 'default'} className="mt-1">
                     {instructor.is_active ? 'ACTIVE' : 'INACTIVE'}
                   </Badge>
@@ -81,19 +81,19 @@ export function InstructorManager({ initialInstructors }: { initialInstructors: 
             </div>
 
             {instructor.role && (
-              <p className="text-xs font-display tracking-[1px] uppercase text-bl mb-3">{instructor.role}</p>
+              <p className="text-xs font-display tracking-[1px] uppercase text-bl-ink mb-3">{instructor.role}</p>
             )}
 
-            <p className="text-sm text-mu mb-4 line-clamp-2">{instructor.bio || 'No biography provided.'}</p>
+            <p className="text-sm text-ink-2 mb-4 line-clamp-2">{instructor.bio || 'No biography provided.'}</p>
 
-            <div className="space-y-2 border-t border-gray-100 pt-4">
+            <div className="space-y-2 border-t border-line-subtle pt-4">
               {instructor.email && (
-                <div className="flex items-center gap-2 text-sm text-mu">
+                <div className="flex items-center gap-2 text-sm text-ink-2">
                   <Mail size={14} className="text-bl" /> {instructor.email}
                 </div>
               )}
               {instructor.phone && (
-                <div className="flex items-center gap-2 text-sm text-mu">
+                <div className="flex items-center gap-2 text-sm text-ink-2">
                   <Phone size={14} className="text-bl" /> {instructor.phone}
                 </div>
               )}
@@ -102,7 +102,7 @@ export function InstructorManager({ initialInstructors }: { initialInstructors: 
         ))}
 
         {instructors.length === 0 && (
-          <div className="col-span-full py-12 text-center text-mu bg-light rounded-[16px]">
+          <div className="col-span-full py-12 text-center text-ink-2 bg-canvas-muted rounded-[16px]">
             No instructors found.
           </div>
         )}
@@ -111,11 +111,11 @@ export function InstructorManager({ initialInstructors }: { initialInstructors: 
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} title="Add Instructor" size="lg">
         <div className="space-y-4">
           <div>
-            <label className="block text-sm text-mu mb-1">Name</label>
+            <label className="block text-sm text-ink-2 mb-1">Name</label>
             <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
           </div>
           <div>
-            <label className="block text-sm text-mu mb-1">Role / Title</label>
+            <label className="block text-sm text-ink-2 mb-1">Role / Title</label>
             <Input
               placeholder="e.g., Kids Dance Instructor"
               value={form.role}
@@ -123,24 +123,24 @@ export function InstructorManager({ initialInstructors }: { initialInstructors: 
             />
           </div>
           <div>
-            <label className="block text-sm text-mu mb-1">Bio</label>
+            <label className="block text-sm text-ink-2 mb-1">Bio</label>
             <textarea
-              className="w-full h-24 p-3 rounded-md border border-black/10 text-sm focus:outline-none focus:ring-2 focus:ring-bl resize-none"
+              className="w-full h-24 bg-surface border border-line-strong rounded-control px-4 py-3 text-sm text-ink placeholder:text-ink-3 focus:outline-none focus:border-bl/50 focus:ring-1 focus:ring-bl/20 transition-all resize-none"
               value={form.bio}
               onChange={(e) => setForm({ ...form, bio: e.target.value })}
             />
           </div>
           <div>
-            <label className="block text-sm text-mu mb-1">Certifications (one per line or comma-separated)</label>
+            <label className="block text-sm text-ink-2 mb-1">Certifications (one per line or comma-separated)</label>
             <textarea
-              className="w-full h-16 p-3 rounded-md border border-black/10 text-sm focus:outline-none focus:ring-2 focus:ring-bl resize-none"
+              className="w-full h-16 bg-surface border border-line-strong rounded-control px-4 py-3 text-sm text-ink placeholder:text-ink-3 focus:outline-none focus:border-bl/50 focus:ring-1 focus:ring-bl/20 transition-all resize-none"
               value={form.certifications}
               onChange={(e) => setForm({ ...form, certifications: e.target.value })}
             />
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm text-mu mb-1">Email</label>
+              <label className="block text-sm text-ink-2 mb-1">Email</label>
               <Input
                 type="email"
                 value={form.email}
@@ -148,7 +148,7 @@ export function InstructorManager({ initialInstructors }: { initialInstructors: 
               />
             </div>
             <div>
-              <label className="block text-sm text-mu mb-1">Phone</label>
+              <label className="block text-sm text-ink-2 mb-1">Phone</label>
               <Input
                 value={form.phone}
                 onChange={(e) => setForm({ ...form, phone: e.target.value })}

@@ -50,8 +50,8 @@ export default async function FeesPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="font-display text-3xl text-blk tracking-wide">Fees & Payments</h2>
-          <p className="text-mu font-body text-sm mt-1">Manage transactions, track pending fees, and log offline payments.</p>
+          <h2 className="font-display text-3xl text-ink tracking-wide">Fees & Payments</h2>
+          <p className="text-ink-2 font-body text-sm mt-1">Manage transactions, track pending fees, and log offline payments.</p>
         </div>
         <a href="/api/export?type=payments">
           <Button variant="outline" className="flex items-center gap-2">

@@ -1,7 +1,8 @@
 import { createServerSupabase } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import { InstructorSidebar } from "@/components/instructor/sidebar";
+import { PortalShell } from "@/components/portal/portal-shell";
 import { ROUTES } from "@/lib/utils/constants";
+import { GsapProvider } from "@/components/motion/gsap-provider";
 
 export const dynamic = 'force-dynamic';
 
@@ -30,13 +31,8 @@ export default async function InstructorLayout({
   const instructor = instructorData as any;
 
   return (
-    <div className="min-h-screen bg-light flex">
-      <InstructorSidebar instructorName={instructor.name || "Instructor"} />
-      <div className="flex-1 md:ml-64 p-4 md:p-8 overflow-y-auto mt-12 md:mt-0">
-        <div className="max-w-6xl mx-auto">
-          {children}
-        </div>
-      </div>
-    </div>
+    <PortalShell role="instructor" name={instructor.name || "Instructor"}>
+      <GsapProvider>{children}</GsapProvider>
+    </PortalShell>
   );
 }

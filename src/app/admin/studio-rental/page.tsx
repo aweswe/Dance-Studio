@@ -13,8 +13,8 @@ export default async function StudioRentalPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="font-display text-3xl text-blk tracking-wide">Studio Rental</h2>
-        <p className="text-mu font-body text-sm mt-1">Review and confirm external studio booking requests.</p>
+        <h2 className="font-display text-3xl text-ink tracking-wide">Studio Rental</h2>
+        <p className="text-ink-2 font-body text-sm mt-1">Review and confirm external studio booking requests.</p>
       </div>
 
       <Suspense fallback={<CardSkeleton />}>

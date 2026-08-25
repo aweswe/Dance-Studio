@@ -18,7 +18,7 @@ export default function GlobalError({ reset }: { error: Error & { digest?: strin
           </p>
           <button
             onClick={() => reset()}
-            className="text-[11px] font-semibold tracking-[2px] uppercase px-8 py-3 bg-bl text-white rounded transition-all"
+            className="text-[11px] font-semibold tracking-[2px] uppercase px-8 py-3 bg-bl text-white rounded transition-all focus-visible:focus-ring active:scale-[0.98]"
           >
             Try Again
           </button>

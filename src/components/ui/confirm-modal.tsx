@@ -29,12 +29,12 @@ export function ConfirmModal({
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={title} size="sm">
       <div className="space-y-4">
-        <p className="text-sm text-mu leading-relaxed">{description}</p>
+        <p className="text-sm text-ink-2 leading-relaxed">{description}</p>
         <div className="flex gap-3 pt-1">
           <Button
             onClick={onConfirm}
             disabled={busy}
-            className={danger ? "bg-red-600 hover:bg-red-700" : undefined}
+            variant={danger ? "danger" : "primary"}
           >
             {busy ? "Working..." : confirmLabel}
           </Button>

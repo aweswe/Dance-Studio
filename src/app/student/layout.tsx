@@ -1,7 +1,8 @@
 import { createServerSupabase, createAdminSupabase } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import { StudentSidebar } from "@/components/student/sidebar";
+import { PortalShell } from "@/components/portal/portal-shell";
 import { ROUTES } from "@/lib/utils/constants";
+import { GsapProvider } from "@/components/motion/gsap-provider";
 
 export const dynamic = 'force-dynamic';
 
@@ -66,13 +67,8 @@ export default async function StudentLayout({
   const isKuchipudi = (student as any)?.programme?.slug === "kuchipudi";
 
   return (
-    <div className="min-h-screen bg-light flex">
-      <StudentSidebar studentName={(student as any)?.name || "Student"} isKuchipudi={isKuchipudi} />
-      <div className="flex-1 md:ml-64 p-4 md:p-8 overflow-y-auto mt-12 md:mt-0">
-        <div className="max-w-6xl mx-auto">
-          {children}
-        </div>
-      </div>
-    </div>
+    <PortalShell role="student" name={(student as any)?.name || "Student"} isKuchipudi={isKuchipudi}>
+      <GsapProvider>{children}</GsapProvider>
+    </PortalShell>
   );
 }

@@ -86,20 +86,20 @@ export function StudentActions({ student, batches }: StudentActionsProps) {
   }
 
   return (
-    <div className="pt-4 border-t border-gray-100 space-y-4">
+    <div className="pt-4 border-t border-line-subtle space-y-4">
       {/* Portal access */}
       {student.auth_id ? (
         <div className="flex items-center justify-between bg-green/10 border border-green/20 rounded-lg px-4 py-3">
           <div>
-            <p className="text-sm font-medium text-blk">Portal access enabled</p>
-            <p className="text-xs text-mu">Student can log in with WhatsApp OTP</p>
+            <p className="text-sm font-medium text-ink">Portal access enabled</p>
+            <p className="text-xs text-ink-2">Student can log in with WhatsApp OTP</p>
           </div>
-          <span className="text-[10px] font-semibold tracking-[2px] text-green">LINKED</span>
+          <span className="text-[10px] font-semibold tracking-[2px] text-green-ink">LINKED</span>
         </div>
       ) : (
-        <div className="bg-light border border-gray-200 rounded-lg px-4 py-3">
-          <p className="text-sm font-medium text-blk mb-1">Portal not enabled</p>
-          <p className="text-xs text-mu mb-3">
+        <div className="bg-canvas-muted border border-line-strong rounded-lg px-4 py-3">
+          <p className="text-sm font-medium text-ink mb-1">Portal not enabled</p>
+          <p className="text-xs text-ink-2 mb-3">
             Creates the student&apos;s WhatsApp OTP login and sends a welcome message.
           </p>
           <Button
@@ -117,7 +117,7 @@ export function StudentActions({ student, batches }: StudentActionsProps) {
         <Button className="w-full" onClick={() => setIsEditOpen(true)}>Edit Profile</Button>
         <Button
           variant="outline"
-          className="w-full text-red-500 hover:text-red-600 hover:bg-red-50"
+          className="w-full text-danger hover:text-danger-deep hover:bg-danger/10"
           onClick={() => {
             if (student.status === 'active') setIsConfirmOpen(true)
             else toggleStatus()
@@ -129,7 +129,7 @@ export function StudentActions({ student, batches }: StudentActionsProps) {
       </div>
 
       {feedback && (
-        <p className={`mt-3 text-sm ${feedback.ok ? 'text-green' : 'text-red-500'}`}>
+        <p className={`mt-3 text-sm ${feedback.ok ? 'text-green-ink' : 'text-danger'}`}>
           {feedback.text}
         </p>
       )}
@@ -148,19 +148,19 @@ export function StudentActions({ student, batches }: StudentActionsProps) {
       <Modal isOpen={isEditOpen} onClose={() => setIsEditOpen(false)} title="Edit Student" size="md">
         <div className="space-y-4">
           <div>
-            <label className="block text-sm text-mu mb-1">Name</label>
+            <label className="block text-sm text-ink-2 mb-1">Name</label>
             <Input value={name} onChange={(e) => setName(e.target.value)} />
           </div>
           <div>
-            <label className="block text-sm text-mu mb-1">Phone</label>
+            <label className="block text-sm text-ink-2 mb-1">Phone</label>
             <Input value={phone} onChange={(e) => setPhone(e.target.value)} />
           </div>
           <div>
-            <label className="block text-sm text-mu mb-1">Email</label>
+            <label className="block text-sm text-ink-2 mb-1">Email</label>
             <Input value={email} onChange={(e) => setEmail(e.target.value)} placeholder="student@example.com" />
           </div>
           <div>
-            <label className="block text-sm text-mu mb-1">Batch</label>
+            <label className="block text-sm text-ink-2 mb-1">Batch</label>
             <Select
               value={batchId}
               onChange={(e) => setBatchId(e.target.value)}

@@ -14,7 +14,7 @@ export function Skeleton({ className, variant = "pulse", dark = false }: Skeleto
       aria-hidden="true"
       className={cn(
         "rounded",
-        dark ? "bg-white/5" : "bg-black/5",
+        dark ? "bg-white/5" : "bg-line",
         variant === "shimmer" && (dark ? "skeleton-shimmer-dark" : "skeleton-shimmer"),
         variant === "pulse" && "animate-pulse",
         className,
@@ -43,7 +43,7 @@ export function Spinner({ className }: { className?: string }) {
 /** Skeleton for stat numbers (hero stats section) */
 export function StatSkeleton() {
   return (
-    <div className="text-center py-8 px-5 border-r border-black/[.07] last:border-r-0">
+    <div className="text-center py-8 px-5 border-r border-line last:border-r-0">
       <Skeleton className="h-12 w-20 mx-auto mb-2" />
       <Skeleton className="h-3 w-24 mx-auto" />
     </div>
@@ -84,10 +84,10 @@ export function TableRowSkeleton({ columns = 5 }: { columns?: number }) {
 /** Full table skeleton: header row + body rows */
 export function TableSkeleton({ rows = 6, columns = 5 }: { rows?: number; columns?: number }) {
   return (
-    <div className="w-full overflow-x-auto rounded-xl border border-black/5 bg-white">
+    <div className="w-full overflow-x-auto rounded-card border border-line bg-surface">
       <table className="w-full min-w-[640px]">
         <thead>
-          <tr className="border-b border-black/5">
+          <tr className="border-b border-line-subtle">
             {Array.from({ length: columns }).map((_, i) => (
               <th key={i} className="px-4 py-3 text-left">
                 <Skeleton className="h-3.5 w-20" />
@@ -119,7 +119,7 @@ export function SectionHeaderSkeleton({ center = false }: { center?: boolean }) 
 /** Public stats strip (4 bordered cells) */
 export function StatStripSkeleton({ count = 4 }: { count?: number }) {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-black/[.07]">
+    <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-line">
       {Array.from({ length: count }).map((_, i) => (
         <div key={i} className="flex flex-col items-center py-8 px-5">
           <Skeleton className="h-12 w-20 mb-2" />
@@ -155,8 +155,8 @@ export function CardSkeleton({ dark = false, className }: { dark?: boolean; clas
   return (
     <div
       className={cn(
-        "rounded-2xl p-8 border",
-        dark ? "bg-deep border-white/[.08]" : "bg-white border-black/5",
+        "rounded-card p-8 border",
+        dark ? "bg-deep border-white/[.08]" : "bg-surface border-line",
         className,
       )}
     >
@@ -175,7 +175,7 @@ export function CardSkeleton({ dark = false, className }: { dark?: boolean; clas
 /** Dashboard KPI card (label + big number + delta) */
 export function StatCardSkeleton() {
   return (
-    <div className="bg-wh p-6 rounded-[16px] shadow-sm border border-gray-100">
+    <div className="bg-surface p-6 rounded-card border border-line">
       <Skeleton className="h-4 w-24 mb-4" />
       <Skeleton className="h-10 w-16" />
     </div>
@@ -198,7 +198,7 @@ export function AvatarRowSkeleton() {
 /** Generic list row: thumb + two lines + right-aligned action */
 export function ListRowSkeleton() {
   return (
-    <div className="flex items-center gap-4 p-4 border-b border-black/5">
+    <div className="flex items-center gap-4 p-4 border-b border-line-subtle">
       <Skeleton className="h-12 w-12 rounded-lg shrink-0" />
       <div className="flex-1 space-y-2">
         <Skeleton className="h-4 w-48 max-w-full" />

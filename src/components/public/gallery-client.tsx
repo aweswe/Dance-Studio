@@ -93,10 +93,10 @@ export function GalleryClient({ images }: { images: ImageType[] }) {
             onClick={() => setFilter(cat)}
             aria-pressed={filter === cat}
             className={cn(
-              "px-4 py-2 text-[11px] font-bold tracking-[1.5px] uppercase rounded-full transition-all border",
+              "px-4 py-2 text-[11px] font-bold tracking-[1.5px] uppercase rounded-full transition-all border focus-visible:focus-ring active:scale-95",
               filter === cat
                 ? "bg-blk text-white border-blk"
-                : "bg-white text-mu border-black/10 hover:border-black/30"
+                : "bg-surface text-ink-2 border-line-strong hover:border-bl"
             )}
           >
             {cat}
@@ -110,7 +110,7 @@ export function GalleryClient({ images }: { images: ImageType[] }) {
           <button
             key={image.id}
             type="button"
-            className="relative rounded-xl overflow-hidden bg-off aspect-square cursor-pointer group focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-bl"
+            className="relative rounded-xl overflow-hidden bg-canvas-muted-2 aspect-square cursor-pointer group focus-visible:focus-ring"
             onClick={(e) => {
               triggerRef.current = e.currentTarget;
               setLightboxImage(image);
@@ -128,7 +128,7 @@ export function GalleryClient({ images }: { images: ImageType[] }) {
           </button>
         ))}
         {filteredImages.length === 0 && (
-          <div className="col-span-full text-center py-12 text-mu">
+          <div className="col-span-full text-center py-12 text-ink-2">
             No images found for this category.
           </div>
         )}
@@ -141,7 +141,7 @@ export function GalleryClient({ images }: { images: ImageType[] }) {
           role="dialog"
           aria-modal="true"
           aria-label={lightboxImage.alt || 'Gallery image'}
-          className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
+          className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4 animate-overlay-in"
           onClick={(e) => {
             // Backdrop click (not the image or controls) closes.
             if (e.target === e.currentTarget) close();
@@ -151,13 +151,13 @@ export function GalleryClient({ images }: { images: ImageType[] }) {
             ref={closeBtnRef}
             type="button"
             aria-label="Close image"
-            className="absolute top-6 right-6 text-white/70 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
+            className="absolute top-6 right-6 text-white/70 hover:text-white transition-colors focus-visible:focus-ring rounded-sm"
             onClick={close}
           >
             <X size={32} />
           </button>
 
-          <div className="relative w-full max-w-5xl aspect-video md:aspect-[3/2] bg-transparent">
+          <div className="relative w-full max-w-5xl aspect-video md:aspect-[3/2] bg-transparent animate-panel-in">
             <Image
               src={lightboxImage.url}
               alt={lightboxImage.alt || 'Gallery Image'}

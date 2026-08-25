@@ -26,7 +26,7 @@ export function Hero() {
         Neredmet X Road · Secunderabad · Teaching Since 2010
       </p>
 
-      <h1 className="heading-display text-[clamp(60px,10vw,120px)] text-white relative z-10 mb-2">
+      <h1 className="heading-display text-display-hero text-white relative z-10 mb-2">
         MOVE WITH <span className="text-bl">RHYTHM</span>
       </h1>
 
@@ -40,13 +40,13 @@ export function Hero() {
         <div className="flex gap-3 justify-center flex-wrap relative z-10">
           <Link
             href={ROUTES.enrol}
-            className="bg-bl text-white text-[11px] font-semibold tracking-[2px] uppercase py-3.5 px-9 hover:opacity-85 transition-opacity"
+            className="bg-bl text-white text-[11px] font-semibold tracking-[2px] uppercase py-3.5 px-9 hover:bg-bl-deep transition-all focus-visible:focus-ring active:scale-[0.98]"
           >
             Enrol Now
           </Link>
           <Link
             href={ROUTES.programmes}
-            className="bg-transparent text-white text-[11px] font-medium tracking-[2px] uppercase border border-white/20 py-[13px] px-8 hover:border-bl hover:text-bl transition-all"
+            className="bg-transparent text-white text-[11px] font-medium tracking-[2px] uppercase border border-white/20 py-[13px] px-8 hover:border-bl hover:text-bl transition-all focus-visible:focus-ring active:scale-[0.98]"
           >
             View Programmes
           </Link>

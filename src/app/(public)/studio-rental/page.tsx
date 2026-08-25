@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { Wind, Maximize, Music, MonitorPlay, CheckCircle2 } from 'lucide-react';
 import { StudioRentalForm } from '@/components/public/studio-rental-form';
 import { SITE_URL } from '@/lib/utils/constants';
+import { Reveal } from '@/components/motion/reveal';
 
 export const metadata: Metadata = {
   title: 'Dance Studio Rental Secunderabad',
@@ -11,11 +12,11 @@ export const metadata: Metadata = {
 
 export default function StudioRentalPage() {
   return (
-    <div className="bg-white">
+    <div className="bg-canvas text-ink">
       {/* Hero */}
       <section className="bg-blk text-white py-24 px-6 md:px-16 relative">
         <div className="max-w-4xl mx-auto text-center relative z-10">
-          <div className="text-[10px] tracking-[5px] uppercase text-bl mb-4">Book The Space</div>
+          <div className="text-[10px] tracking-[5px] uppercase text-bl-light mb-4">Book The Space</div>
           <h1 className="heading-display text-5xl md:text-7xl mb-6">STUDIO RENTAL</h1>
           <p className="text-white/70 text-lg leading-relaxed">
             A fully-equipped dance and fitness studio at Neredmet X Road, Secunderabad — available
@@ -30,7 +31,8 @@ export default function StudioRentalPage() {
         
         {/* Info Column */}
         <div className="space-y-12">
-          
+
+          <Reveal>
           <div>
             <h2 className="heading-display text-3xl mb-6">STUDIO FEATURES</h2>
             <div className="grid grid-cols-2 gap-6">
@@ -42,31 +44,35 @@ export default function StudioRentalPage() {
                 { icon: MonitorPlay, label: "Changing Rooms" },
                 { icon: Maximize, label: "Central Location" },
               ].map((Feature, idx) => (
-                <div key={idx} className="flex gap-4 items-start bg-off p-6 rounded-2xl">
+                <div key={idx} className="flex gap-4 items-start bg-canvas-muted-2 p-6 rounded-card">
                   <Feature.icon className="text-bl shrink-0" size={24} />
                   <span className="text-sm font-bold tracking-wide uppercase">{Feature.label}</span>
                 </div>
               ))}
             </div>
           </div>
+          </Reveal>
 
+          <Reveal y={20}>
           <div>
             <h2 className="heading-display text-3xl mb-6">PRICING</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <div className="border-2 border-black/10 rounded-2xl p-6 text-center">
-                <div className="text-[11px] font-bold tracking-[2px] uppercase text-mu mb-2">Weekdays</div>
-                <div className="text-sm text-blk font-semibold mb-4">(Mon - Fri)</div>
-                <div className="text-3xl font-bold heading-display text-bl">₹1000<span className="text-sm text-mu font-sans ml-1">/ hr</span></div>
+              <div className="border-2 border-line-strong rounded-card p-6 text-center">
+                <div className="text-[11px] font-bold tracking-[2px] uppercase text-ink-2 mb-2">Weekdays</div>
+                <div className="text-sm text-ink font-semibold mb-4">(Mon - Fri)</div>
+                <div className="text-3xl font-bold heading-display text-bl">₹1000<span className="text-sm text-ink-2 font-sans ml-1">/ hr</span></div>
               </div>
-              <div className="border-2 border-bl rounded-2xl p-6 text-center bg-bl/5 relative">
+              <div className="border-2 border-bl rounded-card p-6 text-center bg-bl/5 relative">
                 <div className="absolute top-0 right-1/2 translate-x-1/2 -translate-y-1/2 bg-bl text-white text-[9px] font-bold tracking-[2px] uppercase px-3 py-1 rounded-full">Peak</div>
-                <div className="text-[11px] font-bold tracking-[2px] uppercase text-mu mb-2">Weekends</div>
-                <div className="text-sm text-blk font-semibold mb-4">(Sat - Sun)</div>
-                <div className="text-3xl font-bold heading-display text-bl">₹1500<span className="text-sm text-mu font-sans ml-1">/ hr</span></div>
+                <div className="text-[11px] font-bold tracking-[2px] uppercase text-ink-2 mb-2">Weekends</div>
+                <div className="text-sm text-ink font-semibold mb-4">(Sat - Sun)</div>
+                <div className="text-3xl font-bold heading-display text-bl">₹1500<span className="text-sm text-ink-2 font-sans ml-1">/ hr</span></div>
               </div>
             </div>
           </div>
+          </Reveal>
 
+          <Reveal y={20}>
           <div>
             <h2 className="heading-display text-3xl mb-6">RULES & GUIDELINES</h2>
             <ul className="space-y-3">
@@ -77,13 +83,14 @@ export default function StudioRentalPage() {
                 "Minimum booking duration is 1 hour.",
                 "Full payment required to confirm the booking."
               ].map((rule, idx) => (
-                <li key={idx} className="flex gap-3 items-start text-sm text-mu leading-relaxed">
+                <li key={idx} className="flex gap-3 items-start text-sm text-ink-2 leading-relaxed">
                   <CheckCircle2 className="text-bl shrink-0 mt-0.5" size={16} />
                   <span>{rule}</span>
                 </li>
               ))}
             </ul>
           </div>
+          </Reveal>
         </div>
 
         {/* Form Column */}

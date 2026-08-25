@@ -8,6 +8,8 @@ import { enrolFormSchema } from '@/lib/validators/enrol';
 import { formatCurrency, formatTime, whatsappLink } from '@/lib/utils/format';
 import { loadRazorpayScript, openRazorpayCheckout } from '@/lib/razorpay/checkout';
 import { Spinner } from '@/components/ui/skeleton';
+import { Input } from '@/components/ui/input';
+import { Select } from '@/components/ui/select';
 
 const PAYMENTS_ENABLED = Boolean(process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID);
 
@@ -158,19 +160,19 @@ export function EnrolForm({ programmes = [], batches = [], defaultProgramme }: E
   // ---------- Success screen ----------
   if (status === 'success') {
     return (
-      <div className="bg-white p-8 rounded-2xl shadow-sm border border-black/5 max-w-lg mx-auto w-full text-center">
+      <div className="bg-surface p-8 rounded-card border border-line max-w-lg mx-auto w-full text-center">
         <CheckCircle2 className="mx-auto mb-4 text-green" size={56} strokeWidth={1.5} />
-        <h3 className="heading-display text-3xl text-blk mb-3">YOU&apos;RE IN!</h3>
-        <p className="text-sm text-mu mb-2 leading-relaxed">
+        <h3 className="heading-display text-3xl text-ink mb-3">YOU&apos;RE IN!</h3>
+        <p className="text-sm text-ink-2 mb-2 leading-relaxed">
           Payment received — your batch is confirmed.
         </p>
-        <p className="text-sm text-mu mb-8 leading-relaxed">
-          Check WhatsApp on <span className="font-semibold text-blk">+91 90529 80859</span> for your
+        <p className="text-sm text-ink-2 mb-8 leading-relaxed">
+          Check WhatsApp on <span className="font-semibold text-ink">+91 90529 80859</span> for your
           student login link.
         </p>
         <a
           href={ROUTES.home}
-          className="inline-block text-[11px] font-semibold tracking-[1.8px] uppercase px-8 py-3 bg-bl text-white hover:bg-[#22a0c4] transition-all"
+          className="inline-block text-[11px] font-semibold tracking-[1.8px] uppercase px-8 py-3 bg-bl text-white hover:bg-bl-deep transition-all focus-visible:focus-ring active:scale-[0.98]"
         >
           Back to Home
         </a>
@@ -181,23 +183,23 @@ export function EnrolForm({ programmes = [], batches = [], defaultProgramme }: E
   // ---------- WhatsApp degraded mode ----------
   if (status === 'degraded' || !PAYMENTS_ENABLED) {
     return (
-      <div className="bg-white p-8 rounded-2xl shadow-sm border border-black/5 max-w-lg mx-auto w-full">
-        <h3 className="heading-display text-2xl text-blk mb-2">BOOK VIA WHATSAPP</h3>
-        <p className="text-sm text-mu mb-6 leading-relaxed">
+      <div className="bg-surface p-8 rounded-card border border-line max-w-lg mx-auto w-full">
+        <h3 className="heading-display text-2xl text-ink mb-2">BOOK VIA WHATSAPP</h3>
+        <p className="text-sm text-ink-2 mb-6 leading-relaxed">
           Online payments are coming soon — book your free trial on WhatsApp instead.
           No registration fee.
         </p>
-        <div className="bg-off rounded-lg p-4 text-sm text-mu mb-6 space-y-1">
-          <p><span className="font-semibold text-blk">Name:</span> {formData.name || '—'}</p>
-          <p><span className="font-semibold text-blk">Programme:</span> {selected?.name ?? '—'}</p>
-          <p><span className="font-semibold text-blk">Batch:</span> {batchLabel(selectedBatch) || '—'}</p>
-          <p><span className="font-semibold text-blk">Phone:</span> {phone || '—'}</p>
+        <div className="bg-canvas-muted-2 rounded-lg p-4 text-sm text-ink-2 mb-6 space-y-1">
+          <p><span className="font-semibold text-ink">Name:</span> {formData.name || '—'}</p>
+          <p><span className="font-semibold text-ink">Programme:</span> {selected?.name ?? '—'}</p>
+          <p><span className="font-semibold text-ink">Batch:</span> {batchLabel(selectedBatch) || '—'}</p>
+          <p><span className="font-semibold text-ink">Phone:</span> {phone || '—'}</p>
         </div>
         <a
           href={whatsappLink(waMessage)}
           target="_blank"
           rel="noopener noreferrer"
-          className="block text-center text-[11px] font-semibold tracking-[1.8px] uppercase px-8 py-3.5 bg-green text-white hover:opacity-90 transition-all"
+          className="block text-center text-[11px] font-semibold tracking-[1.8px] uppercase px-8 py-3.5 bg-green text-white hover:opacity-90 transition-all focus-visible:focus-ring active:scale-[0.98]"
         >
           Book Your Free Trial on WhatsApp
         </a>
@@ -207,17 +209,17 @@ export function EnrolForm({ programmes = [], batches = [], defaultProgramme }: E
 
   // ---------- Form ----------
   return (
-    <div className="bg-white p-8 rounded-2xl shadow-sm border border-black/5 max-w-lg mx-auto w-full">
+    <div className="bg-surface p-8 rounded-card border border-line max-w-lg mx-auto w-full">
       <div className="flex justify-between mb-8">
         {[1, 2, 3].map((s) => (
           <div key={s} className="flex items-center gap-2">
             <div className={cn(
               "w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-colors",
-              step >= s ? "bg-blk text-white" : "bg-off text-mu",
+              step >= s ? "bg-blk text-white" : "bg-canvas-muted-2 text-ink-2",
             )}>
               {s}
             </div>
-            {s < 3 && <div className={cn("h-px w-10 sm:w-16 transition-colors", step > s ? "bg-blk" : "bg-off")} />}
+            {s < 3 && <div className={cn("h-px w-10 sm:w-16 transition-colors", step > s ? "bg-blk" : "bg-canvas-muted-2")} />}
           </div>
         ))}
       </div>
@@ -225,20 +227,16 @@ export function EnrolForm({ programmes = [], batches = [], defaultProgramme }: E
       <form onSubmit={handleSubmit} className="flex flex-col gap-6" noValidate>
         {step === 1 && (
           <div>
-            <h3 className="heading-display text-2xl text-blk mb-4">Select Programme</h3>
-            <select
+            <h3 className="heading-display text-2xl text-ink mb-4">Select Programme</h3>
+            <Select
               required
-              className="w-full p-4 border border-black/10 rounded-lg text-sm bg-off outline-none focus:border-bl transition-colors"
+              placeholder="Choose a programme..."
+              options={programmes.map((p) => ({ value: p.id, label: p.name }))}
               value={formData.programmeId}
               onChange={(e) => setFormData((prev) => ({ ...prev, programmeId: e.target.value, batchId: '' }))}
-            >
-              <option value="">Choose a programme...</option>
-              {programmes.map((p) => (
-                <option key={p.id} value={p.id}>{p.name}</option>
-              ))}
-            </select>
+            />
             {selected && (
-              <p className="text-xs text-mu mt-3">
+              <p className="text-xs text-ink-2 mt-3">
                 {formatCurrency(selected.fees_monthly)}/month · {formatCurrency(selected.fees_quarterly)}/quarter ·{' '}
                 {selected.age_group}
               </p>
@@ -248,21 +246,17 @@ export function EnrolForm({ programmes = [], batches = [], defaultProgramme }: E
 
         {step === 2 && (
           <div>
-            <h3 className="heading-display text-2xl text-blk mb-4">Select Batch</h3>
+            <h3 className="heading-display text-2xl text-ink mb-4">Select Batch</h3>
             {filteredBatches.length > 0 ? (
-              <select
+              <Select
                 required
-                className="w-full p-4 border border-black/10 rounded-lg text-sm bg-off outline-none focus:border-bl transition-colors"
+                placeholder="Choose a batch..."
+                options={filteredBatches.map((b) => ({ value: b.id, label: batchLabel(b) }))}
                 value={formData.batchId}
                 onChange={(e) => setField('batchId', e.target.value)}
-              >
-                <option value="">Choose a batch...</option>
-                {filteredBatches.map((b) => (
-                  <option key={b.id} value={b.id}>{batchLabel(b)}</option>
-                ))}
-              </select>
+              />
             ) : (
-              <p className="text-sm text-mu bg-off rounded-lg p-4">
+              <p className="text-sm text-ink-2 bg-canvas-muted-2 rounded-lg p-4">
                 No active batches for this programme right now. Choose another programme or message us on WhatsApp.
               </p>
             )}
@@ -271,56 +265,38 @@ export function EnrolForm({ programmes = [], batches = [], defaultProgramme }: E
 
         {step === 3 && (
           <div>
-            <h3 className="heading-display text-2xl text-blk mb-4">Your Details</h3>
-            <div className="bg-off rounded-lg p-4 text-xs text-mu mb-4 space-y-1">
-              <p><span className="font-semibold text-blk">{selected?.name}</span> · {batchLabel(selectedBatch)}</p>
+            <h3 className="heading-display text-2xl text-ink mb-4">Your Details</h3>
+            <div className="bg-canvas-muted-2 rounded-lg p-4 text-xs text-ink-2 mb-4 space-y-1">
+              <p><span className="font-semibold text-ink">{selected?.name}</span> · {batchLabel(selectedBatch)}</p>
               {selected && (
                 <p>First month: {formatCurrency(selected.fees_monthly)} — pay after your free trial class.</p>
               )}
             </div>
             <div className="flex flex-col gap-4">
-              <div>
-                <input
-                  type="text"
-                  placeholder="Full Name"
-                  className={cn(
-                    "w-full p-4 border rounded-lg text-sm bg-off outline-none focus:border-bl transition-colors",
-                    errors.name ? "border-red-400" : "border-black/10",
-                  )}
-                  value={formData.name}
-                  onChange={(e) => setField('name', e.target.value)}
-                />
-                {errors.name && <p className="text-xs text-red-500 mt-1.5">{errors.name}</p>}
-              </div>
-              <div>
-                <input
-                  type="email"
-                  placeholder="Email Address (optional)"
-                  className={cn(
-                    "w-full p-4 border rounded-lg text-sm bg-off outline-none focus:border-bl transition-colors",
-                    errors.email ? "border-red-400" : "border-black/10",
-                  )}
-                  value={formData.email}
-                  onChange={(e) => setField('email', e.target.value)}
-                />
-                {errors.email && <p className="text-xs text-red-500 mt-1.5">{errors.email}</p>}
-              </div>
-              <div>
-                <input
-                  type="tel"
-                  placeholder="Phone Number (10 digits)"
-                  className={cn(
-                    "w-full p-4 border rounded-lg text-sm bg-off outline-none focus:border-bl transition-colors",
-                    errors.phone ? "border-red-400" : "border-black/10",
-                  )}
-                  value={formData.phone}
-                  onChange={(e) => setField('phone', e.target.value)}
-                />
-                {errors.phone && <p className="text-xs text-red-500 mt-1.5">{errors.phone}</p>}
-              </div>
+              <Input
+                type="text"
+                placeholder="Full Name"
+                error={errors.name}
+                value={formData.name}
+                onChange={(e) => setField('name', e.target.value)}
+              />
+              <Input
+                type="email"
+                placeholder="Email Address (optional)"
+                error={errors.email}
+                value={formData.email}
+                onChange={(e) => setField('email', e.target.value)}
+              />
+              <Input
+                type="tel"
+                placeholder="Phone Number (10 digits)"
+                error={errors.phone}
+                value={formData.phone}
+                onChange={(e) => setField('phone', e.target.value)}
+              />
             </div>
             {status === 'error' && (
-              <div className="mt-4 flex gap-2.5 items-start bg-red-50 border border-red-200 rounded-lg p-4 text-xs text-red-700 leading-relaxed">
+              <div className="mt-4 flex gap-2.5 items-start bg-danger/10 border border-danger/30 rounded-lg p-4 text-xs text-danger leading-relaxed">
                 <AlertCircle size={16} className="shrink-0 mt-0.5" />
                 <span>{errorMsg}</span>
               </div>
@@ -333,7 +309,7 @@ export function EnrolForm({ programmes = [], batches = [], defaultProgramme }: E
             <button
               type="button"
               onClick={() => { setStep(step - 1); setErrorMsg(''); }}
-              className="text-[11px] font-semibold tracking-[1.8px] uppercase px-6 py-3 border border-black/20 text-blk hover:border-bl hover:text-bl transition-all"
+              className="text-[11px] font-semibold tracking-[1.8px] uppercase px-6 py-3 border border-line-strong text-ink hover:border-bl-ink hover:text-bl-ink transition-all focus-visible:focus-ring active:scale-[0.98]"
             >
               Back
             </button>
@@ -342,7 +318,7 @@ export function EnrolForm({ programmes = [], batches = [], defaultProgramme }: E
           <button
             type="submit"
             disabled={status === 'submitting'}
-            className="text-[11px] font-semibold tracking-[1.8px] uppercase px-8 py-3 bg-bl text-white hover:bg-[#22a0c4] transition-all disabled:opacity-60 flex items-center gap-2"
+            className="text-[11px] font-semibold tracking-[1.8px] uppercase px-8 py-3 bg-bl text-white hover:bg-bl-deep transition-all disabled:opacity-60 disabled:active:scale-100 focus-visible:focus-ring active:scale-[0.98] flex items-center gap-2"
           >
             {status === 'submitting' && <Spinner className="w-4 h-4" />}
             {step === 3 ? 'Confirm & Pay' : 'Next'}

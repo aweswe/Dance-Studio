@@ -52,60 +52,60 @@ export default async function AttendancePage() {
     <div className="space-y-8">
       <div>
         <h1 className="font-display text-4xl tracking-[2px] mb-2">Attendance Record</h1>
-        <p className="text-mu">Track your class attendance and history.</p>
+        <p className="text-ink-2">Track your class attendance and history.</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card>
-          <p className="text-sm text-mu mb-1 uppercase tracking-widest font-semibold">Overall Attendance</p>
+          <p className="text-sm text-ink-2 mb-1 uppercase tracking-widest font-semibold">Overall Attendance</p>
           {total > 0 ? (
             <>
               <p className="font-display text-5xl mb-2">{percentage}%</p>
-              <div className="w-full bg-black/10 h-2 rounded-full overflow-hidden">
+              <div className="w-full bg-canvas-muted-2 h-2 rounded-full overflow-hidden">
                 <div
-                  className={`h-full ${percentage >= 75 ? "bg-green" : percentage >= 50 ? "bg-gold" : "bg-red-500"}`}
+                  className={`h-full ${percentage >= 75 ? "bg-green" : percentage >= 50 ? "bg-gold" : "bg-danger"}`}
                   style={{ width: `${percentage}%` }}
                 />
               </div>
             </>
           ) : (
-            <p className="text-sm text-mu mt-2">No classes marked yet — your attendance will appear here once classes begin.</p>
+            <p className="text-sm text-ink-2 mt-2">No classes marked yet — your attendance will appear here once classes begin.</p>
           )}
         </Card>
 
         <Card>
-          <p className="text-sm text-mu mb-1 uppercase tracking-widest font-semibold">This Month</p>
+          <p className="text-sm text-ink-2 mb-1 uppercase tracking-widest font-semibold">This Month</p>
           {monthTotal > 0 ? (
             <>
               <p className="font-display text-5xl mb-2">
                 {monthPresent}
-                <span className="text-2xl text-mu">/{monthTotal}</span>
+                <span className="text-2xl text-ink-2">/{monthTotal}</span>
               </p>
-              <p className="text-sm text-mu">classes attended</p>
+              <p className="text-sm text-ink-2">classes attended</p>
             </>
           ) : (
-            <p className="text-sm text-mu mt-2">Nothing marked this month yet.</p>
+            <p className="text-sm text-ink-2 mt-2">Nothing marked this month yet.</p>
           )}
         </Card>
 
         <Card>
-          <p className="text-sm text-mu mb-4 uppercase tracking-widest font-semibold">Stats</p>
+          <p className="text-sm text-ink-2 mb-4 uppercase tracking-widest font-semibold">Stats</p>
           <div className="flex gap-8">
             <div>
               <p className="text-3xl font-bold">{total}</p>
-              <p className="text-sm text-mu">Total Classes</p>
+              <p className="text-sm text-ink-2">Total Classes</p>
             </div>
             <div>
               <p className="text-3xl font-bold text-green">{present}</p>
-              <p className="text-sm text-mu">Present</p>
+              <p className="text-sm text-ink-2">Present</p>
             </div>
             <div>
-              <p className="text-3xl font-bold text-red-500">{absent}</p>
-              <p className="text-sm text-mu">Absent</p>
+              <p className="text-3xl font-bold text-danger">{absent}</p>
+              <p className="text-sm text-ink-2">Absent</p>
             </div>
             <div>
               <p className="text-3xl font-bold text-gold">{leave}</p>
-              <p className="text-sm text-mu">On Leave</p>
+              <p className="text-sm text-ink-2">On Leave</p>
             </div>
           </div>
         </Card>

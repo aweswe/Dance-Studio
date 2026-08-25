@@ -16,8 +16,8 @@ export default async function ContentPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="font-display text-3xl text-blk tracking-wide">Website Content</h2>
-        <p className="text-mu font-body text-sm mt-1">Update global stats, FAQ, and site-wide announcements.</p>
+        <h2 className="font-display text-3xl text-ink tracking-wide">Website Content</h2>
+        <p className="text-ink-2 font-body text-sm mt-1">Update global stats, FAQ, and site-wide announcements.</p>
       </div>
 
       <Suspense fallback={<CardSkeleton />}>

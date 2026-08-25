@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Card } from '@/components/ui/card'
 import { Select } from '@/components/ui/select'
+import { Button } from '@/components/ui/button'
 import { updateProgress } from '@/actions/kuchipudi'
 import {
   KUCHIPUDI_LEVELS,
@@ -49,18 +50,19 @@ export function KuchipudiAdmin({
   return (
     <Card className="p-6">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="font-display text-xl text-blk">Kuchipudi Progress</h3>
-        <button
+        <h3 className="font-display text-xl text-ink">Kuchipudi Progress</h3>
+        <Button
           onClick={save}
           disabled={busy}
-          className="text-[11px] font-semibold tracking-[2px] uppercase px-5 py-2 bg-bl text-wh rounded disabled:opacity-50"
+          isLoading={busy}
+          size="sm"
         >
           {busy ? 'Saving…' : 'Save Progress'}
-        </button>
+        </Button>
       </div>
 
       <div className="mb-4 max-w-xs">
-        <label className="block text-xs font-semibold text-mu mb-1.5 uppercase tracking-widest">Current Level</label>
+        <label className="block text-xs font-semibold text-ink-2 mb-1.5 uppercase tracking-widest">Current Level</label>
         <Select
           value={level}
           onChange={(e) => setLevel(e.target.value)}
@@ -71,7 +73,7 @@ export function KuchipudiAdmin({
       <div className="space-y-5">
         {KUCHIPUDI_LEVELS.map((l) => (
           <div key={l}>
-            <p className="text-xs font-semibold text-mu uppercase tracking-widest mb-2">
+            <p className="text-xs font-semibold text-ink-2 uppercase tracking-widest mb-2">
               {KUCHIPUDI_LEVEL_LABELS[l as KuchipudiLevel]}
             </p>
             <div className="flex flex-wrap gap-2">
@@ -81,14 +83,14 @@ export function KuchipudiAdmin({
                   <label
                     key={module}
                     className={`flex items-center gap-2 px-3 py-2 rounded-lg border text-sm cursor-pointer transition-colors ${
-                      checked ? 'border-bl/30 bg-blp/40 text-blk' : 'border-gray-200 text-mu hover:border-bl'
+                      checked ? 'border-bl/30 bg-bl-pale/40 text-ink' : 'border-line-strong text-ink-2 hover:border-bl'
                     }`}
                   >
                     <input
                       type="checkbox"
                       checked={checked}
                       onChange={() => toggleModule(module)}
-                      className="accent-bl"
+                      className="accent-bl focus-visible:focus-ring active:scale-[0.98]"
                     />
                     {module}
                   </label>
@@ -100,7 +102,7 @@ export function KuchipudiAdmin({
       </div>
 
       {feedback && (
-        <p className={`text-sm mt-4 ${feedback.ok ? 'text-green' : 'text-red-500'}`}>{feedback.text}</p>
+        <p className={`text-sm mt-4 ${feedback.ok ? 'text-green-ink' : 'text-danger'}`}>{feedback.text}</p>
       )}
     </Card>
   )

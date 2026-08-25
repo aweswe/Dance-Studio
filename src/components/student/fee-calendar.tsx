@@ -16,7 +16,7 @@ export function FeeCalendar({ months }: { months: FeeMonth[] }) {
   return (
     <Card>
       <h2 className="font-display text-2xl tracking-[2px] mb-1">Payment Calendar</h2>
-      <p className="text-sm text-mu mb-5">Your fee coverage for the last 12 months.</p>
+      <p className="text-sm text-ink-2 mb-5">Your fee coverage for the last 12 months.</p>
       <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
         {months.map((m) => (
           <div
@@ -24,17 +24,17 @@ export function FeeCalendar({ months }: { months: FeeMonth[] }) {
             className={cn(
               "rounded-lg border p-3 text-center",
               m.covered && "border-green/40 bg-green/5",
-              !m.covered && m.isCurrent && "border-red-400 bg-red-50",
-              !m.covered && !m.isCurrent && "border-black/10 bg-off",
+              !m.covered && m.isCurrent && "border-danger/40 bg-danger/10",
+              !m.covered && !m.isCurrent && "border-line bg-canvas-muted-2",
             )}
           >
-            <p className="text-[11px] font-semibold uppercase tracking-wider text-mu mb-1.5">{m.label}</p>
+            <p className="text-[11px] font-semibold uppercase tracking-wider text-ink-2 mb-1.5">{m.label}</p>
             {m.covered ? (
-              <p className="text-xs font-semibold text-green">Paid ✓</p>
+              <p className="text-xs font-semibold text-green-ink">Paid ✓</p>
             ) : m.isCurrent ? (
-              <p className="text-xs font-semibold text-red-600">Due</p>
+              <p className="text-xs font-semibold text-danger">Due</p>
             ) : (
-              <p className="text-xs text-mu">—</p>
+              <p className="text-xs text-ink-2">—</p>
             )}
           </div>
         ))}

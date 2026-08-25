@@ -19,7 +19,7 @@ export function FeeStatusCard({ status, amountDue, dueDate }: FeeStatusCardProps
   return (
     <Card className="flex flex-col md:flex-row md:items-center justify-between gap-6">
       <div>
-        <p className="text-sm text-mu mb-2 uppercase tracking-widest font-semibold">Current Month Status</p>
+        <p className="text-sm text-ink-2 mb-2 uppercase tracking-widest font-semibold">Current Month Status</p>
         {status === "Paid" ? (
           <div className="flex items-center gap-4">
             <h2 className="font-display text-4xl text-green">Paid ✓</h2>
@@ -28,10 +28,10 @@ export function FeeStatusCard({ status, amountDue, dueDate }: FeeStatusCardProps
         ) : (
           <div className="flex items-center gap-4">
             <h2 className="font-display text-4xl">₹{amountDue}</h2>
-            <Badge variant="outline" className="border-red-500 text-red-500">Due</Badge>
+            <Badge variant="outline" className="border-danger text-danger">Due</Badge>
           </div>
         )}
-        <p className="text-sm text-mu mt-2">
+        <p className="text-sm text-ink-2 mt-2">
           {status === "Paid"
             ? "This month's fee is covered — thank you!"
             : `Due Date: ${dueDate}`}
@@ -46,7 +46,7 @@ export function FeeStatusCard({ status, amountDue, dueDate }: FeeStatusCardProps
             href={whatsappLink(payMessage)}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center justify-center bg-bl text-wh font-semibold text-[11px] tracking-[2px] uppercase px-8 py-4 rounded hover:bg-bl/90 transition-colors"
+            className="inline-flex items-center justify-center gap-2 bg-bl text-wh font-semibold text-[11px] tracking-[2px] uppercase px-8 py-4 rounded hover:bg-bl-deep transition-all active:scale-[0.98] focus-visible:focus-ring"
           >
             Pay via WhatsApp
           </a>

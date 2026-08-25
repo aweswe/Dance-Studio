@@ -10,7 +10,7 @@ export function Card({ children, className, padding = "md" }: CardProps) {
   return (
     <div
       className={cn(
-        "bg-white rounded-2xl border border-black/[.07] overflow-hidden",
+        "bg-surface rounded-card border border-line overflow-hidden",
         {
           "p-0": padding === "none",
           "p-4": padding === "sm",
@@ -29,7 +29,7 @@ export function CardDark({ children, className, padding = "md" }: CardProps) {
   return (
     <div
       className={cn(
-        "bg-deep rounded-2xl border border-white/[.08] overflow-hidden",
+        "bg-deep rounded-card border border-white/[.08] overflow-hidden",
         {
           "p-0": padding === "none",
           "p-4": padding === "sm",

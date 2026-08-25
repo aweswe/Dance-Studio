@@ -6,6 +6,7 @@ import { getBatches } from '@/data/batches';
 import { ProgrammeCard } from '@/components/public/programme-card';
 import { scheduleFor } from '@/lib/utils/schedule';
 import { ROUTES, SITE_URL } from '@/lib/utils/constants';
+import { Reveal } from '@/components/motion/reveal';
 
 export const metadata: Metadata = {
   title: 'Dance & Fitness Programmes | Rhythmzz Academy of Dance',
@@ -30,7 +31,7 @@ export default async function ProgrammesPage() {
   };
 
   return (
-    <div className="bg-white">
+    <div className="bg-canvas text-ink">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }}
@@ -54,7 +55,7 @@ export default async function ProgrammesPage() {
 
       {/* Programme grid */}
       <section className="py-24 px-6 md:px-16">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Reveal stagger={0.08} className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
           {programmes.map((prog: any) => (
             <ProgrammeCard
               key={prog.id ?? prog.slug}
@@ -62,22 +63,22 @@ export default async function ProgrammesPage() {
               schedule={scheduleFor(prog, batches)}
             />
           ))}
-        </div>
+        </Reveal>
 
         {/* Not sure? CTA */}
-        <div className="max-w-3xl mx-auto mt-16 text-center bg-light border border-black/5 rounded-2xl p-10">
+        <Reveal y={20} className="max-w-3xl mx-auto mt-16 text-center bg-canvas-muted border border-line rounded-card p-10">
           <h2 className="heading-display text-3xl mb-3">NOT SURE WHICH ONE?</h2>
-          <p className="text-sm text-mu mb-6">
+          <p className="text-sm text-ink-2 mb-6">
             Come for a free trial class and we&apos;ll help you find the right batch. No
             registration fee, no commitment.
           </p>
           <Link
             href={ROUTES.enrol}
-            className="inline-block bg-blk text-white text-[11px] font-semibold tracking-[2px] uppercase py-4 px-10 hover:bg-bl transition-all"
+            className="inline-block bg-blk text-white text-[11px] font-semibold tracking-[2px] uppercase py-4 px-10 hover:bg-bl transition-all focus-visible:focus-ring active:scale-[0.98]"
           >
             Book a Free Trial
           </Link>
-        </div>
+        </Reveal>
       </section>
     </div>
   );

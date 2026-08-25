@@ -98,10 +98,10 @@ export function FeeTable({
   }
 
   return (
-    <div className="bg-wh rounded-[16px] shadow-sm border border-gray-100 overflow-hidden">
-      <div className="p-4 border-b border-gray-100 flex flex-col sm:flex-row gap-4 justify-between items-center bg-light/50">
+    <div className="bg-surface rounded-card border border-line overflow-hidden">
+      <div className="p-4 border-b border-line bg-canvas-muted/50 flex flex-col sm:flex-row gap-4 justify-between items-center">
         <div className="relative w-full sm:max-w-xs">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-mu" size={18} />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-2" size={18} />
           <Input
             placeholder="Search student or notes..."
             value={search}
@@ -127,41 +127,41 @@ export function FeeTable({
       </div>
 
       {feedback && (
-        <p className={`px-4 pt-3 text-sm ${feedback.ok ? 'text-green' : 'text-red-500'}`}>{feedback.text}</p>
+        <p className={`px-4 pt-3 text-sm ${feedback.ok ? 'text-green-ink' : 'text-danger'}`}>{feedback.text}</p>
       )}
 
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="bg-light border-b border-gray-200">
-              <th className="px-6 py-4 text-xs font-display tracking-[2px] text-mu uppercase">Date</th>
-              <th className="px-6 py-4 text-xs font-display tracking-[2px] text-mu uppercase">Month</th>
-              <th className="px-6 py-4 text-xs font-display tracking-[2px] text-mu uppercase">Student</th>
-              <th className="px-6 py-4 text-xs font-display tracking-[2px] text-mu uppercase">Amount</th>
-              <th className="px-6 py-4 text-xs font-display tracking-[2px] text-mu uppercase">Method</th>
-              <th className="px-6 py-4 text-xs font-display tracking-[2px] text-mu uppercase">Notes</th>
+            <tr className="bg-canvas-muted border-b border-line">
+              <th scope="col" className="px-6 py-4 text-xs font-display tracking-[2px] text-ink-2 uppercase">Date</th>
+              <th scope="col" className="px-6 py-4 text-xs font-display tracking-[2px] text-ink-2 uppercase">Month</th>
+              <th scope="col" className="px-6 py-4 text-xs font-display tracking-[2px] text-ink-2 uppercase">Student</th>
+              <th scope="col" className="px-6 py-4 text-xs font-display tracking-[2px] text-ink-2 uppercase">Amount</th>
+              <th scope="col" className="px-6 py-4 text-xs font-display tracking-[2px] text-ink-2 uppercase">Method</th>
+              <th scope="col" className="px-6 py-4 text-xs font-display tracking-[2px] text-ink-2 uppercase">Notes</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100">
+          <tbody className="divide-y divide-line-subtle">
             {visible.length === 0 ? (
               <tr>
-                <td colSpan={6} className="px-6 py-12 text-center text-mu">
+                <td colSpan={6} className="px-6 py-12 text-center text-ink-2">
                   No payment records found.
                 </td>
               </tr>
             ) : (
               visible.map((p) => (
-                <tr key={p.id} className="hover:bg-light/50 transition-colors">
-                  <td className="px-6 py-4 text-sm text-mu">{formatDate(p.paid_at)}</td>
-                  <td className="px-6 py-4 text-sm text-mu">{monthLabel(p.for_month, p.paid_at)}</td>
-                  <td className="px-6 py-4 font-medium text-blk">{p.student?.name || '—'}</td>
+                <tr key={p.id} className="hover:bg-canvas-muted transition-colors">
+                  <td className="px-6 py-4 text-sm text-ink-2">{formatDate(p.paid_at)}</td>
+                  <td className="px-6 py-4 text-sm text-ink-2">{monthLabel(p.for_month, p.paid_at)}</td>
+                  <td className="px-6 py-4 font-medium text-ink">{p.student?.name || '—'}</td>
                   <td className="px-6 py-4 font-medium">{formatCurrency(p.amount)}</td>
                   <td className="px-6 py-4">
                     <Badge variant={p.source === 'razorpay' ? 'green' : p.source === 'upi_offline' ? 'blue' : 'default'}>
                       {p.source === 'upi_offline' ? 'UPI' : p.source.toUpperCase()}
                     </Badge>
                   </td>
-                  <td className="px-6 py-4 text-sm text-mu">{p.notes || '—'}</td>
+                  <td className="px-6 py-4 text-sm text-ink-2">{p.notes || '—'}</td>
                 </tr>
               ))
             )}
@@ -170,7 +170,7 @@ export function FeeTable({
       </div>
 
       {visibleCount < filtered.length && (
-        <div className="p-4 border-t border-gray-100 flex justify-center">
+        <div className="p-4 border-t border-line flex justify-center">
           <Button
             variant="outline"
             onClick={() => setVisibleCount((c) => c + 25)}
@@ -183,7 +183,7 @@ export function FeeTable({
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} title="Log Offline Payment" size="md">
         <div className="space-y-4">
           <div>
-            <label className="block text-sm text-mu mb-1">Student</label>
+            <label className="block text-sm text-ink-2 mb-1">Student</label>
             <Select
               value={form.studentId}
               onChange={(e) => setForm({ ...form, studentId: e.target.value })}
@@ -192,7 +192,7 @@ export function FeeTable({
             />
           </div>
           <div>
-            <label className="block text-sm text-mu mb-1">Amount (₹)</label>
+            <label className="block text-sm text-ink-2 mb-1">Amount (₹)</label>
             <Input
               type="number"
               min={1}
@@ -201,7 +201,7 @@ export function FeeTable({
             />
           </div>
           <div>
-            <label className="block text-sm text-mu mb-1">Source</label>
+            <label className="block text-sm text-ink-2 mb-1">Source</label>
             <Select
               value={form.source}
               onChange={(e) => setForm({ ...form, source: e.target.value })}
@@ -212,16 +212,16 @@ export function FeeTable({
             />
           </div>
           <div>
-            <label className="block text-sm text-mu mb-1">Covers Month</label>
+            <label className="block text-sm text-ink-2 mb-1">Covers Month</label>
             <Input
               type="month"
               value={form.month}
               onChange={(e) => setForm({ ...form, month: e.target.value })}
             />
-            <p className="text-xs text-mu mt-1">Which month this payment covers in the ledger.</p>
+            <p className="text-xs text-ink-2 mt-1">Which month this payment covers in the ledger.</p>
           </div>
           <div>
-            <label className="block text-sm text-mu mb-1">Notes</label>
+            <label className="block text-sm text-ink-2 mb-1">Notes</label>
             <Input
               placeholder="e.g., August fee, paid in cash"
               value={form.notes}

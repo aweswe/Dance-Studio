@@ -73,7 +73,7 @@ export function AddStudentModal({
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} title="Walk-in Enrolment" size="md">
         <div className="space-y-4">
           <div>
-            <label className="block text-sm text-mu mb-1">Full Name</label>
+            <label className="block text-sm text-ink-2 mb-1">Full Name</label>
             <Input
               value={form.name}
               onChange={(e) => set({ name: e.target.value })}
@@ -81,7 +81,7 @@ export function AddStudentModal({
             />
           </div>
           <div>
-            <label className="block text-sm text-mu mb-1">Phone (10 digits)</label>
+            <label className="block text-sm text-ink-2 mb-1">Phone (10 digits)</label>
             <Input
               value={form.phone}
               onChange={(e) => set({ phone: e.target.value })}
@@ -90,7 +90,7 @@ export function AddStudentModal({
             />
           </div>
           <div>
-            <label className="block text-sm text-mu mb-1">Email (optional)</label>
+            <label className="block text-sm text-ink-2 mb-1">Email (optional)</label>
             <Input
               value={form.email}
               onChange={(e) => set({ email: e.target.value })}
@@ -98,7 +98,7 @@ export function AddStudentModal({
             />
           </div>
           <div>
-            <label className="block text-sm text-mu mb-1">Programme</label>
+            <label className="block text-sm text-ink-2 mb-1">Programme</label>
             <Select
               value={form.programmeId}
               onChange={(e) => set({ programmeId: e.target.value, batchId: '' })}
@@ -107,7 +107,7 @@ export function AddStudentModal({
             />
           </div>
           <div>
-            <label className="block text-sm text-mu mb-1">Batch</label>
+            <label className="block text-sm text-ink-2 mb-1">Batch</label>
             <Select
               value={form.batchId}
               onChange={(e) => set({ batchId: e.target.value })}
@@ -119,7 +119,7 @@ export function AddStudentModal({
             />
           </div>
           <div>
-            <label className="block text-sm text-mu mb-1">Status</label>
+            <label className="block text-sm text-ink-2 mb-1">Status</label>
             <Select
               value={form.status}
               onChange={(e) => set({ status: e.target.value as 'active' | 'inactive' })}
@@ -130,18 +130,18 @@ export function AddStudentModal({
             />
           </div>
 
-          <label className="flex items-center gap-2 text-sm text-blk cursor-pointer">
+          <label className="flex items-center gap-2 text-sm text-ink cursor-pointer">
             <input
               type="checkbox"
               checked={form.enablePortal}
               onChange={(e) => set({ enablePortal: e.target.checked })}
-              className="accent-bl"
+              className="accent-bl focus-visible:focus-ring active:scale-[0.98]"
             />
             Enable portal access now (sends WhatsApp OTP welcome)
           </label>
 
           {feedback && (
-            <p className={`text-sm ${feedback.ok ? 'text-green' : 'text-red-500'}`}>
+            <p className={`text-sm ${feedback.ok ? 'text-green-ink' : 'text-danger'}`}>
               {feedback.text}
             </p>
           )}

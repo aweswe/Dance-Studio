@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { cn } from '@/lib/utils/cn';
+import { Input } from '@/components/ui/input';
 
 export function StudioRentalForm() {
   const [loading, setLoading] = useState(false);
@@ -51,17 +52,17 @@ export function StudioRentalForm() {
 
   if (success) {
     return (
-      <div className="bg-light p-8 rounded-2xl text-center border border-green/20">
+      <div className="bg-canvas-muted p-8 rounded-card text-center border border-green/20">
         <div className="w-16 h-16 bg-green/10 text-green rounded-full flex items-center justify-center mx-auto mb-4">
           <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
         </div>
         <h3 className="heading-display text-2xl mb-2">Request Received</h3>
-        <p className="text-mu">We&apos;ll get back to you shortly to confirm your booking.</p>
+        <p className="text-ink-2">We&apos;ll get back to you shortly to confirm your booking.</p>
         <button
           onClick={() => setSuccess(false)}
-          className="mt-6 text-[11px] font-bold uppercase tracking-wider text-bl"
+          className="mt-6 text-[11px] font-bold uppercase tracking-wider text-bl-ink hover:text-bl transition-colors rounded-sm focus-visible:focus-ring"
         >
           Book Another Slot
         </button>
@@ -70,82 +71,64 @@ export function StudioRentalForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white p-8 rounded-2xl shadow-sm border border-black/5 flex flex-col gap-5">
+    <form onSubmit={handleSubmit} className="bg-surface p-8 rounded-card border border-line flex flex-col gap-5">
       <h3 className="heading-display text-2xl mb-2">Request a Booking</h3>
 
-      <div>
-        <label className="block text-[11px] font-bold uppercase tracking-wider text-blk mb-2">Full Name</label>
-        <input
-          type="text"
+      <Input
+        label="Full Name"
+        type="text"
+        required
+        value={form.name}
+        onChange={setField('name')}
+        placeholder="Enter your name"
+      />
+
+      <Input
+        label="Phone Number"
+        type="tel"
+        required
+        value={form.phone}
+        onChange={setField('phone')}
+        placeholder="Enter phone number"
+      />
+
+      <Input
+        label="Email (optional)"
+        type="email"
+        value={form.email}
+        onChange={setField('email')}
+        placeholder="Enter email address"
+      />
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <Input
+          label="Preferred Date"
+          type="date"
           required
-          value={form.name}
-          onChange={setField('name')}
-          className="w-full p-4 border border-black/10 rounded-lg text-sm bg-off outline-none focus:border-bl transition-colors"
-          placeholder="Enter your name"
+          value={form.preferredDate}
+          onChange={setField('preferredDate')}
         />
       </div>
 
-      <div>
-        <label className="block text-[11px] font-bold uppercase tracking-wider text-blk mb-2">Phone Number</label>
-        <input
-          type="tel"
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <Input
+          label="Start Time"
+          type="time"
           required
-          value={form.phone}
-          onChange={setField('phone')}
-          className="w-full p-4 border border-black/10 rounded-lg text-sm bg-off outline-none focus:border-bl transition-colors"
-          placeholder="Enter phone number"
+          value={form.preferredTimeStart}
+          onChange={setField('preferredTimeStart')}
         />
-      </div>
-
-      <div>
-        <label className="block text-[11px] font-bold uppercase tracking-wider text-blk mb-2">Email <span className="text-mu normal-case">(optional)</span></label>
-        <input
-          type="email"
-          value={form.email}
-          onChange={setField('email')}
-          className="w-full p-4 border border-black/10 rounded-lg text-sm bg-off outline-none focus:border-bl transition-colors"
-          placeholder="Enter email address"
+        <Input
+          label="End Time"
+          type="time"
+          required
+          value={form.preferredTimeEnd}
+          onChange={setField('preferredTimeEnd')}
         />
-      </div>
-
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="block text-[11px] font-bold uppercase tracking-wider text-blk mb-2">Preferred Date</label>
-          <input
-            type="date"
-            required
-            value={form.preferredDate}
-            onChange={setField('preferredDate')}
-            className="w-full p-4 border border-black/10 rounded-lg text-sm bg-off outline-none focus:border-bl transition-colors"
-          />
-        </div>
-      </div>
-
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="block text-[11px] font-bold uppercase tracking-wider text-blk mb-2">Start Time</label>
-          <input
-            type="time"
-            required
-            value={form.preferredTimeStart}
-            onChange={setField('preferredTimeStart')}
-            className="w-full p-4 border border-black/10 rounded-lg text-sm bg-off outline-none focus:border-bl transition-colors"
-          />
-        </div>
-        <div>
-          <label className="block text-[11px] font-bold uppercase tracking-wider text-blk mb-2">End Time</label>
-          <input
-            type="time"
-            required
-            value={form.preferredTimeEnd}
-            onChange={setField('preferredTimeEnd')}
-            className="w-full p-4 border border-black/10 rounded-lg text-sm bg-off outline-none focus:border-bl transition-colors"
-          />
-        </div>
       </div>
 
       {error && (
-        <p className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-lg p-3">
+        <p className="text-sm text-danger bg-danger/10 border border-danger/30 rounded-lg p-3">
           {error}
         </p>
       )}
@@ -154,14 +137,15 @@ export function StudioRentalForm() {
         type="submit"
         disabled={loading}
         className={cn(
-          "mt-4 text-[11px] font-semibold tracking-[1.8px] uppercase px-8 py-4 bg-blk text-white transition-all rounded-lg",
-          loading ? "opacity-70 cursor-not-allowed" : "hover:bg-black"
+          "mt-4 text-[11px] font-semibold tracking-[1.8px] uppercase px-8 py-4 bg-blk text-white transition-all rounded-control",
+          "hover:bg-bl focus-visible:focus-ring active:scale-[0.98]",
+          loading && "opacity-70 cursor-not-allowed",
         )}
       >
         {loading ? 'Submitting...' : 'Submit Request'}
       </button>
 
-      <p className="text-[10px] text-mu text-center mt-2">
+      <p className="text-[10px] text-ink-2 text-center mt-2">
         Submitting this form does not confirm your booking. We will contact you to finalize.
       </p>
     </form>

@@ -37,7 +37,7 @@ export default async function AttendancePage({
     <div className="space-y-6">
       <div>
         <h1 className="font-display text-4xl tracking-[2px] mb-2">Mark Attendance</h1>
-        <p className="text-mu">Select a batch and date to record student attendance.</p>
+        <p className="text-ink-2">Select a batch and date to record student attendance.</p>
       </div>
 
       <AttendanceMarker batches={(batches || []) as any} initialBatchId={batch} />

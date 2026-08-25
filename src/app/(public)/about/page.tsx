@@ -3,6 +3,8 @@ import { getInstructors } from '@/data/instructors';
 import { InstructorCard } from '@/components/public/instructor-card';
 import { SITE_URL } from '@/lib/utils/constants';
 import { Award, Target, Heart } from 'lucide-react';
+import { Reveal } from '@/components/motion/reveal';
+import { Entrance } from '@/components/motion/entrance';
 
 export const metadata: Metadata = {
   title: 'About Us',
@@ -36,7 +38,7 @@ export default async function AboutPage() {
   const instructors = await getInstructors();
 
   return (
-    <div className="bg-white">
+    <div className="bg-canvas text-ink">
       {/* Hero */}
       <section className="bg-blk text-white py-24 px-6 md:px-16 relative overflow-hidden">
         <div className="max-w-4xl mx-auto text-center relative z-10">
@@ -44,10 +46,12 @@ export default async function AboutPage() {
           <h1 className="heading-display text-5xl md:text-7xl mb-6">
             FROM A DANCE CREW TO SECUNDERABAD&apos;S OWN ACADEMY
           </h1>
-          <p className="text-white/70 text-base md:text-lg leading-relaxed max-w-2xl mx-auto">
-            Teaching since 2010, founded in 2013 — 5,000+ students trained across four programmes
-            at Neredmet X Road, Secunderabad.
-          </p>
+          <Entrance delay={0.1}>
+            <p className="text-white/70 text-base md:text-lg leading-relaxed max-w-2xl mx-auto">
+              Teaching since 2010, founded in 2013 — 5,000+ students trained across four programmes
+              at Neredmet X Road, Secunderabad.
+            </p>
+          </Entrance>
         </div>
         {/* Subtle background decoration */}
         <div className="absolute top-0 right-0 w-96 h-96 bg-bl/10 rounded-full blur-3xl translate-x-1/2 -translate-y-1/2"></div>
@@ -56,9 +60,10 @@ export default async function AboutPage() {
       {/* The Vision */}
       <section className="py-24 px-6 md:px-16 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-          <div>
-            <h2 className="heading-display text-4xl mb-6">OUR VISION</h2>
-            <div className="space-y-4 text-mu leading-relaxed">
+          <Reveal>
+            <div>
+              <h2 className="heading-display text-4xl mb-6">OUR VISION</h2>
+              <div className="space-y-4 text-ink-2 leading-relaxed">
               <p>
                 Rhythmzz Academy of Dance began in 2010, when Nitish started teaching dance in
                 Secunderabad as a young dancer with a crew and a handful of students. In 2013 it
@@ -77,18 +82,19 @@ export default async function AboutPage() {
                 <Target className="text-bl shrink-0" size={24} />
                 <div>
                   <h4 className="text-[11px] font-bold tracking-[1px] uppercase mb-1">Mission</h4>
-                  <p className="text-xs text-mu">To train every student to perform, not just to learn steps.</p>
+                  <p className="text-xs text-ink-2">To train every student to perform, not just to learn steps.</p>
                 </div>
               </div>
               <div className="flex gap-4">
                 <Heart className="text-bl shrink-0" size={24} />
                 <div>
                   <h4 className="text-[11px] font-bold tracking-[1px] uppercase mb-1">Values</h4>
-                  <p className="text-xs text-mu">Passion, discipline, community, and joy.</p>
+                  <p className="text-xs text-ink-2">Passion, discipline, community, and joy.</p>
                 </div>
               </div>
             </div>
           </div>
+          </Reveal>
 
           {/* Brand tiles — stand-ins for studio photography */}
           <div className="grid grid-cols-2 gap-4">
@@ -123,44 +129,45 @@ export default async function AboutPage() {
       </section>
 
       {/* Timeline */}
-      <section className="py-24 px-6 md:px-16 bg-light">
+      <section className="py-24 px-6 md:px-16 bg-canvas-muted">
         <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-16">
+          <Reveal className="text-center mb-16">
+            <div className="section-label mb-3">Since 2010</div>
             <h2 className="heading-display text-4xl">OUR JOURNEY</h2>
-          </div>
+          </Reveal>
 
-          <div className="space-y-8 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-black/10 before:to-transparent">
+          <Reveal stagger={0.08} className="space-y-8 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-line before:to-transparent">
             {TIMELINE.map((item, idx) => (
               <div key={idx} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
-                <div className="flex items-center justify-center w-10 h-10 rounded-full border-4 border-light bg-bl shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 shadow"></div>
-                <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-6 rounded-2xl bg-white border border-black/5 shadow-sm">
-                  <div className="text-bl font-bold tracking-wider mb-1">{item.year}</div>
+                <div className="flex items-center justify-center w-10 h-10 rounded-full border-4 border-canvas-muted bg-bl shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2"></div>
+                <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-6 rounded-card bg-surface border border-line">
+                  <div className="text-bl-ink font-bold tracking-wider mb-1">{item.year}</div>
                   <h3 className="heading-display text-2xl mb-2">{item.title}</h3>
-                  <p className="text-sm text-mu leading-relaxed">{item.desc}</p>
+                  <p className="text-sm text-ink-2 leading-relaxed">{item.desc}</p>
                 </div>
               </div>
             ))}
-          </div>
+          </Reveal>
         </div>
       </section>
 
       {/* Instructors */}
-      <section className="py-24 px-6 md:px-16 bg-white border-t border-black/5">
+      <section className="py-24 px-6 md:px-16 bg-canvas border-t border-line">
         <div className="max-w-7xl mx-auto">
-          <div className="mb-16 text-center">
-            <div className="text-[10px] tracking-[5px] uppercase text-bl mb-3">The Instructors</div>
+          <Reveal className="mb-16 text-center">
+            <div className="section-label mb-3">The Instructors</div>
             <h2 className="heading-display text-4xl md:text-5xl">MEET OUR INSTRUCTORS</h2>
-            <p className="text-mu mt-4 max-w-xl mx-auto">
+            <p className="text-ink-2 mt-4 max-w-xl mx-auto">
               Certified professionals with years of training, stage experience, and teaching
               expertise.
             </p>
-          </div>
+          </Reveal>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <Reveal stagger={0.08} className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {((instructors ?? []) as any[]).map((instructor: any) => (
               <InstructorCard key={instructor.id} instructor={instructor} />
             ))}
-          </div>
+          </Reveal>
         </div>
       </section>
 

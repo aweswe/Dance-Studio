@@ -65,20 +65,20 @@ export default async function HomePage() {
   try { if (testimonialsContent) testimonials = JSON.parse(testimonialsContent); } catch {}
 
   return (
-    <div className="relative bg-white text-blk font-body overflow-x-hidden">
+    <div className="relative bg-canvas text-ink font-body overflow-x-hidden">
       <StructuredData />
       <Hero />
       <Marquee />
       <Stats stats={stats} />
 
       {/* PROGRAMMES SECTION */}
-      <section id="programs" className="py-24 px-6 md:px-16 bg-white">
+      <section id="programs" className="py-24 px-6 md:px-16 bg-canvas">
         <div className="max-w-7xl mx-auto">
           <Reveal className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
             <div>
-              <div className="text-[10px] tracking-[5px] uppercase text-bl mb-3">Four Programmes · One Studio</div>
-              <h2 className="heading-display text-4xl md:text-6xl text-blk">KIDS · ADULTS · FITNESS · CLASSICAL</h2>
-              <p className="text-sm text-mu max-w-lg mt-4 leading-relaxed">
+              <div className="section-label mb-3">Four Programmes · One Studio</div>
+              <h2 className="heading-display text-4xl md:text-6xl text-ink">KIDS · ADULTS · FITNESS · CLASSICAL</h2>
+              <p className="text-sm text-ink-2 max-w-lg mt-4 leading-relaxed">
                 Fees from ₹2,000 a month. No registration fee. Your first class is on us — book a free trial at Neredmet X Road, Secunderabad.
               </p>
             </div>
@@ -93,12 +93,12 @@ export default async function HomePage() {
       </section>
 
       {/* SCHEDULE SECTION */}
-      <section id="schedule" className="py-24 px-6 md:px-16 bg-off border-y border-black/5">
+      <section id="schedule" className="py-24 px-6 md:px-16 bg-canvas-muted-2 border-y border-line">
         <div className="max-w-7xl mx-auto">
           <Reveal className="mb-12">
-            <div className="text-[10px] tracking-[5px] uppercase text-bl mb-3">Weekly Schedule</div>
-            <h2 className="heading-display text-4xl md:text-6xl text-blk">CLASSES AT NEREDMET X ROAD</h2>
-            <p className="text-sm text-mu max-w-lg mt-4 leading-relaxed">
+            <div className="section-label mb-3">Weekly Schedule</div>
+            <h2 className="heading-display text-4xl md:text-6xl text-ink">CLASSES AT NEREDMET X ROAD</h2>
+            <p className="text-sm text-ink-2 max-w-lg mt-4 leading-relaxed">
               Monday to Saturday, 6 AM to 9 PM — find the batch that fits your week.
             </p>
           </Reveal>
@@ -109,12 +109,12 @@ export default async function HomePage() {
       </section>
 
       {/* INSTRUCTORS SECTION */}
-      <section className="py-24 px-6 md:px-16 bg-white">
+      <section className="py-24 px-6 md:px-16 bg-canvas">
         <div className="max-w-7xl mx-auto">
           <Reveal className="mb-16 text-center">
-            <div className="text-[10px] tracking-[5px] uppercase text-bl mb-3 text-center">The Instructors</div>
-            <h2 className="heading-display text-4xl md:text-6xl text-blk">TRAINED, CERTIFIED, ON STAGE</h2>
-            <p className="text-sm text-mu max-w-lg mt-4 mx-auto leading-relaxed">
+            <div className="section-label mb-3 text-center">The Instructors</div>
+            <h2 className="heading-display text-4xl md:text-6xl text-ink">TRAINED, CERTIFIED, ON STAGE</h2>
+            <p className="text-sm text-ink-2 max-w-lg mt-4 mx-auto leading-relaxed">
               Led by founder Nitish — ISPTD-certified, nATFEST International Festival Sri Lanka 2017, teaching for 15+ years.
             </p>
           </Reveal>
@@ -127,11 +127,11 @@ export default async function HomePage() {
       </section>
 
       {/* TESTIMONIALS SECTION */}
-      <section className="py-24 px-6 md:px-16 bg-light border-y border-black/5">
+      <section className="py-24 px-6 md:px-16 bg-canvas-muted border-y border-line">
         <div className="max-w-7xl mx-auto">
           <Reveal className="mb-16 text-center">
-            <div className="text-[10px] tracking-[5px] uppercase text-bl mb-3">From Our Students</div>
-            <h2 className="heading-display text-4xl md:text-6xl text-blk">5,000+ STUDENTS. HERE ARE THREE.</h2>
+            <div className="section-label mb-3">From Our Students</div>
+            <h2 className="heading-display text-4xl md:text-6xl text-ink">5,000+ STUDENTS. HERE ARE THREE.</h2>
           </Reveal>
           <Reveal stagger={0.08} className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {testimonials.slice(0, 3).map((test: any, i: number) => (
@@ -142,12 +142,12 @@ export default async function HomePage() {
       </section>
 
       {/* GALLERY PREVIEW */}
-      <section className="py-24 px-6 md:px-16 bg-white">
+      <section className="py-24 px-6 md:px-16 bg-canvas">
         <div className="max-w-7xl mx-auto">
           <Reveal className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
             <div>
-              <div className="text-[10px] tracking-[5px] uppercase text-bl mb-3">Inside the Studio</div>
-              <h2 className="heading-display text-4xl md:text-6xl text-blk">CLASS DAYS &amp; SHOW NIGHTS</h2>
+              <div className="section-label mb-3">Inside the Studio</div>
+              <h2 className="heading-display text-4xl md:text-6xl text-ink">CLASS DAYS &amp; SHOW NIGHTS</h2>
             </div>
           </Reveal>
           <Reveal y={20}>
@@ -168,7 +168,7 @@ export default async function HomePage() {
           </p>
           <Link
             href="/studio-rental"
-            className="inline-block border border-white/20 text-[11px] font-semibold tracking-[2px] uppercase py-4 px-8 hover:bg-white hover:text-black transition-all"
+            className="inline-block border border-white/20 text-[11px] font-semibold tracking-[2px] uppercase py-4 px-8 hover:bg-white hover:text-black transition-all focus-visible:focus-ring active:scale-[0.98]"
           >
             Book Studio Space
           </Link>
@@ -176,11 +176,11 @@ export default async function HomePage() {
       </section>
 
       {/* FAQ SECTION */}
-      <section className="py-24 px-6 md:px-16 bg-light">
+      <section className="py-24 px-6 md:px-16 bg-canvas-muted">
         <div className="max-w-7xl mx-auto">
           <Reveal className="mb-16 text-center">
-            <div className="text-[10px] tracking-[5px] uppercase text-bl mb-3">FAQ</div>
-            <h2 className="heading-display text-4xl md:text-6xl text-blk">QUESTIONS WE GET AT THE STUDIO</h2>
+            <div className="section-label mb-3">FAQ</div>
+            <h2 className="heading-display text-4xl md:text-6xl text-ink">QUESTIONS WE GET AT THE STUDIO</h2>
           </Reveal>
           <Reveal y={20}>
             <FAQAccordion faqs={faqs} />
