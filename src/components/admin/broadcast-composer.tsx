@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Card } from '@/components/ui/card'
 import { Select } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
+import { ConfirmModal } from '@/components/ui/confirm-modal'
 import { Send, Users } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { sendBroadcast, estimateBroadcastReach } from '@/actions/broadcast'
@@ -25,6 +26,7 @@ export function BroadcastComposer({
   const [reach, setReach] = useState<number | null>(null)
   const [busy, setBusy] = useState(false)
   const [result, setResult] = useState<{ ok: boolean; text: string } | null>(null)
+  const [confirmOpen, setConfirmOpen] = useState(false)
 
   const updateScope = async (nextScope: string, nextScopeId: string) => {
     setScope(nextScope)
@@ -36,6 +38,7 @@ export function BroadcastComposer({
   }
 
   const send = async () => {
+    setConfirmOpen(false)
     setBusy(true)
     setResult(null)
     const res = await sendBroadcast(scope, scopeId, message)
@@ -43,7 +46,7 @@ export function BroadcastComposer({
     if (res.success) {
       setResult({
         ok: true,
-        text: `Sent to ${res.count} of ${res.total} active students.`,
+        text: `Queued for ${res.count} of ${res.total} active students — messages go out within 5 minutes.`,
       })
       router.refresh()
     } else {
@@ -110,7 +113,7 @@ export function BroadcastComposer({
 
             <Button
               className="w-full flex items-center justify-center gap-2"
-              onClick={send}
+              onClick={() => setConfirmOpen(true)}
               disabled={busy || message.trim().length === 0 || (scope !== 'all' && !scopeId)}
             >
               <Send size={16} /> {busy ? 'Sending...' : 'Send Broadcast'}
@@ -137,6 +140,20 @@ export function BroadcastComposer({
           </p>
         </Card>
       </div>
+
+      <ConfirmModal
+        isOpen={confirmOpen}
+        onClose={() => setConfirmOpen(false)}
+        onConfirm={send}
+        busy={busy}
+        title="Send this broadcast?"
+        confirmLabel="Send"
+        description={
+          reach === null
+            ? `This will message every active student${scope !== 'all' ? ' in the selected ' + scope : ''} on WhatsApp.`
+            : `This will message up to ${reach} active student${reach === 1 ? '' : 's'}${scope !== 'all' ? ' in the selected ' + scope : ''} on WhatsApp.`
+        }
+      />
     </div>
   )
 }

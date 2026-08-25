@@ -1,11 +1,12 @@
 import { Metadata } from 'next';
 import { getGalleryImages } from '@/data/gallery';
 import { GalleryClient } from '@/components/public/gallery-client';
+import { SITE_URL } from '@/lib/utils/constants';
 
 export const metadata: Metadata = {
   title: 'Gallery',
   description: 'Photos from our dance classes, performances and events at Neredmet X Road, Secunderabad.',
-  alternates: { canonical: 'https://www.rhythmzzdance.com/gallery' },
+  alternates: { canonical: `${SITE_URL}/gallery` },
 };
 
 export default async function GalleryPage() {
@@ -16,7 +17,7 @@ export default async function GalleryPage() {
     "@type": "ImageGallery",
     "name": "Rhythmzz Academy Gallery",
     "description": "Photos of dance classes and events at Rhythmzz Academy.",
-    "url": "https://www.rhythmzzdance.com/gallery",
+    "url": `${SITE_URL}/gallery`,
     "image": ((images ?? []) as any[]).slice(0, 5).map((img: any) => img.url)
   };
 

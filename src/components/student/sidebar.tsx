@@ -10,6 +10,7 @@ import {
   CreditCard,
   Bell,
   Award,
+  User,
   LogOut,
   Menu,
   X,
@@ -33,6 +34,7 @@ export function StudentSidebar({ studentName, isKuchipudi }: StudentSidebarProps
     { name: "Attendance", href: `${ROUTES.student}/attendance`, icon: CheckSquare },
     { name: "Fees", href: `${ROUTES.student}/fees`, icon: CreditCard },
     { name: "Notices", href: `${ROUTES.student}/notices`, icon: Bell },
+    { name: "Profile", href: `${ROUTES.student}/profile`, icon: User },
   ];
 
   if (isKuchipudi) {

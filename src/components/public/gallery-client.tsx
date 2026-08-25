@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import { X } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
@@ -14,9 +14,68 @@ interface ImageType {
   height?: number;
 }
 
+const FOCUSABLE =
+  'button:not([disabled]), [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+
 export function GalleryClient({ images }: { images: ImageType[] }) {
   const [filter, setFilter] = useState('all');
   const [lightboxImage, setLightboxImage] = useState<ImageType | null>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const closeBtnRef = useRef<HTMLButtonElement>(null);
+  const triggerRef = useRef<HTMLButtonElement | null>(null);
+
+  const close = useCallback(() => setLightboxImage(null), []);
+
+  // Lightbox a11y: Esc closes, arrows navigate, Tab cycles inside (focus trap),
+  // body scroll locks, and focus returns to the tile that opened the dialog.
+  useEffect(() => {
+    if (!lightboxImage) {
+      triggerRef.current?.focus();
+      return;
+    }
+
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    closeBtnRef.current?.focus();
+
+    const index = images.findIndex((img) => img.id === lightboxImage.id);
+    const step = (delta: number) => {
+      if (index < 0) return;
+      const next = images[(index + delta + images.length) % images.length];
+      setLightboxImage(next);
+    };
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        close();
+        return;
+      }
+      if (e.key === 'ArrowRight') step(1);
+      if (e.key === 'ArrowLeft') step(-1);
+      if (e.key !== 'Tab') return;
+
+      // Focus trap: keep Tab cycling within the dialog.
+      const dialog = dialogRef.current;
+      if (!dialog) return;
+      const focusables = Array.from(dialog.querySelectorAll<HTMLElement>(FOCUSABLE));
+      if (focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [lightboxImage, images, close]);
 
   // Extract unique categories
   const categories = ['all', ...Array.from(new Set(images.map(img => img.category).filter(Boolean)))];
@@ -35,8 +94,8 @@ export function GalleryClient({ images }: { images: ImageType[] }) {
             aria-pressed={filter === cat}
             className={cn(
               "px-4 py-2 text-[11px] font-bold tracking-[1.5px] uppercase rounded-full transition-all border",
-              filter === cat 
-                ? "bg-blk text-white border-blk" 
+              filter === cat
+                ? "bg-blk text-white border-blk"
                 : "bg-white text-mu border-black/10 hover:border-black/30"
             )}
           >
@@ -45,23 +104,28 @@ export function GalleryClient({ images }: { images: ImageType[] }) {
         ))}
       </div>
 
-      {/* Grid */}
+      {/* Grid — real buttons so every tile is keyboard-operable */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {filteredImages.map((image) => (
-          <div 
-            key={image.id} 
-            className="relative rounded-xl overflow-hidden bg-off aspect-square cursor-pointer group"
-            onClick={() => setLightboxImage(image)}
+          <button
+            key={image.id}
+            type="button"
+            className="relative rounded-xl overflow-hidden bg-off aspect-square cursor-pointer group focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-bl"
+            onClick={(e) => {
+              triggerRef.current = e.currentTarget;
+              setLightboxImage(image);
+            }}
+            aria-label={`View ${image.alt || 'gallery image'} larger`}
           >
-            <Image 
-              src={image.url} 
-              alt={image.alt || 'Gallery Image'} 
-              fill 
+            <Image
+              src={image.url}
+              alt={image.alt || 'Gallery Image'}
+              fill
               sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
-              className="object-cover transition-transform duration-500 group-hover:scale-105" 
+              className="object-cover transition-transform duration-500 group-hover:scale-105"
             />
             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
-          </div>
+          </button>
         ))}
         {filteredImages.length === 0 && (
           <div className="col-span-full text-center py-12 text-mu">
@@ -73,26 +137,32 @@ export function GalleryClient({ images }: { images: ImageType[] }) {
       {/* Lightbox */}
       {lightboxImage && (
         <div
+          ref={dialogRef}
           role="dialog"
           aria-modal="true"
           aria-label={lightboxImage.alt || 'Gallery image'}
           className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
+          onClick={(e) => {
+            // Backdrop click (not the image or controls) closes.
+            if (e.target === e.currentTarget) close();
+          }}
         >
           <button
+            ref={closeBtnRef}
             type="button"
             aria-label="Close image"
-            className="absolute top-6 right-6 text-white/70 hover:text-white"
-            onClick={() => setLightboxImage(null)}
+            className="absolute top-6 right-6 text-white/70 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
+            onClick={close}
           >
             <X size={32} />
           </button>
-          
+
           <div className="relative w-full max-w-5xl aspect-video md:aspect-[3/2] bg-transparent">
-            <Image 
-              src={lightboxImage.url} 
-              alt={lightboxImage.alt || 'Gallery Image'} 
-              fill 
-              className="object-contain" 
+            <Image
+              src={lightboxImage.url}
+              alt={lightboxImage.alt || 'Gallery Image'}
+              fill
+              className="object-contain"
             />
           </div>
           {lightboxImage.alt && (
@@ -100,6 +170,7 @@ export function GalleryClient({ images }: { images: ImageType[] }) {
               {lightboxImage.alt}
             </div>
           )}
+          <p className="sr-only">Use left and right arrows to move between images, Escape to close.</p>
         </div>
       )}
     </div>

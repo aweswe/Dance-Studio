@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getBlogPosts, getBlogPostBySlug } from '@/data/blog';
 import { formatDate } from '@/lib/utils/format';
+import { SITE_URL } from '@/lib/utils/constants';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -34,6 +35,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: post.title,
     description: post.excerpt || `Read ${post.title} on the Rhythmzz Academy blog.`,
+    alternates: { canonical: `${SITE_URL}/blog/${slug}` },
     openGraph: {
       images: post.cover_image_url || post.cover_image ? [post.cover_image_url || post.cover_image] : [],
     }

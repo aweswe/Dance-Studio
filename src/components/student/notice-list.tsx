@@ -7,8 +7,20 @@ interface Notice {
   id: string;
   message: string;
   sent_at: string;
+  template_name?: string | null;
   recipients?: { scope?: string; scopeId?: string } | null;
 }
+
+/** Titles per broadcast template so students see what kind of notice it is. */
+const NOTICE_TITLES: Record<string, string> = {
+  enrolment_welcome: "Welcome to Rhythmzz",
+  payment_receipt: "Payment Receipt",
+  fee_reminder: "Fee Reminder",
+  absence_checkin: "Attendance Update",
+  admin_broadcast: "Academy Notice",
+  rental_confirmed: "Studio Rental Update",
+  rental_cancelled: "Studio Rental Update",
+};
 
 export function NoticeList({
   notices,
@@ -43,7 +55,9 @@ export function NoticeList({
       {visible.map((notice) => (
         <Card key={notice.id}>
           <div className="flex justify-between items-start mb-2">
-            <h3 className="font-semibold">Academy Notice</h3>
+            <h3 className="font-semibold">
+              {(notice.template_name && NOTICE_TITLES[notice.template_name]) || "Academy Notice"}
+            </h3>
             <span className="text-xs text-mu">{formatDate(notice.sent_at)}</span>
           </div>
           <p className="text-sm whitespace-pre-wrap">{notice.message}</p>

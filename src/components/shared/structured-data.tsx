@@ -1,7 +1,8 @@
 import { getProgrammes } from '@/data/programmes';
 import { getFAQs } from '@/data/content';
+import { SITE_URL } from '@/lib/utils/constants';
 
-const SITE = 'https://www.rhythmzzdance.com';
+const SITE = SITE_URL;
 
 // Reference offer copy per programme slug (batch windows from the studio schedule).
 const OFFER_DETAILS: Record<string, { name: string; description: string }> = {

@@ -4,14 +4,13 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Menu, X } from 'lucide-react';
-import { cn } from '@/lib/utils/cn';
 import { ROUTES } from '@/lib/utils/constants';
 
 export function Nav() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-12 py-2.5 bg-white/95 border-b border-black/5 backdrop-blur-md">
+    <nav className="relative z-50 flex items-center justify-between px-6 md:px-12 py-2.5 bg-white/95 border-b border-black/5 backdrop-blur-md">
       <Link href={ROUTES.home} className="block">
         <Image src="/logo.png" alt="Rhythmzz Logo" width={120} height={44} className="h-11 w-auto" priority />
       </Link>

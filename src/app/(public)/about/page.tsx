@@ -1,13 +1,14 @@
 import { Metadata } from 'next';
 import { getInstructors } from '@/data/instructors';
 import { InstructorCard } from '@/components/public/instructor-card';
+import { SITE_URL } from '@/lib/utils/constants';
 import { Award, Target, Heart } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'About Us',
   description:
     'Rhythmzz Academy of Dance — teaching dance at Neredmet X Road, Secunderabad since 2010. Founded in 2013 by Nitish. 5,000+ students trained across 4 programmes.',
-  alternates: { canonical: 'https://www.rhythmzzdance.com/about' },
+  alternates: { canonical: `${SITE_URL}/about` },
 };
 
 const STATS = [

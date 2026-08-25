@@ -1,12 +1,12 @@
 import { Metadata } from 'next';
-import Image from 'next/image';
 import { Wind, Maximize, Music, MonitorPlay, CheckCircle2 } from 'lucide-react';
 import { StudioRentalForm } from '@/components/public/studio-rental-form';
+import { SITE_URL } from '@/lib/utils/constants';
 
 export const metadata: Metadata = {
   title: 'Dance Studio Rental Secunderabad',
   description: 'Rent our dance studio at Neredmet X Road, Secunderabad — ₹1,000/hr weekdays, ₹1,500/hr weekends. Air-conditioned with mirrors, sprung floor and sound.',
-  alternates: { canonical: 'https://www.rhythmzzdance.com/studio-rental' },
+  alternates: { canonical: `${SITE_URL}/studio-rental` },
 };
 
 export default function StudioRentalPage() {

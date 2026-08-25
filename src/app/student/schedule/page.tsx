@@ -50,9 +50,12 @@ export default async function SchedulePage() {
               </div>
               <div className="flex-2">
                 <p className="text-sm text-mu uppercase tracking-widest font-semibold mb-3">Weekly Routine</p>
+                {!batch.days || batch.days.length === 0 ? (
+                  <p className="text-sm text-mu">Class days not set yet — contact the academy for timings.</p>
+                ) : (
                 <div className="flex flex-wrap gap-2">
                   {daysOfWeek.map((day) => {
-                    const isClassDay = batch.days.includes(day);
+                    const isClassDay = (batch.days ?? []).includes(day);
                     return (
                       <div
                         key={day}
@@ -67,6 +70,7 @@ export default async function SchedulePage() {
                     );
                   })}
                 </div>
+                )}
               </div>
             </div>
           </Card>

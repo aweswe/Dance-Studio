@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Bebas_Neue, Inter } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
+import { SITE_URL } from "@/lib/utils/constants";
 import "./globals.css";
 
 export const viewport: Viewport = {
@@ -20,7 +22,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.rhythmzzdance.com"),
+  metadataBase: new URL(SITE_URL),
   title: {
     default:
       "Dance Classes in Secunderabad | Kids, Adults, Fitness & Kuchipudi | Rhythmzz Academy",
@@ -56,7 +58,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_IN",
-    url: "https://www.rhythmzzdance.com",
+    url: SITE_URL,
     siteName: "Rhythmzz Academy of Dance",
     title:
       "Rhythmzz Academy of Dance | Dance & Fitness Classes in Secunderabad",
@@ -101,7 +103,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en-IN"
       className={`${bebasNeue.variable} ${inter.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col font-body">{children}</body>
+      <body className="min-h-full flex flex-col font-body">
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }

@@ -1,0 +1,463 @@
+<title>Rhythmzz Ship Audit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ground: #F7F9FB;
+    --surface: #FFFFFF;
+    --ink: #0F0F0F;
+    --muted: #6E7783;
+    --accent: #2BB4D8;
+    --accent-soft: #E8F7FC;
+    --gold: #F5A623;
+    --gold-soft: #FDF3E0;
+    --green: #1DB954;
+    --green-soft: #E9F9EF;
+    --crit: #E5484D;
+    --crit-soft: #FDECEC;
+    --line: #E3E8EE;
+    --chip: #EEF2F6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #0F0F0F;
+      --surface: #171717;
+      --ink: #F2F2F2;
+      --muted: #9AA3AD;
+      --accent: #38C3E3;
+      --accent-soft: rgba(43, 180, 216, 0.14);
+      --gold: #F5A623;
+      --gold-soft: rgba(245, 166, 35, 0.13);
+      --green: #2BD569;
+      --green-soft: rgba(29, 185, 84, 0.13);
+      --crit: #FF6369;
+      --crit-soft: rgba(229, 72, 77, 0.15);
+      --line: #2A2F35;
+      --chip: #20242A;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground: #0F0F0F;
+    --surface: #171717;
+    --ink: #F2F2F2;
+    --muted: #9AA3AD;
+    --accent: #38C3E3;
+    --accent-soft: rgba(43, 180, 216, 0.14);
+    --gold: #F5A623;
+    --gold-soft: rgba(245, 166, 35, 0.13);
+    --green: #2BD569;
+    --green-soft: rgba(29, 185, 84, 0.13);
+    --crit: #FF6369;
+    --crit-soft: rgba(229, 72, 77, 0.15);
+    --line: #2A2F35;
+    --chip: #20242A;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: var(--ground);
+    color: var(--ink);
+    line-height: 1.65;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1060px; margin: 0 auto; padding: 0 28px; }
+
+  /* ── Header band ── */
+  header { padding: 64px 0 40px; border-bottom: 1px solid var(--line); }
+  .wordmark {
+    font-family: "Bebas Neue", "Arial Narrow", sans-serif;
+    font-size: 84px; line-height: 0.9; letter-spacing: 0.04em;
+    color: var(--ink);
+  }
+  .wordmark span { color: var(--accent); }
+  .eyebrow {
+    font-size: 12px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 14px;
+  }
+  .lede { max-width: 640px; margin-top: 18px; color: var(--muted); font-size: 17px; }
+
+  /* ── Verdict ── */
+  .verdict {
+    display: grid; grid-template-columns: 2fr 1fr; gap: 32px;
+    padding: 44px 0; border-bottom: 1px solid var(--line);
+  }
+  .verdict h1 {
+    font-family: "Bebas Neue", "Arial Narrow", sans-serif;
+    font-size: 40px; line-height: 1.08; font-weight: 400; letter-spacing: 0.01em;
+    text-wrap: balance;
+  }
+  .verdict p { color: var(--muted); margin-top: 14px; max-width: 620px; }
+  .verdict p strong { color: var(--ink); font-weight: 600; }
+
+  /* ── Scorecard ── */
+  .scorecard {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;
+    align-self: start; margin-top: 6px;
+  }
+  .score-tile {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+    padding: 14px 16px; display: flex; align-items: baseline; justify-content: space-between; gap: 8px;
+  }
+  .score-tile .label { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+  .score-tile .counts { font-variant-numeric: tabular-nums; font-size: 13px; font-weight: 600; white-space: nowrap; }
+  .c0 { color: var(--crit); } .c1 { color: var(--gold); } .c2 { color: var(--muted); }
+
+  /* ── Sections ── */
+  section { padding: 48px 0; border-bottom: 1px solid var(--line); }
+  .sec-head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 28px; }
+  .sec-head h2 {
+    font-family: "Bebas Neue", "Arial Narrow", sans-serif;
+    font-size: 34px; font-weight: 400; letter-spacing: 0.02em; line-height: 1;
+  }
+  .sec-head .note { font-size: 13px; color: var(--muted); }
+
+  /* ── Findings ── */
+  .finding {
+    display: grid; grid-template-columns: 64px 1fr; gap: 18px;
+    padding: 18px 0; border-top: 1px solid var(--line);
+  }
+  .finding:first-of-type { border-top: none; }
+  .pill {
+    display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+    padding: 4px 10px; border-radius: 999px; text-transform: uppercase;
+    height: fit-content; text-align: center;
+  }
+  .p0 { background: var(--crit-soft); color: var(--crit); border: 1px solid var(--crit); }
+  .p1 { background: var(--gold-soft); color: var(--gold); border: 1px solid var(--gold); }
+  .p2 { background: var(--chip); color: var(--muted); border: 1px solid var(--line); }
+  .finding h3 { font-size: 16.5px; font-weight: 600; line-height: 1.4; }
+  .finding p { font-size: 14.5px; color: var(--muted); margin-top: 6px; max-width: 780px; }
+  .finding p strong { color: var(--ink); font-weight: 600; }
+  .finding .fix { margin-top: 8px; font-size: 13.5px; }
+  .finding .fix b { color: var(--accent); font-weight: 600; }
+
+  /* ── The good ── */
+  .good-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  .good {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+    padding: 18px 20px; display: flex; gap: 14px; align-items: flex-start;
+  }
+  .good .tick {
+    flex: none; width: 22px; height: 22px; border-radius: 50%; margin-top: 2px;
+    background: var(--green-soft); color: var(--green);
+    display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700;
+  }
+  .good h3 { font-size: 15px; font-weight: 600; }
+  .good p { font-size: 13.5px; color: var(--muted); margin-top: 4px; }
+
+  /* ── Wow opportunities ── */
+  .opps { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .opp {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+    padding: 16px 18px; position: relative;
+  }
+  .opp .rank {
+    position: absolute; top: 14px; right: 16px;
+    font-family: "Bebas Neue", "Arial Narrow", sans-serif; font-size: 26px;
+    color: var(--accent); opacity: 0.75;
+  }
+  .opp h3 { font-size: 14.5px; font-weight: 600; padding-right: 40px; }
+  .opp p { font-size: 13.5px; color: var(--muted); margin-top: 5px; }
+  .chips { margin-top: 10px; display: flex; gap: 6px; flex-wrap: wrap; }
+  .chip {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;
+    background: var(--chip); color: var(--muted); border-radius: 999px; padding: 3px 10px;
+  }
+  .chip.eff { background: var(--accent-soft); color: var(--accent); }
+  .chip.imp { background: var(--green-soft); color: var(--green); }
+
+  /* ── Roadmap ── */
+  .phase {
+    display: grid; grid-template-columns: 72px 1fr; gap: 22px;
+    padding: 22px 0; border-top: 1px solid var(--line);
+  }
+  .phase:first-of-type { border-top: none; }
+  .phase .num {
+    font-family: "Bebas Neue", "Arial Narrow", sans-serif; font-size: 44px; line-height: 1;
+    color: var(--accent);
+  }
+  .phase h3 { font-size: 17px; font-weight: 700; }
+  .phase .when { font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-top: 2px; }
+  .phase ul { margin-top: 10px; padding-left: 0; list-style: none; }
+  .phase li { font-size: 14.5px; color: var(--muted); padding: 3px 0 3px 22px; position: relative; }
+  .phase li::before { content: ""; position: absolute; left: 4px; top: 12px; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+  .phase li strong { color: var(--ink); font-weight: 600; }
+
+  footer { padding: 40px 0 72px; font-size: 12.5px; color: var(--muted); letter-spacing: 0.04em; }
+  footer b { color: var(--ink); font-weight: 600; }
+
+  @media (max-width: 760px) {
+    .wordmark { font-size: 60px; }
+    .verdict, .good-grid, .opps { grid-template-columns: 1fr; }
+    .finding, .phase { grid-template-columns: 1fr; gap: 10px; }
+    .pill { width: fit-content; }
+    .scorecard { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+
+<header>
+  <div class="wrap">
+    <p class="eyebrow">Product Audit · August 2026</p>
+    <div class="wordmark">RHYTHMZZ <span>SHIP AUDIT</span></div>
+    <p class="lede">A deep audit of the Rhythmzz Academy platform across four surfaces — public site, student &amp; auth, admin portal, and engineering — with one question: what stands between today's app and a genuinely high-end product?</p>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="verdict">
+    <div>
+      <h1>The foundation is unusually strong. What blocks shipping is not polish.</h1>
+      <p>The team built a real design system, a properly guarded action layer, and genuinely thoughtful SEO. But the three flows a studio lives on — <strong>students logging in, fees being collected, and the site showing real dancing</strong> — don't function end-to-end yet. Fix the seven P0s and the launch is credible; everything after that is passing the bar.</p>
+    </div>
+    <div class="scorecard">
+      <div class="score-tile"><span class="label">Public site</span><span class="counts"><span class="c0">1 P0</span> · <span class="c1">2 P1</span> · <span class="c2">3 P2</span></span></div>
+      <div class="score-tile"><span class="label">Student &amp; auth</span><span class="counts"><span class="c0">1 P0</span> · <span class="c1">2 P1</span> · <span class="c2">3 P2</span></span></div>
+      <div class="score-tile"><span class="label">Admin portal</span><span class="counts"><span class="c0">0 P0</span> · <span class="c1">6 P1</span> · <span class="c2">4 P2</span></span></div>
+      <div class="score-tile"><span class="label">Engineering</span><span class="counts"><span class="c0">5 P0</span> · <span class="c1">3 P1</span> · <span class="c2">5 P2</span></span></div>
+    </div>
+  </div>
+
+  <section>
+    <div class="sec-head"><h2>What's genuinely good</h2><span class="note">Keep these; they're the reason this is a rework, not a rebuild</span></div>
+    <div class="good-grid">
+      <div class="good"><div class="tick">✓</div><div><h3>A real design system</h3><p>One Card/Button/Input/Modal vocabulary across all 11 admin pages, Bebas Neue + Inter, GSAP motion that respects <code>prefers-reduced-motion</code>, skeletons and per-route error states everywhere.</p></div></div>
+      <div class="good"><div class="tick">✓</div><div><h3>Conversion copy that respects the customer</h3><p>Fees and schedules on every programme card, a free-trial thread through the whole site, scarcity, and real trust signals — certification, awards, timeline, testimonials.</p></div></div>
+      <div class="good"><div class="tick">✓</div><div><h3>Auth architecture done right</h3><p>Proxy role guards on every dashboard route, RLS-scoped reads by <code>auth_id</code>, role-aware sign-out, and a phone-OTP flow with +91 handling, digit caps, and a change-number escape hatch.</p></div></div>
+      <div class="good"><div class="tick">✓</div><div><h3>The attendance calendar</h3><p>The best page in the product: threshold-colored percentage, Present/Absent/Leave counts, and a color-coded month grid. Exactly what a parent checks weekly.</p></div></div>
+      <div class="good"><div class="tick">✓</div><div><h3>Action hygiene</h3><p>Every mutation is <code>isAdmin</code>-guarded and zod-validated with structured <code>{success, error}</code> returns; batch-move bookkeeping via RPCs is correct, blog slug collisions are caught, gallery uploads clean up orphans on failure.</p></div></div>
+      <div class="good"><div class="tick">✓</div><div><h3>SEO fundamentals</h3><p><code>metadataBase</code>, per-route canonicals, dynamic sitemap, robots that disallow dashboards, rich JSON-LD (DanceSchool, FAQPage, Course, ItemList), manifest, skip link.</p></div></div>
+      <div class="good"><div class="tick">✓</div><div><h3>Graceful degradation</h3><p>Public data layer falls back to hardcoded content when Supabase is down, WhatsApp client fails soft into mock mode, Razorpay HMAC verified with <code>timingSafeEqual</code>, fulfilment is idempotent.</p></div></div>
+      <div class="good"><div class="tick">✓</div><div><h3>Documentation</h3><p>A 575-line APP-FLOW.md with file references for every flow, a functional scope-of-work, and a homepage UI reference. Rare for a project at this stage.</p></div></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>Fundamental gaps</h2><span class="note">P0 = blocks trust or launch · P1 = daily trust &amp; ops · P2 = polish &amp; hygiene</span></div>
+
+    <div class="finding">
+      <span class="pill p0">P0</span>
+      <div>
+        <h3>Most real students can never log in</h3>
+        <p><strong>Account provisioning is broken for the dominant enrolment channel.</strong> <code>students.auth_id</code> is only ever written by the dormant Razorpay fulfilment path. Students enrolled offline or via WhatsApp get <code>auth_id = NULL</code>, so OTP login creates an identity, finds no row, and silently redirects the parent back to the marketing homepage with zero explanation. There is no admin "invite to portal" flow anywhere.</p>
+        <p class="fix"><b>Fix:</b> admin "Enable portal access" action per student — create auth user by phone, write <code>auth_id</code>, fire the <code>enrolment_welcome</code> WhatsApp template (already defined). Plus a "number not recognized — we'll help" recovery state on the login page.</p>
+      </div>
+    </div>
+
+    <div class="finding">
+      <span class="pill p0">P0</span>
+      <div>
+        <h3>Anyone can read revenue and any student's attendance via the API</h3>
+        <p><strong>Data leak through public RPCs.</strong> <code>get_dashboard_analytics()</code> and <code>get_student_attendance_summary()</code> are SECURITY DEFINER functions with default PUBLIC EXECUTE — no <code>REVOKE</code> anywhere in setup.sql. PostgREST exposes them anonymously: revenue, occupancy, active counts, and any student's attendance history by UUID, all bypassing RLS.</p>
+        <p class="fix"><b>Fix:</b> <code>REVOKE EXECUTE ... FROM PUBLIC</code> and grant to <code>authenticated</code> with role checks inside the functions.</p>
+      </div>
+    </div>
+
+    <div class="finding">
+      <span class="pill p0">P0</span>
+      <div>
+        <h3>Any logged-in student can delete the studio's gallery</h3>
+        <p><strong>Storage policies grant every authenticated user INSERT/UPDATE/DELETE</strong> on the gallery bucket. The <code>isAdmin</code> check in <code>uploadMedia</code> protects only the app's own UI — calling the storage API directly with any session bypasses it. Gallery vandalism and free file hosting for anyone with a student account.</p>
+        <p class="fix"><b>Fix:</b> admin-only storage policies; keep public SELECT.</p>
+      </div>
+    </div>
+
+    <div class="finding">
+      <span class="pill p0">P0</span>
+      <div>
+        <h3>Payments are 100% offline — and the dormant path is broken anyway</h3>
+        <p><strong>No money moves through the product.</strong> Razorpay routes exist but nothing calls them, <code>payment_orders</code> RLS would deny anonymous writes (create-order would 500), and the webhook is unconfigured. Every fee is collected out-of-band and logged by hand, and the fee status is a binary month check that shows "you owe ₹2,500" even when Paid — advance payments are invisible to the model.</p>
+        <p class="fix"><b>Fix:</b> a month-allocated fee ledger first (each payment names the month it covers), then wire Razorpay properly — RLS policy, webhook, and a real Pay button on the student fees page.</p>
+      </div>
+    </div>
+
+    <div class="finding">
+      <span class="pill p0">P0</span>
+      <div>
+        <h3>Zero rate limiting anywhere</h3>
+        <p><strong>OTP login, password login, anonymous rental inserts, and broadcast have no throttling.</strong> The WhatsApp OTP channel costs per send, the rental API is anonymous (<code>WITH CHECK (true)</code>), and broadcast can be spammed — spam and bill abuse, full stop.</p>
+        <p class="fix"><b>Fix:</b> in-memory or Upstash rate limits on the OTP/verify/login endpoints, rental form, and broadcast action.</p>
+      </div>
+    </div>
+
+    <div class="finding">
+      <span class="pill p0">P0</span>
+      <div>
+        <h3>No deploy, no CI, no tests, no migration workflow</h3>
+        <p><strong>The product lives only on localhost.</strong> No Vercel config, no <code>.github/</code>, zero test files, and the schema is a hand-pasted <code>setup.sql</code> that has already drifted from the backup folder (instructors.role exists only in setup.sql). Supabase's managed daily backups are adequate; everything else is unversioned.</p>
+        <p class="fix"><b>Fix:</b> deploy to Vercel with the custom domain, add a CI smoke build, and move the schema to <code>supabase/migrations</code> with the CLI.</p>
+      </div>
+    </div>
+
+    <div class="finding">
+      <span class="pill p0">P0</span>
+      <div>
+        <h3>The flagship section of the homepage renders empty</h3>
+        <p><strong>Zero photography anywhere.</strong> The live gallery table is empty and all six instructor <code>photo_url</code>s are NULL — so "Class Days &amp; Show Nights" renders a blank grid and every instructor card is a grey letter-avatar. The About page even self-labels its tiles "stand-ins for studio photography". For a dance studio this reads as "we don't exist".</p>
+        <p class="fix"><b>Fix:</b> shoot or seed 20–40 real photos plus instructor headshots through the (already built) gallery manager, and swap the generic OG image for a real one.</p>
+      </div>
+    </div>
+
+    <div class="finding">
+      <span class="pill p1">P1</span>
+      <div>
+        <h3>Admin daily ops are missing their most-used tools</h3>
+        <p><strong>Six concrete gaps:</strong> student search/filter are dead controls (typing does nothing); the first "Load More" duplicates page 1; there's no walk-in enrolment from the admin (the owner must open the public site); <strong>no click-to-call or WhatsApp link on any phone number anywhere in admin</strong> — for an Indian studio this is the single most-used daily action; fee reminders hit the first 20 students alphabetically regardless of who actually owes; destructive actions (gallery delete, deactivate, rental decline) have no confirmation and gallery errors are swallowed silently.</p>
+        <p class="fix"><b>Fix:</b> <code>tel:</code>/<code>wa.me</code> links on every row (20 minutes), wire search + seed the pagination cursor, add an Add-Student modal, a due-date-driven reminder list, and confirm dialogs.</p>
+      </div>
+    </div>
+
+    <div class="finding">
+      <span class="pill p1">P1</span>
+      <div>
+        <h3>Every canonical, OG, and sitemap URL points at the wrong domain</h3>
+        <p><strong>rhythmzzdance.com is hard-coded everywhere</strong> — metadataBase, sitemap, robots, JSON-LD — while the brand email and admin run on rhythmzz.in. Search engines get the wrong canonical host for every page.</p>
+        <p class="fix"><b>Fix:</b> one <code>SITE_URL</code> constant, and a DNS/redirect decision before launch.</p>
+      </div>
+    </div>
+
+    <div class="finding">
+      <span class="pill p1">P1</span>
+      <div>
+        <h3>WhatsApp sends are silently mocked</h3>
+        <p><strong>No <code>WHATSAPP_API_KEY</code> is configured</strong>, so broadcasts, fee reminders, and rental confirmations all "succeed" while sending nothing. Deferring Razorpay was a product decision; silent no-op sends are a trap — the owner will believe 200 parents were messaged.</p>
+        <p class="fix"><b>Fix:</b> live WhatsApp Business API key (WATI/Interakt), plus a visible "MOCK MODE" banner in admin when the key is absent.</p>
+      </div>
+    </div>
+
+    <div class="finding">
+      <span class="pill p1">P1</span>
+      <div>
+        <h3>The enrolment funnel ends in a broken promise</h3>
+        <p><strong>The final button says "Confirm &amp; Pay" unconditionally</strong>, but payments are deferred — visitors walk a 3-step form expecting payment and hit "Online payments are coming soon". Also: no enquiry form on the Contact page (only links), so leads who won't open WhatsApp leave nothing behind.</p>
+        <p class="fix"><b>Fix:</b> rename the button to "Confirm Booking" when payments are disabled, and add a one-field callback-request form on Contact.</p>
+      </div>
+    </div>
+
+    <div class="finding">
+      <span class="pill p1">P1</span>
+      <div>
+        <h3>Student-side trust details erode what the portal gets right</h3>
+        <p><strong>Attendance shows 100% for a student with zero records</strong> — proudly wrong. Kuchipudi progress is decorative: <code>modules_completed</code> is fetched but never rendered (hardcoded modules instead), and an unknown level string breaks the whole stepper. No profile edit — a parent who changes numbers is locked out until an admin fixes it. Schedule crashes if <code>batch.days</code> is null. Every notice renders as "Academy Notice".</p>
+        <p class="fix"><b>Fix:</b> null-safe attendance % with a "no records yet" state, render real progress data, add a profile page, and per-type notice titles.</p>
+      </div>
+    </div>
+
+    <div class="finding">
+      <span class="pill p2">P2</span>
+      <div>
+        <h3>Public-site polish debt</h3>
+        <p>Gallery lightbox: <code>div onClick</code> with no keyboard handler, no Esc, no focus trap. The announcement banner, when active, paints over the fixed nav on mobile. Sitemap <code>lastModified</code> is hard-coded to 2026-01-01. Blog pages lack canonicals. <code>public/</code> still ships create-next-app boilerplate SVGs.</p>
+      </div>
+    </div>
+
+    <div class="finding">
+      <span class="pill p2">P2</span>
+      <div>
+        <h3>Multi-kid families are impossible</h3>
+        <p><code>students.phone</code> is UNIQUE and the portal resolves a single <code>auth_id</code> — one parent, one child, siblings need separate phone numbers. For a kids' academy this is a real ceiling on adoption.</p>
+        <p class="fix"><b>Fix (later):</b> family accounts — parent identity resolves to multiple students with a child switcher.</p>
+      </div>
+    </div>
+
+    <div class="finding">
+      <span class="pill p2">P2</span>
+      <div>
+        <h3>Admin detail gaps</h3>
+        <p>No rental calendar view (it's a list — double-bookings can't be spotted); decline sends no notification to the renter; DB errors collapse into "No students found" (indistinguishable from an empty academy); the dashboard is five number cards with no charts or pending-items feed; no markdown preview in the blog editor; fee table capped at 100 records.</p>
+      </div>
+    </div>
+
+    <div class="finding">
+      <span class="pill p2">P2</span>
+      <div>
+        <h3>Engineering hygiene</h3>
+        <p><code>updateProgress</code> is unguarded, unvalidated, swallows errors, and always returns success. Certificate HTML interpolates <code>student.name</code> raw (stored XSS). Homepage fires 7 Supabase queries per request with no caching. Broadcasts send sequentially — 200 recipients exceeds serverless timeouts; no queue or retry. No Sentry/analytics/global-error. README is untouched create-next-app boilerplate.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>Surpassing the bar</h2><span class="note">The wow list — ranked by impact per effort</span></div>
+    <div class="opps">
+      <div class="opp"><span class="rank">1</span><h3>Seed real photography + instructor headshots</h3><p>Turns two broken sections into the site's best assets. Also swap the generic OG image for a real photo — it's the first thing anyone sees when a link is shared.</p><div class="chips"><span class="chip eff">Low effort</span><span class="chip imp">Highest impact</span></div></div>
+      <div class="opp"><span class="rank">2</span><h3>Click-to-call + WhatsApp on every row</h3><p><code>tel:</code> and <code>wa.me</code> links on every student, fee, and rental row in admin. The single most-used daily action in an Indian studio, and it's a 20-minute change.</p><div class="chips"><span class="chip eff">Low effort</span><span class="chip imp">Daily ops</span></div></div>
+      <div class="opp"><span class="rank">3</span><h3>"Enable portal access" per student</h3><p>One admin action: create auth user by phone, link <code>auth_id</code>, fire the welcome WhatsApp. Fixes the P0 login gap and gives parents self-recovery in a single move.</p><div class="chips"><span class="chip eff">Low effort</span><span class="chip imp">Fixes P0</span></div></div>
+      <div class="opp"><span class="rank">4</span><h3>Fix search + pagination</h3><p>Wire the dead search/filter controls and seed the Load More cursor. Without this the students table is unusable at 200+ students.</p><div class="chips"><span class="chip eff">Low effort</span></div></div>
+      <div class="opp"><span class="rank">5</span><h3>Google reviews strip + Instagram feed</h3><p>"4.9 on Google — 120+ reviews" linking to the Maps listing, plus an embedded recent-posts strip. The strongest trust signal for local Indian parents, currently absent.</p><div class="chips"><span class="chip eff">Low effort</span></div></div>
+      <div class="opp"><span class="rank">6</span><h3>Fee ledger month-grid</h3><p>Each payment names the month it covers; parents see a 12-month grid of covered months. Kills the "Due" confusion and makes advance payments work.</p><div class="chips"><span class="chip eff">Low–med effort</span><span class="chip imp">Trust</span></div></div>
+      <div class="opp"><span class="rank">7</span><h3>Hero video</h3><p>A 20–30s muted class-performance clip above the fold. Nothing sells dance like motion.</p><div class="chips"><span class="chip eff">Med effort</span><span class="chip imp">Wow</span></div></div>
+      <div class="opp"><span class="rank">8</span><h3>Wire Razorpay for real</h3><p>The infra is 80% built — RLS policy, webhook, Pay button on the fees page, auto-link auth on fulfilment. Turns the biggest deferred item into the product's strongest feature.</p><div class="chips"><span class="chip eff">Med effort</span><span class="chip imp">Revenue</span></div></div>
+      <div class="opp"><span class="rank">9</span><h3>Walk-in enrolment modal</h3><p>Add a student from the admin desk in 60 seconds, reusing the enrol validation. Walk-ins are how studios actually grow.</p><div class="chips"><span class="chip eff">Med effort</span></div></div>
+      <div class="opp"><span class="rank">10</span><h3>"Who owes fees" screen</h3><p>Due-date per student derived from payments, sorted, with one-tap WhatsApp reminders. Replaces the misleading first-20 list with the answer the owner actually needs.</p><div class="chips"><span class="chip eff">Med effort</span><span class="chip imp">Revenue</span></div></div>
+      <div class="opp"><span class="rank">11</span><h3>Rental calendar month-grid</h3><p>Confirmed/pending slots on a real calendar — double-bookings become visible at a glance, and declined renters get a WhatsApp notice.</p><div class="chips"><span class="chip eff">Med effort</span></div></div>
+      <div class="opp"><span class="rank">12</span><h3>Dashboard with two real charts + pending feed</h3><p>Revenue last 6 months, attendance rate per batch, plus a feed of pending rentals and unmarked attendance. The founder's morning screen, not five number cards.</p><div class="chips"><span class="chip eff">Med effort</span><span class="chip imp">Trust</span></div></div>
+      <div class="opp"><span class="rank">13</span><h3>Real kuchipudi progress data</h3><p>Instructors mark modules complete; render <code>modules_completed</code> instead of the hardcoded list. The stepper UI is already good — it just needs real data behind it.</p><div class="chips"><span class="chip eff">Low–med effort</span></div></div>
+      <div class="opp"><span class="rank">14</span><h3>Family accounts</h3><p>Parent identity resolves to multiple kids with a child switcher. Removes the one-parent-one-child ceiling for a kids' academy.</p><div class="chips"><span class="chip eff">High effort</span><span class="chip imp">Adoption</span></div></div>
+      <div class="opp"><span class="rank">15</span><h3>WhatsApp Business API live, with queue + batching</h3><p>Real sends for broadcasts, reminders, and confirmations — batched, with retries. Automate monthly fee reminders on a schedule.</p><div class="chips"><span class="chip eff">High effort</span></div></div>
+      <div class="opp"><span class="rank">16</span><h3>Trial-class slot booking</h3><p>Reuse the rental calendar for actual trial slots with date/time picker and WhatsApp confirmation. The free trial is the funnel — let it book itself.</p><div class="chips"><span class="chip eff">Med effort</span><span class="chip imp">Growth</span></div></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>Ship roadmap</h2><span class="note">Sequenced — each phase unblocks the next</span></div>
+    <div class="phase">
+      <div class="num">01</div>
+      <div>
+        <h3>Launch blockers</h3>
+        <p class="when">Week 1</p>
+        <ul>
+          <li><strong>Security trio:</strong> REVOKE the public RPCs, admin-only storage policies, rate limits on OTP/login/rental/broadcast</li>
+          <li><strong>Account provisioning:</strong> "Enable portal access" action + login recovery state</li>
+          <li><strong>Domain centralization</strong> to one constant + DNS decision</li>
+          <li><strong>Ship it:</strong> Vercel deploy, CI smoke build, migrations under version control</li>
+          <li><strong>Photography seed</strong> (the moment photos exist) + enrol button copy fix</li>
+        </ul>
+      </div>
+    </div>
+    <div class="phase">
+      <div class="num">02</div>
+      <div>
+        <h3>Trust &amp; daily ops</h3>
+        <p class="when">Week 2</p>
+        <ul>
+          <li><strong>Fee ledger</strong> month-grid + honest fee status</li>
+          <li><strong>Click-to-call/WhatsApp</strong> everywhere in admin; fix search + pagination</li>
+          <li><strong>Walk-in enrolment</strong> modal; confirmations on destructive actions</li>
+          <li><strong>WhatsApp API key</strong> + live sends with a visible mock-mode warning</li>
+        </ul>
+      </div>
+    </div>
+    <div class="phase">
+      <div class="num">03</div>
+      <div>
+        <h3>Money</h3>
+        <p class="when">Weeks 3–4</p>
+        <ul>
+          <li><strong>Razorpay end-to-end:</strong> RLS fix, webhook, Pay button on the fees page, receipts</li>
+          <li><strong>"Who owes fees" screen</strong> with one-tap reminders</li>
+          <li><strong>Automated monthly reminders</strong> on a schedule</li>
+        </ul>
+      </div>
+    </div>
+    <div class="phase">
+      <div class="num">04</div>
+      <div>
+        <h3>Wow</h3>
+        <p class="when">Ongoing</p>
+        <ul>
+          <li><strong>Social proof:</strong> Google reviews strip, Instagram feed, hero video</li>
+          <li><strong>Product depth:</strong> family accounts, real kuchipudi progress, rental calendar grid, dashboard charts + pending feed</li>
+          <li><strong>Growth:</strong> trial-class slot booking, referral programme</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap"><b>RHYTHMZZ ACADEMY OF DANCE</b> · SHIP AUDIT · AUGUST 2026 · FOUR AUDIT SURFACES · 7 P0 / 13 P1 / 15 P2 · EVERY FINDING TRACED TO CODE ON <b>FEAT/COMPLETE-APP-WIRING</b></div>
+  </footer>
+
+</div>

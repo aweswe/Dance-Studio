@@ -86,6 +86,20 @@ export const WHATSAPP_TEMPLATES = {
     }),
   },
 
+  /** Studio rental declined */
+  rentalCancelled: {
+    name: "rental_cancelled",
+    variables: (data: {
+      name: string;
+      date: string;
+      time: string;
+    }) => ({
+      renter_name: data.name,
+      date: data.date,
+      time: data.time,
+    }),
+  },
+
   /** Kuchipudi certificate ready */
   certificateReady: {
     name: "certificate_ready",

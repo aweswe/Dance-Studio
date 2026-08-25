@@ -65,3 +65,11 @@ export function formatPhone(phone: string): string {
 export function whatsappLink(message: string): string {
   return `https://wa.me/919052980859?text=${encodeURIComponent(message)}`;
 }
+
+/** Click-to-call tel: link for any Indian phone format. */
+export function telLink(phone: string): string {
+  const digits = phone.replace(/\D/g, "");
+  if (digits.length === 10) return `tel:+91${digits}`;
+  if (digits.length === 12 && digits.startsWith("91")) return `tel:+${digits}`;
+  return `tel:${digits}`;
+}

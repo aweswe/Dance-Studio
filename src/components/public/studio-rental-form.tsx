@@ -58,7 +58,7 @@ export function StudioRentalForm() {
           </svg>
         </div>
         <h3 className="heading-display text-2xl mb-2">Request Received</h3>
-        <p className="text-mu">We'll get back to you shortly to confirm your booking.</p>
+        <p className="text-mu">We&apos;ll get back to you shortly to confirm your booking.</p>
         <button
           onClick={() => setSuccess(false)}
           className="mt-6 text-[11px] font-bold uppercase tracking-wider text-bl"

@@ -1,13 +1,3 @@
-/**
- * Database type definitions for Supabase.
- *
- * GENERATED from the live database (project pndbazmwnbqzkwwmmgaf). Regenerate with:
- *   supabase gen types typescript --db-url "postgresql://postgres.pndbazmwnbqzkwwmmgaf:<password>@aws-0-ap-south-1.pooler.supabase.com:6543/postgres" --schema public > src/lib/supabase/types.ts
- * then re-append the convenience aliases at the bottom of this file.
- *
- * The generated `Relationships` metadata is required by postgrest-js 2.x —
- * without it, awaited query results collapse to `never`.
- */
 export type Json =
   | string
   | number
@@ -225,10 +215,91 @@ export type Database = {
           },
         ]
       }
+      broadcast_queue: {
+        Row: {
+          attempts: number | null
+          created_at: string | null
+          id: string
+          last_error: string | null
+          log_id: string | null
+          recipient_phone: string
+          status: string | null
+          template_name: string
+          updated_at: string | null
+          variables: Json | null
+        }
+        Insert: {
+          attempts?: number | null
+          created_at?: string | null
+          id?: string
+          last_error?: string | null
+          log_id?: string | null
+          recipient_phone: string
+          status?: string | null
+          template_name: string
+          updated_at?: string | null
+          variables?: Json | null
+        }
+        Update: {
+          attempts?: number | null
+          created_at?: string | null
+          id?: string
+          last_error?: string | null
+          log_id?: string | null
+          recipient_phone?: string
+          status?: string | null
+          template_name?: string
+          updated_at?: string | null
+          variables?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "broadcast_queue_log_id_fkey"
+            columns: ["log_id"]
+            isOneToOne: false
+            referencedRelation: "broadcast_logs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      enquiries: {
+        Row: {
+          created_at: string | null
+          email: string | null
+          id: string
+          message: string
+          name: string
+          phone: string
+          source: string | null
+          status: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          message: string
+          name: string
+          phone: string
+          source?: string | null
+          status?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          message?: string
+          name?: string
+          phone?: string
+          source?: string | null
+          status?: string | null
+        }
+        Relationships: []
+      }
       fee_payments: {
         Row: {
           amount: number
           created_at: string | null
+          for_month: string | null
           id: string
           notes: string | null
           paid_at: string | null
@@ -241,6 +312,7 @@ export type Database = {
         Insert: {
           amount: number
           created_at?: string | null
+          for_month?: string | null
           id?: string
           notes?: string | null
           paid_at?: string | null
@@ -253,6 +325,7 @@ export type Database = {
         Update: {
           amount?: number
           created_at?: string | null
+          for_month?: string | null
           id?: string
           notes?: string | null
           paid_at?: string | null
@@ -866,5 +939,3 @@ export type UserRole = Database["public"]["Enums"]["user_role"];
 export type AttendanceStatus = Database["public"]["Enums"]["attendance_status"];
 export type PaymentSource = Database["public"]["Enums"]["payment_source"];
 export type BatchStatus = Database["public"]["Enums"]["batch_status"];
-export type RentalStatus = Database["public"]["Enums"]["rental_status"];
-export type GalleryType = Database["public"]["Enums"]["gallery_type"];

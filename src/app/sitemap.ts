@@ -1,10 +1,13 @@
 import type { MetadataRoute } from "next";
 import { getPublicSupabase } from "@/lib/supabase/public";
+import { SITE_URL } from "@/lib/utils/constants";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = "https://www.rhythmzzdance.com";
+  const baseUrl = SITE_URL;
   const supabase = getPublicSupabase();
-  const buildDate = new Date("2026-01-01T00:00:00.000Z");
+  // Static pages don't have a DB row to read a real lastModified from —
+  // deploy time is the honest value (previously a hardcoded Jan 2026 date).
+  const buildDate = new Date();
 
   // Static pages
   const staticPages: MetadataRoute.Sitemap = [

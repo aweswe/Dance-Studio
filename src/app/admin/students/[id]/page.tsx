@@ -1,11 +1,12 @@
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { ArrowLeft, Phone, Mail, Calendar } from 'lucide-react'
+import { ArrowLeft, Phone, Mail, Calendar, MessageCircle } from 'lucide-react'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { createServerSupabase } from '@/lib/supabase/server'
 import { StudentActions } from '@/components/admin/student-actions'
-import { formatDate, formatCurrency, formatTime } from '@/lib/utils/format'
+import { KuchipudiAdmin } from '@/components/admin/kuchipudi-admin'
+import { formatDate, formatCurrency, formatTime, telLink } from '@/lib/utils/format'
 
 export default async function StudentDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -15,8 +16,8 @@ export default async function StudentDetailPage({ params }: { params: Promise<{ 
   const { data: studentData } = await supabase
     .from('students')
     .select(`
-      id, name, phone, email, status, join_date, student_id_display, batch_id,
-      programme:programmes(name),
+      id, name, phone, email, status, join_date, student_id_display, batch_id, auth_id,
+      programme:programmes(name, slug),
       batch:batches(name, days, time_start, time_end, programme:programmes(name))
     `)
     .eq('id', id)
@@ -24,6 +25,19 @@ export default async function StudentDetailPage({ params }: { params: Promise<{ 
 
   if (!studentData) notFound()
   const student = studentData as any
+
+  // Kuchipudi students get inline module marking (instructor marking deferred —
+  // no instructor auth accounts exist yet).
+  const isKuchipudi = (student.programme as any)?.slug === 'kuchipudi'
+  let kuchipudiProgress = null
+  if (isKuchipudi) {
+    const { data: progressRow } = await supabase
+      .from('kuchipudi_progress')
+      .select('current_level, modules_completed')
+      .eq('student_id', id)
+      .maybeSingle()
+    kuchipudiProgress = progressRow
+  }
 
   const { data: payments } = await supabase
     .from('fee_payments')
@@ -62,7 +76,25 @@ export default async function StudentDetailPage({ params }: { params: Promise<{ 
             <div className="flex items-start gap-3 text-sm">
               <Phone size={16} className="text-mu mt-0.5" />
               <div>
-                <p className="font-medium text-blk">{student.phone}</p>
+                <p className="font-medium text-blk flex items-center gap-2">
+                  {student.phone}
+                  <a
+                    href={telLink(student.phone)}
+                    className="p-1 rounded text-mu hover:text-bl hover:bg-black/5 transition-colors"
+                    aria-label="Call student"
+                  >
+                    <Phone size={13} />
+                  </a>
+                  <a
+                    href={`https://wa.me/91${String(student.phone).replace(/\D/g, '').replace(/^91/, '')}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="p-1 rounded text-mu hover:text-green hover:bg-black/5 transition-colors"
+                    aria-label="WhatsApp student"
+                  >
+                    <MessageCircle size={13} />
+                  </a>
+                </p>
                 <p className="text-xs text-mu">Primary Contact</p>
               </div>
             </div>
@@ -92,12 +124,15 @@ export default async function StudentDetailPage({ params }: { params: Promise<{ 
               email: student.email,
               status: student.status,
               batch_id: student.batch_id,
+              auth_id: student.auth_id,
             }}
             batches={(batches ?? []) as any[]}
           />
         </Card>
 
         <div className="col-span-1 lg:col-span-2 space-y-6">
+          {isKuchipudi && <KuchipudiAdmin studentId={id} initialProgress={kuchipudiProgress as any} />}
+
           <Card className="p-6">
             <h3 className="font-display text-xl text-blk border-b border-gray-100 pb-2 mb-4">Enrolment</h3>
             {student.batch ? (

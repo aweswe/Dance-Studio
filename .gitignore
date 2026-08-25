@@ -42,3 +42,4 @@ dev-smoke*.log
 *.tsbuildinfo
 next-env.d.ts
 supabase/.temp/
+supabase/.branches/

@@ -1,14 +1,15 @@
 import { Metadata } from 'next';
 import { MapPin, Phone, Mail, Clock, Map } from 'lucide-react';
-import { ACADEMY, HOURS, AREAS_SERVED } from '@/lib/utils/constants';
+import { ACADEMY, HOURS, AREAS_SERVED, SITE_URL } from '@/lib/utils/constants';
 import { formatTime } from '@/lib/utils/format';
+import { EnquiryForm } from '@/components/public/enquiry-form';
 
 const hoursLabel = `${HOURS.days[0]} – ${HOURS.days[HOURS.days.length - 1]}: ${formatTime(`${HOURS.opens}:00`)} – ${formatTime(`${HOURS.closes}:00`)}`;
 
 export const metadata: Metadata = {
   title: 'Contact Us',
   description: `Get in touch with Rhythmzz Academy of Dance. Located in ${ACADEMY.address.landmark}, ${ACADEMY.address.city}. Call ${ACADEMY.phoneDisplay} to book a trial class.`,
-  alternates: { canonical: 'https://www.rhythmzzdance.com/contact' },
+  alternates: { canonical: `${SITE_URL}/contact` },
 };
 
 // Reference neighbourhoods — 8–15 minutes by drive from the studio.
@@ -108,6 +109,18 @@ export default function ContactPage() {
               </span>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Enquiry form */}
+      <section className="py-20 px-6 md:px-16 bg-off">
+        <div className="max-w-xl mx-auto bg-white rounded-2xl shadow-sm border border-black/5 p-8 md:p-12">
+          <div className="text-[10px] tracking-[5px] uppercase text-bl mb-4">Send Us A Message</div>
+          <h2 className="heading-display text-4xl mb-4">HAVE A QUESTION?</h2>
+          <p className="text-sm text-mu mb-8 leading-relaxed">
+            Ask about classes, timings, or a free trial session — we reply within 24 hours.
+          </p>
+          <EnquiryForm />
         </div>
       </section>
 

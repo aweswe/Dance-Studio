@@ -1,5 +1,5 @@
 import { ReactNode, Suspense } from 'react';
-import { Nav } from '@/components/public/nav';
+import { PublicHeader } from '@/components/public/public-header';
 import { Footer } from '@/components/public/footer';
 import { WhatsappFloat } from '@/components/public/whatsapp-float';
 import { AnnouncementBanner } from '@/components/public/announcement-banner';
@@ -22,11 +22,14 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
       >
         Skip to content
       </a>
-      <Suspense fallback={null}>
-        <BannerFetcher />
-      </Suspense>
-      <Nav />
-      <main id="main" className="flex-grow flex flex-col pt-[72px]">
+      <PublicHeader
+        bannerSlot={
+          <Suspense fallback={null}>
+            <BannerFetcher />
+          </Suspense>
+        }
+      />
+      <main id="main" className="flex-grow flex flex-col pt-[var(--public-header-h,72px)]">
         <GsapProvider>{children}</GsapProvider>
       </main>
       <Footer />

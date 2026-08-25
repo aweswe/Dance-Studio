@@ -5,13 +5,13 @@ import { getProgrammes } from '@/data/programmes';
 import { getBatches } from '@/data/batches';
 import { ProgrammeCard } from '@/components/public/programme-card';
 import { scheduleFor } from '@/lib/utils/schedule';
-import { ROUTES } from '@/lib/utils/constants';
+import { ROUTES, SITE_URL } from '@/lib/utils/constants';
 
 export const metadata: Metadata = {
   title: 'Dance & Fitness Programmes | Rhythmzz Academy of Dance',
   description:
     'Kids dance, adult dance, mind & body fitness and Kuchipudi classes at Neredmet X Road, Secunderabad. Fees from ₹2,000 a month, no registration fee, free trial class.',
-  alternates: { canonical: 'https://www.rhythmzzdance.com/programmes' },
+  alternates: { canonical: `${SITE_URL}/programmes` },
 };
 
 export default async function ProgrammesPage() {
@@ -25,7 +25,7 @@ export default async function ProgrammesPage() {
       '@type': 'ListItem',
       position: i + 1,
       name: p.name,
-      url: `https://www.rhythmzzdance.com/programmes/${p.slug}`,
+      url: `${SITE_URL}/programmes/${p.slug}`,
     })),
   };
 

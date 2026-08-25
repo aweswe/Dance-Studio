@@ -1,6 +1,7 @@
 import { createAdminSupabase } from '@/lib/supabase/server';
 import { sendWhatsAppTemplate } from '@/lib/whatsapp/client';
 import { WHATSAPP_TEMPLATES } from '@/lib/whatsapp/templates';
+import { SITE_URL } from '@/lib/utils/constants';
 
 export interface FulfillOrderParams {
   razorpayOrderId: string;
@@ -41,15 +42,21 @@ export async function provisionStudentFromOrder(
   if (!order) return { fulfilled: false, reason: 'ORDER_NOT_FOUND' };
   if (order.status === 'webhook_processed') return { fulfilled: true, alreadyProcessed: true };
 
-  // Check if student exists
-  const { data: studentData } = await supabase
-    .from('students')
-    .select('*')
-    .eq('phone', order.student_phone)
-    .eq('programme_id', order.programme_id)
-    .single();
-
-  let student = studentData as any;
+  // Check if student exists — portal flow links via student_id, enrol flow
+  // matches on phone + programme.
+  let student: any = null;
+  if (order.student_id) {
+    const { data } = await supabase.from('students').select('*').eq('id', order.student_id).single();
+    student = data as any;
+  } else {
+    const { data } = await supabase
+      .from('students')
+      .select('*')
+      .eq('phone', order.student_phone)
+      .eq('programme_id', order.programme_id)
+      .single();
+    student = data as any;
+  }
 
   if (!student) {
     // Create auth user if needed
@@ -97,20 +104,23 @@ export async function provisionStudentFromOrder(
       source: 'razorpay',
       razorpay_payment_id: paymentId,
       payment_order_id: order.id,
+      // The ledger keys off for_month — this payment covers the current month.
+      for_month: new Date().toISOString().slice(0, 7) + '-01',
     });
 
     // Look up programme name for WhatsApp
     const { data: progData } = await supabase.from('programmes').select('name').eq('id', order.programme_id).single();
     const progName = (progData as any)?.name || 'Dance Class';
 
-    if (order.student_phone) {
+    const waPhone = order.student_phone || student.phone;
+    if (waPhone) {
       await sendWhatsAppTemplate({
-        phone: order.student_phone,
+        phone: waPhone,
         templateName: WHATSAPP_TEMPLATES.welcome.name,
         variables: WHATSAPP_TEMPLATES.welcome.variables({
-          studentName: order.student_name || 'Student',
+          studentName: order.student_name || student.name || 'Student',
           programmeName: progName,
-          loginUrl: 'https://www.rhythmzzdance.com/login',
+          loginUrl: `${SITE_URL}/login`,
         }),
       });
     }

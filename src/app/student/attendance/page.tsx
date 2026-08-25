@@ -37,7 +37,16 @@ export default async function AttendancePage() {
   const present = attSummary?.present_count || 0;
   const absent = attSummary?.absent_count || 0;
   const leave = attSummary?.leave_count || 0;
-  const percentage = total > 0 ? Math.round((present / total) * 100) : 100;
+  const percentage = total > 0 ? Math.round((present / total) * 100) : 0;
+
+  // Monthly context: this month's marks, from the raw records.
+  const now = new Date();
+  const monthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+  const monthRecords = ((attendance || []) as { date: string; status: string }[]).filter((r) =>
+    r.date.startsWith(monthKey),
+  );
+  const monthTotal = monthRecords.length;
+  const monthPresent = monthRecords.filter((r) => r.status === "present").length;
 
   return (
     <div className="space-y-8">
@@ -49,16 +58,37 @@ export default async function AttendancePage() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card>
           <p className="text-sm text-mu mb-1 uppercase tracking-widest font-semibold">Overall Attendance</p>
-          <p className="font-display text-5xl mb-2">{percentage}%</p>
-          <div className="w-full bg-black/10 h-2 rounded-full overflow-hidden">
-            <div 
-              className={`h-full ${percentage >= 75 ? "bg-green" : percentage >= 50 ? "bg-gold" : "bg-red-500"}`} 
-              style={{ width: `${percentage}%` }}
-            />
-          </div>
+          {total > 0 ? (
+            <>
+              <p className="font-display text-5xl mb-2">{percentage}%</p>
+              <div className="w-full bg-black/10 h-2 rounded-full overflow-hidden">
+                <div
+                  className={`h-full ${percentage >= 75 ? "bg-green" : percentage >= 50 ? "bg-gold" : "bg-red-500"}`}
+                  style={{ width: `${percentage}%` }}
+                />
+              </div>
+            </>
+          ) : (
+            <p className="text-sm text-mu mt-2">No classes marked yet — your attendance will appear here once classes begin.</p>
+          )}
         </Card>
-        
-        <Card className="md:col-span-2">
+
+        <Card>
+          <p className="text-sm text-mu mb-1 uppercase tracking-widest font-semibold">This Month</p>
+          {monthTotal > 0 ? (
+            <>
+              <p className="font-display text-5xl mb-2">
+                {monthPresent}
+                <span className="text-2xl text-mu">/{monthTotal}</span>
+              </p>
+              <p className="text-sm text-mu">classes attended</p>
+            </>
+          ) : (
+            <p className="text-sm text-mu mt-2">Nothing marked this month yet.</p>
+          )}
+        </Card>
+
+        <Card>
           <p className="text-sm text-mu mb-4 uppercase tracking-widest font-semibold">Stats</p>
           <div className="flex gap-8">
             <div>

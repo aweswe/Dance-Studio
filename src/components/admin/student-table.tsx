@@ -5,11 +5,11 @@ import { Input } from '@/components/ui/input'
 import { Select } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Search, Filter, MoreVertical } from 'lucide-react'
+import { Search, Filter, MoreVertical, Phone, MessageCircle } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { usePagination } from '@/hooks/use-pagination'
 import { getStudentsAction } from '@/actions/students'
-import { formatDate } from '@/lib/utils/format'
+import { formatDate, telLink } from '@/lib/utils/format'
 
 interface Student extends Record<string, unknown> {
   id: string
@@ -17,6 +17,7 @@ interface Student extends Record<string, unknown> {
   phone: string
   status: string
   created_at: string
+  auth_id?: string | null
   batch?: {
     name: string | null
     days: string[]
@@ -38,24 +39,27 @@ export function StudentTable({ initialData }: StudentTableProps) {
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState('all')
 
-  const { items: data, isLoading, loadMore, hasMore } = usePagination<Student>({
+  // Seeded from the server's first page — Load More continues from nextCursor,
+  // and search/filter changes (refreshKey) reset + refetch page 1 debounced.
+  const { items: data, isLoading, loadMore, hasMore, error } = usePagination<Student>({
     fetcher: async (cursor, limit) => {
       const res = await getStudentsAction({ limit, cursor: cursor ?? undefined, search, status: statusFilter !== 'all' ? statusFilter : undefined })
       return (res?.data as Student[]) || []
     },
     limit: 10,
     cursorField: 'created_at',
+    initialItems: initialData.data,
+    initialCursor: initialData.nextCursor,
+    refreshKey: `${search}|${statusFilter}`,
   })
-
-  const displayData = data.length > 0 ? data : initialData.data
 
   return (
     <div className="bg-white rounded-[16px] shadow-sm border border-black/[.07] overflow-hidden">
       <div className="p-4 border-b border-black/[.07] flex flex-col sm:flex-row gap-4 justify-between items-center bg-light/50">
         <div className="relative w-full sm:max-w-xs">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-mu" size={18} />
-          <Input 
-            placeholder="Search name or phone..." 
+          <Input
+            placeholder="Search name or phone..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="pl-10"
@@ -65,7 +69,7 @@ export function StudentTable({ initialData }: StudentTableProps) {
           <div className="flex items-center gap-2 text-sm text-mu font-medium">
             <Filter size={16} /> Filter:
           </div>
-          <Select 
+          <Select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
             options={[
@@ -76,6 +80,12 @@ export function StudentTable({ initialData }: StudentTableProps) {
           />
         </div>
       </div>
+
+      {error && (
+        <div className="mx-4 mt-4 px-4 py-3 rounded-lg bg-red-50 border border-red-200 text-sm text-red-600">
+          Could not load students: {error}
+        </div>
+      )}
 
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse">
@@ -90,16 +100,44 @@ export function StudentTable({ initialData }: StudentTableProps) {
             </tr>
           </thead>
           <tbody className="divide-y divide-black/[.05]">
-            {displayData.map((student) => (
-              <tr 
-                key={student.id} 
+            {data.map((student) => (
+              <tr
+                key={student.id}
                 className="hover:bg-light transition-colors cursor-pointer"
                 onClick={() => router.push(`/admin/students/${student.id}`)}
               >
                 <td className="px-6 py-4">
-                  <div className="font-medium text-blk">{student.name}</div>
+                  <div className="font-medium text-blk flex items-center gap-2">
+                    {student.name}
+                    {student.auth_id && (
+                      <Badge variant="green" className="text-[10px] px-2 py-0.5">PORTAL</Badge>
+                    )}
+                  </div>
                 </td>
-                <td className="px-6 py-4 text-sm text-mu">{student.phone}</td>
+                <td className="px-6 py-4 text-sm text-mu">
+                  <div className="flex items-center gap-1">
+                    <span>{student.phone}</span>
+                    {/* Click-to-call / WhatsApp — stop propagation so the row nav doesn't fire */}
+                    <a
+                      href={telLink(student.phone)}
+                      onClick={(e) => e.stopPropagation()}
+                      aria-label={`Call ${student.name ?? 'student'}`}
+                      className="p-1 rounded text-mu hover:text-bl hover:bg-black/5 transition-colors"
+                    >
+                      <Phone size={13} />
+                    </a>
+                    <a
+                      href={`https://wa.me/91${student.phone.replace(/\D/g, '').replace(/^91/, '')}`}
+                      onClick={(e) => e.stopPropagation()}
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label={`WhatsApp ${student.name ?? 'student'}`}
+                      className="p-1 rounded text-mu hover:text-green hover:bg-black/5 transition-colors"
+                    >
+                      <MessageCircle size={13} />
+                    </a>
+                  </div>
+                </td>
                 <td className="px-6 py-4">
                   {student.batch ? (
                     <div>
@@ -127,7 +165,7 @@ export function StudentTable({ initialData }: StudentTableProps) {
                 </td>
               </tr>
             ))}
-            {displayData.length === 0 && !isLoading && (
+            {data.length === 0 && !isLoading && (
               <tr>
                 <td colSpan={6} className="px-6 py-12 text-center text-mu">
                   No students found.
@@ -137,11 +175,11 @@ export function StudentTable({ initialData }: StudentTableProps) {
           </tbody>
         </table>
       </div>
-      
+
       {hasMore && (
         <div className="p-4 border-t border-black/[.07] flex justify-center">
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             onClick={() => loadMore()}
             disabled={isLoading}
           >

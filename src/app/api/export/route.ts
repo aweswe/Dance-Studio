@@ -1,16 +1,16 @@
 import { NextResponse } from 'next/server';
 import { createServerSupabase } from '@/lib/supabase/server';
+import { rateLimit, clientIp } from '@/lib/rate-limit';
+import { escapeCsv } from '@/lib/utils/csv';
 
 export const dynamic = 'force-dynamic';
 
-// Quote every field, double internal quotes, strip newlines (CSV injection-safe)
-const escapeCsv = (value: unknown): string => {
-  const s = String(value ?? '').replace(/[\r\n]+/g, ' ');
-  return `"${s.replace(/"/g, '""')}"`;
-};
-
 export async function GET(req: Request) {
   try {
+    if (!rateLimit(`export:${clientIp(req.headers)}`, { limit: 10, windowMs: 60 * 1000 })) {
+      return NextResponse.json({ error: 'Too many requests. Please try again later.' }, { status: 429 });
+    }
+
     const { searchParams } = new URL(req.url);
     const type = searchParams.get('type');
 
@@ -53,7 +53,7 @@ export async function GET(req: Request) {
         'Content-Disposition': `attachment; filename="${type}.csv"`,
       },
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }

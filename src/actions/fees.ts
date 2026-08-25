@@ -5,24 +5,49 @@ import { logOfflinePaymentSchema } from '@/lib/validators/fees';
 import { sendWhatsAppTemplate } from '@/lib/whatsapp/client';
 import { WHATSAPP_TEMPLATES } from '@/lib/whatsapp/templates';
 import { formatCurrency } from '@/lib/utils/format';
+import { SITE_URL } from '@/lib/utils/constants';
 import { revalidatePath } from 'next/cache';
 
-export async function logOfflinePayment(studentId: string, amount: number, source: string, notes: string) {
+export async function logOfflinePayment(
+  studentId: string,
+  amount: number,
+  source: string,
+  notes: string,
+  forMonth?: string,
+) {
   const supabase = await createServerSupabase();
   if (!(await isAdmin(supabase))) return { success: false, error: 'Not authorized' };
 
-  const parsed = logOfflinePaymentSchema.safeParse({ studentId, amount, source, notes });
+  const parsed = logOfflinePaymentSchema.safeParse({ studentId, amount, source, notes, forMonth });
   if (!parsed.success) {
     return { success: false, error: parsed.error.issues[0]?.message ?? 'Invalid payment' };
   }
 
-  const { error } = await supabase.from('fee_payments').insert({
-    student_id: parsed.data.studentId,
-    amount: parsed.data.amount,
-    source: parsed.data.source,
-    notes: parsed.data.notes || null,
-  });
+  // "YYYY-MM" → first of that month; default to the current month.
+  const for_month = parsed.data.forMonth
+    ? `${parsed.data.forMonth}-01`
+    : new Date().toISOString().slice(0, 7) + '-01';
+
+  const { data: inserted, error } = await supabase
+    .from('fee_payments')
+    .insert({
+      student_id: parsed.data.studentId,
+      amount: parsed.data.amount,
+      source: parsed.data.source,
+      notes: parsed.data.notes || null,
+      for_month,
+    })
+    .select('id')
+    .single();
   if (error) return { success: false, error: error.message };
+
+  // Every payment gets a printable receipt — point offline receipts at it too.
+  if (inserted) {
+    await supabase
+      .from('fee_payments')
+      .update({ receipt_url: `${SITE_URL}/receipt/${inserted.id}` })
+      .eq('id', inserted.id);
+  }
 
   revalidatePath('/admin/fees');
   return { success: true };
@@ -52,7 +77,7 @@ export async function sendFeeReminder(studentId: string) {
       studentName: student.name,
       amount: formatCurrency(feeAmount),
       dueDate: '5th of this month',
-      paymentLink: 'https://www.rhythmzzdance.com/student/fees',
+      paymentLink: `${SITE_URL}/student/fees`,
     }),
   });
 

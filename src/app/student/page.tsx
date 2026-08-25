@@ -30,9 +30,10 @@ export default async function StudentDashboardPage() {
     .rpc("get_student_attendance_summary", { p_student_id: student.id });
 
   const attSummary = attendanceSummary as any;
-  const attendancePercentage = attSummary?.total_classes > 0
+  const hasAttendance = (attSummary?.total_classes || 0) > 0;
+  const attendancePercentage = hasAttendance
     ? Math.round((attSummary.present_count / attSummary.total_classes) * 100)
-    : 100;
+    : 0;
 
   // Fee status from the latest payment (same month+year rule as /student/fees)
   const { data: payments } = await supabase
@@ -60,7 +61,9 @@ export default async function StudentDashboardPage() {
           <div className="flex flex-col h-full justify-between">
             <div>
               <p className="text-sm text-mu mb-1 uppercase tracking-widest font-semibold">Attendance</p>
-              <p className="font-display text-5xl">{attendancePercentage}%</p>
+              <p className="font-display text-5xl">
+                {hasAttendance ? `${attendancePercentage}%` : <span className="text-3xl text-mu">No classes marked yet</span>}
+              </p>
             </div>
             <Link href={`${ROUTES.student}/attendance`} className="text-bl text-sm font-semibold mt-4 hover:underline">
               View Details &rarr;

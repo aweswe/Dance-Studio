@@ -69,7 +69,7 @@ export function AttendanceMarker({ batches, initialBatchId }: AttendanceMarkerPr
       } else {
         setMessage({ type: "error", text: result.error || "Failed to mark attendance." });
       }
-    } catch (err) {
+    } catch {
       setMessage({ type: "error", text: "An unexpected error occurred." });
     } finally {
       setIsSubmitting(false);

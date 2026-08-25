@@ -1,7 +1,6 @@
 "use client";
 
 import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
@@ -57,6 +56,10 @@ export function AttendanceCalendar({ records }: AttendanceCalendarProps) {
     return record ? record.status : null;
   };
 
+  const monthRecordCount = records.filter((r) =>
+    r.date.startsWith(`${year}-${String(month + 1).padStart(2, "0")}`),
+  ).length;
+
   return (
     <Card className="max-w-md mx-auto md:mx-0">
       <div className="flex items-center justify-between mb-6">
@@ -100,6 +103,10 @@ export function AttendanceCalendar({ records }: AttendanceCalendarProps) {
         <div className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-full bg-red-500/40"></div>Absent</div>
         <div className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-full bg-gold/40"></div>Leave</div>
       </div>
+
+      {monthRecordCount === 0 && (
+        <p className="mt-4 text-center text-xs text-mu">No classes marked this month yet.</p>
+      )}
     </Card>
   );
 }

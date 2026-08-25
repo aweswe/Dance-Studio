@@ -2,9 +2,9 @@
 
 import { useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Modal } from '@/components/ui/modal'
+import { ConfirmModal } from '@/components/ui/confirm-modal'
 import { Upload, X, ArrowUp, ArrowDown, Eye, EyeOff } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { uploadMedia, toggleVisibility, deleteMedia, reorderMedia } from '@/actions/gallery'
@@ -28,6 +28,8 @@ export function GalleryManager({ initialItems }: { initialItems: GalleryItem[] }
   const [isUploadOpen, setIsUploadOpen] = useState(false)
   const [title, setTitle] = useState('')
   const [tags, setTags] = useState('')
+  const [pendingDelete, setPendingDelete] = useState<GalleryItem | null>(null)
+  const [deleteBusy, setDeleteBusy] = useState(false)
 
   const items = initialItems || []
 
@@ -66,7 +68,16 @@ export function GalleryManager({ initialItems }: { initialItems: GalleryItem[] }
   }
 
   const doDelete = async (id: string) => {
-    await deleteMedia(id)
+    setDeleteBusy(true)
+    setFeedback(null)
+    const res = await deleteMedia(id)
+    setDeleteBusy(false)
+    if (res.success) {
+      setPendingDelete(null)
+      setFeedback({ ok: true, text: 'Media deleted' })
+    } else {
+      setFeedback({ ok: false, text: res.error ?? 'Delete failed' })
+    }
     router.refresh()
   }
 
@@ -147,7 +158,11 @@ export function GalleryManager({ initialItems }: { initialItems: GalleryItem[] }
                 >
                   {item.is_visible ? <Eye size={14} /> : <EyeOff size={14} />}
                 </button>
-                <button className="p-1 rounded text-red-500 hover:bg-red-50" onClick={() => doDelete(item.id)} aria-label="Delete">
+                <button
+                  className="p-1 rounded text-red-500 hover:bg-red-50"
+                  onClick={() => setPendingDelete(item)}
+                  aria-label="Delete"
+                >
                   <X size={14} />
                 </button>
               </div>
@@ -161,6 +176,17 @@ export function GalleryManager({ initialItems }: { initialItems: GalleryItem[] }
           No media yet. Upload the first photo or video above.
         </div>
       )}
+
+      <ConfirmModal
+        isOpen={pendingDelete !== null}
+        onClose={() => setPendingDelete(null)}
+        onConfirm={() => pendingDelete && doDelete(pendingDelete.id)}
+        busy={deleteBusy}
+        danger
+        title="Delete media?"
+        confirmLabel="Delete"
+        description={`"${pendingDelete?.title || pendingDelete?.tags?.[0] || pendingDelete?.type || 'This item'}" will be removed from the site and the storage bucket. This cannot be undone.`}
+      />
 
       <Modal isOpen={isUploadOpen} onClose={() => { setIsUploadOpen(false); setPendingFile(null) }} title="Upload Media" size="md">
         <div className="space-y-4">

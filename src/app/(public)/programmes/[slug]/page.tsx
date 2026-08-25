@@ -6,6 +6,7 @@ import { getProgrammes, getProgrammeBySlug } from '@/data/programmes';
 import { getBatches } from '@/data/batches';
 import { CheckCircle2, Clock, Calendar, IndianRupee, MapPin } from 'lucide-react';
 import { formatTime } from '@/lib/utils/format';
+import { SITE_URL } from '@/lib/utils/constants';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -39,7 +40,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: programme.name,
     description: programme.description || `Join our ${programme.name} classes in Secunderabad. Free trial class at Neredmet X Road.`,
-    alternates: { canonical: `https://www.rhythmzzdance.com/programmes/${slug}` },
+    alternates: { canonical: `${SITE_URL}/programmes/${slug}` },
   };
 }
 
@@ -76,7 +77,7 @@ export default async function ProgrammeDetailPage({ params }: Props) {
     "provider": {
       "@type": "Organization",
       "name": "Rhythmzz Academy of Dance",
-      "sameAs": "https://www.rhythmzzdance.com"
+      "sameAs": SITE_URL
     }
   };
 

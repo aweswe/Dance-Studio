@@ -81,7 +81,7 @@ export default function AdminLoginPage() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="admin@rhythmzzdance.com"
+              placeholder="admin@rhythmzz.in"
               className="w-full bg-white/5 border border-white/10 rounded px-4 py-3 text-white text-sm placeholder-white/20 focus:outline-none focus:border-bl/50 transition-colors"
               autoFocus
               required

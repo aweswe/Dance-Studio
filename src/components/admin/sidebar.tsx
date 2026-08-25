@@ -11,6 +11,7 @@ import {
   CalendarCheck,
   IndianRupee,
   MessageSquare,
+  Inbox,
   Calendar,
   Image as ImageIcon,
   Settings,
@@ -41,7 +42,8 @@ const navGroups = [
     items: [
       { name: 'Attendance', href: '/admin/attendance', icon: CalendarCheck },
       { name: 'Fees', href: '/admin/fees', icon: IndianRupee },
-      { name: 'Broadcast', href: '/admin/broadcast', icon: MessageSquare }
+      { name: 'Broadcast', href: '/admin/broadcast', icon: MessageSquare },
+      { name: 'Enquiries', href: '/admin/enquiries', icon: Inbox }
     ]
   },
   {

@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
+import { ConfirmModal } from '@/components/ui/confirm-modal'
 import { Plus, Edit, Trash2 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { useRouter } from 'next/navigation'
@@ -48,6 +49,7 @@ export function BlogEditor({ initialPosts }: { initialPosts: Post[] }) {
   const [form, setForm] = useState<PostForm>(EMPTY_FORM)
   const [busy, setBusy] = useState(false)
   const [feedback, setFeedback] = useState<{ ok: boolean; text: string } | null>(null)
+  const [pendingDelete, setPendingDelete] = useState<Post | null>(null)
 
   const posts = initialPosts || []
 
@@ -96,12 +98,13 @@ export function BlogEditor({ initialPosts }: { initialPosts: Post[] }) {
   }
 
   const remove = async (id: string) => {
-    if (!confirm('Delete this post permanently?')) return
+    setPendingDelete(null)
     const res = await deletePost(id)
     if (!res.success) {
       setFeedback({ ok: false, text: res.error ?? 'Could not delete post' })
       return
     }
+    setFeedback({ ok: true, text: 'Post deleted' })
     router.refresh()
   }
 
@@ -157,13 +160,26 @@ export function BlogEditor({ initialPosts }: { initialPosts: Post[] }) {
             />
           </div>
           <div>
-            <label className="block text-sm text-mu mb-1">Content</label>
-            <textarea
-              className="w-full h-64 p-3 rounded-md border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-bl resize-none"
-              placeholder="Write your post content here (Markdown supported)..."
-              value={form.content}
-              onChange={(e) => setForm({ ...form, content: e.target.value })}
-            />
+            <label className="block text-sm text-mu mb-1">Content (HTML)</label>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <textarea
+                className="w-full h-96 p-3 rounded-md border border-gray-200 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-bl resize-none"
+                placeholder="<h2>Heading</h2>&#10;<p>Write your post content here (HTML)...</p>"
+                value={form.content}
+                onChange={(e) => setForm({ ...form, content: e.target.value })}
+              />
+              <div className="h-96 overflow-y-auto rounded-md border border-gray-200 bg-light/50 p-4">
+                <p className="text-[10px] font-display tracking-[2px] text-mu uppercase mb-2">Live Preview</p>
+                {form.content.trim() ? (
+                  <div
+                    className="prose prose-neutral max-w-none prose-headings:font-display prose-headings:font-normal prose-a:text-bl prose-img:rounded-xl text-sm"
+                    dangerouslySetInnerHTML={{ __html: form.content }}
+                  />
+                ) : (
+                  <p className="text-sm text-mu italic">Start typing to preview the post.</p>
+                )}
+              </div>
+            </div>
           </div>
           <div className="flex gap-3 pt-4 border-t border-gray-100">
             <Button onClick={() => save(true)} disabled={busy}>
@@ -211,7 +227,7 @@ export function BlogEditor({ initialPosts }: { initialPosts: Post[] }) {
               <button className="p-2 text-mu hover:text-bl rounded-full hover:bg-light" onClick={() => openEdit(post)}>
                 <Edit size={16} />
               </button>
-              <button className="p-2 text-mu hover:text-red-500 rounded-full hover:bg-light" onClick={() => remove(post.id)}>
+              <button className="p-2 text-mu hover:text-red-500 rounded-full hover:bg-light" onClick={() => setPendingDelete(post)}>
                 <Trash2 size={16} />
               </button>
             </div>
@@ -224,6 +240,17 @@ export function BlogEditor({ initialPosts }: { initialPosts: Post[] }) {
           </div>
         )}
       </div>
+
+      <ConfirmModal
+        isOpen={pendingDelete !== null}
+        onClose={() => setPendingDelete(null)}
+        onConfirm={() => pendingDelete && remove(pendingDelete.id)}
+        busy={busy}
+        danger
+        title="Delete this post?"
+        confirmLabel="Delete"
+        description={`"${pendingDelete?.title ?? 'This post'}" will be permanently removed from the blog. This cannot be undone.`}
+      />
     </div>
   )
 }

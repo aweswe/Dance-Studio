@@ -5,11 +5,13 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select } from '@/components/ui/select'
 import { Modal } from '@/components/ui/modal'
+import { ConfirmModal } from '@/components/ui/confirm-modal'
 import { useRouter } from 'next/navigation'
 import {
   deactivateStudent,
   reactivateStudent,
   updateStudent,
+  enablePortalAccess,
 } from '@/actions/students'
 
 interface BatchOption {
@@ -27,6 +29,7 @@ interface StudentActionsProps {
     email: string | null
     status: string
     batch_id: string | null
+    auth_id: string | null
   }
   batches: BatchOption[]
 }
@@ -42,6 +45,9 @@ export function StudentActions({ student, batches }: StudentActionsProps) {
   const [phone, setPhone] = useState(student.phone)
   const [email, setEmail] = useState(student.email ?? '')
   const [batchId, setBatchId] = useState(student.batch_id ?? '')
+
+  // Deactivate confirmation
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false)
 
   const run = async (fn: () => Promise<{ success: boolean; error?: string }>, okText: string) => {
     setBusy(true)
@@ -62,6 +68,7 @@ export function StudentActions({ student, batches }: StudentActionsProps) {
       () => (targetInactive ? deactivateStudent(student.id) : reactivateStudent(student.id)),
       targetInactive ? 'Student deactivated' : 'Student reactivated'
     )
+    setIsConfirmOpen(false)
   }
 
   const saveEdit = () => {
@@ -79,13 +86,42 @@ export function StudentActions({ student, batches }: StudentActionsProps) {
   }
 
   return (
-    <div className="pt-4 border-t border-gray-100">
+    <div className="pt-4 border-t border-gray-100 space-y-4">
+      {/* Portal access */}
+      {student.auth_id ? (
+        <div className="flex items-center justify-between bg-green/10 border border-green/20 rounded-lg px-4 py-3">
+          <div>
+            <p className="text-sm font-medium text-blk">Portal access enabled</p>
+            <p className="text-xs text-mu">Student can log in with WhatsApp OTP</p>
+          </div>
+          <span className="text-[10px] font-semibold tracking-[2px] text-green">LINKED</span>
+        </div>
+      ) : (
+        <div className="bg-light border border-gray-200 rounded-lg px-4 py-3">
+          <p className="text-sm font-medium text-blk mb-1">Portal not enabled</p>
+          <p className="text-xs text-mu mb-3">
+            Creates the student&apos;s WhatsApp OTP login and sends a welcome message.
+          </p>
+          <Button
+            variant="outline"
+            className="w-full"
+            onClick={() => run(() => enablePortalAccess(student.id), 'Portal enabled — welcome message sent')}
+            disabled={busy}
+          >
+            {busy ? 'Enabling...' : 'Enable Portal Access'}
+          </Button>
+        </div>
+      )}
+
       <div className="flex gap-2">
         <Button className="w-full" onClick={() => setIsEditOpen(true)}>Edit Profile</Button>
         <Button
           variant="outline"
           className="w-full text-red-500 hover:text-red-600 hover:bg-red-50"
-          onClick={toggleStatus}
+          onClick={() => {
+            if (student.status === 'active') setIsConfirmOpen(true)
+            else toggleStatus()
+          }}
           disabled={busy}
         >
           {student.status === 'active' ? 'Deactivate' : 'Reactivate'}
@@ -97,6 +133,17 @@ export function StudentActions({ student, batches }: StudentActionsProps) {
           {feedback.text}
         </p>
       )}
+
+      <ConfirmModal
+        isOpen={isConfirmOpen}
+        onClose={() => setIsConfirmOpen(false)}
+        onConfirm={toggleStatus}
+        busy={busy}
+        danger
+        title="Deactivate student?"
+        confirmLabel="Deactivate"
+        description={`${student.name} will no longer appear as active and will be freed from their batch. This does not delete their records or portal access.`}
+      />
 
       <Modal isOpen={isEditOpen} onClose={() => setIsEditOpen(false)} title="Edit Student" size="md">
         <div className="space-y-4">

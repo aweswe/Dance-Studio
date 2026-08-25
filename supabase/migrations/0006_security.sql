@@ -1,0 +1,243 @@
+-- ════════════════════════════════════════════════════════════════
+-- 007_security.sql — RPC privilege lockdown + gallery storage write lockdown
+--
+-- Before this migration, every SECURITY DEFINER function was executable
+-- by PUBLIC (PostgREST exposes them anonymously): revenue/occupancy via
+-- get_dashboard_analytics(), any student's attendance via
+-- get_student_attendance_summary()/check_consecutive_absences(), and
+-- batch-count mutation via increment/decrement_batch_enrollment().
+-- Storage write policies on the gallery bucket allowed ANY authenticated
+-- user (i.e., any student) to insert/update/delete studio media.
+-- ════════════════════════════════════════════════════════════════
+
+-- ── 1. Revoke default PUBLIC EXECUTE, grant only the API + service roles ──
+REVOKE EXECUTE ON FUNCTION public.get_dashboard_analytics() FROM PUBLIC, anon;
+REVOKE EXECUTE ON FUNCTION public.get_student_attendance_summary(uuid) FROM PUBLIC, anon;
+REVOKE EXECUTE ON FUNCTION public.check_consecutive_absences(uuid, integer) FROM PUBLIC, anon;
+REVOKE EXECUTE ON FUNCTION public.increment_batch_enrollment(uuid) FROM PUBLIC, anon;
+REVOKE EXECUTE ON FUNCTION public.decrement_batch_enrollment(uuid) FROM PUBLIC, anon;
+
+GRANT EXECUTE ON FUNCTION public.get_dashboard_analytics() TO authenticated, service_role;
+GRANT EXECUTE ON FUNCTION public.get_student_attendance_summary(uuid) TO authenticated, service_role;
+GRANT EXECUTE ON FUNCTION public.check_consecutive_absences(uuid, integer) TO authenticated, service_role;
+GRANT EXECUTE ON FUNCTION public.increment_batch_enrollment(uuid) TO authenticated, service_role;
+GRANT EXECUTE ON FUNCTION public.decrement_batch_enrollment(uuid) TO authenticated, service_role;
+
+-- ── 2. Role-checked replacements ──
+-- The webhook (service role) has no auth.uid(), so service-role calls are
+-- recognized by auth.uid() IS NULL — reachable only after the revokes above.
+
+-- Dashboard analytics: admin only
+CREATE OR REPLACE FUNCTION public.get_dashboard_analytics()
+RETURNS JSONB AS $$
+DECLARE
+    v_active_students INT;
+    v_enrollments_this_month INT;
+    v_enrollments_last_month INT;
+    v_revenue_this_month INT;
+    v_avg_attendance_this_week NUMERIC;
+    v_batch_occupancy JSONB;
+BEGIN
+    IF public.get_user_role() <> 'admin' THEN
+        RAISE EXCEPTION 'insufficient_privilege' USING ERRCODE = '42501';
+    END IF;
+
+    -- Active students
+    SELECT COUNT(*) INTO v_active_students FROM students WHERE status = 'active';
+
+    -- Enrollments this month
+    SELECT COUNT(*) INTO v_enrollments_this_month FROM students
+    WHERE join_date >= date_trunc('month', CURRENT_DATE);
+
+    -- Enrollments last month
+    SELECT COUNT(*) INTO v_enrollments_last_month FROM students
+    WHERE join_date >= date_trunc('month', CURRENT_DATE - INTERVAL '1 month')
+    AND join_date < date_trunc('month', CURRENT_DATE);
+
+    -- Revenue this month
+    SELECT COALESCE(SUM(amount), 0) INTO v_revenue_this_month FROM fee_payments
+    WHERE paid_at >= date_trunc('month', CURRENT_DATE);
+
+    -- Avg attendance rate this week (Present / Total records * 100)
+    WITH weekly_attendance AS (
+        SELECT
+            SUM(CASE WHEN status = 'present' THEN 1 ELSE 0 END) as present_count,
+            COUNT(*) as total_count
+        FROM attendance
+        WHERE date >= date_trunc('week', CURRENT_DATE)
+    )
+    SELECT
+        CASE WHEN total_count > 0 THEN ROUND((present_count::NUMERIC / total_count::NUMERIC) * 100, 2) ELSE 0 END
+    INTO v_avg_attendance_this_week
+    FROM weekly_attendance;
+
+    -- Batch occupancy
+    SELECT jsonb_agg(
+        jsonb_build_object(
+            'batch_id', b.id,
+            'programme_name', p.name,
+            'capacity', b.capacity,
+            'enrolled', b.enrolled_count,
+            'occupancy_percentage', CASE WHEN b.capacity > 0 THEN ROUND((b.enrolled_count::NUMERIC / b.capacity::NUMERIC) * 100, 2) ELSE 0 END
+        )
+    ) INTO v_batch_occupancy
+    FROM batches b
+    JOIN programmes p ON b.programme_id = p.id
+    WHERE b.status = 'active';
+
+    RETURN jsonb_build_object(
+        'active_students', v_active_students,
+        'enrollments_this_month', v_enrollments_this_month,
+        'enrollments_last_month', v_enrollments_last_month,
+        'revenue_this_month', v_revenue_this_month,
+        'avg_attendance_this_week', v_avg_attendance_this_week,
+        'batch_occupancy', COALESCE(v_batch_occupancy, '[]'::jsonb)
+    );
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = 'public';
+
+-- Student attendance summary: admin, or the student themselves
+CREATE OR REPLACE FUNCTION public.get_student_attendance_summary(p_student_id UUID)
+RETURNS JSONB AS $$
+DECLARE
+    v_total_classes INT;
+    v_present_count INT;
+    v_absent_count INT;
+    v_leave_count INT;
+    v_percentage NUMERIC;
+    v_last_30_days JSONB;
+BEGIN
+    IF NOT (
+        public.get_user_role() = 'admin'
+        OR (
+            public.get_user_role() = 'student'
+            AND EXISTS (SELECT 1 FROM students WHERE auth_id = auth.uid() AND id = p_student_id)
+        )
+    ) THEN
+        RAISE EXCEPTION 'insufficient_privilege' USING ERRCODE = '42501';
+    END IF;
+
+    SELECT
+        COUNT(*),
+        COUNT(*) FILTER (WHERE status = 'present'),
+        COUNT(*) FILTER (WHERE status = 'absent'),
+        COUNT(*) FILTER (WHERE status = 'leave')
+    INTO v_total_classes, v_present_count, v_absent_count, v_leave_count
+    FROM attendance
+    WHERE student_id = p_student_id;
+
+    IF v_total_classes > 0 THEN
+        v_percentage := ROUND((v_present_count::NUMERIC / v_total_classes::NUMERIC) * 100, 2);
+    ELSE
+        v_percentage := 0;
+    END IF;
+
+    SELECT jsonb_agg(
+        jsonb_build_object(
+            'date', date,
+            'status', status
+        ) ORDER BY date DESC
+    ) INTO v_last_30_days
+    FROM attendance
+    WHERE student_id = p_student_id AND date >= CURRENT_DATE - INTERVAL '30 days';
+
+    RETURN jsonb_build_object(
+        'total_classes', COALESCE(v_total_classes, 0),
+        'present_count', COALESCE(v_present_count, 0),
+        'absent_count', COALESCE(v_absent_count, 0),
+        'leave_count', COALESCE(v_leave_count, 0),
+        'percentage', v_percentage,
+        'last_30_days', COALESCE(v_last_30_days, '[]'::jsonb)
+    );
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = 'public';
+
+-- Consecutive absences: admin, or the student themselves
+CREATE OR REPLACE FUNCTION public.check_consecutive_absences(p_student_id UUID, p_threshold INT)
+RETURNS BOOLEAN AS $$
+DECLARE
+    v_consecutive_absences INT;
+BEGIN
+    IF NOT (
+        public.get_user_role() = 'admin'
+        OR (
+            public.get_user_role() = 'student'
+            AND EXISTS (SELECT 1 FROM students WHERE auth_id = auth.uid() AND id = p_student_id)
+        )
+    ) THEN
+        RAISE EXCEPTION 'insufficient_privilege' USING ERRCODE = '42501';
+    END IF;
+
+    WITH ordered_attendance AS (
+        SELECT status
+        FROM attendance
+        WHERE student_id = p_student_id
+        ORDER BY date DESC
+        LIMIT p_threshold
+    )
+    SELECT COUNT(*) INTO v_consecutive_absences
+    FROM ordered_attendance
+    WHERE status = 'absent';
+
+    RETURN v_consecutive_absences >= p_threshold;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = 'public';
+
+-- Batch enrollment counters: admin, or the service role (payment webhook)
+CREATE OR REPLACE FUNCTION public.increment_batch_enrollment(p_batch_id UUID)
+RETURNS BOOLEAN AS $$
+DECLARE
+    v_current_count INT;
+    v_capacity INT;
+BEGIN
+    IF NOT (public.get_user_role() = 'admin' OR auth.uid() IS NULL) THEN
+        RAISE EXCEPTION 'insufficient_privilege' USING ERRCODE = '42501';
+    END IF;
+
+    SELECT enrolled_count, capacity INTO v_current_count, v_capacity
+    FROM batches
+    WHERE id = p_batch_id FOR UPDATE;
+
+    IF v_current_count >= v_capacity THEN
+        RAISE EXCEPTION 'Batch is full';
+    END IF;
+
+    UPDATE batches
+    SET enrolled_count = enrolled_count + 1,
+        status = CASE WHEN enrolled_count + 1 >= capacity THEN 'full'::batch_status ELSE status END
+    WHERE id = p_batch_id;
+
+    RETURN TRUE;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = 'public';
+
+CREATE OR REPLACE FUNCTION public.decrement_batch_enrollment(p_batch_id UUID)
+RETURNS BOOLEAN AS $$
+BEGIN
+    IF NOT (public.get_user_role() = 'admin' OR auth.uid() IS NULL) THEN
+        RAISE EXCEPTION 'insufficient_privilege' USING ERRCODE = '42501';
+    END IF;
+
+    UPDATE batches
+    SET enrolled_count = GREATEST(0, enrolled_count - 1),
+        status = CASE WHEN enrolled_count - 1 < capacity AND status = 'full' THEN 'active'::batch_status ELSE status END
+    WHERE id = p_batch_id;
+
+    RETURN TRUE;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = 'public';
+
+-- ── 3. Gallery storage: writes for admins only ──
+-- (Public SELECT stays; uploads run under the admin session client.)
+DROP POLICY IF EXISTS gallery_storage_authenticated_insert ON storage.objects;
+DROP POLICY IF EXISTS gallery_storage_authenticated_update ON storage.objects;
+DROP POLICY IF EXISTS gallery_storage_authenticated_delete ON storage.objects;
+DROP POLICY IF EXISTS gallery_storage_admin_insert ON storage.objects;
+DROP POLICY IF EXISTS gallery_storage_admin_update ON storage.objects;
+DROP POLICY IF EXISTS gallery_storage_admin_delete ON storage.objects;
+CREATE POLICY gallery_storage_admin_insert ON storage.objects FOR INSERT TO authenticated
+  WITH CHECK (bucket_id = 'gallery' AND public.get_user_role() = 'admin');
+CREATE POLICY gallery_storage_admin_update ON storage.objects FOR UPDATE TO authenticated
+  USING (bucket_id = 'gallery' AND public.get_user_role() = 'admin');
+CREATE POLICY gallery_storage_admin_delete ON storage.objects FOR DELETE TO authenticated
+  USING (bucket_id = 'gallery' AND public.get_user_role() = 'admin');

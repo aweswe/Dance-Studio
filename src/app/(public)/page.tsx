@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
+import { SITE_URL } from '@/lib/utils/constants';
 
 // Components
 import { Hero } from '@/components/public/hero';
@@ -29,8 +30,12 @@ import { scheduleFor } from '@/lib/utils/schedule';
 import { Reveal } from '@/components/motion/reveal';
 
 export const metadata: Metadata = {
-  alternates: { canonical: 'https://www.rhythmzzdance.com' },
+  alternates: { canonical: SITE_URL },
 };
+
+// Homepage runs 7 Supabase queries per request — cache it for an hour so
+// public traffic doesn't hammer the DB. Content changes land within the hour.
+export const revalidate = 3600;
 
 export default async function HomePage() {
   // Parallel data fetching for instant load
@@ -54,10 +59,10 @@ export default async function HomePage() {
 
   // Try parsing JSON content
   let faqs = [];
-  try { if (faqsContent) faqs = JSON.parse(faqsContent); } catch(e) {}
+  try { if (faqsContent) faqs = JSON.parse(faqsContent); } catch {}
 
   let testimonials = [];
-  try { if (testimonialsContent) testimonials = JSON.parse(testimonialsContent); } catch(e) {}
+  try { if (testimonialsContent) testimonials = JSON.parse(testimonialsContent); } catch {}
 
   return (
     <div className="relative bg-white text-blk font-body overflow-x-hidden">

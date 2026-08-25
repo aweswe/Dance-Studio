@@ -1,9 +1,151 @@
 'use server';
 
-import { createServerSupabase } from '@/lib/supabase/server';
+import { createServerSupabase, createAdminSupabase } from '@/lib/supabase/server';
 import { isAdmin } from '@/lib/supabase/guards';
-import { updateStudentSchema, type UpdateStudentData } from '@/lib/validators/student';
+import { updateStudentSchema, createStudentSchema, type UpdateStudentData, type CreateStudentData } from '@/lib/validators/student';
+import { sendWhatsAppTemplate } from '@/lib/whatsapp/client';
+import { WHATSAPP_TEMPLATES } from '@/lib/whatsapp/templates';
+import { SITE_URL, ROUTES } from '@/lib/utils/constants';
 import { revalidatePath } from 'next/cache';
+
+/**
+ * Create (or reuse) an auth user for a student so they can log in with
+ * WhatsApp OTP, and link it via students.auth_id. Sends the enrolment
+ * welcome WhatsApp (soft-fails to mock mode when WhatsApp isn't configured).
+ */
+export async function enablePortalAccess(studentId: string) {
+  const supabase = await createServerSupabase();
+  if (!(await isAdmin(supabase))) return { success: false, error: 'Not authorized' };
+
+  const { data: studentData } = await supabase
+    .from('students')
+    .select('id, name, phone, auth_id, programme:programmes(name)')
+    .eq('id', studentId)
+    .single();
+  const student = studentData as any;
+  if (!student) return { success: false, error: 'Student not found' };
+
+  if (student.auth_id) {
+    return { success: false, error: 'Portal access is already enabled for this student' };
+  }
+
+  // Normalize to E.164 +91XXXXXXXXXX (the format OTP sign-in expects)
+  const digits = String(student.phone ?? '').replace(/\D/g, '');
+  const phone =
+    digits.length === 10 ? `+91${digits}` :
+    digits.length === 12 && digits.startsWith('91') ? `+${digits}` : '';
+  if (!phone) {
+    return { success: false, error: 'Student has no valid Indian mobile number — add one first' };
+  }
+
+  const admin = createAdminSupabase();
+
+  // Create the auth user (idempotent: reuse on "already registered")
+  let userId: string;
+  const { data: created, error: createErr } = await admin.auth.admin.createUser({
+    phone,
+    phone_confirm: true,
+  });
+  if (createErr) {
+    if (createErr.message.includes('already')) {
+      const { data: existing } = await admin.auth.admin.listUsers({ page: 1, perPage: 1000 });
+      const found = existing?.users?.find((u) => u.phone === phone);
+      if (!found) return { success: false, error: createErr.message };
+      userId = found.id;
+    } else {
+      return { success: false, error: createErr.message };
+    }
+  } else {
+    userId = created.user.id;
+  }
+
+  const { error: linkErr } = await supabase
+    .from('students')
+    .update({ auth_id: userId })
+    .eq('id', studentId);
+  if (linkErr) return { success: false, error: linkErr.message };
+
+  // Welcome the student onto the portal (mock-safe)
+  try {
+    await sendWhatsAppTemplate({
+      phone,
+      templateName: WHATSAPP_TEMPLATES.welcome.name,
+      variables: WHATSAPP_TEMPLATES.welcome.variables({
+        studentName: student.name,
+        programmeName: student.programme?.name ?? 'Rhythmzz Academy',
+        loginUrl: `${SITE_URL}${ROUTES.login}`,
+      }),
+    });
+  } catch (err) {
+    console.error('Portal welcome WhatsApp failed for', studentId, err);
+  }
+
+  revalidatePath('/admin/students');
+  revalidatePath('/admin/students/' + studentId);
+  return { success: true };
+}
+
+/**
+ * Walk-in enrolment: create a student row directly (no Razorpay flow).
+ * Optionally enables portal access straight away. Phone conflicts are
+ * surfaced so the admin can find the duplicate instead of a raw DB error.
+ */
+export async function createStudent(data: CreateStudentData & { name: string; phone: string }) {
+  const supabase = await createServerSupabase();
+  if (!(await isAdmin(supabase))) return { success: false, error: 'Not authorized' };
+
+  const parsed = createStudentSchema.safeParse(data);
+  if (!parsed.success) {
+    return { success: false, error: parsed.error.issues[0]?.message ?? 'Invalid student data' };
+  }
+  const d = parsed.data;
+
+  // Programme follows the batch when one is picked, same as updateStudent.
+  let programmeId = d.programmeId ?? null;
+  if (d.batchId) {
+    const { data: batch } = await supabase
+      .from('batches')
+      .select('programme_id')
+      .eq('id', d.batchId)
+      .single();
+    if (!batch) return { success: false, error: 'Batch not found' };
+    programmeId = batch.programme_id;
+  }
+
+  const { data: inserted, error } = await supabase
+    .from('students')
+    .insert({
+      name: d.name,
+      phone: d.phone,
+      email: d.email || null,
+      programme_id: programmeId,
+      batch_id: d.batchId ?? null,
+      status: d.status,
+    })
+    .select('id')
+    .single();
+
+  if (error) {
+    if (error.code === '23505' || error.message.includes('duplicate')) {
+      return { success: false, error: 'A student with this phone number already exists' };
+    }
+    return { success: false, error: error.message };
+  }
+
+  if (d.batchId) {
+    await supabase.rpc('increment_batch_enrollment', { p_batch_id: d.batchId });
+  }
+
+  // Optional immediate portal access — reuses the idempotent provisioning flow.
+  let portal = { ok: true };
+  if (d.enablePortal && inserted) {
+    const res = await enablePortalAccess(inserted.id);
+    portal = { ok: res.success };
+  }
+
+  revalidatePath('/admin/students');
+  return { success: true, id: inserted?.id ?? null, portalEnabled: d.enablePortal && portal.ok };
+}
 
 export async function deactivateStudent(studentId: string) {
   const supabase = await createServerSupabase();
@@ -123,7 +265,7 @@ export async function getStudentsAction({ limit = 10, cursor = null, search = ''
   let query = supabase
     .from('students')
     .select(`
-      id, name, phone, status, created_at,
+      id, name, phone, status, created_at, auth_id,
       batch:batches (
         name,
         days,

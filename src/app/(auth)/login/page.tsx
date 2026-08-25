@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { ACADEMY } from "@/lib/utils/constants";
 import { MessageCircle, ArrowRight, Loader2 } from "lucide-react";
 
-export default function LoginPage() {
+function LoginForm() {
+  const searchParams = useSearchParams();
+  const unlinked = searchParams.get("error") === "unlinked";
   const [step, setStep] = useState<"phone" | "otp">("phone");
   const [phone, setPhone] = useState("");
   const [otp, setOtp] = useState("");
@@ -80,6 +82,35 @@ export default function LoginPage() {
             via WhatsApp OTP
           </p>
         </div>
+
+        {/* Unlinked number panel */}
+        {unlinked && (
+          <div className="mb-8 border border-gold/40 bg-gold/10 rounded p-5 text-center">
+            <p className="text-xs tracking-[2px] uppercase text-gold mb-2">
+              Number not linked yet
+            </p>
+            <p className="text-sm text-white/60 leading-relaxed mb-4">
+              This number isn&apos;t connected to an enrolled student. If you
+              just joined, the studio will enable your login shortly — or
+              message us and we&apos;ll set it up right away.
+            </p>
+            <a
+              href={ACADEMY.whatsapp}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full bg-gold text-black text-[11px] font-semibold tracking-[2px] uppercase py-3 flex items-center justify-center gap-2 hover:opacity-85 transition-opacity"
+            >
+              <MessageCircle className="w-4 h-4" />
+              WhatsApp the Studio
+            </a>
+            <p className="text-[10px] text-white/30 mt-3">
+              or call{" "}
+              <a href={`tel:${ACADEMY.phone}`} className="text-bl/60 hover:text-bl">
+                {ACADEMY.phoneDisplay}
+              </a>
+            </p>
+          </div>
+        )}
 
         {/* Phone Step */}
         {step === "phone" && (
@@ -189,5 +220,13 @@ export default function LoginPage() {
         </p>
       </div>
     </main>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={null}>
+      <LoginForm />
+    </Suspense>
   );
 }

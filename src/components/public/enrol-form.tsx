@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils/cn';
 import { ROUTES } from '@/lib/utils/constants';
 import { enrolFormSchema } from '@/lib/validators/enrol';
 import { formatCurrency, formatTime, whatsappLink } from '@/lib/utils/format';
+import { loadRazorpayScript, openRazorpayCheckout } from '@/lib/razorpay/checkout';
 import { Spinner } from '@/components/ui/skeleton';
 
 const PAYMENTS_ENABLED = Boolean(process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID);
@@ -19,12 +20,6 @@ interface EnrolFormProps {
 
 type FormStatus = 'editing' | 'submitting' | 'success' | 'error' | 'degraded';
 
-interface RazorpayResponse {
-  razorpay_order_id: string;
-  razorpay_payment_id: string;
-  razorpay_signature: string;
-}
-
 /** "Monday · Wednesday · 5:00 PM – 7:00 PM" */
 function batchLabel(batch: any): string {
   const days = Array.isArray(batch?.days) ? batch.days.join(' · ') : (batch?.days ?? '');
@@ -37,17 +32,6 @@ function batchLabel(batch: any): string {
 function normalizePhone(raw: string): string {
   const digits = raw.replace(/\D/g, '');
   return digits.length === 12 && digits.startsWith('91') ? digits.slice(2) : digits;
-}
-
-function loadRazorpayScript(): Promise<boolean> {
-  return new Promise((resolve) => {
-    if ((window as any).Razorpay) { resolve(true); return; }
-    const script = document.createElement('script');
-    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
-    script.onload = () => resolve(true);
-    script.onerror = () => resolve(false);
-    document.body.appendChild(script);
-  });
 }
 
 export function EnrolForm({ programmes = [], batches = [], defaultProgramme }: EnrolFormProps) {
@@ -145,61 +129,30 @@ export function EnrolForm({ programmes = [], batches = [], defaultProgramme }: E
       return;
     }
 
-    openRazorpayCheckout(data, result.data);
-  }
-
-  function openRazorpayCheckout(orderData: { order_id: string; amount: number }, payment: { name: string; email?: string }) {
     settledRef.current = false;
-
-    const rzp = new (window as any).Razorpay({
-      key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
-      amount: orderData.amount * 100, // paise
-      currency: 'INR',
-      name: 'Rhythmzz Academy of Dance',
+    openRazorpayCheckout({
+      orderId: data.order_id,
+      amount: data.amount,
       description: `${selected?.name ?? 'Dance class'} — first month fees`,
-      order_id: orderData.order_id,
       prefill: {
-        name: payment.name,
-        email: payment.email || undefined,
+        name: result.data.name,
+        email: result.data.email || undefined,
         contact: phone,
       },
-      theme: { color: '#2BB4D8' },
-      modal: {
-        ondismiss: () => {
-          // Fires on backdrop/Esc close — only reset if the payment didn't settle.
-          if (!settledRef.current) setStatus('editing');
-        },
-      },
-      handler: async (response: RazorpayResponse) => {
+      onSuccess: () => {
         settledRef.current = true;
-        const verifyRes = await fetch('/api/razorpay/verify', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            razorpay_order_id: response.razorpay_order_id,
-            razorpay_payment_id: response.razorpay_payment_id,
-            razorpay_signature: response.razorpay_signature,
-          }),
-        });
-
-        if (verifyRes.ok) {
-          setStatus('success');
-        } else {
-          setStatus('error');
-          setErrorMsg(
-            'Your payment was received but verification failed. Please message us on WhatsApp — we will confirm your enrolment manually.',
-          );
-        }
+        setStatus('success');
+      },
+      onFailure: (message) => {
+        settledRef.current = true;
+        setStatus('error');
+        setErrorMsg(message);
+      },
+      onDismiss: () => {
+        // Fires on backdrop/Esc close — only reset if the payment didn't settle.
+        if (!settledRef.current) setStatus('editing');
       },
     });
-
-    rzp.on('payment.failed', () => {
-      settledRef.current = true;
-      setStatus('error');
-      setErrorMsg("Payment didn't go through. You can try again, or book on WhatsApp instead.");
-    });
-
-    rzp.open();
   }
 
   // ---------- Success screen ----------

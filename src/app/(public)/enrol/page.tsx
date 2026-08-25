@@ -2,13 +2,14 @@ import { Metadata } from 'next';
 import { getProgrammes } from '@/data/programmes';
 import { getBatches } from '@/data/batches';
 import { EnrolForm } from '@/components/public/enrol-form';
+import { SITE_URL } from '@/lib/utils/constants';
 import { CheckCircle2 } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Enrol — Free Trial Class',
   description:
     'Book your free trial class at Rhythmzz Academy of Dance, Neredmet X Road, Secunderabad. Kids Dance, Adults Dance, Mind & Body Fitness and Kuchipudi. No registration fee.',
-  alternates: { canonical: 'https://www.rhythmzzdance.com/enrol' },
+  alternates: { canonical: `${SITE_URL}/enrol` },
 };
 
 export default async function EnrolPage({

@@ -22,6 +22,13 @@ export async function sendWhatsAppTemplate(
 ): Promise<SendResult> {
   const provider = process.env.WHATSAPP_PROVIDER || "interakt";
 
+  // No API key configured → mock mode: log and report success so callers
+  // (queue drain, enrolment welcome, fee reminders) behave end-to-end.
+  if (!process.env.WHATSAPP_API_KEY) {
+    console.log("[WhatsApp Mock]", provider, params.templateName, params.phone);
+    return { success: true };
+  }
+
   try {
     if (provider === "interakt") {
       return await sendViaInterakt(params);
