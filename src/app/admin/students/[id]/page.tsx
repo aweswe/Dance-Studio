@@ -6,7 +6,7 @@ import { notFound } from 'next/navigation'
 import { createServerSupabase } from '@/lib/supabase/server'
 import { StudentActions } from '@/components/admin/student-actions'
 import { KuchipudiAdmin } from '@/components/admin/kuchipudi-admin'
-import { formatDate, formatCurrency, formatTime, telLink } from '@/lib/utils/format'
+import { formatDate, formatCurrency, formatTime, telLink, formatPhone } from '@/lib/utils/format'
 
 export default async function StudentDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -77,23 +77,27 @@ export default async function StudentDetailPage({ params }: { params: Promise<{ 
               <Phone size={16} className="text-ink-2 mt-0.5" />
               <div>
                 <p className="font-medium text-ink flex items-center gap-2">
-                  {student.phone}
-                  <a
-                    href={telLink(student.phone)}
-                    className="p-1 rounded text-ink-2 hover:text-bl hover:bg-line-subtle transition-colors focus-visible:focus-ring active:scale-[0.98]"
-                    aria-label="Call student"
-                  >
-                    <Phone size={13} />
-                  </a>
-                  <a
-                    href={`https://wa.me/91${String(student.phone).replace(/\D/g, '').replace(/^91/, '')}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="p-1 rounded text-ink-2 hover:text-green hover:bg-line-subtle transition-colors focus-visible:focus-ring active:scale-[0.98]"
-                    aria-label="WhatsApp student"
-                  >
-                    <MessageCircle size={13} />
-                  </a>
+                  {student.phone ? formatPhone(student.phone) : '—'}
+                  {student.phone && (
+                    <>
+                      <a
+                        href={telLink(student.phone)}
+                        className="p-1 rounded text-ink-2 hover:text-bl hover:bg-line-subtle transition-colors focus-visible:focus-ring active:scale-[0.98]"
+                        aria-label="Call student"
+                      >
+                        <Phone size={13} />
+                      </a>
+                      <a
+                        href={`https://wa.me/91${String(student.phone).replace(/\D/g, '').replace(/^91/, '')}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="p-1 rounded text-ink-2 hover:text-green hover:bg-line-subtle transition-colors focus-visible:focus-ring active:scale-[0.98]"
+                        aria-label="WhatsApp student"
+                      >
+                        <MessageCircle size={13} />
+                      </a>
+                    </>
+                  )}
                 </p>
                 <p className="text-xs text-ink-2">Primary Contact</p>
               </div>

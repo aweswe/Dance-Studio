@@ -48,53 +48,80 @@ export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // ── Protected routes ──
-
-  // Student dashboard — must be logged in
+  // Student dashboard — must be logged in (or preview bypass active in dev only)
   if (pathname.startsWith("/student")) {
+    const isDev = process.env.NODE_ENV !== "production";
+    const bypassStudentCookie = request.cookies.get("bypass_student")?.value;
+    const isStudentBypass = isDev && (bypassStudentCookie === "true" || request.nextUrl.searchParams.get("bypass") === "aarav");
+
+    if (isStudentBypass) {
+      if (request.nextUrl.searchParams.has("bypass")) {
+        const cleanUrl = new URL(request.url);
+        cleanUrl.searchParams.delete("bypass");
+        const res = NextResponse.redirect(cleanUrl);
+        res.cookies.set("bypass_student", "true", { path: "/" });
+        return res;
+      }
+      return response;
+    }
+
     if (!user) {
-      return NextResponse.redirect(new URL("/login", request.url));
+      const url = request.nextUrl.clone();
+      url.pathname = "/login";
+      return NextResponse.redirect(url);
     }
     // Check role
     const { data: profile } = await supabase
       .from("users")
       .select("role")
       .eq("id", user.id)
-      .single();
+      .maybeSingle();
 
-    if (profile?.role !== "student") {
-      return NextResponse.redirect(new URL("/", request.url));
+    // If a role is explicitly defined as instructor or something else, prevent student portal access
+    if (profile && profile.role !== "student" && profile.role !== "admin") {
+      const url = request.nextUrl.clone();
+      url.pathname = "/";
+      return NextResponse.redirect(url);
     }
   }
 
   // Instructor dashboard
   if (pathname.startsWith("/instructor")) {
     if (!user) {
-      return NextResponse.redirect(new URL("/admin-login", request.url));
+      const url = request.nextUrl.clone();
+      url.pathname = "/admin-login";
+      return NextResponse.redirect(url);
     }
     const { data: profile } = await supabase
       .from("users")
       .select("role")
       .eq("id", user.id)
-      .single();
+      .maybeSingle();
 
-    if (profile?.role !== "instructor") {
-      return NextResponse.redirect(new URL("/", request.url));
+    if (profile?.role !== "instructor" && profile?.role !== "admin") {
+      const url = request.nextUrl.clone();
+      url.pathname = "/";
+      return NextResponse.redirect(url);
     }
   }
 
   // Admin dashboard (exclude the login page itself — it shares the prefix)
   if (pathname.startsWith("/admin") && pathname !== "/admin-login") {
     if (!user) {
-      return NextResponse.redirect(new URL("/admin-login", request.url));
+      const url = request.nextUrl.clone();
+      url.pathname = "/admin-login";
+      return NextResponse.redirect(url);
     }
     const { data: profile } = await supabase
       .from("users")
       .select("role")
       .eq("id", user.id)
-      .single();
+      .maybeSingle();
 
     if (profile?.role !== "admin") {
-      return NextResponse.redirect(new URL("/", request.url));
+      const url = request.nextUrl.clone();
+      url.pathname = "/";
+      return NextResponse.redirect(url);
     }
   }
 
@@ -105,17 +132,19 @@ export async function proxy(request: NextRequest) {
         .from("users")
         .select("role")
         .eq("id", user.id)
-        .single();
+        .maybeSingle();
 
+      const url = request.nextUrl.clone();
       if (profile?.role === "admin") {
-        return NextResponse.redirect(new URL("/admin", request.url));
+        url.pathname = "/admin";
+        return NextResponse.redirect(url);
       }
       if (profile?.role === "instructor") {
-        return NextResponse.redirect(new URL("/instructor", request.url));
+        url.pathname = "/instructor";
+        return NextResponse.redirect(url);
       }
-      if (profile?.role === "student") {
-        return NextResponse.redirect(new URL("/student", request.url));
-      }
+      url.pathname = "/student";
+      return NextResponse.redirect(url);
     }
   }
 

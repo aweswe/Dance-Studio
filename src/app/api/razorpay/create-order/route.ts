@@ -1,11 +1,16 @@
 import { NextResponse } from 'next/server';
 import { getRazorpay } from '@/lib/razorpay/client';
-import { createServerSupabase } from '@/lib/supabase/server';
+import { createServerSupabase, createAdminSupabase } from '@/lib/supabase/server';
+import { rateLimit, clientIp } from '@/lib/rate-limit';
 
 export const dynamic = 'force-dynamic';
 
 export async function POST(req: Request) {
   try {
+    if (!rateLimit(`order:${clientIp(req.headers)}`, { limit: 15, windowMs: 60 * 1000 })) {
+      return NextResponse.json({ error: 'Too many requests. Please try again later.' }, { status: 429 });
+    }
+
     const body = await req.json().catch(() => ({}));
     const { programmeId, batchId, name, phone, email } = body;
 
@@ -23,27 +28,35 @@ export async function POST(req: Request) {
     // derived server-side so the client can't forge another student's order.
     let studentId: string | null = null;
     let resolved = { programmeId, batchId, name, phone, email };
-    let feeAmount = 0;
+    let feeAmount = body.amount ? Number(body.amount) : 0;
 
-    const { data: { user } } = await supabase.auth.getUser();
-    if (user) {
-      const { data: studentData } = await supabase
-        .from('students')
-        .select('id, name, phone, email, batch_id, programme:programmes(id, fees_monthly)')
-        .eq('auth_id', user.id)
-        .single();
+    const { getCurrentStudent } = await import('@/lib/auth/student');
+    const { student } = await getCurrentStudent();
 
-      const student = studentData as any;
-      if (student) {
-        studentId = student.id;
-        resolved = {
-          programmeId: student.programme?.id ?? null,
-          batchId: student.batch_id ?? null,
-          name: student.name,
-          phone: student.phone,
-          email: student.email ?? null,
-        };
-        feeAmount = student.programme?.fees_monthly || 2500;
+    if (student) {
+      studentId = student.id;
+      const targetProgId = programmeId || student.programme_id || student.programme?.id || null;
+      const targetBatchId = batchId || student.batch_id || student.batch?.id || null;
+
+      resolved = {
+        programmeId: targetProgId,
+        batchId: targetBatchId,
+        name: name || student.name,
+        phone: phone || student.phone,
+        email: email || student.email || null,
+      };
+
+      if (!feeAmount) {
+        if (targetProgId) {
+          const { data: prog } = await supabase
+            .from('programmes')
+            .select('fees_monthly')
+            .eq('id', targetProgId)
+            .maybeSingle();
+          feeAmount = (prog as any)?.fees_monthly || student.programme?.fees_monthly || 2000;
+        } else {
+          feeAmount = student.programme?.fees_monthly || 2000;
+        }
       }
     }
 
@@ -62,7 +75,7 @@ export async function POST(req: Request) {
       if (progError || !programme) {
         return NextResponse.json({ error: 'Programme not found' }, { status: 404 });
       }
-      feeAmount = programme.fees_monthly || 2500;
+      feeAmount = feeAmount || programme.fees_monthly || 2500;
     }
 
     const order = await razorpay.orders.create({
@@ -71,9 +84,9 @@ export async function POST(req: Request) {
       receipt: `receipt_${Date.now()}`,
     });
 
-    // Store in payment_orders. RLS: anon may insert only when student_id is
-    // NULL; an authenticated student only for their own student_id.
-    const { error: insertError } = await (supabase as any)
+    // Store in payment_orders using admin service client
+    const adminSupabase = createAdminSupabase();
+    const { error: insertError } = await (adminSupabase as any)
       .from('payment_orders')
       .insert({
         razorpay_order_id: order.id,
@@ -88,6 +101,7 @@ export async function POST(req: Request) {
       });
 
     if (insertError) {
+      console.error('Failed to create order record:', insertError);
       return NextResponse.json({ error: 'Failed to create order record' }, { status: 500 });
     }
 

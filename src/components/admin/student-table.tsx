@@ -9,12 +9,12 @@ import { Search, Filter, Phone, MessageCircle } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { usePagination } from '@/hooks/use-pagination'
 import { getStudentsAction } from '@/actions/students'
-import { formatDate, telLink } from '@/lib/utils/format'
+import { formatDate, telLink, formatPhone } from '@/lib/utils/format'
 
 interface Student extends Record<string, unknown> {
   id: string
   name?: string
-  phone: string
+  phone?: string | null
   status: string
   created_at: string
   auth_id?: string | null
@@ -48,8 +48,8 @@ export function StudentTable({ initialData }: StudentTableProps) {
     },
     limit: 10,
     cursorField: 'created_at',
-    initialItems: initialData.data,
-    initialCursor: initialData.nextCursor,
+    initialItems: initialData?.data ?? [],
+    initialCursor: initialData?.nextCursor ?? null,
     refreshKey: `${search}|${statusFilter}`,
   })
 
@@ -115,26 +115,30 @@ export function StudentTable({ initialData }: StudentTableProps) {
                 </td>
                 <td className="px-6 py-4 text-sm text-ink-2">
                   <div className="flex items-center gap-1">
-                    <span>{student.phone}</span>
+                    <span>{student.phone ? formatPhone(student.phone) : '—'}</span>
                     {/* Click-to-call / WhatsApp — stop propagation so the row nav doesn't fire */}
-                    <a
-                      href={telLink(student.phone)}
-                      onClick={(e) => e.stopPropagation()}
-                      aria-label={`Call ${student.name ?? 'student'}`}
-                      className="p-1 rounded text-ink-2 hover:text-bl hover:bg-canvas-muted-2 transition-colors"
-                    >
-                      <Phone size={13} />
-                    </a>
-                    <a
-                      href={`https://wa.me/91${student.phone.replace(/\D/g, '').replace(/^91/, '')}`}
-                      onClick={(e) => e.stopPropagation()}
-                      target="_blank"
-                      rel="noreferrer"
-                      aria-label={`WhatsApp ${student.name ?? 'student'}`}
-                      className="p-1 rounded text-ink-2 hover:text-green hover:bg-canvas-muted-2 transition-colors"
-                    >
-                      <MessageCircle size={13} />
-                    </a>
+                    {student.phone ? (
+                      <>
+                        <a
+                          href={telLink(student.phone)}
+                          onClick={(e) => e.stopPropagation()}
+                          aria-label={`Call ${student.name ?? 'student'}`}
+                          className="p-1 rounded text-ink-2 hover:text-bl hover:bg-canvas-muted-2 transition-colors"
+                        >
+                          <Phone size={13} />
+                        </a>
+                        <a
+                          href={`https://wa.me/91${String(student.phone).replace(/\D/g, '').replace(/^91/, '')}`}
+                          onClick={(e) => e.stopPropagation()}
+                          target="_blank"
+                          rel="noreferrer"
+                          aria-label={`WhatsApp ${student.name ?? 'student'}`}
+                          className="p-1 rounded text-ink-2 hover:text-green hover:bg-canvas-muted-2 transition-colors"
+                        >
+                          <MessageCircle size={13} />
+                        </a>
+                      </>
+                    ) : null}
                   </div>
                 </td>
                 <td className="px-6 py-4">

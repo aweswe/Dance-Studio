@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { normalizeIndianPhone } from "@/lib/utils/format";
 
 export const enrolFormSchema = z.object({
   name: z
@@ -7,7 +8,8 @@ export const enrolFormSchema = z.object({
     .max(100, "Name is too long"),
   phone: z
     .string()
-    .regex(/^[6-9]\d{9}$/, "Enter a valid 10-digit Indian mobile number"),
+    .transform((v) => normalizeIndianPhone(v))
+    .refine((v) => /^[6-9]\d{9}$/.test(v), "Enter a valid 10-digit Indian mobile number"),
   email: z
     .string()
     .email("Enter a valid email address")

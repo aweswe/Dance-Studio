@@ -16,9 +16,9 @@ export function MapContact() {
           className="absolute inset-0 w-full h-full"
         ></iframe>
       </div>
-      <div className="p-12 md:p-20 bg-blk text-white flex flex-col justify-center">
-        <div className="text-[10px] tracking-[5px] uppercase text-bl-light mb-4">Visit Us</div>
-        <h2 className="heading-display text-4xl md:text-5xl mb-8 text-white">GET IN TOUCH</h2>
+      <div className="p-6 sm:p-10 md:p-16 lg:p-20 bg-blk text-white flex flex-col justify-center">
+        <div className="text-[10px] tracking-[2px] sm:tracking-[5px] uppercase text-bl-light mb-3 font-semibold">Visit Us</div>
+        <h2 className="heading-display text-3xl sm:text-4xl md:text-5xl mb-6 text-white leading-tight">GET IN TOUCH</h2>
         
         <div className="flex flex-col gap-6 mb-10">
           <div className="flex gap-4 items-start">

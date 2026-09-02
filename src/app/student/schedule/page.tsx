@@ -1,26 +1,20 @@
 import { createServerSupabase } from "@/lib/supabase/server";
+import { getCurrentStudent } from "@/lib/auth/student";
 import { redirect } from "next/navigation";
 import { ROUTES } from "@/lib/utils/constants";
 import { Card } from "@/components/ui/card";
 import { formatTime } from "@/lib/utils/format";
+import { StudentClassesView } from "@/components/student/student-classes-view";
 
 export const metadata = {
   title: "My Schedule | Student Dashboard",
 };
 
 export default async function SchedulePage() {
-  const supabase = await createServerSupabase();
-  const { data: { user } } = await supabase.auth.getUser();
+  const { student, user } = await getCurrentStudent();
 
-  if (!user) redirect(ROUTES.login);
+  if (!student) redirect(ROUTES.login);
 
-  const { data: studentData } = await supabase
-    .from("students")
-    .select("batch:batches(*)")
-    .eq("auth_id", user.id)
-    .single();
-
-  const student = studentData as any;
   const batch = student?.batch;
   const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
@@ -32,9 +26,15 @@ export default async function SchedulePage() {
       </div>
 
       {!batch ? (
-        <Card>
-          <p className="text-ink-2">You are not assigned to a batch yet.</p>
-        </Card>
+        <div className="space-y-4">
+          <Card className="p-6 border-bl/30 bg-bl/5">
+            <h3 className="font-display text-xl text-ink mb-1">No Batch Assigned Yet</h3>
+            <p className="text-sm text-ink-2">
+              Select or join any class below to activate your weekly timetable.
+            </p>
+          </Card>
+          <StudentClassesView currentStudent={student} />
+        </div>
       ) : (
         <div className="grid grid-cols-1 gap-6">
           <Card>

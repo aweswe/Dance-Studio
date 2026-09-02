@@ -43,7 +43,7 @@ export async function provisionStudentFromOrder(
   if (order.status === 'webhook_processed') return { fulfilled: true, alreadyProcessed: true };
 
   // Check if student exists — portal flow links via student_id, enrol flow
-  // matches on phone + programme.
+  // matches on phone + programme or email.
   let student: any = null;
   if (order.student_id) {
     const { data } = await supabase.from('students').select('*').eq('id', order.student_id).single();
@@ -52,10 +52,22 @@ export async function provisionStudentFromOrder(
     const { data } = await supabase
       .from('students')
       .select('*')
-      .eq('phone', order.student_phone)
-      .eq('programme_id', order.programme_id)
-      .single();
+      .or(`phone.eq.${order.student_phone},email.ilike.${order.student_email || 'none'}`)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
     student = data as any;
+  }
+
+  // If student already exists, ensure programme and batch are updated from the order
+  if (student && (order.programme_id || order.batch_id)) {
+    await (supabase as any).from('students').update({
+      programme_id: order.programme_id || student.programme_id,
+      batch_id: order.batch_id || student.batch_id,
+    }).eq('id', student.id);
+    if (order.batch_id && student.batch_id !== order.batch_id) {
+      await (supabase as any).rpc('increment_batch_enrollment', { p_batch_id: order.batch_id });
+    }
   }
 
   if (!student) {

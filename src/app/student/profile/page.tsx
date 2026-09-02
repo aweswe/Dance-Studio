@@ -1,4 +1,5 @@
 import { createServerSupabase } from "@/lib/supabase/server";
+import { getCurrentStudent } from "@/lib/auth/student";
 import { redirect } from "next/navigation";
 import { ROUTES } from "@/lib/utils/constants";
 import { ProfileForm } from "@/components/student/profile-form";
@@ -8,18 +9,9 @@ export const metadata = {
 };
 
 export default async function ProfilePage() {
-  const supabase = await createServerSupabase();
-  const { data: { user } } = await supabase.auth.getUser();
+  const { student, user } = await getCurrentStudent();
 
-  if (!user) redirect(ROUTES.login);
-
-  const { data: studentData } = await supabase
-    .from("students")
-    .select("name, phone, email")
-    .eq("auth_id", user.id)
-    .single();
-
-  if (!studentData) redirect(ROUTES.home);
+  if (!student) redirect(ROUTES.login);
 
   return (
     <div className="space-y-6">
@@ -30,9 +22,9 @@ export default async function ProfilePage() {
 
       <ProfileForm
         initial={{
-          name: (studentData as any).name || "",
-          phone: (studentData as any).phone || "",
-          email: (studentData as any).email || "",
+          name: (student as any)?.name || "",
+          phone: (student as any)?.phone || "",
+          email: (student as any)?.email || "",
         }}
       />
     </div>

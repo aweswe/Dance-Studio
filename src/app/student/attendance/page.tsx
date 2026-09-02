@@ -1,4 +1,5 @@
 import { createServerSupabase } from "@/lib/supabase/server";
+import { getCurrentStudent } from "@/lib/auth/student";
 import { redirect } from "next/navigation";
 import { ROUTES } from "@/lib/utils/constants";
 import { AttendanceCalendar } from "@/components/student/attendance-calendar";
@@ -10,18 +11,9 @@ export const metadata = {
 
 export default async function AttendancePage() {
   const supabase = await createServerSupabase();
-  const { data: { user } } = await supabase.auth.getUser();
+  const { student, user } = await getCurrentStudent();
 
-  if (!user) redirect(ROUTES.login);
-
-  const { data: studentData } = await supabase
-    .from("students")
-    .select("id")
-    .eq("auth_id", user.id)
-    .single();
-
-  if (!studentData) redirect(ROUTES.home);
-  const student = studentData as any;
+  if (!student) redirect(ROUTES.login);
 
   const { data: attendance } = await supabase
     .from("attendance")

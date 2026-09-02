@@ -46,17 +46,37 @@ export function formatTime(time: string): string {
 }
 
 /**
+ * Normalize Indian phone numbers: strips +91, leading 0, spaces, dashes
+ * and returns standard 10-digit mobile number if valid.
+ */
+export function normalizeIndianPhone(input?: string | null): string {
+  if (!input) return "";
+  let digits = String(input).replace(/\D/g, "");
+  // If starts with 91 and has 12 digits (+91XXXXXXXXXX) -> slice last 10
+  if (digits.length === 12 && digits.startsWith("91")) {
+    digits = digits.slice(2);
+  }
+  // If starts with 0 and has 11 digits (0XXXXXXXXXX) -> slice last 10
+  if (digits.length === 11 && digits.startsWith("0")) {
+    digits = digits.slice(1);
+  }
+  // If more than 10 digits and contains 91 at start
+  if (digits.length > 10 && digits.startsWith("91")) {
+    digits = digits.slice(-10);
+  }
+  return digits;
+}
+
+/**
  * Format phone number for display
  */
-export function formatPhone(phone: string): string {
-  const cleaned = phone.replace(/\D/g, "");
+export function formatPhone(phone?: string | null): string {
+  if (!phone) return "—";
+  const cleaned = normalizeIndianPhone(phone);
   if (cleaned.length === 10) {
     return `+91 ${cleaned.slice(0, 5)} ${cleaned.slice(5)}`;
   }
-  if (cleaned.length === 12 && cleaned.startsWith("91")) {
-    return `+91 ${cleaned.slice(2, 7)} ${cleaned.slice(7)}`;
-  }
-  return phone;
+  return String(phone);
 }
 
 /**
@@ -67,9 +87,10 @@ export function whatsappLink(message: string): string {
 }
 
 /** Click-to-call tel: link for any Indian phone format. */
-export function telLink(phone: string): string {
-  const digits = phone.replace(/\D/g, "");
+export function telLink(phone?: string | null): string {
+  if (!phone) return "#";
+  const digits = String(phone).replace(/\D/g, "");
   if (digits.length === 10) return `tel:+91${digits}`;
   if (digits.length === 12 && digits.startsWith("91")) return `tel:+${digits}`;
-  return `tel:${digits}`;
+  return digits ? `tel:${digits}` : "#";
 }

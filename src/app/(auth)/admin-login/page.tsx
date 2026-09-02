@@ -14,6 +14,26 @@ export default function AdminLoginPage() {
   const router = useRouter();
   const supabase = createClient();
 
+  // If already authenticated as admin/instructor, redirect immediately
+  useState(() => {
+    supabase.auth.getUser().then(async ({ data: { user } }) => {
+      if (user) {
+        const { data: profile } = await supabase
+          .from("users")
+          .select("role")
+          .eq("id", user.id)
+          .maybeSingle();
+
+        const role = (profile as any)?.role;
+        if (role === "admin") {
+          router.push("/admin");
+        } else if (role === "instructor") {
+          router.push("/instructor");
+        }
+      }
+    });
+  });
+
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
     setError("");
@@ -37,13 +57,13 @@ export default function AdminLoginPage() {
           .from("users")
           .select("role")
           .eq("id", user.id)
-          .single();
+          .maybeSingle();
 
-        const role = (profile as any)?.role;
+        const role = profile?.role;
         if (role === "admin") {
-          router.push("/admin");
+          window.location.href = "/admin";
         } else if (role === "instructor") {
-          router.push("/instructor");
+          window.location.href = "/instructor";
         } else {
           setError("Access denied. Admin or Instructor accounts only.");
           await supabase.auth.signOut();

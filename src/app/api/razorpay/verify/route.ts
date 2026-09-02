@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { verifyPaymentSignature } from '@/lib/razorpay/verify';
 import { provisionStudentFromOrder } from '@/lib/payments/fulfill-order';
-import { createServerSupabase } from '@/lib/supabase/server';
+import { createAdminSupabase } from '@/lib/supabase/server';
 
 export async function POST(req: Request) {
   try {
@@ -22,7 +22,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
     }
 
-    const supabase = await createServerSupabase();
+    const supabase = createAdminSupabase();
     const { error } = await (supabase as any)
       .from('payment_orders')
       .update({ status: 'paid' })

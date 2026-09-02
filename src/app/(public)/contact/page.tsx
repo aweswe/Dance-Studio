@@ -20,19 +20,19 @@ export default function ContactPage() {
   return (
     <div className="bg-canvas text-ink">
       {/* Header */}
-      <section className="bg-blk text-white py-20 px-6 md:px-16 text-center">
-        <h1 className="heading-display text-5xl md:text-7xl mb-4">CONTACT US</h1>
-        <p className="text-white/60 max-w-2xl mx-auto">
+      <section className="bg-blk text-white py-16 sm:py-20 px-4 sm:px-6 md:px-16 text-center">
+        <h1 className="heading-display text-3xl sm:text-5xl md:text-7xl mb-3 leading-tight">CONTACT US</h1>
+        <p className="text-white/60 text-sm sm:text-base max-w-2xl mx-auto">
           We&apos;d love to hear from you. Reach out for class inquiries, studio rentals, or just to say hello.
         </p>
       </section>
 
       {/* Info and Areas */}
-      <section className="py-20 px-6 md:px-16 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16">
+      <section className="py-16 sm:py-20 px-4 sm:px-6 md:px-16 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16">
         <Reveal>
         <div>
-          <div className="section-label mb-4">Get In Touch</div>
-          <h2 className="heading-display text-4xl mb-8">WE ARE HERE</h2>
+          <div className="section-label mb-3">Get In Touch</div>
+          <h2 className="heading-display text-2xl sm:text-3xl md:text-4xl mb-6 leading-tight">WE ARE HERE</h2>
 
           <div className="flex flex-col gap-8 mb-12">
             <div className="flex gap-4 items-start">

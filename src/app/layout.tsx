@@ -5,7 +5,14 @@ import { SITE_URL } from "@/lib/utils/constants";
 import "./globals.css";
 
 export const viewport: Viewport = {
-  themeColor: "#2BB4D8",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: [
+    { media: "(prefers-color-scheme: dark)", color: "#0F0F0F" },
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+  ],
+  colorScheme: "dark light",
 };
 
 const displayFace = Big_Shoulders({
@@ -96,23 +103,26 @@ export const metadata: Metadata = {
   manifest: "/manifest.json",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+import { ThemeInitializer } from "@/components/shared/theme-initializer";
+import { NavigationProgress } from "@/components/shared/navigation-progress";
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
       lang="en-IN"
       suppressHydrationWarning
-      className={`${displayFace.variable} ${inter.variable} h-full antialiased`}
+      className={`dark ${displayFace.variable} ${inter.variable} h-full antialiased`}
     >
       <head>
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem('rhythmzz-theme');
-if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches))
-document.documentElement.classList.add('dark');}catch(e){}})()`,
+            __html: `(function(){try{var t=localStorage.getItem('rhythmzz-theme');if(t==='light'){document.documentElement.classList.remove('dark');document.documentElement.style.colorScheme='light';}else{document.documentElement.classList.add('dark');document.documentElement.style.colorScheme='dark';}}catch(e){document.documentElement.classList.add('dark');}})();`,
           }}
         />
       </head>
       <body className="min-h-full flex flex-col font-body">
+        <NavigationProgress />
+        <ThemeInitializer />
         {children}
         <Analytics />
       </body>

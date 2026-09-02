@@ -1,4 +1,4 @@
-import { createServerSupabase } from "@/lib/supabase/server";
+import { createServerSupabase, createAdminSupabase } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { ROUTES, ACADEMY } from "@/lib/utils/constants";
 import { formatCurrency, formatDate } from "@/lib/utils/format";
@@ -17,12 +17,11 @@ function monthLabel(for_month: string | null, paid_at: string): string {
 
 export default async function ReceiptPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const supabase = await createServerSupabase();
-  const { data: { user } } = await supabase.auth.getUser();
+  const { getCurrentStudent } = await import("@/lib/auth/student");
+  const { student: currentStudent, user } = await getCurrentStudent();
+  const adminSupabase = createAdminSupabase();
 
-  if (!user) redirect(`${ROUTES.login}?redirect=${encodeURIComponent(`/receipt/${id}`)}`);
-
-  const { data: payment } = await supabase
+  const { data: payment } = await adminSupabase
     .from("fee_payments")
     .select("id, amount, source, notes, paid_at, for_month, student:students(id, name, phone, auth_id, programme:programmes(name))")
     .eq("id", id)
@@ -31,10 +30,17 @@ export default async function ReceiptPage({ params }: { params: Promise<{ id: st
   const p = payment as any;
   if (!p || !p.student) redirect(ROUTES.home);
 
-  // Only the paying student (or an admin) may view a receipt.
-  const { data: viewerRole } = await supabase.from("users").select("role").eq("id", user.id).single();
-  if ((viewerRole as any)?.role !== "admin" && p.student.auth_id !== user.id) {
-    redirect(ROUTES.home);
+  // Allow paying student, demo student preview, or admin
+  const isOwner = currentStudent?.id === p.student.id || (user && p.student.auth_id === user.id);
+  if (!isOwner) {
+    if (user) {
+      const { data: viewerRole } = await adminSupabase.from("users").select("role").eq("id", user.id).single();
+      if ((viewerRole as any)?.role !== "admin") {
+        redirect(ROUTES.home);
+      }
+    } else {
+      redirect(ROUTES.login);
+    }
   }
 
   const sourceLabel = p.source === "razorpay" ? "Razorpay (Online)" : p.source === "upi_offline" ? "UPI" : "Cash";

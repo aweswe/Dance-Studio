@@ -20,18 +20,24 @@ export default async function InstructorLayout({
 
   const { data: instructorData } = await supabase
     .from("instructors")
-    .select("name")
-    .eq("auth_id", user.id)
-    .single();
+    .select("id, name")
+    .or(`auth_id.eq.${user.id},email.ilike.${user.email || 'none'}`)
+    .maybeSingle();
 
-  if (!instructorData) {
+  const { data: profile } = await supabase
+    .from("users")
+    .select("role")
+    .eq("id", user.id)
+    .maybeSingle();
+
+  if (!instructorData && profile?.role !== "admin" && profile?.role !== "instructor") {
     redirect(ROUTES.home);
   }
 
-  const instructor = instructorData as any;
+  const name = instructorData?.name || (profile?.role === "admin" ? "Admin (Instructor View)" : (user.email?.split("@")[0] || "Instructor"));
 
   return (
-    <PortalShell role="instructor" name={instructor.name || "Instructor"}>
+    <PortalShell role="instructor" name={name}>
       <GsapProvider>{children}</GsapProvider>
     </PortalShell>
   );

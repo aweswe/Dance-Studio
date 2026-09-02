@@ -83,3 +83,119 @@ export async function updateProfile(input: ProfileData) {
   revalidatePath('/student');
   return { success: true };
 }
+
+/**
+ * Completes student phone registration after Email / Google login.
+ * Validates 10-digit Indian phone number, links/creates student record,
+ * and sets user role to 'student'.
+ */
+export async function completeStudentOnboarding(phone: string, name?: string) {
+  const supabase = await createServerSupabase();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) {
+    return { success: false, error: 'Not signed in' };
+  }
+
+  const cleaned = phone.replace(/\D/g, '');
+  if (!/^[6-9]\d{9}$/.test(cleaned)) {
+    return { success: false, error: 'Please enter a valid 10-digit mobile number' };
+  }
+
+  const admin = createAdminSupabase();
+
+  // Ensure role is student in users table
+  await (admin as any).from('users').upsert({
+    id: user.id,
+    role: 'student',
+  });
+
+  // Check if student exists by auth_id or email
+  let { data: student } = await (admin as any)
+    .from('students')
+    .select('id, auth_id, name, phone, email')
+    .or(`auth_id.eq.${user.id},email.ilike.${user.email || 'none'}`)
+    .maybeSingle();
+
+  const studentName = name || user.user_metadata?.full_name || user.user_metadata?.name || student?.name || 'Dance Student';
+
+  if (student) {
+    await (admin as any).from('students').update({
+      auth_id: user.id,
+      phone: cleaned,
+      email: user.email || student.email || null,
+      name: studentName,
+    }).eq('id', student.id);
+  } else {
+    // Also check if phone exists
+    const { data: phoneMatch } = await (admin as any)
+      .from('students')
+      .select('id')
+      .eq('phone', cleaned)
+      .maybeSingle();
+
+    if (phoneMatch) {
+      await (admin as any).from('students').update({
+        auth_id: user.id,
+        email: user.email || null,
+        name: studentName,
+      }).eq('id', phoneMatch.id);
+    } else {
+      await (admin as any).from('students').insert({
+        auth_id: user.id,
+        name: studentName,
+        phone: cleaned,
+        email: user.email || null,
+        status: 'active',
+      });
+    }
+  }
+
+  revalidatePath('/student');
+  return { success: true };
+}
+
+/**
+ * Allows an authenticated student to select their dance batch & programme.
+ */
+export async function assignStudentBatch(batchId: string) {
+  const { getCurrentStudent } = await import('@/lib/auth/student');
+  const { student } = await getCurrentStudent();
+  if (!student || !student.id) {
+    return { success: false, error: 'Student profile not found. Please refresh.' };
+  }
+
+  const admin = createAdminSupabase();
+
+  // Find batch and associated programme
+  const { data: batch, error: batchErr } = await (admin as any)
+    .from('batches')
+    .select('id, programme_id')
+    .eq('id', batchId)
+    .single();
+
+  if (batchErr || !batch) {
+    return { success: false, error: 'Selected batch was not found.' };
+  }
+
+  const { error: updateErr } = await (admin as any)
+    .from('students')
+    .update({
+      programme_id: batch.programme_id,
+      batch_id: batch.id,
+    })
+    .eq('id', student.id);
+
+  if (updateErr) {
+    return { success: false, error: updateErr.message };
+  }
+
+  // Increment batch enrollment count
+  try {
+    await (admin as any).rpc('increment_batch_enrollment', { p_batch_id: batch.id });
+  } catch {}
+
+  revalidatePath('/student');
+  revalidatePath('/student/schedule');
+  revalidatePath('/student/fees');
+  return { success: true };
+}

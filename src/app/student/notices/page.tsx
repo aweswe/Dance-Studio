@@ -1,4 +1,5 @@
 import { createServerSupabase } from "@/lib/supabase/server";
+import { getCurrentStudent } from "@/lib/auth/student";
 import { redirect } from "next/navigation";
 import { ROUTES } from "@/lib/utils/constants";
 import { NoticeList } from "@/components/student/notice-list";
@@ -9,17 +10,9 @@ export const metadata = {
 
 export default async function NoticesPage() {
   const supabase = await createServerSupabase();
-  const { data: { user } } = await supabase.auth.getUser();
+  const { student, user } = await getCurrentStudent();
 
-  if (!user) redirect(ROUTES.login);
-
-  const { data: student } = await supabase
-    .from("students")
-    .select("id, programme_id, batch_id")
-    .eq("auth_id", user.id)
-    .single();
-
-  if (!student) redirect(ROUTES.home);
+  if (!student) redirect(ROUTES.login);
 
   // RLS (`broadcast_logs_students_read`) returns only scoped broadcasts;
   // the client filter below is belt-and-braces for legacy rows.

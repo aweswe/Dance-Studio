@@ -10,6 +10,14 @@ export const dynamic = "force-dynamic";
  * land back on the admin login, students on the student login.
  */
 export async function POST(request: Request) {
+  return handleSignOut(request);
+}
+
+export async function GET(request: Request) {
+  return handleSignOut(request);
+}
+
+async function handleSignOut(request: Request) {
   const supabase = await createServerSupabase();
 
   let role: string | null = null;
@@ -21,12 +29,20 @@ export async function POST(request: Request) {
       .from("users")
       .select("role")
       .eq("id", user.id)
-      .single();
+      .maybeSingle();
     role = (profile as { role?: string } | null)?.role ?? null;
   }
 
   await supabase.auth.signOut();
 
-  const target = role === "admin" || role === "instructor" ? "/admin-login" : "/login";
-  return NextResponse.redirect(new URL(target, request.url));
+  // Resolve public origin safely on Vercel
+  const forwardedHost = request.headers.get("x-forwarded-host");
+  const forwardedProto = request.headers.get("x-forwarded-proto") || "https";
+  const origin = forwardedHost
+    ? `${forwardedProto}://${forwardedHost}`
+    : process.env.NEXT_PUBLIC_SITE_URL || new URL(request.url).origin;
+
+  const res = NextResponse.redirect(new URL("/", origin));
+  res.cookies.delete("bypass_student");
+  return res;
 }

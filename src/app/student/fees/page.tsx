@@ -1,10 +1,14 @@
 import { createServerSupabase } from "@/lib/supabase/server";
+import { getCurrentStudent } from "@/lib/auth/student";
 import { redirect } from "next/navigation";
 import { ROUTES } from "@/lib/utils/constants";
 import { FeeStatusCard } from "@/components/student/fee-status-card";
 import { PaymentHistory } from "@/components/student/payment-history";
 import { FeeCalendar, FeeMonth } from "@/components/student/fee-calendar";
+import { Card } from "@/components/ui/card";
 import { coveredMonthKeys, isDue, monthlyAmount, monthKey, trailingMonths } from "@/lib/fees/ledger";
+import { Sparkles, ArrowRight, CreditCard } from "lucide-react";
+import Link from "next/link";
 
 export const metadata = {
   title: "Fees | Student Dashboard",
@@ -12,18 +16,11 @@ export const metadata = {
 
 export default async function FeesPage() {
   const supabase = await createServerSupabase();
-  const { data: { user } } = await supabase.auth.getUser();
+  const { student, user } = await getCurrentStudent();
 
-  if (!user) redirect(ROUTES.login);
+  if (!student) redirect(ROUTES.login);
 
-  const { data: studentData } = await supabase
-    .from("students")
-    .select("id, programme:programmes(fees_monthly)")
-    .eq("auth_id", user.id)
-    .single();
-
-  if (!studentData) redirect(ROUTES.home);
-  const student = studentData as any;
+  const hasBatch = Boolean(student.batch_id || student.programme_id || student.batch || student.programme);
 
   const { data: payments } = await supabase
     .from("fee_payments")
@@ -54,16 +51,43 @@ export default async function FeesPage() {
     <div className="space-y-8">
       <div>
         <h1 className="font-display text-4xl tracking-[2px] mb-2">Fee Management</h1>
-        <p className="text-ink-2">View and manage your fee payments.</p>
+        <p className="text-ink-2">View and manage your fee payments and receipts.</p>
       </div>
 
-      <FeeStatusCard
-        status={status}
-        amountDue={amountDue}
-        dueDate={dueDate}
-      />
+      {!hasBatch ? (
+        <Card className="p-8 border-dashed border-line-strong bg-surface space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+            <div className="space-y-2">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gold/15 text-gold border border-gold/30 text-xs font-semibold uppercase tracking-wider">
+                <Sparkles size={13} />
+                No Active Class Enrolment
+              </div>
+              <h2 className="font-display text-2xl text-ink">
+                Join a Batch to Activate Your Fee Ledger
+              </h2>
+              <p className="text-sm text-ink-2 max-w-xl leading-relaxed">
+                You are currently not assigned to any dance batch. Select your dance discipline and weekly batch schedule to view your customized fee plan, due dates, and payment options.
+              </p>
+            </div>
 
-      <FeeCalendar months={months} />
+            <Link
+              href={`${ROUTES.student}/classes`}
+              className="inline-flex items-center justify-center gap-2 bg-bl hover:bg-bl-deep text-white font-semibold text-xs tracking-[2px] uppercase px-8 py-4 rounded-control transition-all shadow-md active:scale-[0.98] self-start sm:self-auto shrink-0"
+            >
+              Select Batch & Discipline <ArrowRight size={14} />
+            </Link>
+          </div>
+        </Card>
+      ) : (
+        <>
+          <FeeStatusCard
+            status={status}
+            amountDue={amountDue}
+            dueDate={dueDate}
+          />
+          <FeeCalendar months={months} />
+        </>
+      )}
 
       <div>
         <h2 className="font-display text-2xl tracking-[2px] mb-4">Payment History</h2>

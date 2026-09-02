@@ -59,18 +59,18 @@
   --ease-scroll: cubic-bezier(0.33, 1, 0.68, 1);
 
   /* ── Type scale (fluid display + label/micro) ── */
-  --text-display-hero: clamp(3.75rem, 10vw, 7.5rem);
-  --text-display-hero--line-height: 1;
-  --text-display-1: clamp(3rem, 6vw, 4.5rem);
-  --text-display-1--line-height: 1;
-  --text-display-2: clamp(2.25rem, 4vw, 3.75rem);
-  --text-display-2--line-height: 1.05;
-  --text-display-3: clamp(1.5rem, 2.5vw, 1.875rem);
-  --text-display-3--line-height: 1.1;
+  --text-display-hero: clamp(2.25rem, 8vw, 6.5rem);
+  --text-display-hero--line-height: 1.05;
+  --text-display-1: clamp(1.85rem, 5vw, 4rem);
+  --text-display-1--line-height: 1.05;
+  --text-display-2: clamp(1.5rem, 3.5vw, 3rem);
+  --text-display-2--line-height: 1.1;
+  --text-display-3: clamp(1.2rem, 2.2vw, 1.75rem);
+  --text-display-3--line-height: 1.15;
   --text-label: 0.625rem;
-  --text-label--letter-spacing: 0.5em;
+  --text-label--letter-spacing: 0.25em;
   --text-micro: 0.5625rem;
-  --text-micro--letter-spacing: 0.25em;
+  --text-micro--letter-spacing: 0.15em;
 }
 
 /* ── Semantic values (light = today's exact look) ── */
@@ -300,10 +300,22 @@ html.theme-transition *::after {
 /* ── Section Labels ── */
 @utility section-label {
   font-size: 10px;
-  letter-spacing: 5px;
+  letter-spacing: 2px;
   text-transform: uppercase;
   color: var(--bl-ink);
   margin-bottom: 12px;
+  word-break: break-word;
+  @media (min-width: 768px) {
+    letter-spacing: 4px;
+  }
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 .section-label-light {

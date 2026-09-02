@@ -7,15 +7,25 @@ import { Download } from 'lucide-react'
 import { TableSkeleton } from '@/components/ui/skeleton'
 import { createServerSupabase } from '@/lib/supabase/server'
 
+export const dynamic = 'force-dynamic';
+
 export default async function StudentsPage() {
   // Initial fetch for the first page
-  const initialData = await getStudentsAction({ limit: 10, cursor: null })
+  let initialData = { data: [] as any[], nextCursor: null as string | null };
+  try {
+    const res = await getStudentsAction({ limit: 10, cursor: null });
+    if (res && Array.isArray(res.data)) {
+      initialData = res;
+    }
+  } catch (err) {
+    console.error('Error fetching initial students:', err);
+  }
 
-  const supabase = await createServerSupabase()
+  const supabase = await createServerSupabase();
   const [{ data: programmes }, { data: batches }] = await Promise.all([
     supabase.from('programmes').select('id, name').order('name'),
     supabase.from('batches').select('id, name, programme:programmes(name)').order('name'),
-  ])
+  ]);
 
   return (
     <div className="space-y-6">

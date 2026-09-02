@@ -4,10 +4,11 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getProgrammes, getProgrammeBySlug } from '@/data/programmes';
 import { getBatches } from '@/data/batches';
-import { CheckCircle2, Clock, Calendar, IndianRupee, MapPin } from 'lucide-react';
+import { CheckCircle2, Clock, Calendar, IndianRupee, MapPin, Sparkles } from 'lucide-react';
 import { formatTime } from '@/lib/utils/format';
 import { SITE_URL } from '@/lib/utils/constants';
 import { Reveal } from '@/components/motion/reveal';
+import { KuchipudiCurriculum } from '@/components/public/kuchipudi-curriculum';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -45,7 +46,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-// Grounded per-programme facts (batch windows and leads from the studio schedule).
 const PROGRAMME_NOTES: Record<string, string> = {
   'kids-dance':
     'Kids Dance at Rhythmzz runs Monday to Wednesday, 5 to 7 PM, in two batches taught by Deepak and Kajal — Bollywood, Hip Hop and Contemporary, with stage performance training built in. Children from age 5 are welcome.',
@@ -54,7 +54,26 @@ const PROGRAMME_NOTES: Record<string, string> = {
   'mind-body-fitness':
     'Mind & Body Fitness runs weekday mornings, 9:30 to 10:30 AM, with Shailaja — Zumba, Yoga, Pilates, HIIT, strength, Tabata, core and mobility on a rotating weekly schedule.',
   kuchipudi:
-    'Kuchipudi Classical is a level-based, certified programme taught by Srusti on Fridays and Saturdays, 6:30 to 7:30 PM — Foundation through Advanced, with formal certification at each stage. Seats are limited.',
+    'Kuchipudi Classical is a level-based, certified programme taught by Srusti on Fridays and Saturdays, 6:30 to 7:30 PM — 10-Year Foundation through Advanced and 6-Year Accelerated Certificate tracks with formal public examination.',
+};
+
+const PROGRAMME_HERO_IMAGES: Record<string, { src: string; alt: string }> = {
+  'kids-dance': {
+    src: '/images/studio-training/group-circle-drill.jpg',
+    alt: 'Kids and youth dance training at Rhythmzz Academy',
+  },
+  'adults-dance': {
+    src: '/images/studio-training/contemporary-conditioning.jpg',
+    alt: 'Adults dance batch and contemporary training',
+  },
+  'mind-body-fitness': {
+    src: '/images/studio-training/floorwork-stretch.jpg',
+    alt: 'Mind and body fitness, yoga and conditioning at Rhythmzz',
+  },
+  kuchipudi: {
+    src: '/images/studio-training/alignment-drills-1.jpg',
+    alt: 'Kuchipudi classical dance posture and hastas',
+  },
 };
 
 export default async function ProgrammeDetailPage({ params }: Props) {
@@ -83,6 +102,7 @@ export default async function ProgrammeDetailPage({ params }: Props) {
   };
 
   const includesList = programme.includes ? (typeof programme.includes === 'string' ? JSON.parse(programme.includes) : programme.includes) : [];
+  const heroImage = PROGRAMME_HERO_IMAGES[slug] || PROGRAMME_HERO_IMAGES['kids-dance'];
 
   return (
     <div className="bg-canvas text-ink">
@@ -92,7 +112,18 @@ export default async function ProgrammeDetailPage({ params }: Props) {
       />
 
       {/* Hero */}
-      <section className="bg-blk text-white py-20 px-6 md:px-16 text-center relative">
+      <section className="bg-blk text-white py-20 px-6 md:px-16 text-center relative overflow-hidden">
+        <div className="absolute inset-0 z-0 opacity-20">
+          <Image
+            src={heroImage.src}
+            alt={heroImage.alt}
+            fill
+            className="object-cover"
+            priority
+          />
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-b from-blk/70 via-blk/85 to-blk z-0" />
+
         <div className="max-w-3xl mx-auto relative z-10">
           <div className="inline-block bg-white/10 px-4 py-1.5 rounded-full text-[10px] font-bold tracking-[2px] uppercase mb-6">
             {programme.age_group || 'All Ages'}
@@ -101,13 +132,21 @@ export default async function ProgrammeDetailPage({ params }: Props) {
           <p className="text-white/70 text-lg leading-relaxed max-w-2xl mx-auto">
             {programme.description}
           </p>
-          <div className="mt-10">
+          <div className="mt-10 flex flex-wrap justify-center gap-4">
             <Link
               href={`/enrol?programme=${programme.slug}`}
-              className="inline-block text-[11px] font-semibold tracking-[2px] uppercase py-4 px-10 bg-bl text-white hover:bg-bl-deep transition-all focus-visible:focus-ring active:scale-[0.98]"
+              className="inline-block text-[11px] font-semibold tracking-[2px] uppercase py-4 px-10 bg-bl text-white hover:bg-bl-deep transition-all focus-visible:focus-ring active:scale-[0.98] rounded-control shadow-md"
             >
               Enrol Now
             </Link>
+            {slug === 'kuchipudi' && (
+              <a
+                href="#curriculum"
+                className="inline-block text-[11px] font-semibold tracking-[2px] uppercase py-4 px-8 bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all rounded-control focus-visible:focus-ring"
+              >
+                View 10 & 6-Year Syllabus ↓
+              </a>
+            )}
           </div>
         </div>
       </section>
@@ -258,6 +297,14 @@ export default async function ProgrammeDetailPage({ params }: Props) {
         </div>
 
       </section>
+
+      {/* Embedded Kuchipudi Master Curriculum if on kuchipudi route */}
+      {slug === 'kuchipudi' && (
+        <section className="py-16 px-6 md:px-16 max-w-7xl mx-auto border-t border-line">
+          <KuchipudiCurriculum />
+        </section>
+      )}
     </div>
   );
 }
+

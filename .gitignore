@@ -43,3 +43,7 @@ dev-smoke*.log
 next-env.d.ts
 supabase/.temp/
 supabase/.branches/
+
+# archives & scratch asset dumps
+*.zip
+kuchipudi /

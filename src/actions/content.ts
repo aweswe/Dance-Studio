@@ -12,7 +12,7 @@ export async function updateSiteContent(key: string, value: any) {
     .upsert({ content_key: key, content_value: value }, { onConflict: 'content_key' });
   if (error) return { success: false, error: error.message };
 
-  revalidatePath('/');
+  revalidatePath('/', 'layout');
   return { success: true };
 }
 
@@ -25,7 +25,7 @@ export async function updateFAQ(faqs: any[]) {
     .upsert({ content_key: 'faqs', content_value: faqs as any }, { onConflict: 'content_key' });
   if (error) return { success: false, error: error.message };
 
-  revalidatePath('/');
+  revalidatePath('/', 'layout');
   return { success: true };
 }
 
@@ -38,6 +38,6 @@ export async function updateBanner(data: any) {
     .upsert({ content_key: 'banner', content_value: data }, { onConflict: 'content_key' });
   if (error) return { success: false, error: error.message };
 
-  revalidatePath('/');
+  revalidatePath('/', 'layout');
   return { success: true };
 }
