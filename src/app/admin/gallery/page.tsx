@@ -1,14 +1,16 @@
-import { Suspense } from 'react'
-import { GalleryManager } from '@/components/admin/gallery-manager'
-import { Skeleton } from '@/components/ui/skeleton'
-import { createServerSupabase } from '@/lib/supabase/server'
+import { Suspense } from 'react';
+import { GalleryManager } from '@/components/admin/gallery-manager';
+import { Skeleton } from '@/components/ui/skeleton';
+import { createAdminSupabase } from '@/lib/supabase/server';
+
+export const dynamic = 'force-dynamic';
 
 export default async function GalleryPage() {
-  const supabase = await createServerSupabase()
+  const supabase = createAdminSupabase();
   const { data: items } = await supabase
     .from('gallery')
     .select('*')
-    .order('sort_order', { ascending: true })
+    .order('sort_order', { ascending: false });
 
   return (
     <div className="space-y-6">
@@ -27,5 +29,5 @@ export default async function GalleryPage() {
         <GalleryManager initialItems={(items ?? []) as any[]} />
       </Suspense>
     </div>
-  )
+  );
 }

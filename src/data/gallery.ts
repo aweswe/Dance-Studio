@@ -578,14 +578,23 @@ export async function getGalleryImages(limit = 60) {
       .from('gallery')
       .select('id, url, thumbnail_url, type, title, tags, is_visible, sort_order')
       .eq('is_visible', true)
-      .order('sort_order', { ascending: true })
+      .order('sort_order', { ascending: false })
       .limit(limit);
     if (data && data.length > 0) {
-      return (data as any[]).map((img) => ({
-        ...img,
-        alt: img.title ?? 'Gallery Image',
-        category: (Array.isArray(img.tags) && img.tags.length > 0 ? img.tags[0] : img.type) ?? 'Classes',
+      const dbImages = (data as any[]).map((img) => ({
+        id: img.id,
+        url: img.url,
+        thumbnailUrl: img.thumbnail_url || img.url,
+        title: img.title || 'Studio Performance',
+        alt: img.title ?? 'Rhythmzz Dance Academy Photo',
+        type: (img.type === 'video' ? 'video' : 'image') as 'image' | 'video',
+        category: (Array.isArray(img.tags) && img.tags.length > 0 ? img.tags[0] : 'Academy'),
+        tags: Array.isArray(img.tags) ? img.tags : ['Academy'],
+        is_visible: img.is_visible,
+        sort_order: img.sort_order,
       }));
+      // Put uploaded photos at the beginning, followed by authentic academy images
+      return [...dbImages, ...ALL_AUTHENTIC_GALLERY_IMAGES].slice(0, limit);
     }
   } catch {}
   return ALL_AUTHENTIC_GALLERY_IMAGES.slice(0, limit);
