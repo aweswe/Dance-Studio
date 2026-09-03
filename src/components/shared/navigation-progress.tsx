@@ -157,6 +157,13 @@ export function NavigationProgress() {
 
   if (!isNavigating && progress === 0) return null;
 
+  const isAuthOrLogout =
+    actionLabel.toLowerCase().includes("logging out") ||
+    actionLabel.toLowerCase().includes("signing out") ||
+    actionLabel.toLowerCase().includes("redirecting to home") ||
+    actionLabel.toLowerCase().includes("redirecting to login") ||
+    actionLabel.toLowerCase().includes("auth");
+
   return (
     <>
       {/* Top glowing progress line */}
@@ -173,16 +180,45 @@ export function NavigationProgress() {
         />
       </div>
 
-      {/* Floating Action Pill */}
-      <div
-        aria-live="polite"
-        className="fixed top-4 left-1/2 -translate-x-1/2 z-[999999] pointer-events-none transition-all duration-300 transform translate-y-0 opacity-100"
-      >
-        <div className="flex items-center gap-2.5 px-4 py-2 rounded-full bg-blk/90 dark:bg-surface/95 text-white dark:text-ink text-xs font-semibold tracking-wide border border-bl/40 dark:border-line-strong shadow-2xl backdrop-blur-md">
-          <Loader2 className="w-3.5 h-3.5 animate-spin text-bl shrink-0" />
-          <span>{actionLabel}</span>
+      {isAuthOrLogout ? (
+        /* Mid-Screen Centered Auth Redirect / Logout Loading Skeleton */
+        <div
+          aria-live="assertive"
+          className="fixed inset-0 z-[999999] flex items-center justify-center bg-blk/80 backdrop-blur-md p-4 animate-in fade-in duration-200 pointer-events-auto"
+        >
+          <div className="flex flex-col items-center justify-center p-8 rounded-2xl bg-surface border border-line-strong shadow-2xl max-w-sm w-full text-center space-y-4">
+            <div className="relative">
+              <div className="w-16 h-16 rounded-full border-2 border-bl/20 border-t-bl animate-spin" />
+              <span className="absolute inset-0 flex items-center justify-center text-bl font-display font-black text-xl">
+                R
+              </span>
+            </div>
+            <div>
+              <h3 className="text-lg font-bold text-ink font-display tracking-wide">
+                {actionLabel.toLowerCase().includes("out") ? "Signing Out..." : "Redirecting..."}
+              </h3>
+              <p className="text-xs text-ink-2 mt-1.5 font-medium">
+                {actionLabel}
+              </p>
+            </div>
+            {/* Animated accent line */}
+            <div className="w-36 h-1 bg-line rounded-full overflow-hidden">
+              <div className="h-full bg-bl animate-pulse" style={{ width: "100%" }} />
+            </div>
+          </div>
         </div>
-      </div>
+      ) : (
+        /* Floating Top Action Pill for standard navigations */
+        <div
+          aria-live="polite"
+          className="fixed top-4 left-1/2 -translate-x-1/2 z-[999999] pointer-events-none transition-all duration-300 transform translate-y-0 opacity-100"
+        >
+          <div className="flex items-center gap-2.5 px-4 py-2 rounded-full bg-blk/90 dark:bg-surface/95 text-white dark:text-ink text-xs font-semibold tracking-wide border border-bl/40 dark:border-line-strong shadow-2xl backdrop-blur-md">
+            <Loader2 className="w-3.5 h-3.5 animate-spin text-bl shrink-0" />
+            <span>{actionLabel}</span>
+          </div>
+        </div>
+      )}
     </>
   );
 }

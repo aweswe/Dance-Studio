@@ -84,6 +84,22 @@ export function PortalShell({ role, name, isKuchipudi, children }: PortalShellPr
       ? INSTRUCTOR_NAV
       : [...STUDENT_NAV, ...(isKuchipudi ? [{ name: "Progress", href: `${ROUTES.student}/progress`, icon: Award }] : [])];
 
+  const handleSignOut = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSigningOut(true);
+    triggerActionLoader("Logging out · Redirecting to Home...");
+    try {
+      const { createClient } = await import("@/lib/supabase/client");
+      const supabase = createClient();
+      await supabase.auth.signOut().catch(() => {});
+    } catch {}
+    document.cookie = "bypass_student=; path=/; max-age=0;";
+    try {
+      await fetch("/auth/signout", { method: "POST" }).catch(() => {});
+    } catch {}
+    window.location.href = "/";
+  };
+
   return (
     <div className="min-h-screen bg-canvas-muted flex">
       {/* Sidebar - Single Dynamic Logo */}
@@ -172,10 +188,7 @@ export function PortalShell({ role, name, isKuchipudi, children }: PortalShellPr
           <form
             action="/auth/signout"
             method="post"
-            onSubmit={() => {
-              setIsSigningOut(true);
-              triggerActionLoader("Logging out · Redirecting to Home...");
-            }}
+            onSubmit={handleSignOut}
           >
             <button
               type="submit"

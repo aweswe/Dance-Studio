@@ -42,7 +42,9 @@ async function handleSignOut(request: Request) {
     ? `${forwardedProto}://${forwardedHost}`
     : process.env.NEXT_PUBLIC_SITE_URL || new URL(request.url).origin;
 
-  const res = NextResponse.redirect(new URL("/", origin));
+  // Crucial: Use status 303 (See Other) so the browser redirects via GET to /
+  // Default status 307 preserves the POST method, causing "HTTP ERROR 405" on /
+  const res = NextResponse.redirect(new URL("/", origin), 303);
   res.cookies.delete("bypass_student");
   return res;
 }
