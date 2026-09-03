@@ -19,6 +19,14 @@ export function Modal({ isOpen, onClose, title, children, size = "md" }: ModalPr
   const [closing, setClosing] = useState(false);
   const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
 
+  // Stable ref for onClose to prevent re-triggering effects when inline arrow functions change reference
+  const onCloseRef = useRef(onClose);
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  });
+
+  const hasFocusedRef = useRef(false);
+
   // Derived-from-props phase machine (render-phase adjustment):
   // opening cancels a pending exit; closing starts the exit animation.
   if (prevIsOpen !== isOpen) {
@@ -50,21 +58,50 @@ export function Modal({ isOpen, onClose, title, children, size = "md" }: ModalPr
     };
   }, [rendered]);
 
-  // Escape closes; autofocus the close button on open. Runs before the
-  // focus timer fires, so the captured element is still the opener.
+  // Escape key closes; initial open focus.
+  // CRITICAL: We only listen to [isOpen], NOT onClose, and we NEVER steal focus
+  // while the user is actively typing in an input!
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen) {
+      hasFocusedRef.current = false;
+      return;
+    }
+
     restoreFocusRef.current = document.activeElement as HTMLElement | null;
+
     function handleEscape(e: KeyboardEvent) {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") onCloseRef.current();
     }
     document.addEventListener("keydown", handleEscape);
-    const t = setTimeout(() => closeButtonRef.current?.focus(), 0);
+
+    // Only run on initial modal open, never on subsequent renders/keystrokes
+    if (!hasFocusedRef.current) {
+      hasFocusedRef.current = true;
+      const t = setTimeout(() => {
+        if (overlayRef.current) {
+          const active = document.activeElement;
+          // If focus is already inside an input in this dialog, do not touch it
+          if (active && overlayRef.current.contains(active) && active !== overlayRef.current) {
+            return;
+          }
+          // Focus the first interactive element or close button
+          const firstInteractive = overlayRef.current.querySelector<HTMLElement>(
+            'input:not([type="hidden"]):not([disabled]), textarea:not([disabled]), select:not([disabled]), button:not([aria-label="Close dialog"])'
+          );
+          (firstInteractive || closeButtonRef.current)?.focus();
+        }
+      }, 50);
+
+      return () => {
+        document.removeEventListener("keydown", handleEscape);
+        clearTimeout(t);
+      };
+    }
+
     return () => {
       document.removeEventListener("keydown", handleEscape);
-      clearTimeout(t);
     };
-  }, [isOpen, onClose]);
+  }, [isOpen]);
 
   if (!rendered) return null;
 
@@ -76,7 +113,7 @@ export function Modal({ isOpen, onClose, title, children, size = "md" }: ModalPr
       aria-label={title ?? undefined}
       className="fixed inset-0 z-[1000] flex items-center justify-center p-4"
       onClick={(e) => {
-        if (e.target === overlayRef.current) onClose();
+        if (e.target === overlayRef.current) onCloseRef.current();
       }}
     >
       <div
@@ -101,7 +138,7 @@ export function Modal({ isOpen, onClose, title, children, size = "md" }: ModalPr
             <h2 className="font-display text-xl tracking-wider text-ink">{title}</h2>
             <button
               ref={closeButtonRef}
-              onClick={onClose}
+              onClick={() => onCloseRef.current()}
               aria-label="Close dialog"
               className="text-ink-2 hover:text-ink transition-colors p-1 rounded focus-visible:focus-ring active:scale-95"
             >
@@ -111,7 +148,7 @@ export function Modal({ isOpen, onClose, title, children, size = "md" }: ModalPr
         ) : (
           <button
             ref={closeButtonRef}
-            onClick={onClose}
+            onClick={() => onCloseRef.current()}
             aria-label="Close dialog"
             className="absolute top-4 right-4 z-10 text-ink-2 hover:text-ink transition-colors p-1 rounded focus-visible:focus-ring active:scale-95"
           >
