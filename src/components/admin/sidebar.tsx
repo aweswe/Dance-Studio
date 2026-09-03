@@ -16,8 +16,11 @@ import {
   Image as ImageIcon,
   Settings,
   FileText,
-  LogOut
+  LogOut,
+  Loader2,
 } from 'lucide-react'
+import { useState } from 'react'
+import { triggerActionLoader } from '@/components/shared/navigation-progress'
 
 const navGroups = [
   {
@@ -62,6 +65,7 @@ interface SidebarProps {
 
 export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const pathname = usePathname()
+  const [isSigningOut, setIsSigningOut] = useState(false)
 
   return (
     <>
@@ -112,13 +116,25 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
         </nav>
 
         <div className="p-4 border-t border-line shrink-0">
-          <form action="/auth/signout" method="post">
+          <form 
+            action="/auth/signout" 
+            method="post"
+            onSubmit={() => {
+              setIsSigningOut(true)
+              triggerActionLoader("Logging out · Redirecting to Home...")
+            }}
+          >
             <button
               type="submit"
-              className="flex w-full items-center gap-3 px-3 py-2 rounded-lg text-sm font-body text-ink-2 hover:bg-canvas-muted hover:text-ink transition-colors focus-visible:focus-ring"
+              disabled={isSigningOut}
+              className="flex w-full items-center gap-3 px-3 py-2 rounded-lg text-sm font-body text-ink-2 hover:bg-canvas-muted hover:text-ink transition-colors focus-visible:focus-ring disabled:opacity-50"
             >
-              <LogOut size={18} />
-              Sign Out
+              {isSigningOut ? (
+                <Loader2 size={18} className="animate-spin text-bl" />
+              ) : (
+                <LogOut size={18} />
+              )}
+              <span>{isSigningOut ? "Signing Out..." : "Sign Out"}</span>
             </button>
           </form>
         </div>

@@ -1,9 +1,8 @@
 import { z } from "zod";
+import { indianPhoneSchema } from "./phone";
 
 export const otpLoginSchema = z.object({
-  phone: z
-    .string()
-    .regex(/^[6-9]\d{9}$/, "Enter a valid 10-digit Indian mobile number"),
+  phone: indianPhoneSchema,
 });
 
 export const otpVerifySchema = z.object({

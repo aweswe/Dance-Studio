@@ -1,13 +1,12 @@
 import { z } from "zod";
+import { indianPhoneSchema } from "./phone";
 
 export const rentalFormSchema = z.object({
   name: z
     .string()
     .min(2, "Name must be at least 2 characters")
     .max(100, "Name is too long"),
-  phone: z
-    .string()
-    .regex(/^[6-9]\d{9}$/, "Enter a valid 10-digit Indian mobile number"),
+  phone: indianPhoneSchema,
   email: z
     .string()
     .email("Enter a valid email address")

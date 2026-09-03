@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { optionalIndianPhoneSchema } from "./phone";
 
 export const createInstructorSchema = z.object({
   name: z
@@ -12,11 +13,7 @@ export const createInstructorSchema = z.object({
     .max(20, "Too many certifications")
     .default([]),
   email: z.string().email("Enter a valid email address").optional().or(z.literal("")),
-  phone: z
-    .string()
-    .regex(/^[6-9]\d{9}$/, "Enter a valid 10-digit Indian mobile number")
-    .optional()
-    .or(z.literal("")),
+  phone: optionalIndianPhoneSchema,
   isActive: z.boolean().default(true),
 });
 

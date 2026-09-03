@@ -19,10 +19,12 @@ import {
   Home,
   Sparkles,
   ExternalLink,
+  Loader2,
 } from "lucide-react";
 import { useState } from "react";
 import { ROUTES } from "@/lib/utils/constants";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { triggerActionLoader } from "@/components/shared/navigation-progress";
 
 export type PortalRole = "student" | "instructor";
 
@@ -71,6 +73,7 @@ function getPageLabel(pathname: string, role: PortalRole): string {
 export function PortalShell({ role, name, isKuchipudi, children }: PortalShellProps) {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const [isSigningOut, setIsSigningOut] = useState(false);
 
   const home = role === "instructor" ? ROUTES.instructor : ROUTES.student;
   const pageTitle = getPageLabel(pathname, role);
@@ -166,13 +169,25 @@ export function PortalShell({ role, name, isKuchipudi, children }: PortalShellPr
 
         {/* Sign out */}
         <div className="p-4 border-t border-white/10 shrink-0 bg-surface-dark/20">
-          <form action="/auth/signout" method="post">
+          <form
+            action="/auth/signout"
+            method="post"
+            onSubmit={() => {
+              setIsSigningOut(true);
+              triggerActionLoader("Logging out · Redirecting to Home...");
+            }}
+          >
             <button
               type="submit"
-              className="flex w-full items-center gap-3 px-3 py-2 rounded-lg text-xs font-semibold text-white/60 hover:text-red-400 hover:bg-white/5 transition-colors focus-visible:focus-ring"
+              disabled={isSigningOut}
+              className="flex w-full items-center gap-3 px-3 py-2 rounded-lg text-xs font-semibold text-white/60 hover:text-red-400 hover:bg-white/5 transition-colors focus-visible:focus-ring disabled:opacity-50"
             >
-              <LogOut size={16} />
-              Sign Out
+              {isSigningOut ? (
+                <Loader2 size={16} className="animate-spin text-bl" />
+              ) : (
+                <LogOut size={16} />
+              )}
+              <span>{isSigningOut ? "Signing Out..." : "Sign Out"}</span>
             </button>
           </form>
         </div>

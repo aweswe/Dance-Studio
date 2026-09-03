@@ -42,7 +42,7 @@ export function StudentActions({ student, batches }: StudentActionsProps) {
   // Edit form state
   const [isEditOpen, setIsEditOpen] = useState(false)
   const [name, setName] = useState(student.name)
-  const [phone, setPhone] = useState(student.phone)
+  const [phone, setPhone] = useState(student.phone ?? '')
   const [email, setEmail] = useState(student.email ?? '')
   const [batchId, setBatchId] = useState(student.batch_id ?? '')
 
@@ -152,8 +152,14 @@ export function StudentActions({ student, batches }: StudentActionsProps) {
             <Input value={name} onChange={(e) => setName(e.target.value)} />
           </div>
           <div>
-            <label className="block text-sm text-ink-2 mb-1">Phone</label>
-            <Input value={phone} onChange={(e) => setPhone(e.target.value)} />
+            <label className="block text-sm text-ink-2 mb-1">
+              Phone <span className="text-[11px] text-ink-2">(supports 0, +91, e.g. +91 90529 80859 or 09052980859)</span>
+            </label>
+            <Input
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="+91 90529 80859 or 09052980859"
+            />
           </div>
           <div>
             <label className="block text-sm text-ink-2 mb-1">Email</label>

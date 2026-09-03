@@ -46,25 +46,48 @@ export function formatTime(time: string): string {
 }
 
 /**
- * Normalize Indian phone numbers: strips +91, leading 0, spaces, dashes
+ * Normalize Indian phone numbers: strips +91, leading 0, 91, 0091, spaces, dashes
  * and returns standard 10-digit mobile number if valid.
  */
 export function normalizeIndianPhone(input?: string | null): string {
   if (!input) return "";
   let digits = String(input).replace(/\D/g, "");
-  // If starts with 91 and has 12 digits (+91XXXXXXXXXX) -> slice last 10
+
+  // Strip international prefix 0091 or 00
+  if (digits.startsWith("0091")) digits = digits.slice(4);
+  else if (digits.startsWith("00")) digits = digits.slice(2);
+
+  // If 13 digits starting with 091 or 910
+  if (digits.length === 13) {
+    if (digits.startsWith("091")) digits = digits.slice(3);
+    else if (digits.startsWith("910")) digits = digits.slice(3);
+  }
+
+  // If 12 digits starting with 91 (+91XXXXXXXXXX or 91XXXXXXXXXX)
   if (digits.length === 12 && digits.startsWith("91")) {
     digits = digits.slice(2);
   }
-  // If starts with 0 and has 11 digits (0XXXXXXXXXX) -> slice last 10
+
+  // If 11 digits starting with 0 (0XXXXXXXXXX)
   if (digits.length === 11 && digits.startsWith("0")) {
     digits = digits.slice(1);
   }
-  // If more than 10 digits and contains 91 at start
-  if (digits.length > 10 && digits.startsWith("91")) {
-    digits = digits.slice(-10);
+
+  // Fallback: If more than 10 digits and ends with a 10-digit valid Indian mobile number starting with 6-9
+  if (digits.length > 10) {
+    const last10 = digits.slice(-10);
+    if (/^[6-9]/.test(last10)) {
+      digits = last10;
+    }
   }
+
   return digits;
+}
+
+export function isValidIndianPhone(input?: string | null): boolean {
+  if (!input) return false;
+  const digits = normalizeIndianPhone(input);
+  return /^[6-9]\d{9}$/.test(digits);
 }
 
 /**

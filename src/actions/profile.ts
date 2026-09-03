@@ -1,6 +1,7 @@
 'use server';
 import { createServerSupabase, createAdminSupabase } from '@/lib/supabase/server';
 import { profileSchema, type ProfileData } from '@/lib/validators/profile';
+import { normalizeIndianPhone } from '@/lib/utils/format';
 import { revalidatePath } from 'next/cache';
 
 /**
@@ -41,8 +42,8 @@ export async function updateProfile(input: ProfileData) {
   // App-level duplicate check — students.phone lost its UNIQUE constraint
   // when shared family phones became possible, so surface conflicts here.
   if (phoneChanged) {
-    const digits = phone.replace(/\D/g, '');
-    const last10 = digits.slice(-10);
+    const digits = normalizeIndianPhone(phone);
+    const last10 = digits;
     const { data: conflict } = await admin
       .from('students')
       .select('id')
@@ -96,9 +97,9 @@ export async function completeStudentOnboarding(phone: string, name?: string) {
     return { success: false, error: 'Not signed in' };
   }
 
-  const cleaned = phone.replace(/\D/g, '');
+  const cleaned = normalizeIndianPhone(phone);
   if (!/^[6-9]\d{9}$/.test(cleaned)) {
-    return { success: false, error: 'Please enter a valid 10-digit mobile number' };
+    return { success: false, error: 'Please enter a valid 10-digit mobile number (allows 0, +91, e.g. +91 90529 80859 or 09052980859)' };
   }
 
   const admin = createAdminSupabase();

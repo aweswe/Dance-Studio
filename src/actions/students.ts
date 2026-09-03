@@ -6,6 +6,7 @@ import { updateStudentSchema, createStudentSchema, type UpdateStudentData, type 
 import { sendWhatsAppTemplate } from '@/lib/whatsapp/client';
 import { WHATSAPP_TEMPLATES } from '@/lib/whatsapp/templates';
 import { SITE_URL, ROUTES } from '@/lib/utils/constants';
+import { normalizeIndianPhone } from '@/lib/utils/format';
 import { revalidatePath } from 'next/cache';
 
 /**
@@ -30,12 +31,10 @@ export async function enablePortalAccess(studentId: string) {
   }
 
   // Normalize to E.164 +91XXXXXXXXXX (the format OTP sign-in expects)
-  const digits = String(student.phone ?? '').replace(/\D/g, '');
-  const phone =
-    digits.length === 10 ? `+91${digits}` :
-    digits.length === 12 && digits.startsWith('91') ? `+${digits}` : '';
+  const digits = normalizeIndianPhone(student.phone);
+  const phone = digits.length === 10 ? `+91${digits}` : '';
   if (!phone) {
-    return { success: false, error: 'Student has no valid Indian mobile number — add one first' };
+    return { success: false, error: 'Student has no valid Indian mobile number — please edit profile to add one (e.g. +91 or 0 prefix allowed)' };
   }
 
   const admin = createAdminSupabase();
@@ -225,9 +224,11 @@ export async function updateStudent(studentId: string, data: UpdateStudentData) 
     .eq('id', studentId)
     .single();
 
+  const normalizedPhone = d.phone ? normalizeIndianPhone(d.phone) : null;
+
   const payload: Record<string, unknown> = {
     name: d.name,
-    phone: d.phone,
+    phone: normalizedPhone || null,
     status: d.status,
     programme_id: programmeId,
     batch_id: d.batchId ?? null,

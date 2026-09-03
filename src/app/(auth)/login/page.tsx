@@ -395,8 +395,8 @@ function LoginForm() {
                       type="tel"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
-                      placeholder="90529 80859"
-                      maxLength={10}
+                      placeholder="90529 80859 (or 0 / +91)"
+                      maxLength={16}
                       required
                       className="flex-1 bg-white/5 border border-white/15 border-l-0 rounded-r px-4 py-3 text-white text-sm placeholder-white/25 focus:outline-none focus:border-bl/60 transition-colors"
                       autoFocus
