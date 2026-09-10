@@ -77,61 +77,65 @@
 :root {
   color-scheme: light;
   --background: #ffffff;
-  --foreground: #0f0f0f;
+  --foreground: #0f172a;
 
-  --canvas: #ffffff;
-  --canvas-muted: #f7f9fb; /* light */
-  --canvas-muted-2: #f2f2f2; /* off */
+  --canvas: #f8f9fa;
+  --canvas-muted: #f1f5f9;
+  --canvas-muted-2: #e2e8f0;
   --surface: #ffffff;
-  --bl-pale-surface: #e8f7fc;
+  --surface-card: #ffffff;
+  --bl-pale-surface: #e0f2fe;
 
-  --ink: #0f0f0f;
-  --ink-2: #777777;
-  --ink-3: color-mix(in oklch, #777777 55%, #ffffff);
+  --ink: #0f172a;
+  --ink-2: #475569;
+  --ink-3: #64748b;
 
-  --line: color-mix(in oklch, #0f0f0f 7%, #ffffff); /* black/[.07] */
-  --line-subtle: color-mix(in oklch, #0f0f0f 5%, #ffffff); /* black/5 */
-  --line-strong: color-mix(in oklch, #0f0f0f 10%, #ffffff); /* black/10 */
+  --line: rgba(15, 23, 42, 0.08);
+  --line-subtle: rgba(15, 23, 42, 0.05);
+  --line-strong: rgba(15, 23, 42, 0.15);
 
-  /* Ink variants — same hues darkened for small text on light (AA) */
-  --bl-ink: color-mix(in oklch, #2bb4d8 52%, #0f0f0f);
-  --gold-ink: color-mix(in oklch, #f5a623 45%, #0f0f0f);
-  --green-ink: color-mix(in oklch, #1db954 55%, #0f0f0f);
-
-  /* Interaction */
-  --bl-deep: color-mix(in oklch, #2bb4d8 85%, #0f0f0f); /* replaces #22a0c4 hover */
+  /* Accents */
+  --bl: #2bb4d8;
+  --bl-ink: #0284c7;
+  --bl-deep: #0369a1;
+  --peach: #fb923c;
+  --peach-surface: #fff7ed;
+  --peach-ink: #ea580c;
+  --gold-ink: #d97706;
+  --green-ink: #16a34a;
   --danger: #ef4444;
   --danger-deep: #dc2626;
-
-  /* Static alias for SVG attribute references (charts) */
-  --bl: #2bb4d8;
 }
 
-/* ── Dark variant (all values derived from the frozen palette) ── */
+/* ── Dark variant (Midnight Obsidian Studio) ── */
 .dark {
   color-scheme: dark;
-  --background: #0f0f0f;
+  --background: #09090b;
   --foreground: #ffffff;
 
-  --canvas: #0f0f0f;
-  --canvas-muted: #141414;
-  --canvas-muted-2: color-mix(in oklch, #141414 55%, #0f0f0f);
-  --surface: #141414;
-  --bl-pale-surface: color-mix(in oklch, #2bb4d8 18%, #141414);
+  --canvas: #09090b;
+  --canvas-muted: #121216;
+  --canvas-muted-2: #18181d;
+  --surface: #121216;
+  --surface-card: #18181e;
+  --bl-pale-surface: rgba(43, 180, 216, 0.12);
 
   --ink: #ffffff;
-  --ink-2: color-mix(in oklch, #777777 62%, #ffffff);
-  --ink-3: color-mix(in oklch, #ffffff 45%, #141414);
+  --ink-2: #94a3b8;
+  --ink-3: #64748b;
 
-  --line: color-mix(in oklch, #ffffff 12%, #141414);
-  --line-subtle: color-mix(in oklch, #ffffff 8%, #141414);
-  --line-strong: color-mix(in oklch, #ffffff 20%, #141414);
+  --line: rgba(255, 255, 255, 0.12);
+  --line-subtle: rgba(255, 255, 255, 0.07);
+  --line-strong: rgba(255, 255, 255, 0.22);
 
-  --bl-ink: #2bb4d8;
-  --gold-ink: #f5a623;
-  --green-ink: #1db954;
-
-  --bl-deep: #22a0c4;
+  --bl: #2bb4d8;
+  --bl-ink: #38bdf8;
+  --bl-deep: #0284c7;
+  --peach: #fb923c;
+  --peach-surface: rgba(251, 146, 60, 0.15);
+  --peach-ink: #fdba74;
+  --gold-ink: #fbbf24;
+  --green-ink: #22c55e;
   --danger: #ef4444;
   --danger-deep: #dc2626;
 }
@@ -145,6 +149,7 @@ body {
   background: var(--canvas);
   color: var(--ink);
   overflow-x: hidden;
+  transition: background-color 300ms ease, color 300ms ease;
 }
 
 /* ── Theme transition (one-shot class added by ThemeToggle) ── */
@@ -402,3 +407,89 @@ html.theme-transition *::after {
   background: rgba(29, 185, 84, 0.12);
   border-color: rgba(29, 185, 84, 0.35);
 }
+
+/* ═══ URBAN DANCE SIGNATURE AESTHETIC ═══════════════════════════════ */
+.heading-urban {
+  font-family: var(--font-display-face), sans-serif;
+  font-style: italic;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.03em;
+  line-height: 0.92;
+}
+
+.heading-urban-section {
+  font-family: var(--font-display-face), sans-serif;
+  font-style: italic;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.text-urban-meta {
+  font-family: var(--font-display-face), sans-serif;
+  font-style: italic;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.hairline-border {
+  border-color: var(--line);
+}
+
+/* ═══ BENTO & HYBRID AMBIENCE UTILITIES ═════════════════════════════ */
+.bento-card {
+  background-color: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  overflow: hidden;
+  position: relative;
+  transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1), border-color 300ms ease, box-shadow 300ms ease;
+}
+
+.dark .bento-card {
+  background-color: #121216;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.bento-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(43, 180, 216, 0.4);
+  box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.15);
+}
+
+.dark .bento-card:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7);
+}
+
+/* Peach Pill Button (Step Up inspired) */
+.btn-peach {
+  background-color: #fb923c;
+  color: #000000 !important;
+  font-weight: 800;
+  border-radius: 9999px;
+  transition: all 200ms ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-peach:hover {
+  background-color: #f97316;
+  transform: scale(1.02);
+  box-shadow: 0 8px 20px -4px rgba(251, 146, 60, 0.5);
+}
+
+.btn-peach:active {
+  transform: scale(0.97);
+}
+
+/* Editorial Stark Divider */
+.editorial-line {
+  border-color: var(--line);
+}
+
+

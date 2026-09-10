@@ -17,7 +17,7 @@ import {
   Users,
   BookOpen,
   Home,
-  Sparkles,
+  Layers,
   ExternalLink,
   Loader2,
 } from "lucide-react";
@@ -37,7 +37,7 @@ interface PortalShellProps {
 
 const STUDENT_NAV = [
   { name: "Dashboard", href: ROUTES.student, icon: LayoutDashboard },
-  { name: "Classes & Batches", href: `${ROUTES.student}/classes`, icon: Sparkles },
+  { name: "Classes & Batches", href: `${ROUTES.student}/classes`, icon: Layers },
   { name: "Schedule", href: `${ROUTES.student}/schedule`, icon: Calendar },
   { name: "Attendance", href: `${ROUTES.student}/attendance`, icon: CheckSquare },
   { name: "Fees & Receipts", href: `${ROUTES.student}/fees`, icon: CreditCard },

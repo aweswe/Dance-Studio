@@ -4,18 +4,20 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { Menu, X, User, LayoutDashboard } from 'lucide-react';
+import { Menu, X, User, LayoutDashboard, Calendar } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import { ROUTES } from '@/lib/utils/constants';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { createClient } from '@/lib/supabase/client';
 
-const LINKS = [
+const ALL_LINKS = [
+  { name: 'Schedule', href: '#schedule' },
   { name: 'Programmes', href: ROUTES.programmes },
+  { name: 'Upcoming', href: '#classes' },
+  { name: 'Videos', href: '#videos' },
   { name: 'Kuchipudi', href: '/kuchipudi' },
-  { name: 'Schedule', href: `${ROUTES.home}#schedule` },
-  { name: 'Gallery', href: ROUTES.gallery },
   { name: 'Studio Rental', href: ROUTES.studioRental },
+  { name: 'Gallery', href: ROUTES.gallery },
   { name: 'About', href: ROUTES.about },
   { name: 'Contact', href: ROUTES.contact },
 ];
@@ -82,150 +84,182 @@ export function Nav() {
     };
   }, []);
 
-  // Slight elevation + compression once the page has scrolled.
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
+    const onScroll = () => setScrolled(window.scrollY > 15);
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const isActive = (href: string) =>
-    href.startsWith('/#') ? pathname === ROUTES.home : pathname === href;
-
   return (
-    <nav
+    <header
       className={cn(
-        'relative z-50 flex items-center justify-between px-6 md:px-10 bg-canvas/95 border-b border-line backdrop-blur-md transition-all duration-250',
-        scrolled ? 'py-2 shadow-pop' : 'py-2.5',
+        'w-full z-50 transition-all duration-300',
+        scrolled
+          ? 'bg-surface/90 dark:bg-black/90 backdrop-blur-md border-b border-line py-3 shadow-md'
+          : 'bg-transparent py-4'
       )}
     >
-      <Link href={ROUTES.home} className="block rounded-sm focus-visible:focus-ring">
-        <Image src="/logo.png" alt="Rhythmzz Logo" width={120} height={44} className="h-10 w-auto" priority />
-      </Link>
-
-      {/* Desktop Links */}
-      <ul className="hidden lg:flex gap-5 list-none m-0 p-0">
-        {LINKS.map((link) => {
-          const active = isActive(link.href);
-          return (
-            <li key={link.name} className="relative">
-              <Link
-                href={link.href}
-                className={cn(
-                  'text-[11px] tracking-[1.6px] uppercase font-medium transition-colors rounded-sm focus-visible:focus-ring',
-                  active ? 'text-ink font-bold' : 'text-ink-2 hover:text-bl-ink',
-                )}
-              >
-                {link.name}
-              </Link>
-              {active && (
-                <span className="absolute left-0 right-0 -bottom-2 h-[2px] bg-bl" aria-hidden />
-              )}
-            </li>
-          );
-        })}
-      </ul>
-
-      {/* Desktop CTAs */}
-      <div className="hidden lg:flex gap-2.5 items-center">
-        <ThemeToggle />
-        {authInfo?.isLoggedIn ? (
-          <Link
-            href={authInfo.href}
-            className="text-[11px] font-semibold tracking-[1.6px] uppercase px-3.5 py-2 text-bl-ink hover:text-bl bg-bl/10 hover:bg-bl/20 border border-bl/30 rounded-control flex items-center gap-2 transition-all focus-visible:focus-ring shadow-sm"
-          >
-            <LayoutDashboard size={14} className="text-bl" />
-            <span>{authInfo.label}</span>
-          </Link>
-        ) : (
-          <Link
-            href="/login"
-            className="text-[11px] font-semibold tracking-[1.6px] uppercase px-4 py-2 text-ink-2 hover:text-ink flex items-center gap-1.5 transition-colors focus-visible:focus-ring"
-          >
-            <User size={14} className="text-bl-ink" />
-            <span>Login</span>
-          </Link>
-        )}
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-10 flex items-center justify-between">
+        {/* Left: Brand Identity */}
         <Link
-          href={ROUTES.enrol}
-          className="text-[11px] font-semibold tracking-[1.6px] uppercase px-5 py-2.5 bg-blk text-white hover:bg-bl hover:text-blk transition-all focus-visible:focus-ring active:scale-[0.98] rounded-control dark:bg-bl dark:text-blk dark:hover:bg-white"
+          href={ROUTES.home}
+          className="group flex items-center gap-3 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2BB4D8]"
         >
-          Enrol Now
+          <div className="flex flex-col leading-none">
+            <span className="heading-urban text-lg sm:text-2xl tracking-tighter text-ink group-hover:text-[#2BB4D8] transition-colors">
+              RHYTHMZZ
+            </span>
+            <span className="text-[10px] font-bold tracking-[0.25em] uppercase text-[#FB923C]">
+              DANCE ACADEMY
+            </span>
+          </div>
         </Link>
-      </div>
 
-      {/* Mobile Header Controls: Theme Toggle & Hamburger */}
-      <div className="flex items-center gap-2 lg:hidden">
-        <ThemeToggle className="w-9 h-9 border border-line" />
-        <button
-          className="p-2 text-ink rounded-control border border-line focus-visible:focus-ring active:scale-95 transition-transform"
-          onClick={() => setIsOpen(!isOpen)}
-          aria-label="Toggle menu"
-          aria-expanded={isOpen}
-          aria-controls="mobile-menu"
-        >
-          {isOpen ? <X size={20} /> : <Menu size={20} />}
-        </button>
-      </div>
+        {/* Center/Right Desktop Controls */}
+        <div className="hidden md:flex items-center gap-5 lg:gap-7">
+          <Link
+            href="/programmes"
+            className="text-[11px] font-bold uppercase tracking-[0.18em] text-ink-2 hover:text-ink transition-colors"
+          >
+            Programmes
+          </Link>
 
-      {/* Mobile Menu */}
-      <div
-        id="mobile-menu"
-        className={cn(
-          'absolute top-full left-0 right-0 bg-surface border-b border-line p-6 flex flex-col gap-6 lg:hidden shadow-pop transition-all duration-250 ease-out-snap',
-          isOpen ? 'visible opacity-100 translate-y-0' : 'invisible opacity-0 -translate-y-2',
-        )}
-      >
-        <ul className="flex flex-col gap-3 list-none m-0 p-0">
-          {LINKS.map((link) => {
-            const active = isActive(link.href);
-            return (
-              <li key={link.name} className="relative">
-                <Link
-                  href={link.href}
-                  onClick={() => setIsOpen(false)}
-                  className={cn(
-                    'text-sm tracking-wider uppercase font-medium block py-2 rounded-sm focus-visible:focus-ring',
-                    active ? 'text-ink font-bold' : 'text-ink-2 hover:text-bl-ink',
-                  )}
-                >
-                  {link.name}
-                </Link>
-                {active && (
-                  <span className="absolute left-0 bottom-0 w-5 h-[2px] bg-bl" aria-hidden />
-                )}
-              </li>
-            );
-          })}
-        </ul>
-        <div className="flex flex-col gap-3 pt-4 border-t border-line">
+          <Link
+            href="#schedule"
+            className="text-[11px] font-bold uppercase tracking-[0.18em] text-ink-2 hover:text-ink transition-colors"
+          >
+            Schedule
+          </Link>
+
+          <Link
+            href="#coaches"
+            className="text-[11px] font-bold uppercase tracking-[0.18em] text-ink-2 hover:text-ink transition-colors"
+          >
+            Coaches
+          </Link>
+
+          <Link
+            href="/about"
+            className="text-[11px] font-bold uppercase tracking-[0.18em] text-ink-2 hover:text-ink transition-colors"
+          >
+            About
+          </Link>
+
+          {/* Book A Class Pill Button in Warm Peach */}
+          <Link
+            href={ROUTES.enrol}
+            className="btn-peach px-5 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.16em] shadow-sm active:scale-95"
+          >
+            Book a Class
+          </Link>
+
+          {/* Account Portal Link */}
           {authInfo?.isLoggedIn ? (
             <Link
               href={authInfo.href}
-              onClick={() => setIsOpen(false)}
-              className="text-xs font-semibold tracking-widest uppercase py-3 bg-bl/15 border border-bl/40 text-bl-ink text-center flex items-center justify-center gap-2 rounded-control"
+              className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-[#2BB4D8] hover:underline transition-colors"
             >
-              <LayoutDashboard size={16} /> {authInfo.label}
+              <LayoutDashboard size={13} />
+              <span>{authInfo.label}</span>
             </Link>
           ) : (
             <Link
               href="/login"
-              onClick={() => setIsOpen(false)}
-              className="text-xs font-semibold tracking-widest uppercase py-3 border border-line-strong text-ink text-center flex items-center justify-center gap-2 rounded-control"
+              className="text-[11px] font-bold uppercase tracking-[0.18em] text-ink-2 hover:text-ink transition-colors"
             >
-              <User size={16} /> Student Login
+              Account
             </Link>
           )}
+
+          {/* Theme Toggle Button */}
+          <ThemeToggle />
+        </div>
+
+        {/* Mobile Header Controls (Only on mobile) */}
+        <div className="flex md:hidden items-center gap-2">
+          <ThemeToggle className="w-7 h-7" />
           <Link
             href={ROUTES.enrol}
-            onClick={() => setIsOpen(false)}
-            className="text-xs font-semibold tracking-widest uppercase py-3 bg-blk text-white text-center rounded-control dark:bg-bl dark:text-blk"
+            className="btn-peach px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider shadow-sm active:scale-[0.96]"
           >
-            Enrol Now
+            Book
           </Link>
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            aria-label="Toggle mobile menu"
+            className="p-1.5 text-ink hover:text-[#FB923C] transition-colors cursor-pointer rounded-lg border border-line bg-surface/50"
+          >
+            {isOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
         </div>
       </div>
-    </nav>
+
+      {/* Sleek Mobile Slide-Down Drawer (Mobile Only: md:hidden) */}
+      <div
+        id="mobile-nav-drawer"
+        className={cn(
+          'fixed inset-x-0 top-[60px] z-50 md:hidden bg-canvas/95 backdrop-blur-xl px-5 py-6 flex flex-col justify-between transition-all duration-300 ease-out border-b border-line shadow-2xl max-h-[calc(100vh-60px)] overflow-y-auto',
+          isOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2 pointer-events-none'
+        )}
+      >
+        <div className="space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b border-line">
+            <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#FB923C] font-bold">
+              Menu Navigation
+            </span>
+            <button
+              onClick={() => setIsOpen(false)}
+              className="text-xs font-mono text-ink-2 hover:text-ink flex items-center gap-1 cursor-pointer"
+            >
+              <X size={14} /> Close
+            </button>
+          </div>
+
+          <nav className="grid grid-cols-2 gap-2">
+            {ALL_LINKS.map((link) => (
+              <Link
+                key={link.name}
+                href={link.href}
+                onClick={() => setIsOpen(false)}
+                className="px-3.5 py-2.5 rounded-xl border border-line bg-surface/70 hover:border-[#FB923C] hover:bg-surface text-ink text-xs font-bold uppercase tracking-wider transition-all active:scale-[0.96] flex items-center justify-between"
+              >
+                <span>{link.name}</span>
+                <span className="text-[#FB923C] text-[10px] font-mono">→</span>
+              </Link>
+            ))}
+          </nav>
+
+          <div className="pt-3 border-t border-line space-y-2">
+            <Link
+              href={ROUTES.enrol}
+              onClick={() => setIsOpen(false)}
+              className="btn-peach w-full py-3 text-xs font-black uppercase tracking-wider text-center block shadow-sm active:scale-[0.96]"
+            >
+              Book Free Trial Class ──→
+            </Link>
+
+            {authInfo?.isLoggedIn ? (
+              <Link
+                href={authInfo.href}
+                onClick={() => setIsOpen(false)}
+                className="w-full py-2 text-xs font-mono uppercase tracking-wider text-center block text-[#2BB4D8] hover:underline"
+              >
+                {authInfo.label} ──→
+              </Link>
+            ) : (
+              <Link
+                href="/login"
+                onClick={() => setIsOpen(false)}
+                className="w-full py-2 text-xs font-mono uppercase tracking-wider text-center block text-ink-2 hover:text-ink"
+              >
+                Student / Instructor Login
+              </Link>
+            )}
+          </div>
+        </div>
+      </div>
+    </header>
   );
 }
+

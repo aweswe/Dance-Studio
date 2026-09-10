@@ -170,7 +170,7 @@ export function DashboardPanels({
 
         <div className="space-y-3">
           {pendingRentals.length === 0 && unmarkedToday.length === 0 && newEnquiries.length === 0 && (
-            <p className="text-sm text-ink-2 py-4 text-center">Nothing pending. 🎉</p>
+            <p className="text-sm text-ink-2 py-4 text-center">All studio actions up to date.</p>
           )}
 
           {pendingRentals.map((r) => (

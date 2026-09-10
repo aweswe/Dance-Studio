@@ -9,7 +9,6 @@ import {
   Calendar,
   Clock,
   CreditCard,
-  Sparkles,
   ArrowRight,
   MessageSquare,
   ShieldCheck,
@@ -263,16 +262,16 @@ export function EnrolForm({ programmes = [], batches = [], defaultProgramme }: E
 
   // ---------- Single-View Streamlined Form ----------
   return (
-    <div className="bg-surface p-6 md:p-8 rounded-2xl border border-line shadow-xl max-w-xl mx-auto w-full space-y-6">
+    <div className="bento-card p-6 md:p-8 shadow-xl max-w-xl mx-auto w-full space-y-6">
       {/* Mode Switcher: Enrol Now vs Free Trial */}
-      <div className="flex p-1 rounded-xl bg-canvas-muted border border-line text-xs font-semibold">
+      <div className="flex p-1 rounded-full bg-canvas border border-line text-xs font-semibold">
         <button
           type="button"
           onClick={() => setBookingMode('pay')}
           className={cn(
-            "flex-1 py-2.5 rounded-lg transition-all flex items-center justify-center gap-2",
+            "flex-1 py-2.5 rounded-full transition-all flex items-center justify-center gap-2 font-mono text-xs",
             bookingMode === 'pay'
-              ? "bg-bl text-white shadow-sm font-bold"
+              ? "btn-peach shadow-sm"
               : "text-ink-2 hover:text-ink"
           )}
         >
@@ -282,23 +281,23 @@ export function EnrolForm({ programmes = [], batches = [], defaultProgramme }: E
           type="button"
           onClick={() => setBookingMode('trial')}
           className={cn(
-            "flex-1 py-2.5 rounded-lg transition-all flex items-center justify-center gap-2",
+            "flex-1 py-2.5 rounded-full transition-all flex items-center justify-center gap-2 font-mono text-xs",
             bookingMode === 'trial'
-              ? "bg-surface text-ink border border-line shadow-sm font-bold"
+              ? "btn-peach shadow-sm"
               : "text-ink-2 hover:text-ink"
           )}
         >
-          <Sparkles size={14} /> Book Free Trial (Pay Later)
+          <CheckCircle2 size={14} /> Free Trial (Pay Later)
         </button>
       </div>
 
       <form onSubmit={handleEnrolSubmit} className="space-y-5" noValidate>
         {/* 1. Select Dance Discipline */}
         <div className="space-y-2">
-          <label className="text-xs font-bold uppercase tracking-wider text-ink flex items-center justify-between">
+          <label className="text-xs font-mono font-bold uppercase tracking-wider text-ink flex items-center justify-between">
             <span>1. Choose Programme</span>
             {selectedProgramme && (
-              <span className="text-bl font-semibold">
+              <span className="text-[#FB923C] font-semibold">
                 {formatCurrency(selectedProgramme.fees_monthly)}/month
               </span>
             )}
@@ -313,19 +312,19 @@ export function EnrolForm({ programmes = [], batches = [], defaultProgramme }: E
                   type="button"
                   onClick={() => handleSelectProgramme(p.id)}
                   className={cn(
-                    "p-3 rounded-xl border text-left transition-all relative flex flex-col justify-between",
+                    "p-3 rounded-2xl border text-left transition-all relative flex flex-col justify-between cursor-pointer",
                     isSelected
-                      ? "border-bl bg-bl/10 shadow-sm"
-                      : "border-line bg-canvas-muted hover:border-line-strong hover:bg-canvas-muted/80"
+                      ? "border-[#FB923C] bg-[#FB923C]/10 shadow-sm"
+                      : "border-line bg-canvas hover:border-line-strong hover:bg-canvas/80"
                   )}
                 >
                   <div>
-                    <p className={cn("text-xs font-bold leading-tight", isSelected ? "text-bl-ink" : "text-ink")}>
+                    <p className={cn("text-xs font-bold leading-tight", isSelected ? "text-[#FB923C]" : "text-ink")}>
                       {p.name}
                     </p>
                     <p className="text-[10px] text-ink-2 mt-0.5">{p.age_group || 'All Ages'}</p>
                   </div>
-                  <p className="text-[11px] font-bold text-ink mt-2">
+                  <p className="text-[11px] font-mono font-bold text-ink mt-2">
                     {formatCurrency(p.fees_monthly)}
                   </p>
                 </button>
@@ -427,7 +426,7 @@ export function EnrolForm({ programmes = [], batches = [], defaultProgramme }: E
             <button
               type="submit"
               disabled={status === 'submitting'}
-              className="w-full text-xs font-semibold tracking-[1.5px] uppercase py-4 bg-bl text-white hover:bg-bl-deep transition-all rounded-xl shadow-lg active:scale-[0.98] disabled:opacity-60 flex items-center justify-center gap-2"
+              className="btn-peach w-full py-4 text-xs font-black tracking-[2px] uppercase shadow-md cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2"
             >
               {status === 'submitting' ? (
                 <>
@@ -435,21 +434,21 @@ export function EnrolForm({ programmes = [], batches = [], defaultProgramme }: E
                 </>
               ) : (
                 <>
-                  <CreditCard size={16} /> Enrol &amp; Pay Online ({formatCurrency(selectedProgramme?.fees_monthly ?? 2000)})
+                  <CreditCard size={16} /> Enrol &amp; Pay Online ({formatCurrency(selectedProgramme?.fees_monthly ?? 2000)}) ──→
                 </>
               )}
             </button>
           ) : (
             <button
               type="submit"
-              className="w-full text-xs font-semibold tracking-[1.5px] uppercase py-4 bg-green text-white hover:opacity-95 transition-all rounded-xl shadow-lg active:scale-[0.98] flex items-center justify-center gap-2"
+              className="w-full text-xs font-black tracking-[2px] uppercase py-4 bg-[#22c55e] hover:bg-[#16a34a] text-white transition-all rounded-full shadow-md active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer"
             >
-              <MessageSquare size={16} /> Confirm Free Trial on WhatsApp &rarr;
+              <MessageSquare size={16} /> Confirm Free Trial on WhatsApp ──→
             </button>
           )}
 
-          <p className="text-[11px] text-center text-ink-2 mt-2.5 flex items-center justify-center gap-1.5">
-            <ShieldCheck size={14} className="text-green" /> 100% Secure Checkout · Instant Student Portal Access
+          <p className="text-[11px] font-mono text-center text-ink-3 mt-3 flex items-center justify-center gap-1.5">
+            <ShieldCheck size={14} className="text-[#22c55e]" /> 100% Secure Checkout · Instant Student Portal Access
           </p>
         </div>
       </form>

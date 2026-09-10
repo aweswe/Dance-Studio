@@ -91,14 +91,14 @@ export function GalleryClient({ images }: { images: ImageType[] }) {
             onClick={() => setFilter(cat)}
             aria-pressed={filter === cat}
             className={cn(
-              "px-5 py-2 text-[11px] font-bold tracking-[1.5px] uppercase rounded-full transition-all border focus-visible:focus-ring active:scale-95",
+              "px-5 py-2 text-xs font-mono font-bold tracking-[1.5px] uppercase rounded-full transition-transform duration-100 border focus-visible:focus-ring active:scale-[0.96]",
               filter === cat
-                ? "bg-blk text-white border-blk dark:bg-white dark:text-black shadow-sm"
-                : "bg-surface text-ink-2 border-line hover:border-bl hover:text-ink"
+                ? "btn-peach border-transparent text-black shadow-sm"
+                : "bg-surface text-ink-2 border-line hover:border-[#FB923C] hover:text-ink"
             )}
           >
             {cat}
-            <span className="text-[10px] opacity-60 ml-1.5 font-normal">
+            <span className="text-[10px] opacity-75 ml-1.5 font-normal font-mono">
               ({cat === 'all' ? images.length : images.filter((i) => i.category === cat).length})
             </span>
           </button>
@@ -106,12 +106,12 @@ export function GalleryClient({ images }: { images: ImageType[] }) {
       </div>
 
       {/* Gallery Grid with Hover Overlays */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
         {filteredImages.map((image) => (
           <button
             key={image.id}
             type="button"
-            className="relative rounded-card overflow-hidden bg-blk aspect-square cursor-pointer group focus-visible:focus-ring border border-line text-left"
+            className="bento-card relative aspect-square cursor-pointer group focus-visible:focus-ring border border-line text-left p-0 overflow-hidden"
             onClick={(e) => {
               triggerRef.current = e.currentTarget;
               setLightboxImage(image);
@@ -126,17 +126,17 @@ export function GalleryClient({ images }: { images: ImageType[] }) {
               className="object-cover transition-transform duration-500 group-hover:scale-105 opacity-90 group-hover:opacity-100"
             />
             {/* Always readable title overlay on hover/focus */}
-            <div className="absolute inset-0 bg-gradient-to-t from-blk/90 via-blk/30 to-transparent opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity duration-300 flex flex-col justify-between p-4 z-10">
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity duration-300 flex flex-col justify-between p-5 z-10">
               <div className="flex justify-end">
-                <span className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-md text-white flex items-center justify-center">
+                <span className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-md text-white flex items-center justify-center shadow-md">
                   <ZoomIn size={16} />
                 </span>
               </div>
               <div>
-                <span className="text-[9px] font-bold uppercase tracking-[2px] text-bl-light px-2 py-0.5 rounded bg-bl/20 inline-block mb-1">
+                <span className="text-[9px] font-mono font-bold uppercase tracking-[2px] text-[#FB923C] px-2 py-0.5 rounded bg-black/60 backdrop-blur-md inline-block mb-1.5 border border-white/10">
                   {image.category}
                 </span>
-                <h4 className="heading-display text-base text-white line-clamp-2 leading-snug">
+                <h4 className="heading-urban text-lg text-white line-clamp-2 leading-snug">
                   {image.title || image.alt}
                 </h4>
               </div>

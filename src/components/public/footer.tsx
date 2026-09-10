@@ -1,86 +1,100 @@
 import Link from 'next/link';
-import Image from 'next/image';
 import { ROUTES, ACADEMY } from '@/lib/utils/constants';
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-blk text-white pt-20 pb-8 px-6 md:px-16 border-t border-white/10">
-      <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-10 mb-16">
-          <div className="col-span-1 md:col-span-2">
-            <Link href={ROUTES.home} className="inline-block mb-6">
-              <Image src="/logo.png" alt="Rhythmzz Academy of Dance — logo" width={150} height={55} className="h-12 w-auto object-contain" />
-            </Link>
-            <p className="text-sm text-white/50 leading-relaxed max-w-sm">
-              Teaching dance at Neredmet X Road, Secunderabad since 2010. IAO USA accredited. Structured programmes in Kids, Adults, Fitness, and Kuchipudi Classical Certification.
-            </p>
-            <p className="heading-display text-2xl text-bl mt-6 tracking-[2px]">FEEL THE BEAT!</p>
+    <footer className="w-full bg-[#09090B] text-white dark:bg-[#070709] dark:text-[#E4E4E7] pt-16 sm:pt-20 pb-12 px-6 sm:px-10 md:px-14 border-t border-line dark:border-white/10 mt-12 transition-colors duration-300">
+      <div className="max-w-[1440px] mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-8 mb-16">
+          {/* Column 1: Studio Identity (approx 5 cols) */}
+          <div className="md:col-span-5 flex flex-col justify-between">
+            <div>
+              <h3 className="heading-urban text-2xl sm:text-3xl tracking-tight mb-4 select-none">
+                RHYTHMZZ DANCE ACADEMY
+              </h3>
+              <div className="text-xs sm:text-sm font-medium opacity-85 leading-relaxed space-y-1">
+                <p className="font-bold">Secunderabad</p>
+                <p>Plot 597, 3rd Floor, Above ICICI ATM,</p>
+                <p>Neredmet X Road, Secunderabad 500094</p>
+                <p className="pt-3">
+                  <a
+                    href={`tel:${ACADEMY.phone}`}
+                    className="font-bold hover:text-[#FB923C] transition-colors"
+                  >
+                    +91 90529 80859
+                  </a>
+                </p>
+              </div>
+            </div>
           </div>
 
-          <div>
-            <h4 className="text-[11px] font-bold tracking-[2px] uppercase text-white mb-5">Quick Links</h4>
-            <ul className="flex flex-col gap-2.5 list-none p-0 m-0 text-xs text-white/50">
-              <li><Link href={ROUTES.home} className="hover:text-bl transition-colors">Home</Link></li>
-              <li><Link href={ROUTES.programmes} className="hover:text-bl transition-colors">Programmes</Link></li>
-              <li><Link href="/kuchipudi" className="hover:text-bl transition-colors">Kuchipudi Curriculum</Link></li>
-              <li><Link href={ROUTES.about} className="hover:text-bl transition-colors">About Us</Link></li>
-              <li><Link href={ROUTES.gallery} className="hover:text-bl transition-colors">Photo Gallery</Link></li>
-              <li><Link href={ROUTES.studioRental} className="hover:text-bl transition-colors">Studio Rental</Link></li>
-              <li><Link href={ROUTES.contact} className="hover:text-bl transition-colors">Contact</Link></li>
+          {/* Spacer Column (1 col) */}
+          <div className="hidden md:block md:col-span-2" />
+
+          {/* Column 2: SERVICES (2-3 cols) */}
+          <div className="md:col-span-2">
+            <h4 className="heading-urban text-lg sm:text-xl tracking-wide mb-4 select-none">
+              SERVICES
+            </h4>
+            <ul className="flex flex-col gap-2 list-none p-0 m-0 text-xs sm:text-sm font-bold uppercase tracking-wider">
+              <li>
+                <Link href="#schedule" className="hover:opacity-60 transition-opacity">
+                  Schedule
+                </Link>
+              </li>
+              <li>
+                <Link href="#coaches" className="hover:opacity-60 transition-opacity">
+                  Coaches
+                </Link>
+              </li>
+              <li>
+                <Link href={ROUTES.programmes} className="hover:opacity-60 transition-opacity">
+                  Styles
+                </Link>
+              </li>
+              <li>
+                <Link href="#videos" className="hover:opacity-60 transition-opacity">
+                  Video
+                </Link>
+              </li>
             </ul>
           </div>
 
-          <div>
-            <h4 className="text-[11px] font-bold tracking-[2px] uppercase text-white mb-5">Portals &amp; SaaS</h4>
-            <ul className="flex flex-col gap-2.5 list-none p-0 m-0 text-xs text-white/50">
+          {/* Column 3: INFO (2-3 cols) */}
+          <div className="md:col-span-3">
+            <h4 className="heading-urban text-lg sm:text-xl tracking-wide mb-4 select-none">
+              INFO
+            </h4>
+            <ul className="flex flex-col gap-2 list-none p-0 m-0 text-xs sm:text-sm font-bold uppercase tracking-wider">
               <li>
-                <Link href="/login" className="text-bl-light hover:underline font-semibold flex items-center gap-1.5">
-                  <span>Student Portal Login</span>
+                <Link href={ROUTES.about} className="hover:opacity-60 transition-opacity">
+                  Who We Are
                 </Link>
               </li>
               <li>
-                <Link href="/admin-login" className="hover:text-white transition-colors">
-                  Instructor &amp; Staff Login
+                <Link href={ROUTES.contact} className="hover:opacity-60 transition-opacity">
+                  Contacts
                 </Link>
               </li>
               <li>
-                <Link href="/admin-login" className="hover:text-white transition-colors">
-                  Studio Admin CRM
+                <Link href={ROUTES.enrol} className="hover:opacity-60 transition-opacity">
+                  Book A Class
                 </Link>
               </li>
-              <li>
-                <Link href={ROUTES.enrol} className="hover:text-white transition-colors">
-                  Book Free Trial
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="text-[11px] font-bold tracking-[2px] uppercase text-white mb-5">Studio Location</h4>
-            <ul className="flex flex-col gap-2.5 list-none p-0 m-0 text-xs text-white/50">
-              <li>Beside SBI Bank, Neredmet X Road</li>
-              <li>Secunderabad, Telangana 500056</li>
-              <li><a href={`tel:${ACADEMY.phone}`} className="hover:text-bl transition-colors">{ACADEMY.phoneDisplay}</a></li>
-              <li><a href={`mailto:${ACADEMY.email}`} className="hover:text-bl transition-colors">{ACADEMY.email}</a></li>
-              <li className="pt-2 text-[11px] text-white/30">Open 7 Days: 6:00 AM – 9:00 PM</li>
             </ul>
           </div>
         </div>
 
-        <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-[11px] tracking-[1px] uppercase text-white/30">
-            &copy; {currentYear} Rhythmzz Academy of Dance. All rights reserved.
-          </p>
-          <p className="text-[11px] tracking-[1px] uppercase text-white/30">
-            {process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID
-              ? 'Payments secured by Razorpay'
-              : 'Neredmet X Road · Secunderabad · IAO USA Accredited'}
-          </p>
+        {/* Bottom copyright hairline */}
+        <div className="pt-6 border-t border-current/10 flex flex-col sm:flex-row justify-between items-center gap-3 text-[10px] sm:text-[11px] font-mono uppercase tracking-widest opacity-60">
+          <span>&copy; {currentYear} Rhythmzz Academy of Dance. Since 2010.</span>
+          <span>Neredmet X Road · Secunderabad</span>
         </div>
       </div>
     </footer>
   );
 }
+
+

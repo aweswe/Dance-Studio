@@ -12,7 +12,7 @@ import {
   CreditCard,
   CheckCircle2,
   Clock,
-  Sparkles,
+  Layers,
   ArrowRight,
   UserCheck,
   Bell,
@@ -240,7 +240,7 @@ export default async function StudentDashboardPage() {
           >
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-lg bg-bl/10 text-bl flex items-center justify-center group-hover:bg-bl group-hover:text-white transition-colors shrink-0">
-                <Sparkles className="w-5 h-5" />
+                <Layers className="w-5 h-5" />
               </div>
               <div className="min-w-0">
                 <p className="text-xs font-bold text-ink uppercase tracking-wider truncate">Classes & Batches</p>

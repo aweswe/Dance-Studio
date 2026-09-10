@@ -305,7 +305,7 @@ export function RentalCalendar({ initialRentals }: { initialRentals: Rental[] })
               </Card>
             ))}
             {rentals.filter((r) => r.status === 'pending').length === 0 && (
-              <Card className="p-4 text-sm text-ink-2 text-center">Nothing pending. 🎉</Card>
+              <Card className="p-4 text-sm text-ink-2 text-center">All rental requests reviewed.</Card>
             )}
           </div>
         )}

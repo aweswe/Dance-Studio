@@ -18,76 +18,73 @@ const PROGRAMME_IMAGES: Record<string, string> = {
 };
 
 export function ProgrammeCard({ programme, schedule }: ProgrammeCardProps) {
-  const theme = PROGRAMME_THEMES[programme.slug as keyof typeof PROGRAMME_THEMES] || PROGRAMME_THEMES['adults-dance'];
   const includes = Array.isArray(programme.includes) ? programme.includes : [];
   const imageSrc = PROGRAMME_IMAGES[programme.slug] || PROGRAMME_IMAGES['adults-dance'];
 
   return (
-    <SpotlightCard className={cn("rounded-2xl h-full flex flex-col justify-between overflow-hidden", theme.card)}>
+    <div className="bento-card flex flex-col justify-between overflow-hidden group">
       {/* Visual Header with authentic photography */}
-      <div className="relative h-44 w-full overflow-hidden border-b border-white/10">
+      <div className="relative h-48 w-full overflow-hidden border-b border-line bg-canvas">
         <Image
           src={imageSrc}
           alt={`${programme.name} training at Rhythmzz Academy`}
           fill
           sizes="(max-width: 768px) 100vw, 50vw"
-          className="object-cover transition-transform duration-700 hover:scale-105 opacity-60"
+          className="object-cover transition-transform duration-700 group-hover:scale-105 opacity-80 dark:opacity-60"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-blk via-blk/40 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-surface via-surface/30 to-transparent" />
         
         {/* Recommended / Featured Badge */}
         {programme.sort_order === 1 && (
-          <div className={cn(
-            "absolute top-4 right-4 text-[9px] tracking-[2px] uppercase font-bold py-1.5 px-3 rounded-full shadow-sm z-10",
-            programme.slug === 'adults-dance' ? "bg-gold text-black" : "bg-bl text-white"
-          )}>
-            Recommended
+          <div className="absolute top-4 right-4 text-[9px] tracking-[2px] uppercase font-mono font-black py-1 px-3 rounded-full shadow-md z-10 bg-[#FB923C] text-black flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-black inline-block" />
+            <span>Popular Batch</span>
           </div>
         )}
 
         <div className="absolute bottom-3 left-6 z-10">
-          <div className={cn("inline-flex items-center gap-1.5 text-[9px] tracking-[3px] uppercase font-bold py-1 px-2.5 rounded-full", theme.badge)}>
+          <div className="inline-flex items-center gap-1.5 text-[10px] font-mono tracking-[2px] uppercase font-bold py-1 px-3 rounded-full bg-surface/90 backdrop-blur-md text-ink border border-line">
             {programme.age_group}
           </div>
         </div>
       </div>
 
-      <div className="p-5 sm:p-7 md:p-10 relative z-10 flex-1 flex flex-col justify-between gap-6">
+      <div className="p-6 sm:p-8 relative z-10 flex-1 flex flex-col justify-between gap-6">
         <div>
-          <h3 className="heading-display text-2xl sm:text-3xl md:text-[34px] text-white mb-2 leading-tight">{programme.name}</h3>
-          <p className="text-[11px] tracking-[1.5px] sm:tracking-[2px] uppercase text-white/60 mb-5 leading-normal">{programme.description}</p>
+          <h3 className="heading-urban text-2xl sm:text-3xl text-ink mb-2 leading-tight">{programme.name}</h3>
+          <p className="text-xs font-mono uppercase tracking-[1.5px] text-ink-2 mb-5 leading-normal">{programme.description}</p>
           
-          <ul className="list-none flex flex-col gap-2 mb-6">
+          <ul className="list-none flex flex-col gap-2.5 mb-6">
             {includes.map((item: string, i: number) => (
-              <li key={i} className="text-xs sm:text-[13px] text-white/80 flex items-start gap-2.5 leading-snug">
-                <span className={cn("text-xs font-bold shrink-0 mt-0.5", theme.checkmark)}>✓</span>
+              <li key={i} className="text-xs sm:text-[13px] text-ink-2 flex items-start gap-2.5 leading-snug">
+                <span className="text-[#FB923C] text-sm font-black shrink-0">✓</span>
                 <span>{item}</span>
               </li>
             ))}
           </ul>
 
           {schedule && (
-            <div className="bg-white/5 rounded-lg py-3 px-4 border border-white/10">
-              <p className="text-[10px] sm:text-[11px] text-white/50 mb-1 tracking-[0.5px] uppercase font-semibold">Class schedule</p>
-              <strong className="text-xs sm:text-sm text-white/90 font-medium block leading-snug">
+            <div className="bg-canvas/70 rounded-xl py-3 px-4 border border-line">
+              <p className="text-[10px] font-mono text-ink-3 mb-1 tracking-[1px] uppercase font-bold">Class schedule</p>
+              <strong className="text-xs sm:text-sm text-ink font-semibold block leading-snug">
                 {schedule.days} · {schedule.time}{schedule.instructor ? ` · by ${schedule.instructor}` : ''}
               </strong>
             </div>
           )}
         </div>
 
-        <div className="pt-2">
+        <div className="pt-2 border-t border-line">
           <div className="flex gap-2.5 sm:gap-3 flex-wrap mb-5">
             {programme.fees_monthly && (
-              <div className={cn("rounded-lg py-2 px-3 sm:py-2.5 sm:px-4 text-center border shrink-0", theme.chip)}>
-                <div className="heading-display text-2xl sm:text-3xl text-white font-bold leading-none">{formatCurrency(programme.fees_monthly)}</div>
-                <div className="text-[9px] tracking-[1.5px] uppercase text-white/50 mt-1">Monthly</div>
+              <div className="bg-canvas border border-line rounded-xl py-2 px-3 sm:py-2.5 sm:px-4 text-center shrink-0">
+                <div className="heading-urban text-2xl sm:text-3xl text-ink font-bold leading-none">{formatCurrency(programme.fees_monthly)}</div>
+                <div className="text-[9px] font-mono tracking-[1.5px] uppercase text-ink-3 mt-1">Monthly</div>
               </div>
             )}
             {programme.fees_quarterly && (
-              <div className="bg-white/5 border border-white/10 rounded-lg py-2 px-3 sm:py-2.5 sm:px-4 text-center shrink-0">
-                <div className="heading-display text-2xl sm:text-3xl text-white font-bold leading-none">{formatCurrency(programme.fees_quarterly)}</div>
-                <div className="text-[9px] tracking-[1.5px] uppercase text-white/50 mt-1">Quarterly</div>
+              <div className="bg-canvas border border-line rounded-xl py-2 px-3 sm:py-2.5 sm:px-4 text-center shrink-0">
+                <div className="heading-urban text-2xl sm:text-3xl text-ink font-bold leading-none">{formatCurrency(programme.fees_quarterly)}</div>
+                <div className="text-[9px] font-mono tracking-[1.5px] uppercase text-ink-3 mt-1">Quarterly</div>
               </div>
             )}
           </div>
@@ -95,14 +92,14 @@ export function ProgrammeCard({ programme, schedule }: ProgrammeCardProps) {
           <div className="flex flex-col sm:flex-row gap-2.5">
             <Link
               href={`${ROUTES.enrol}?programme=${programme.slug}`}
-              className={cn("block w-full sm:flex-1 text-center text-[11px] font-semibold tracking-[2px] uppercase py-3.5 px-4 transition-all focus-visible:focus-ring active:scale-[0.98] rounded-control shadow-md", theme.button)}
+              className="btn-peach flex-1 py-3 px-4 text-xs tracking-[0.15em] shadow-sm"
             >
-              Enrol Now
+              Enrol Now ──→
             </Link>
             {programme.slug === 'kuchipudi' && (
               <Link
                 href="/kuchipudi"
-                className="block w-full sm:w-auto text-center text-[11px] font-semibold tracking-[2px] uppercase py-3.5 px-5 bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all rounded-control focus-visible:focus-ring"
+                className="py-3 px-5 rounded-full text-center text-xs font-bold tracking-[0.15em] uppercase bg-surface hover:bg-canvas text-ink border border-line transition-all"
               >
                 Syllabus
               </Link>
@@ -110,7 +107,7 @@ export function ProgrammeCard({ programme, schedule }: ProgrammeCardProps) {
           </div>
         </div>
       </div>
-    </SpotlightCard>
+    </div>
   );
 }
 

@@ -1,22 +1,29 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { Nav } from '@/components/public/nav';
+import { cn } from '@/lib/utils/cn';
 
 /**
- * Fixed header stack (announcement banner + nav). Measures its own height
- * into --public-header-h so <main> can pad itself correctly whether the
- * banner is visible, dismissed, or wraps to two lines — fixes the old
- * banner/nav overlap where the fixed nav sat on top of the banner.
+ * Fixed header stack (announcement banner + nav).
+ * On the homepage ('/'), the hero frame natively embeds the top navbar matching
+ * the urban editorial reference, so this fixed bar gracefully slides in once scrolled.
+ * On all other pages, it provides standard header spacing and visibility.
  */
 export function PublicHeader({ bannerSlot }: { bannerSlot?: React.ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
+  const isHome = pathname === '/';
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
     const update = () => {
-      document.documentElement.style.setProperty('--public-header-h', `${el.offsetHeight}px`);
+      // On homepage, we don't pad main so hero touches the top naturally
+      const height = isHome ? 0 : el.offsetHeight;
+      document.documentElement.style.setProperty('--public-header-h', `${height}px`);
     };
     update();
     const ro = new ResizeObserver(update);
@@ -25,12 +32,34 @@ export function PublicHeader({ bannerSlot }: { bannerSlot?: React.ReactNode }) {
       ro.disconnect();
       document.documentElement.style.removeProperty('--public-header-h');
     };
-  }, []);
+  }, [isHome]);
+
+  useEffect(() => {
+    if (!isHome) {
+      setScrolled(true);
+      return;
+    }
+    const onScroll = () => {
+      setScrolled(window.scrollY > 200);
+    };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [isHome]);
 
   return (
-    <div ref={ref} className="fixed top-0 left-0 right-0 z-[600]">
+    <div
+      ref={ref}
+      className={cn(
+        'fixed top-0 left-0 right-0 z-[600] transition-all duration-300 ease-out',
+        isHome && !scrolled
+          ? 'opacity-0 pointer-events-none -translate-y-6'
+          : 'opacity-100 pointer-events-auto translate-y-0'
+      )}
+    >
       {bannerSlot}
       <Nav />
     </div>
   );
 }
+

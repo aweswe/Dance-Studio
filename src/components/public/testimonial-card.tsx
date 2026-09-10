@@ -1,26 +1,26 @@
-import { Star } from 'lucide-react';
+import { CheckCircle2 } from 'lucide-react';
 import { SpotlightCard } from '@/components/ui/spotlight';
 
 interface TestimonialCardProps {
-  testimonial: any; // Ideally typed
+  testimonial: any;
 }
 
 export function TestimonialCard({ testimonial }: TestimonialCardProps) {
-  const { name = 'Student', quote, text, rating = 5, programme } = testimonial || {};
-  // Defaults use `quote`; legacy rows may carry `text`.
+  const { name = 'Student', quote, text, programme } = testimonial || {};
   const quoteText = quote ?? text ?? 'Great experience!';
 
   return (
     <SpotlightCard
       tone="pale"
-      className="bg-surface p-8 rounded-2xl border border-line h-full flex flex-col"
+      className="bg-surface p-7 rounded-2xl border border-line h-full flex flex-col justify-between hover:border-line-strong transition-all duration-200"
     >
-      <div className="flex gap-1 mb-4 text-gold">
-        {[...Array(5)].map((_, i) => (
-          <Star key={i} size={16} fill={i < rating ? "currentColor" : "none"} strokeWidth={i < rating ? 0 : 1} />
-        ))}
+      <div>
+        <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 text-[11px] font-mono font-medium mb-4">
+          <CheckCircle2 size={12} />
+          <span>Verified Academy Review</span>
+        </div>
+        <p className="text-sm text-ink leading-[1.78] mb-6 italic">&quot;{quoteText}&quot;</p>
       </div>
-      <p className="text-sm text-ink leading-[1.78] mb-6 italic">&quot;{quoteText}&quot;</p>
       <div className="flex items-center gap-3 mt-auto">
         <div className="w-10 h-10 rounded-full bg-canvas-muted-2 flex items-center justify-center text-ink font-bold text-sm">
           {name.charAt(0)}

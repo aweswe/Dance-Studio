@@ -71,8 +71,13 @@ export function StudioRentalForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="bg-surface p-8 rounded-card border border-line flex flex-col gap-5">
-      <h3 className="heading-display text-2xl mb-2">Request a Booking</h3>
+    <form onSubmit={handleSubmit} className="bento-card p-8 md:p-10 shadow-lg flex flex-col gap-5">
+      <div>
+        <div className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#FB923C] font-bold block mb-1">
+          Instant Slot Request
+        </div>
+        <h3 className="heading-urban text-2xl sm:text-3xl text-ink mb-1">REQUEST A BOOKING</h3>
+      </div>
 
       <Input
         label="Full Name"
@@ -137,16 +142,15 @@ export function StudioRentalForm() {
         type="submit"
         disabled={loading}
         className={cn(
-          "mt-4 text-[11px] font-semibold tracking-[1.8px] uppercase px-8 py-4 bg-blk text-white transition-all rounded-control",
-          "hover:bg-bl focus-visible:focus-ring active:scale-[0.98]",
+          "btn-peach mt-2 py-4 text-xs font-black tracking-[2px] uppercase shadow-md cursor-pointer w-full",
           loading && "opacity-70 cursor-not-allowed",
         )}
       >
-        {loading ? 'Submitting...' : 'Submit Request'}
+        {loading ? 'Submitting...' : 'Submit Request ──→'}
       </button>
 
-      <p className="text-[10px] text-ink-2 text-center mt-2">
-        Submitting this form does not confirm your booking. We will contact you to finalize.
+      <p className="text-[10px] font-mono text-ink-3 text-center mt-1">
+        Submitting this form does not charge your card. Our studio team will call to confirm slot availability.
       </p>
     </form>
   );

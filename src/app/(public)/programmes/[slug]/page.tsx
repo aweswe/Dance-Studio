@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getProgrammes, getProgrammeBySlug } from '@/data/programmes';
 import { getBatches } from '@/data/batches';
-import { CheckCircle2, Clock, Calendar, IndianRupee, MapPin, Sparkles } from 'lucide-react';
+import { CheckCircle2, Clock, Calendar, IndianRupee, MapPin } from 'lucide-react';
 import { formatTime } from '@/lib/utils/format';
 import { SITE_URL } from '@/lib/utils/constants';
 import { Reveal } from '@/components/motion/reveal';

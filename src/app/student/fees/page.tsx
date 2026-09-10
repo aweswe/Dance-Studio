@@ -7,7 +7,7 @@ import { PaymentHistory } from "@/components/student/payment-history";
 import { FeeCalendar, FeeMonth } from "@/components/student/fee-calendar";
 import { Card } from "@/components/ui/card";
 import { coveredMonthKeys, isDue, monthlyAmount, monthKey, trailingMonths } from "@/lib/fees/ledger";
-import { Sparkles, ArrowRight, CreditCard } from "lucide-react";
+import { AlertCircle, ArrowRight, CreditCard } from "lucide-react";
 import Link from "next/link";
 
 export const metadata = {
@@ -59,7 +59,7 @@ export default async function FeesPage() {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
             <div className="space-y-2">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gold/15 text-gold border border-gold/30 text-xs font-semibold uppercase tracking-wider">
-                <Sparkles size={13} />
+                <AlertCircle size={13} />
                 No Active Class Enrolment
               </div>
               <h2 className="font-display text-2xl text-ink">

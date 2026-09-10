@@ -45,7 +45,7 @@ export function EnquiryForm() {
   }
 
   const textareaClass =
-    'w-full bg-surface border border-line-strong rounded-control px-4 py-3 text-sm text-ink placeholder:text-ink-3 h-32 resize-none focus:outline-none focus:border-bl/50 focus:ring-1 focus:ring-bl/20 transition-all';
+    'w-full bg-canvas border border-line rounded-xl px-4 py-3 text-sm text-ink placeholder:text-ink-3 h-32 resize-none focus:outline-none focus:border-[#FB923C] focus:ring-1 focus:ring-[#FB923C]/20 transition-all';
 
   return (
     <form onSubmit={submit} className="space-y-5" noValidate>
@@ -77,7 +77,7 @@ export function EnquiryForm() {
       <div>
         <label
           htmlFor="enq-message"
-          className="text-[10px] tracking-[2px] uppercase text-ink-2 mb-2 block"
+          className="text-[10px] font-mono tracking-[2px] uppercase text-ink-2 mb-2 block font-bold"
         >
           Message *
         </label>
@@ -98,9 +98,9 @@ export function EnquiryForm() {
       <button
         type="submit"
         disabled={busy}
-        className="w-full inline-flex items-center justify-center gap-2 text-[11px] font-semibold tracking-[1.8px] uppercase px-8 py-4 bg-blk text-white hover:bg-bl transition-colors disabled:opacity-60 focus-visible:focus-ring active:scale-[0.98]"
+        className="btn-peach w-full py-4 text-xs font-black tracking-[2px] uppercase gap-2 shadow-md cursor-pointer"
       >
-        <Send size={14} /> {busy ? 'Sending...' : 'Send Message'}
+        <Send size={14} /> {busy ? 'Sending...' : 'Send Message ──→'}
       </button>
     </form>
   );

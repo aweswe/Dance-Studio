@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { assignStudentBatch } from "@/actions/profile";
-import { Loader2, CheckCircle2, Sparkles, Clock, Calendar, Users, ArrowRight } from "lucide-react";
+import { Loader2, CheckCircle2, Layers, Clock, Calendar, Users, ArrowRight } from "lucide-react";
 
 interface BatchOption {
   id: string;
@@ -139,7 +139,7 @@ export function BatchPicker({ onBatchAssigned }: { onBatchAssigned?: () => void 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-line-subtle">
         <div className="flex items-center gap-2">
           <div className="w-7 h-7 rounded-lg bg-bl/15 flex items-center justify-center text-bl">
-            <Sparkles className="w-4 h-4" />
+            <Layers className="w-4 h-4" />
           </div>
           <div>
             <h3 className="font-display text-xl text-ink">Choose Your Dance Discipline & Schedule</h3>

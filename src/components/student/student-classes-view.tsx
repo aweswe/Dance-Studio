@@ -13,7 +13,6 @@ import {
   ArrowRight,
   Loader2,
   AlertCircle,
-  Sparkles,
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
