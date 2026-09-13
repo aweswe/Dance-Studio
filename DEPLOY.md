@@ -46,9 +46,9 @@ ON CONFLICT (id) DO UPDATE SET role = 'admin';
    | `WHATSAPP_API_URL` / `WHATSAPP_API_KEY` / `WHATSAPP_PROVIDER` | Phase 7 | WATI/Interakt; absent → mock mode |
    | `NEXT_PUBLIC_UPI_ID` | optional | UPI VPA shown when Razorpay is off |
    | `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` | optional | Durable rate limits |
-   | `CRON_SECRET` | Phase 7 | Guards `/api/cron/*` (Vercel sends `Authorization: Bearer`) |
+   | `CRON_SECRET` | Phase 7 | Guards `/api/cron/*` (`Authorization: Bearer`) |
 
-3. **Crons** are already configured in `vercel.json` (broadcast `*/5 * * * *`, fee reminders `03:30 UTC`, class reminders `14:30 UTC`).
+3. **Background crons** use GitHub Actions (`.github/workflows/cron.yml`), not Vercel — Hobby tier does not support Vercel crons. In the repo: **Settings → Secrets → Actions**, add `CRON_SECRET` (same string as Vercel). Optional `SITE_URL` if not `https://rhythmzz.in`.
 4. **Custom domain**: Settings → Domains → add `rhythmzz.in` and `www.rhythmzz.in` (redirect to apex).
    - DNS at the registrar: apex `A 76.76.21.21`, `www CNAME cname.vercel-dns.com` (or use Vercel's nameservers).
    - After DNS resolves: HTTPS cert is issued automatically; enable "Force HTTPS".

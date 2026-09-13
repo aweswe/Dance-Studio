@@ -57,7 +57,9 @@ npm run build                                                     # 4. build + l
 
 `DB_URL` is the Supabase pooler connection string (see DEPLOY.md). Live migrations must stay idempotent — `DROP … IF EXISTS` before `CREATE`, guarded ALTERs.
 
-## Background jobs (Vercel crons)
+## Background jobs (GitHub Actions → API routes)
+
+Vercel Hobby does not support crons, so schedules live in `.github/workflows/cron.yml`. Each job `curl`s the production app with `Authorization: Bearer $CRON_SECRET` (set as a GitHub Actions secret).
 
 | Cron | Schedule | Route | Job |
 |---|---|---|---|
@@ -65,7 +67,7 @@ npm run build                                                     # 4. build + l
 | Fee reminders | 03:30 UTC daily | `/api/cron/fee-reminders` | Queues `fee_reminder` for students with an uncovered current month |
 | Class reminders | 14:30 UTC daily | `/api/cron/class-reminders` | Night-before class WhatsApp for tomorrow's batches |
 
-All three are authenticated with `Authorization: Bearer $CRON_SECRET`. Missing `WHATSAPP_API_KEY` logs messages as mock — they are not reported as sent.
+Missing `WHATSAPP_API_KEY` logs messages as mock — they are not reported as sent. Manual run: Actions → **Cron jobs** → **Run workflow**.
 
 ## Architecture notes
 

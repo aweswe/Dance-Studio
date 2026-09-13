@@ -1,6 +1,6 @@
 // Daily fee-reminder sweep: students with an uncovered current month get a
 // WhatsApp fee_reminder template (queued; drained by /api/cron/broadcast).
-// Vercel cron hits this at 03:30 UTC (09:00 IST) — see vercel.json.
+// GitHub Actions cron hits this at 03:30 UTC (09:00 IST) — see .github/workflows/cron.yml.
 // Auth: Bearer CRON_SECRET. Silent skip when no WhatsApp key is configured.
 import { createAdminSupabase } from '@/lib/supabase/server';
 import { WHATSAPP_TEMPLATES } from '@/lib/whatsapp/templates';

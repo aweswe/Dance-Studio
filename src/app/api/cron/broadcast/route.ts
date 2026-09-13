@@ -1,5 +1,5 @@
 // Drains broadcast_queue via the WhatsApp provider.
-// Vercel cron hits this every 5 minutes — see vercel.json.
+// GitHub Actions cron hits this every 5 minutes — see .github/workflows/cron.yml.
 // Auth: Bearer CRON_SECRET. Runs under the service role (no session).
 import { createAdminSupabase } from '@/lib/supabase/server';
 import { sendWhatsAppTemplate } from '@/lib/whatsapp/client';
