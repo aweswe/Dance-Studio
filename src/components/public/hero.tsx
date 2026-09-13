@@ -1,15 +1,9 @@
-'use client';
-
-import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Play, MapPin } from 'lucide-react';
+import { MapPin } from 'lucide-react';
 import { ROUTES } from '@/lib/utils/constants';
-import { VideoModal } from '@/components/public/video-modal';
 
 export function Hero() {
-  const [isVideoOpen, setIsVideoOpen] = useState(false);
-
   return (
     <section className="relative w-full px-3 sm:px-6 md:px-10 pt-4 sm:pt-6 pb-6 max-w-[1440px] mx-auto select-none">
       {/* Main Rounded Hero Frame */}
@@ -31,20 +25,12 @@ export function Hero() {
           <div className="absolute inset-x-0 bottom-0 h-[55%] bg-gradient-to-t from-black/85 via-black/50 to-transparent pointer-events-none" />
         </div>
 
-        {/* ── Top Bar: Location + Watch Reel ── */}
-        <div className="relative z-20 flex items-center justify-between">
+        {/* ── Top Bar: Location ── */}
+        <div className="relative z-20 flex items-center">
           <div className="flex items-center gap-1.5 text-[10px] font-mono tracking-[0.2em] uppercase text-white/65 bg-black/30 backdrop-blur-md px-3 py-1.5 rounded-md border border-white/10">
             <MapPin size={10} className="shrink-0" />
             Hyderabad &amp; Secunderabad
           </div>
-          <button
-            onClick={() => setIsVideoOpen(true)}
-            aria-label="Play showreel"
-            className="pointer-events-auto flex items-center gap-2 text-[10px] font-mono tracking-[0.18em] uppercase text-[#F5FB38] hover:text-white bg-black/40 hover:bg-black/60 backdrop-blur-md px-3.5 py-1.5 rounded-md border border-[#F5FB38]/30 transition-all cursor-pointer shadow-sm active:scale-95"
-          >
-            <Play size={10} className="fill-current" />
-            <span>Watch Reel</span>
-          </button>
         </div>
 
         {/* ── Bottom: Headline + Sub + CTA ── */}
@@ -62,7 +48,7 @@ export function Hero() {
 
           {/* Body copy — real info about the studio */}
           <p className="text-sm sm:text-base text-white/75 leading-relaxed max-w-[480px] font-medium">
-            Rhythmzz Academy — Hyderabad's training ground for Hip-Hop,
+            Rhythmzz Academy — Hyderabad&apos;s training ground for Hip-Hop,
             Contemporary, Bollywood &amp; Classical Kuchipudi.
             Batches for age 5 and above. Certificate &amp; Diploma programmes available.
           </p>
@@ -98,14 +84,6 @@ export function Hero() {
         </div>
 
       </div>
-
-      {/* Video Lightbox Modal */}
-      <VideoModal
-        isOpen={isVideoOpen}
-        onClose={() => setIsVideoOpen(false)}
-        title="Rhythmzz Choreography Reel"
-        subtitle="Urban, Contemporary & Kuchipudi Showcase"
-      />
     </section>
   );
 }
