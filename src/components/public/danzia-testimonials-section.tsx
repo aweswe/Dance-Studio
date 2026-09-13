@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { ArrowLeft, ArrowRight, Quote } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Quote, Star } from 'lucide-react';
 
 interface DanziaTestimonial {
   id: string;
@@ -126,14 +126,24 @@ export function DanziaTestimonialsSection() {
             </div>
           </div>
 
-          {/* Danzia-Inspired 98% Satisfaction Stat Block */}
-          <div className="rounded-[28px] bg-[#000000] text-[#FAF6EE] p-7 sm:p-7 border border-white/10 shadow-xl mt-4">
-            <div className="flex flex-col">
-              <span className="font-anton text-5xl sm:text-6xl text-[#F5FB38] leading-none">
-                98%
+          {/* Community Trust Card */}
+          <div className="rounded-[24px] bg-surface border border-line p-6 sm:p-7 shadow-sm mt-6 flex flex-col justify-between gap-4">
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-1 text-amber-400">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} size={15} className="fill-amber-400 text-amber-400" />
+                ))}
+              </div>
+              <span className="font-anton text-2xl text-ink tracking-tight">
+                4.9 / 5.0
               </span>
-              <span className="text-[11px] font-mono uppercase tracking-widest text-[#FAF6EE]/80 mt-1 font-bold">
-                Student &amp; Parent Satisfaction
+            </div>
+            <div className="pt-3 border-t border-line flex items-center justify-between gap-2">
+              <span className="text-[11px] font-mono uppercase tracking-wider text-ink-3">
+                480+ Google Reviews
+              </span>
+              <span className="text-[10px] font-mono uppercase tracking-widest text-[#7C5CFC] font-semibold">
+                Secunderabad
               </span>
             </div>
           </div>
