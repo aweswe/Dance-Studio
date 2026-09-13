@@ -18,10 +18,10 @@ export async function PricingSection() {
   const active = programmes.filter((p) => p.is_active);
 
   return (
-    <section className="w-full px-4 sm:px-6 md:px-10 pb-16 sm:pb-24 max-w-[1360px] mx-auto">
+    <section className="w-full px-4 sm:px-6 md:px-10 pb-24 sm:pb-32 max-w-[1360px] mx-auto">
 
       {/* Header row */}
-      <div className="flex items-baseline justify-between mb-8 px-1">
+      <div className="flex items-baseline justify-between mb-10 px-1">
         <div>
           <p className="text-[11px] font-mono uppercase tracking-[0.22em] text-ink-2 mb-1">03 · Classes &amp; Fees</p>
           <h2 className="font-anton text-3xl sm:text-4xl md:text-5xl text-ink uppercase tracking-tight leading-none">
@@ -31,14 +31,14 @@ export async function PricingSection() {
         </div>
         <Link
           href={ROUTES.enrol}
-          className="hidden sm:inline-flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-widest text-ink-3 hover:text-ink transition-colors border border-line px-3.5 py-2 rounded-xl hover:border-ink"
+          className="hidden sm:inline-flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-widest text-ink-3 hover:text-ink transition-colors border border-line px-4 py-2.5 rounded-xl hover:border-ink"
         >
           Book a Free Trial <ArrowUpRight size={12} />
         </Link>
       </div>
 
       {/* Cards grid — auto-fills for any number of classes */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         {active.map((programme, i) => {
           const accent = ACCENTS[i % ACCENTS.length];
           const isYellow = accent.bg === '#F5FB38';

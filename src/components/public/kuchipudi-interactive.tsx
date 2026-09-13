@@ -5,7 +5,6 @@ import Link from 'next/link';
 import {
   ChevronDown,
   Award,
-  CheckCircle2,
   Clock,
   Music,
   Compass,
@@ -13,7 +12,6 @@ import {
   HelpCircle,
   Calendar,
   Layers,
-  ShieldCheck,
   ArrowRight,
   Search,
 } from 'lucide-react';
@@ -181,8 +179,8 @@ export function KuchipudiRoadmap() {
               </h3>
             </div>
             <div className="shrink-0">
-              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-[#7C5CFC]/10 text-[#7C5CFC] text-xs font-mono font-bold tracking-wider uppercase border border-[#7C5CFC]/20">
-                <Award size={15} /> {s.badge}
+              <span className="text-[11px] font-mono font-bold tracking-[0.18em] uppercase text-[#7C5CFC]">
+                {s.badge}
               </span>
             </div>
           </div>
@@ -198,7 +196,7 @@ export function KuchipudiRoadmap() {
                     key={idx}
                     className="flex items-start gap-3 p-4 rounded-xl bg-canvas border border-line text-xs sm:text-sm text-ink-2 hover:border-[#7C5CFC]/40 transition-colors"
                   >
-                    <CheckCircle2 size={16} className="text-[#7C5CFC] shrink-0 mt-0.5" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#7C5CFC] shrink-0 mt-2" />
                     <span className="leading-relaxed">{m}</span>
                   </li>
                 ))}

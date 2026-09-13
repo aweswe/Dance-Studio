@@ -144,7 +144,7 @@ export function LatestVideos() {
         </div>
       </div>
 
-      {/* Right-aligned 'More videos ──→' Link */}
+      {/* Right-aligned 'More videos' Link */}
       <div className="flex justify-end mt-6 sm:mt-8">
         <Link
           href={ROUTES.gallery}
@@ -152,7 +152,6 @@ export function LatestVideos() {
         >
           <span>More videos</span>
           <span className="font-mono text-base translate-x-0 group-hover:translate-x-1.5 transition-transform">
-            ──→
           </span>
         </Link>
       </div>

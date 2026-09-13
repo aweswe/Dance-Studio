@@ -89,7 +89,7 @@ export default async function EnrolPage({
             </div>
 
             {/* Quick Help Card */}
-            <div className="bento-card p-5 rounded-[24px] border-[#7C5CFC]/30 bg-surface flex items-center justify-between">
+            <div className="bento-card p-6 rounded-[24px] border-[#7C5CFC]/30 bg-surface flex items-center justify-between">
               <div>
                 <span className="text-[10px] font-mono uppercase tracking-wider text-ink-3 block mb-0.5">Need Guidance?</span>
                 <p className="text-xs font-bold text-ink">Call or WhatsApp us directly</p>

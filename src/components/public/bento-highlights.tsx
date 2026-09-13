@@ -7,20 +7,20 @@ import { ROUTES } from '@/lib/utils/constants';
 
 export function BentoHighlights() {
   return (
-    <section className="w-full px-4 sm:px-6 md:px-10 py-14 sm:py-20 max-w-[1360px] mx-auto select-none">
+    <section className="w-full px-4 sm:px-6 md:px-10 py-20 sm:py-28 md:py-32 max-w-[1360px] mx-auto select-none">
       {/* Section Label */}
-      <div className="flex items-center justify-between mb-6 px-1">
+      <div className="flex items-center justify-between mb-8 px-1">
         <span className="text-[11px] font-mono uppercase tracking-[0.22em] text-ink-2">
           02 · Rhythmzz Academy · Est. 2012
         </span>
         <div className="flex items-center gap-2 text-[10px] font-mono tracking-widest text-[#F5FB38] bg-[#000000] px-3.5 py-1.5 rounded-md border border-[#F5FB38]/40 shadow-sm">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#F5FB38] animate-ping" />
+          <span className="w-1.5 h-1.5 rounded-full bg-[#F5FB38]" />
           <span>ADMISSIONS OPEN</span>
         </div>
       </div>
 
       {/* Bento Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-5">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 sm:gap-6">
 
         {/* ── ROW 1 ── */}
 

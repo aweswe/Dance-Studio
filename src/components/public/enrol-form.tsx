@@ -5,13 +5,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import {
   AlertCircle,
-  CheckCircle2,
   Calendar,
   Clock,
   CreditCard,
   ArrowRight,
   MessageSquare,
-  ShieldCheck,
 } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import { ROUTES } from '@/lib/utils/constants';
@@ -185,7 +183,7 @@ export function EnrolForm({ programmes = [], batches = [], defaultProgramme }: E
     return (
       <div className="bg-surface p-8 md:p-10 rounded-2xl border border-line shadow-2xl max-w-lg mx-auto w-full text-center space-y-6 animate-in fade-in zoom-in duration-300">
         <div className="w-16 h-16 rounded-full bg-green/15 text-green flex items-center justify-center mx-auto shadow-[0_0_30px_rgba(34,197,94,0.3)]">
-          <CheckCircle2 size={36} />
+          
         </div>
         <div className="space-y-1">
           <span className="text-[10px] font-mono font-bold uppercase tracking-[2px] text-green">Payment Confirmed</span>
@@ -287,7 +285,7 @@ export function EnrolForm({ programmes = [], batches = [], defaultProgramme }: E
               : "text-ink-2 hover:text-ink"
           )}
         >
-          <CheckCircle2 size={14} /> Free Trial (Pay Later)
+           Free Trial (Pay Later)
         </button>
       </div>
 
@@ -434,7 +432,7 @@ export function EnrolForm({ programmes = [], batches = [], defaultProgramme }: E
                 </>
               ) : (
                 <>
-                  <CreditCard size={16} /> Enrol &amp; Pay Online ({formatCurrency(selectedProgramme?.fees_monthly ?? 2000)}) ──→
+                  <CreditCard size={16} /> Enrol &amp; Pay Online ({formatCurrency(selectedProgramme?.fees_monthly ?? 2000)})
                 </>
               )}
             </button>
@@ -443,12 +441,12 @@ export function EnrolForm({ programmes = [], batches = [], defaultProgramme }: E
               type="submit"
               className="w-full text-xs font-black tracking-[2px] uppercase py-4 bg-[#22c55e] hover:bg-[#16a34a] text-white transition-all rounded-xl shadow-md active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer"
             >
-              <MessageSquare size={16} /> Confirm Free Trial on WhatsApp ──→
+              <MessageSquare size={16} /> Confirm Free Trial on WhatsApp
             </button>
           )}
 
-          <p className="text-[11px] font-mono text-center text-ink-3 mt-3 flex items-center justify-center gap-1.5">
-            <ShieldCheck size={14} className="text-[#22c55e]" /> 100% Secure Checkout · Instant Student Portal Access
+          <p className="text-[11px] font-mono text-center text-ink-3 mt-3">
+            100% Secure Checkout · Instant Student Portal Access
           </p>
         </div>
       </form>

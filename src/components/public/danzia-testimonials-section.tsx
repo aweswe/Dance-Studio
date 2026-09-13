@@ -127,7 +127,7 @@ export function DanziaTestimonialsSection() {
           </div>
 
           {/* Danzia-Inspired 98% Satisfaction Stat Block */}
-          <div className="rounded-[28px] bg-[#000000] text-[#FAF6EE] p-6 sm:p-7 border border-white/10 shadow-xl mt-4">
+          <div className="rounded-[28px] bg-[#000000] text-[#FAF6EE] p-7 sm:p-7 border border-white/10 shadow-xl mt-4">
             <div className="flex flex-col">
               <span className="font-anton text-5xl sm:text-6xl text-[#F5FB38] leading-none">
                 98%

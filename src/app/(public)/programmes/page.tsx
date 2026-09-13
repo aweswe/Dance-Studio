@@ -38,7 +38,7 @@ export default async function ProgrammesPage() {
       />
 
       {/* Page Header */}
-      <section className="py-16 sm:py-24 px-4 sm:px-8 md:px-14 border-b border-line max-w-[1440px] mx-auto">
+      <section className="py-24 sm:py-24 px-4 sm:px-8 md:px-14 border-b border-line max-w-[1440px] mx-auto">
         <p className="text-[11px] font-mono uppercase tracking-[0.25em] text-ink-3 mb-4">
           All Programmes · Rhythmzz Academy
         </p>
@@ -52,7 +52,7 @@ export default async function ProgrammesPage() {
       </section>
 
       {/* Programme Cards */}
-      <section className="py-14 sm:py-20 px-4 sm:px-8 md:px-14 max-w-[1440px] mx-auto">
+      <section className="py-20 sm:py-28 px-4 sm:px-8 md:px-14 max-w-[1440px] mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {programmes.map((prog: any) => (
             <ProgrammeCard

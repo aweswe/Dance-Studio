@@ -41,7 +41,7 @@ export default function HomePage() {
       {/* 05: CLASSES FOR ALL AGES AND LEVELS (Clean, Spacious Large-Format Cards) */}
       <DanziaClassesSection />
 
-      {/* 05: STRUCTURED LEVEL-BASED CERTIFICATION (Academic Rigor & Fixed-Term Enrolment) */}
+      {/* 05: STRUCTURED LEVEL-BASED CERTIFICATION */}
       <LevelCertificationSection />
 
       {/* 06: MEET OUR INSTRUCTORS (Airy High-Fashion Dancer Portraits) */}

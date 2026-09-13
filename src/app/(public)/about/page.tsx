@@ -47,12 +47,12 @@ export default async function AboutPage() {
       </section>
 
       {/* 02: Metric Tiles Bar in Bento Form */}
-      <section className="bg-surface text-ink py-12 sm:py-16 px-4 sm:px-6 md:px-16 border-b border-line">
+      <section className="bg-surface text-ink py-12 sm:py-24 px-4 sm:px-6 md:px-16 border-b border-line">
         <div className="max-w-6xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {STATS.map((stat, idx) => (
             <div
               key={idx}
-              className="bento-card p-5 sm:p-6 flex flex-col items-center text-center justify-center rounded-[24px] hover:border-line-strong transition-all"
+              className="bento-card p-6 sm:p-6 flex flex-col items-center text-center justify-center rounded-[24px] hover:border-line-strong transition-all"
             >
               <span className="font-anton text-3xl sm:text-4xl md:text-5xl text-[#7C5CFC] mb-1.5 tracking-tight">
                 {stat.value}
@@ -91,7 +91,7 @@ export default async function AboutPage() {
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
-              <div className="bento-card p-5 rounded-[22px] flex gap-3.5 items-start">
+              <div className="bento-card p-6 rounded-[22px] flex gap-3.5 items-start">
                 <div className="w-8 h-8 rounded-xl bg-[#7C5CFC]/10 flex items-center justify-center shrink-0">
                   <Target className="text-[#7C5CFC]" size={18} />
                 </div>
@@ -101,7 +101,7 @@ export default async function AboutPage() {
                 </div>
               </div>
 
-              <div className="bento-card p-5 rounded-[22px] flex gap-3.5 items-start">
+              <div className="bento-card p-6 rounded-[22px] flex gap-3.5 items-start">
                 <div className="w-8 h-8 rounded-xl bg-[#7C5CFC]/10 flex items-center justify-center shrink-0">
                   <Heart className="text-[#7C5CFC]" size={18} />
                 </div>
@@ -236,9 +236,9 @@ export default async function AboutPage() {
       {/* 05: International Stage Production (Visual 3-Tile Feature) */}
       <section className="py-20 sm:py-28 px-4 sm:px-6 md:px-16 max-w-6xl mx-auto border-t border-line">
         <div className="max-w-3xl mb-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-surface border border-line text-[#7C5CFC] text-[10px] font-mono font-bold tracking-[2px] uppercase mb-4 shadow-sm">
-            <Globe size={13} /> International Stage Tour
-          </div>
+          <p className="text-[11px] font-mono uppercase tracking-[0.22em] text-[#7C5CFC] mb-3">
+            International Stage Tour · Natfest Sri Lanka
+          </p>
           <h2 className="font-anton text-3xl sm:text-5xl md:text-6xl text-ink tracking-tight uppercase leading-[0.95]">
             NATFEST SRI LANKA COLLABORATION
           </h2>

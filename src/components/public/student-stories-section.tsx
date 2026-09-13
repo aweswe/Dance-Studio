@@ -1,6 +1,6 @@
 'use client';
 
-import { Star, CheckCircle2, Quote } from 'lucide-react';
+import { Star, Quote } from 'lucide-react';
 
 interface TestimonialItem {
   id: string;
@@ -47,7 +47,7 @@ const REVIEWS: TestimonialItem[] = [
 
 export function StudentStoriesSection() {
   return (
-    <section className="w-full px-4 sm:px-6 md:px-10 py-16 sm:py-24 max-w-[1440px] mx-auto select-none">
+    <section className="w-full px-4 sm:px-6 md:px-10 py-24 sm:py-24 max-w-[1440px] mx-auto select-none">
       {/* Section Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 sm:mb-14">
         <div>
@@ -87,7 +87,7 @@ export function StudentStoriesSection() {
                   ))}
                 </div>
                 <div className="flex items-center gap-1 text-[10px] font-mono uppercase tracking-wider text-[#7C5CFC] font-bold">
-                  <CheckCircle2 size={12} />
+                  
                   <span>Verified Dancer</span>
                 </div>
               </div>

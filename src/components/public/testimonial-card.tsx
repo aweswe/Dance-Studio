@@ -1,4 +1,4 @@
-import { CheckCircle2 } from 'lucide-react';
+import { } from 'lucide-react';
 import { SpotlightCard } from '@/components/ui/spotlight';
 
 interface TestimonialCardProps {
@@ -16,7 +16,7 @@ export function TestimonialCard({ testimonial }: TestimonialCardProps) {
     >
       <div>
         <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 text-[11px] font-mono font-medium mb-4">
-          <CheckCircle2 size={12} />
+          
           <span>Verified Academy Review</span>
         </div>
         <p className="text-sm text-ink leading-[1.78] mb-6 italic">&quot;{quoteText}&quot;</p>

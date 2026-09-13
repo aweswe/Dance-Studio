@@ -71,7 +71,7 @@ export function UpcomingClasses() {
   const [activeVideo, setActiveVideo] = useState<ClassCardItem | null>(null);
 
   return (
-    <section id="classes" className="w-full px-4 sm:px-6 md:px-10 py-16 sm:py-24 max-w-[1440px] mx-auto select-none">
+    <section id="classes" className="w-full px-4 sm:px-6 md:px-10 py-24 sm:py-24 max-w-[1440px] mx-auto select-none">
       {/* Section Heading */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 sm:mb-14">
         <div>
@@ -118,7 +118,7 @@ export function UpcomingClasses() {
                       : 'bg-white/90 text-[#000000]'
                   }`}
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-current animate-pulse" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-current" />
                   <span>{item.status}</span>
                 </span>
               </div>
@@ -134,7 +134,7 @@ export function UpcomingClasses() {
             </div>
 
             {/* Bottom Content Body */}
-            <div className="p-6 sm:p-7 flex flex-col justify-between flex-1">
+            <div className="p-7 sm:p-7 flex flex-col justify-between flex-1">
               <div>
                 <div className="flex items-center gap-2 text-[10px] font-mono uppercase tracking-wider text-[#7C5CFC] font-bold mb-2">
                   <Users size={12} />
@@ -194,7 +194,6 @@ export function UpcomingClasses() {
         >
           <span>Explore All 12 Programmes</span>
           <span className="font-mono text-base translate-x-0 group-hover:translate-x-1.5 transition-transform">
-            ──→
           </span>
         </Link>
       </div>

@@ -11,12 +11,10 @@ import {
   BookOpen,
   Activity,
   Award,
-  CheckCircle2,
   ChevronDown,
   Calendar,
   Layers,
   GraduationCap,
-  ShieldCheck,
   Zap,
   Compass,
 } from 'lucide-react';
@@ -51,9 +49,9 @@ export function KuchipudiCurriculum() {
       <div className="bento-card rounded-[28px] sm:rounded-[36px] border border-line p-6 md:p-8">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 pb-6 border-b border-line">
           <div>
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-md bg-[#7C5CFC]/10 text-[#7C5CFC] text-[11px] font-mono font-bold tracking-[0.2em] uppercase mb-3 border border-[#7C5CFC]/20">
-              <GraduationCap size={15} /> Official Master Syllabus
-            </div>
+            <p className="text-[11px] font-mono uppercase tracking-[0.22em] text-ink-3 mb-3">
+              Official Master Syllabus
+            </p>
             <h2 className="font-anton text-3xl sm:text-4xl md:text-5xl text-ink tracking-wide uppercase">
               YEAR-WISE MASTER CURRICULUM
             </h2>
@@ -76,7 +74,7 @@ export function KuchipudiCurriculum() {
                   : 'text-ink-2 hover:text-ink hover:bg-surface/50'
               }`}
             >
-              <Layers size={15} />
+              
               10-Year Master Plan
               <span className="text-[10px] px-1.5 py-0.5 rounded bg-black/15 text-current ml-1 font-bold">
                 Ages 5–7
@@ -94,7 +92,7 @@ export function KuchipudiCurriculum() {
                   : 'text-ink-2 hover:text-ink hover:bg-surface/50'
               }`}
             >
-              <Zap size={15} />
+              
               6-Year Certificate
               <span className="text-[10px] px-1.5 py-0.5 rounded bg-black/15 text-current ml-1 font-bold">
                 Fast-Track
@@ -271,7 +269,7 @@ export function KuchipudiCurriculum() {
             <div>
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-10 h-10 rounded-xl bg-[#7C5CFC]/10 text-[#7C5CFC] flex items-center justify-center border border-[#7C5CFC]/20">
-                  <ShieldCheck size={22} />
+                  
                 </div>
                 <div>
                   <h3 className="font-anton text-2xl text-ink tracking-wide uppercase">
@@ -293,7 +291,7 @@ export function KuchipudiCurriculum() {
                     className="p-4 rounded-xl bg-canvas border border-line hover:border-[#7C5CFC]/30 transition-colors"
                   >
                     <div className="font-bold text-xs font-mono uppercase tracking-wider text-ink mb-1 flex items-center gap-2">
-                      <CheckCircle2 size={15} className="text-[#7C5CFC] shrink-0" />
+                      <Award size={15} className="text-[#7C5CFC] shrink-0" />
                       {param.title}
                     </div>
                     <p className="text-xs md:text-sm text-ink-2 leading-relaxed">
@@ -359,7 +357,7 @@ export function KuchipudiCurriculum() {
                 href="/enrol?programme=kuchipudi"
                 className="btn-sun w-full sm:w-auto text-center text-xs font-black uppercase tracking-[0.18em] py-3.5 px-6 shadow-sm active:scale-[0.96]"
               >
-                Enrol In Kuchipudi ──→
+                Enrol In Kuchipudi
               </Link>
             </div>
           </div>

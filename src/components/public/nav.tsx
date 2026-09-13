@@ -235,7 +235,7 @@ export function Nav() {
               onClick={() => setIsOpen(false)}
               className="btn-sun w-full py-3 text-xs font-black uppercase tracking-wider text-center block shadow-sm active:scale-[0.96]"
             >
-              Book Free Trial Class ──→
+              Book Free Trial Class
             </Link>
 
             {authInfo?.isLoggedIn ? (
@@ -244,7 +244,7 @@ export function Nav() {
                 onClick={() => setIsOpen(false)}
                 className="w-full py-2 text-xs font-mono uppercase tracking-wider text-center block text-[#7C5CFC] hover:underline"
               >
-                {authInfo.label} ──→
+                {authInfo.label}
               </Link>
             ) : (
               <Link

@@ -11,10 +11,8 @@ import { KATHAK_CURRICULUM_PLAN, KathakCurriculumYear } from '@/data/kathak';
 import {
   BookOpen,
   Award,
-  CheckCircle2,
   ChevronDown,
   GraduationCap,
-  ShieldCheck,
   Zap,
   Compass,
 } from 'lucide-react';
@@ -37,9 +35,9 @@ export function ClassicalCurriculumMatrix() {
       <div className="bento-card rounded-[28px] sm:rounded-[36px] border border-line p-6 md:p-8">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 pb-6 border-b border-line">
           <div>
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-md bg-[#7C5CFC]/10 text-[#7C5CFC] text-[11px] font-mono font-bold tracking-[0.2em] uppercase mb-3 border border-[#7C5CFC]/20">
-              <GraduationCap size={15} /> Official Classical Syllabi
-            </div>
+            <p className="text-[11px] font-mono uppercase tracking-[0.22em] text-ink-3 mb-3">
+              Official Classical Syllabi
+            </p>
             <h2 className="font-anton text-3xl sm:text-4xl md:text-5xl text-ink tracking-wide uppercase">
               STRUCTURED LEVEL-BASED CERTIFICATION
             </h2>
@@ -76,7 +74,7 @@ export function ClassicalCurriculumMatrix() {
                   : 'bg-canvas text-ink hover:text-[#7C5CFC] border border-line'
               }`}
             >
-              <Award size={14} />
+              
               <span>Kathak (Lucknow Gharana)</span>
             </button>
           </div>
@@ -120,7 +118,7 @@ export function ClassicalCurriculumMatrix() {
             </div>
 
             <div className="flex items-center gap-3 text-xs font-mono text-ink-2 bg-canvas px-4 py-2.5 rounded-xl border border-line">
-              <ShieldCheck size={16} className="text-[#7C5CFC]" />
+              <span className="w-2 h-2 rounded-full bg-[#7C5CFC] shrink-0" />
               <span>Lineage: Dr. Vempati Chinna Satyam · Guru Srushti</span>
             </div>
           </div>
@@ -230,8 +228,8 @@ export function ClassicalCurriculumMatrix() {
                           </div>
                           <ul className="space-y-2">
                             {item.practical.map((p, idx) => (
-                              <li key={idx} className="text-xs sm:text-sm text-ink-2 flex items-start gap-2 leading-relaxed">
-                                <CheckCircle2 size={15} className="text-[#7C5CFC] shrink-0 mt-0.5" />
+                              <li key={idx} className="text-xs sm:text-sm text-ink-2 flex items-start gap-2.5 leading-relaxed">
+                                <span className="w-1.5 h-1.5 rounded-full bg-[#7C5CFC] shrink-0 mt-2" />
                                 <span>{p}</span>
                               </li>
                             ))}
@@ -332,8 +330,8 @@ export function ClassicalCurriculumMatrix() {
                           </div>
                           <ul className="space-y-2">
                             {item.practical.map((p, idx) => (
-                              <li key={idx} className="text-xs sm:text-sm text-ink-2 flex items-start gap-2 leading-relaxed">
-                                <CheckCircle2 size={15} className="text-[#7C5CFC] shrink-0 mt-0.5" />
+                              <li key={idx} className="text-xs sm:text-sm text-ink-2 flex items-start gap-2.5 leading-relaxed">
+                                <span className="w-1.5 h-1.5 rounded-full bg-[#7C5CFC] shrink-0 mt-2" />
                                 <span>{p}</span>
                               </li>
                             ))}

@@ -50,7 +50,7 @@ const CLASSES: DanziaClassItem[] = [
 
 export function DanziaClassesSection() {
   return (
-    <section className="w-full px-4 sm:px-8 md:px-14 py-20 sm:py-28 max-w-[1440px] mx-auto select-none">
+    <section className="w-full px-4 sm:px-8 md:px-14 py-24 sm:py-32 max-w-[1440px] mx-auto select-none">
       {/* Editorial Header with generous breathing space */}
       <div className="max-w-3xl mb-12 sm:mb-16">
         <h2 className="font-anton text-4xl sm:text-6xl md:text-7xl lg:text-8xl tracking-tight text-ink uppercase leading-[0.92]">

@@ -35,12 +35,12 @@ export default function SchedulePage() {
       </section>
 
       {/* 02: Interactive Weekly Schedule Grid */}
-      <section className="py-12 sm:py-16">
+      <section className="py-12 sm:py-24">
         <WeekScheduleGrid />
       </section>
 
       {/* 03: Bottom CTA */}
-      <section className="py-16 px-4 sm:px-6 md:px-16 bg-surface border-t border-line text-center">
+      <section className="py-24 px-4 sm:px-6 md:px-16 bg-surface border-t border-line text-center">
         <div className="max-w-3xl mx-auto space-y-6">
           <h2 className="font-anton text-3xl sm:text-4xl text-ink uppercase tracking-wide">
             READY TO JOIN A CLASS?

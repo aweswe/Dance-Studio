@@ -67,7 +67,7 @@ const PROGRAMME_NOTES: Record<string, string> = {
   'mind-body-fitness':
     'Mind & Body Fitness runs weekday mornings, 9:30 to 10:30 AM, with Shailaja — Zumba, Yoga, Pilates, HIIT, strength, Tabata, core and mobility on a rotating weekly schedule.',
   'classical-dance':
-    'Structured Level-Based Classical Dance Certification offers certified training in Kuchipudi, Kathak, Bharatnatyam, and Ballet, with active master syllabi for Kuchipudi (Guru Srushti) and Kathak (Guru Poonam). Prohibits casual drop-ins to guarantee rigorous progression toward sacred Rangapravesham solo debuts.',
+    'Structured Level-Based Classical Dance Certification offers certified training in Kuchipudi, Kathak, Bharatnatyam, and Ballet, with active master syllabi for Kuchipudi (Guru Srushti) and Kathak (Guru Poonam). Prohibits casual drop-ins to guarantee rigorous progression toward Rangapravesham solo debuts.',
   'kids-dance':
     'Kids Batch (Ages 5–14) under Commercial & Expressive Style — Bollywood, Hip Hop, Contemporary, and Gymnastics taught step by step.',
   'adults-dance':
@@ -181,7 +181,6 @@ export default async function ProgrammeDetailPage({ params }: Props) {
                   className="btn-sun px-8 py-3.5 text-xs font-black uppercase tracking-[0.16em] shadow-md flex items-center gap-2 active:scale-[0.96]"
                 >
                   <span>Book Free Trial</span>
-                  <span className="font-mono">──→</span>
                 </Link>
                 {slug === 'kuchipudi' && (
                   <a
@@ -356,7 +355,6 @@ export default async function ProgrammeDetailPage({ params }: Props) {
               className="btn-sun w-full py-4 text-xs font-black uppercase tracking-[0.16em] shadow-md flex items-center justify-center gap-2 active:scale-[0.96]"
             >
               <span>Book Trial Class</span>
-              <span className="font-mono">──→</span>
             </Link>
           </div>
 

@@ -71,7 +71,7 @@ const COACHES: CoachItem[] = [
 
 export function CoachesGrid() {
   return (
-    <section id="coaches" className="w-full px-4 sm:px-6 md:px-10 py-16 sm:py-24 max-w-[1440px] mx-auto select-none">
+    <section id="coaches" className="w-full px-4 sm:px-6 md:px-10 py-24 sm:py-24 max-w-[1440px] mx-auto select-none">
       {/* Section Header */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-10 sm:mb-14">
         <div>
@@ -90,17 +90,16 @@ export function CoachesGrid() {
         >
           <span>All Faculty Profiles</span>
           <span className="font-mono text-base translate-x-0 group-hover:translate-x-1.5 transition-transform">
-            ──→
           </span>
         </Link>
       </div>
 
       {/* 5 Vertical High-Impact Portrait Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5 sm:gap-5">
         {COACHES.map((coach) => (
           <div
             key={coach.id}
-            className="group relative rounded-[26px] overflow-hidden aspect-[3/4.6] border border-line hover:border-[#F5FB38] transition-all duration-500 shadow-xl flex flex-col justify-between p-5 sm:p-6 bg-[#000000] hover:-translate-y-2"
+            className="group relative rounded-[26px] overflow-hidden aspect-[3/4.6] border border-line hover:border-[#F5FB38] transition-all duration-500 shadow-xl flex flex-col justify-between p-6 sm:p-6 bg-[#000000] hover:-translate-y-2"
           >
             {/* Background Media with Dark Dramatic Vignette */}
             <div className="absolute inset-0 z-0">

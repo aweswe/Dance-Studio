@@ -191,7 +191,7 @@ export function WeekScheduleGrid() {
   };
 
   return (
-    <section id="schedule" className="w-full px-4 sm:px-6 md:px-10 py-16 sm:py-24 max-w-[1440px] mx-auto select-none">
+    <section id="schedule" className="w-full px-4 sm:px-6 md:px-10 py-24 sm:py-24 max-w-[1440px] mx-auto select-none">
       {/* Header & Filter Bar */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8 sm:mb-12">
         <div>
@@ -361,7 +361,6 @@ export function WeekScheduleGrid() {
         >
           <span>Full Batches &amp; Fees</span>
           <span className="font-mono text-base translate-x-0 group-hover:translate-x-1.5 transition-transform">
-            ──→
           </span>
         </Link>
       </div>

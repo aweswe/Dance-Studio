@@ -100,7 +100,7 @@ export function EnquiryForm() {
         disabled={busy}
         className="btn-sun w-full py-4 text-xs font-black tracking-[2px] uppercase gap-2 shadow-md cursor-pointer flex items-center justify-center transition-transform active:scale-[0.98]"
       >
-        <Send size={14} /> {busy ? 'Sending...' : 'Send Message ──→'}
+        <Send size={14} /> {busy ? 'Sending...' : 'Send Message'}
       </button>
     </form>
   );

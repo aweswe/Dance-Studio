@@ -146,7 +146,7 @@ export function StudioRentalForm() {
           loading && "opacity-70 cursor-not-allowed",
         )}
       >
-        {loading ? 'Submitting...' : 'Submit Request ──→'}
+        {loading ? 'Submitting...' : 'Submit Request'}
       </button>
 
       <p className="text-[10px] font-mono text-ink-3 text-center mt-1">
