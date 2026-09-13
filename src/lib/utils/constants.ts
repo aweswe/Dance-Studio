@@ -50,6 +50,7 @@ export const ROUTES = {
   enrol: "/enrol",
   studioRental: "/studio-rental",
   gallery: "/gallery",
+  schedule: "/schedule",
   about: "/about",
   blog: "/blog",
   blogPost: (slug: string) => `/blog/${slug}`,

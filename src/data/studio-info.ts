@@ -47,7 +47,8 @@ export const STUDIO_INFO = {
     {
       name: "Meghna Menon",
       role: "Manager / Content Creator & Writer",
-      bio: "Joined Rhythmzz in 2015 and was promoted to Manager. Works closely with Nitish on academy growth, creative content, and digital media. Psychology graduate and content writer."
+      bio: "Joined Rhythmzz in 2015 and was promoted to Manager. Works closely with Nitish on academy growth, creative content, and digital media. Psychology graduate and content writer.",
+      photo: "/images/meghna-menon.png"
     },
     {
       name: "Prerna Kapuria",
@@ -67,7 +68,8 @@ export const STUDIO_INFO = {
     {
       name: "Lion Saurabh Sureka",
       role: "Director of Event Management",
-      bio: "Social entrepreneur and Founder & CEO of Celebration Makers. 20+ years of event management leadership identifying and nurturing performing arts talent across India."
+      bio: "Social entrepreneur and Founder & CEO of Celebration Makers. 20+ years of event management leadership identifying and nurturing performing arts talent across India.",
+      photo: "/images/saurabh-sureka.png"
     }
   ],
 
@@ -111,6 +113,13 @@ export const STUDIO_INFO = {
       role: "Instructor — Bollywood, Tollywood & Dance Fitness",
       bio: "Joined in 2013 as a student and evolved into a core instructor. Known for highly energetic, jovial, and interactive sessions.",
       specialty: "Bollywood, Tollywood, Dance Fitness"
+    },
+    {
+      name: "Srikanth",
+      role: "Gymnastics & Acrobatics Trainer",
+      bio: "Certified gymnastics, tumbling, and martial movement coach. Builds core agility, aerial flips, flexibility, and tumbling for kids and commercial dance routines.",
+      specialty: "Gymnastics, Acrobatics, Tumbling, Martial Arts",
+      photo: "/images/srikanth-gymnastics.png"
     },
     {
       name: "Srushti Nidhi",

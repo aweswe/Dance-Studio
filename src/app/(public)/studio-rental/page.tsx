@@ -14,56 +14,53 @@ export const metadata: Metadata = {
 export default function StudioRentalPage() {
   return (
     <div className="bg-canvas text-ink">
-      {/* Hero with Generous Breathing Space */}
-      <section className="relative overflow-hidden py-20 sm:py-28 md:py-32 px-4 sm:px-6 md:px-16 text-center border-b border-line bg-canvas">
-        <div className="max-w-4xl mx-auto">
-          <div className="inline-flex items-center mb-4 px-3.5 py-1 rounded-full border border-line bg-surface/80 backdrop-blur-sm">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#FB923C] inline-block mr-2" />
-            <span className="text-[10px] sm:text-xs font-mono tracking-[0.25em] text-[#FB923C] uppercase font-bold">
-              1,200 SQ. FT. REHEARSAL &amp; PRODUCTION SPACE
-            </span>
+      {/* Hero with Monumental Typography */}
+      <section className="relative overflow-hidden py-14 sm:py-20 md:py-24 px-4 sm:px-6 md:px-10 text-center border-b border-line bg-canvas">
+        <div className="max-w-4xl mx-auto space-y-4">
+          <div className="text-[10px] sm:text-xs font-mono tracking-[0.25em] text-[#7C5CFC] uppercase font-bold">
+            1,200 SQ. FT. REHEARSAL &amp; PRODUCTION SPACE
           </div>
 
-          <h1 className="heading-urban text-4xl sm:text-6xl md:text-7xl text-ink mb-6 leading-tight tracking-tight">
+          <h1 className="font-anton text-4xl sm:text-6xl md:text-7xl lg:text-8xl text-ink leading-[0.92] tracking-tight uppercase">
             STUDIO SPACE RENTAL
           </h1>
 
-          <p className="text-ink-2 text-sm sm:text-base md:text-lg leading-relaxed max-w-2xl mx-auto">
+          <p className="text-ink-2 text-sm sm:text-base md:text-lg leading-relaxed max-w-2xl mx-auto pt-2">
             A fully air-conditioned, shock-absorbing sprung floor rehearsal space at Neredmet X Road, Secunderabad. Available for dance rehearsals, fitness workshops, auditions, and private video shoots.
           </p>
         </div>
       </section>
 
       {/* 4 Clean Spec Metric Tiles */}
-      <section className="bg-surface py-10 sm:py-12 px-4 sm:px-6 md:px-16 border-b border-line">
+      <section className="bg-surface py-10 sm:py-12 px-4 sm:px-6 md:px-10 border-b border-line">
         <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
           <div className="flex flex-col items-center">
-            <span className="heading-urban text-2xl sm:text-3xl text-ink mb-1">1,200 SQ FT</span>
+            <span className="font-anton text-2xl sm:text-3xl text-ink mb-1 tracking-wide">1,200 SQ FT</span>
             <span className="text-[10px] sm:text-xs font-mono font-bold tracking-wider uppercase text-ink-3">Sprung Hardwood Floor</span>
           </div>
           <div className="flex flex-col items-center">
-            <span className="heading-urban text-2xl sm:text-3xl text-ink mb-1">FULL MIRRORS</span>
+            <span className="font-anton text-2xl sm:text-3xl text-ink mb-1 tracking-wide">FULL MIRRORS</span>
             <span className="text-[10px] sm:text-xs font-mono font-bold tracking-wider uppercase text-ink-3">Floor-to-Ceiling Glass</span>
           </div>
           <div className="flex flex-col items-center">
-            <span className="heading-urban text-2xl sm:text-3xl text-ink mb-1">ACOUSTIC AUDIO</span>
+            <span className="font-anton text-2xl sm:text-3xl text-ink mb-1 tracking-wide">ACOUSTIC AUDIO</span>
             <span className="text-[10px] sm:text-xs font-mono font-bold tracking-wider uppercase text-ink-3">Bluetooth &amp; Aux Sound</span>
           </div>
           <div className="flex flex-col items-center">
-            <span className="heading-urban text-2xl sm:text-3xl text-ink mb-1">CLIMATE CONTROL</span>
+            <span className="font-anton text-2xl sm:text-3xl text-ink mb-1 tracking-wide">CLIMATE CONTROL</span>
             <span className="text-[10px] sm:text-xs font-mono font-bold tracking-wider uppercase text-ink-3">100% Air-Conditioned</span>
           </div>
         </div>
       </section>
 
       {/* Main Spacious 2-Column Content */}
-      <section className="py-20 sm:py-28 px-4 sm:px-6 md:px-16 max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-start">
+      <section className="py-16 sm:py-24 px-4 sm:px-6 md:px-10 max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-start">
         
         {/* Left Column: Visuals, Pricing & Guidelines */}
         <div className="lg:col-span-7 space-y-8">
           {/* Dual Studio Imagery */}
           <div className="grid grid-cols-2 gap-4">
-            <div className="relative h-60 sm:h-72 bento-card overflow-hidden p-0 group">
+            <div className="relative h-60 sm:h-72 bento-card rounded-[24px] overflow-hidden p-0 group border border-line">
               <Image
                 src="/images/studio-training/studio-practice-mirrors.jpg"
                 alt="Mirrored rehearsal hall"
@@ -76,7 +73,7 @@ export default function StudioRentalPage() {
               </div>
             </div>
 
-            <div className="relative h-60 sm:h-72 bento-card overflow-hidden p-0 group">
+            <div className="relative h-60 sm:h-72 bento-card rounded-[24px] overflow-hidden p-0 group border border-line">
               <Image
                 src="/images/studio-training/floorwork-stretch.jpg"
                 alt="Sprung floor mobility area"
@@ -92,21 +89,21 @@ export default function StudioRentalPage() {
 
           {/* Pricing Cards with Concentric Radii */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="bento-card p-6 text-center">
-              <span className="text-[10px] font-mono font-bold tracking-[2px] uppercase text-[#FB923C] block mb-1">
+            <div className="bento-card rounded-[28px] p-6 text-center border border-line">
+              <span className="text-[10px] font-mono font-bold tracking-[2px] uppercase text-[#7C5CFC] block mb-1">
                 Weekdays (Mon – Fri)
               </span>
-              <div className="heading-urban text-4xl text-ink mt-2">
+              <div className="font-anton text-4xl sm:text-5xl text-ink mt-2 tracking-wide">
                 ₹1,000<span className="text-xs text-ink-3 font-mono ml-1 uppercase font-normal">/ hour</span>
               </div>
               <p className="text-[11px] text-ink-3 mt-2">Ideal for private rehearsals &amp; auditions</p>
             </div>
 
-            <div className="bento-card p-6 text-center border-[#FB923C]/40 bg-surface">
-              <span className="text-[10px] font-mono font-bold tracking-[2px] uppercase text-[#FB923C] block mb-1">
+            <div className="bento-card rounded-[28px] p-6 text-center border border-[#7C5CFC]/40 bg-surface">
+              <span className="text-[10px] font-mono font-bold tracking-[2px] uppercase text-[#7C5CFC] block mb-1">
                 Weekends (Sat – Sun)
               </span>
-              <div className="heading-urban text-4xl text-ink mt-2">
+              <div className="font-anton text-4xl sm:text-5xl text-ink mt-2 tracking-wide">
                 ₹1,500<span className="text-xs text-ink-3 font-mono ml-1 uppercase font-normal">/ hour</span>
               </div>
               <p className="text-[11px] text-ink-3 mt-2">High-demand workshop &amp; shoot slots</p>
@@ -114,7 +111,7 @@ export default function StudioRentalPage() {
           </div>
 
           {/* Essential Guidelines (De-Noised) */}
-          <div className="bento-card p-6 space-y-3">
+          <div className="bento-card rounded-[28px] p-6 space-y-3 border border-line">
             <span className="text-[10px] font-mono font-bold uppercase tracking-[2px] text-ink-3 block">
               Essential Studio Rules
             </span>
@@ -125,7 +122,7 @@ export default function StudioRentalPage() {
                 "Minimum booking duration is 1 hour; includes equipment setup and vacate time."
               ].map((rule, idx) => (
                 <li key={idx} className="flex gap-2.5 items-start text-xs text-ink-2">
-                  <CheckCircle2 className="text-[#FB923C] shrink-0 mt-0.5" size={14} />
+                  <CheckCircle2 className="text-[#7C5CFC] shrink-0 mt-0.5" size={14} />
                   <span>{rule}</span>
                 </li>
               ))}

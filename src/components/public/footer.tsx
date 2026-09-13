@@ -5,23 +5,23 @@ export function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="w-full bg-[#09090B] text-white dark:bg-[#070709] dark:text-[#E4E4E7] pt-16 sm:pt-20 pb-12 px-6 sm:px-10 md:px-14 border-t border-line dark:border-white/10 mt-12 transition-colors duration-300">
-      <div className="max-w-[1440px] mx-auto">
+    <footer className="w-full bg-[#000000] text-[#FAF6EE] pt-16 sm:pt-20 pb-12 px-6 sm:px-10 md:px-14 border-t border-white/10 mt-12 transition-colors duration-300">
+      <div className="max-w-[1440px] mx-auto overflow-hidden">
+        <div aria-hidden="true" className="font-anton whitespace-nowrap leading-none tracking-wide select-none text-[#FAF6EE] text-[clamp(1.6rem,8vw,9rem)] mb-12">
+          RHYTHMZZ DANCE ACADEMY
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-8 mb-16">
           {/* Column 1: Studio Identity (approx 5 cols) */}
           <div className="md:col-span-5 flex flex-col justify-between">
             <div>
-              <h3 className="heading-urban text-2xl sm:text-3xl tracking-tight mb-4 select-none">
-                RHYTHMZZ DANCE ACADEMY
-              </h3>
-              <div className="text-xs sm:text-sm font-medium opacity-85 leading-relaxed space-y-1">
-                <p className="font-bold">Secunderabad</p>
+              <div className="text-xs sm:text-sm font-medium opacity-85 leading-relaxed space-y-1 text-[#FAF6EE]/80">
+                <p className="font-bold text-[#FAF6EE]">Secunderabad</p>
                 <p>Plot 597, 3rd Floor, Above ICICI ATM,</p>
                 <p>Neredmet X Road, Secunderabad 500094</p>
                 <p className="pt-3">
                   <a
                     href={`tel:${ACADEMY.phone}`}
-                    className="font-bold hover:text-[#FB923C] transition-colors"
+                    className="font-bold text-[#F5FB38] hover:text-[#7C5CFC] transition-colors"
                   >
                     +91 90529 80859
                   </a>
@@ -35,27 +35,27 @@ export function Footer() {
 
           {/* Column 2: SERVICES (2-3 cols) */}
           <div className="md:col-span-2">
-            <h4 className="heading-urban text-lg sm:text-xl tracking-wide mb-4 select-none">
+            <h4 className="font-anton text-xl tracking-wider mb-4 select-none text-[#F5FB38]">
               SERVICES
             </h4>
             <ul className="flex flex-col gap-2 list-none p-0 m-0 text-xs sm:text-sm font-bold uppercase tracking-wider">
               <li>
-                <Link href="#schedule" className="hover:opacity-60 transition-opacity">
+                <Link href="#schedule" className="text-[#FAF6EE]/75 hover:text-[#7C5CFC] transition-colors">
                   Schedule
                 </Link>
               </li>
               <li>
-                <Link href="#coaches" className="hover:opacity-60 transition-opacity">
+                <Link href="#coaches" className="text-[#FAF6EE]/75 hover:text-[#7C5CFC] transition-colors">
                   Coaches
                 </Link>
               </li>
               <li>
-                <Link href={ROUTES.programmes} className="hover:opacity-60 transition-opacity">
+                <Link href={ROUTES.programmes} className="text-[#FAF6EE]/75 hover:text-[#7C5CFC] transition-colors">
                   Styles
                 </Link>
               </li>
               <li>
-                <Link href="#videos" className="hover:opacity-60 transition-opacity">
+                <Link href="#videos" className="text-[#FAF6EE]/75 hover:text-[#7C5CFC] transition-colors">
                   Video
                 </Link>
               </li>
@@ -64,22 +64,22 @@ export function Footer() {
 
           {/* Column 3: INFO (2-3 cols) */}
           <div className="md:col-span-3">
-            <h4 className="heading-urban text-lg sm:text-xl tracking-wide mb-4 select-none">
+            <h4 className="font-anton text-xl tracking-wider mb-4 select-none text-[#F5FB38]">
               INFO
             </h4>
             <ul className="flex flex-col gap-2 list-none p-0 m-0 text-xs sm:text-sm font-bold uppercase tracking-wider">
               <li>
-                <Link href={ROUTES.about} className="hover:opacity-60 transition-opacity">
+                <Link href={ROUTES.about} className="text-[#FAF6EE]/75 hover:text-[#7C5CFC] transition-colors">
                   Who We Are
                 </Link>
               </li>
               <li>
-                <Link href={ROUTES.contact} className="hover:opacity-60 transition-opacity">
+                <Link href={ROUTES.contact} className="text-[#FAF6EE]/75 hover:text-[#7C5CFC] transition-colors">
                   Contacts
                 </Link>
               </li>
               <li>
-                <Link href={ROUTES.enrol} className="hover:opacity-60 transition-opacity">
+                <Link href={ROUTES.enrol} className="text-[#FAF6EE]/75 hover:text-[#7C5CFC] transition-colors">
                   Book A Class
                 </Link>
               </li>

@@ -20,6 +20,18 @@
   --color-green: #1DB954;
   --color-gold: #F5A623;
   --color-purp: #8B5CF6;
+  --color-acid: #D4FF00;
+  --color-acid-neon: #E2F806;
+
+  /* ── Option 1: Soft & Exciting Palette ── */
+  --color-sun: #F5FB38;
+  --color-sun-hover: #E6EC28;
+  --color-periwinkle: #7C5CFC;
+  --color-periwinkle-light: #ECE7FF;
+  --color-cream: #FAF6EE;
+  --color-cream-card: #F4EFE3;
+  --color-velvet: #000000;
+  --color-velvet-card: #0A0A0A;
 
   /* ── Semantic (flip with .dark; light values ≡ pre-redesign look) ── */
   --color-canvas: var(--canvas);
@@ -41,6 +53,7 @@
   --color-danger-deep: var(--danger-deep);
 
   /* ── Fonts ── */
+  --font-anton: var(--font-anton);
   --font-display: var(--font-display-face);
   --font-body: var(--font-inter);
 
@@ -73,67 +86,67 @@
   --text-micro--letter-spacing: 0.15em;
 }
 
-/* ── Semantic values (light = today's exact look) ── */
+/* ── Semantic values: Soft Warm Butter Cream Canvas ── */
 :root {
   color-scheme: light;
-  --background: #ffffff;
-  --foreground: #0f172a;
+  --background: #FAF6EE;
+  --foreground: #141418;
 
-  --canvas: #f8f9fa;
-  --canvas-muted: #f1f5f9;
-  --canvas-muted-2: #e2e8f0;
-  --surface: #ffffff;
-  --surface-card: #ffffff;
-  --bl-pale-surface: #e0f2fe;
+  --canvas: #FAF6EE;
+  --canvas-muted: #F3EFE4;
+  --canvas-muted-2: #E9E4D6;
+  --surface: #FFFFFF;
+  --surface-card: #FFFFFF;
+  --bl-pale-surface: #ECE7FF;
 
-  --ink: #0f172a;
-  --ink-2: #475569;
-  --ink-3: #64748b;
+  --ink: #141418;
+  --ink-2: #525566;
+  --ink-3: #75788C;
 
-  --line: rgba(15, 23, 42, 0.08);
-  --line-subtle: rgba(15, 23, 42, 0.05);
-  --line-strong: rgba(15, 23, 42, 0.15);
+  --line: rgba(20, 20, 24, 0.08);
+  --line-subtle: rgba(20, 20, 24, 0.05);
+  --line-strong: rgba(20, 20, 24, 0.15);
 
-  /* Accents */
-  --bl: #2bb4d8;
-  --bl-ink: #0284c7;
-  --bl-deep: #0369a1;
-  --peach: #fb923c;
-  --peach-surface: #fff7ed;
-  --peach-ink: #ea580c;
+  /* Accents: Sun Butter & Electric Periwinkle */
+  --bl: #7C5CFC;
+  --bl-ink: #6540EB;
+  --bl-deep: #512BDB;
+  --peach: #F5FB38;
+  --peach-surface: #FEFEE5;
+  --peach-ink: #141418;
   --gold-ink: #d97706;
   --green-ink: #16a34a;
   --danger: #ef4444;
   --danger-deep: #dc2626;
 }
 
-/* ── Dark variant (Midnight Obsidian Studio) ── */
+/* ── Dark variant (Velvet Obsidian Studio) ── */
 .dark {
   color-scheme: dark;
-  --background: #09090b;
-  --foreground: #ffffff;
+  --background: #000000;
+  --foreground: #FAF6EE;
 
-  --canvas: #09090b;
-  --canvas-muted: #121216;
-  --canvas-muted-2: #18181d;
-  --surface: #121216;
-  --surface-card: #18181e;
-  --bl-pale-surface: rgba(43, 180, 216, 0.12);
+  --canvas: #000000;
+  --canvas-muted: #0A0A0A;
+  --canvas-muted-2: #141414;
+  --surface: #0A0A0A;
+  --surface-card: #111111;
+  --bl-pale-surface: rgba(124, 92, 252, 0.15);
 
-  --ink: #ffffff;
-  --ink-2: #94a3b8;
-  --ink-3: #64748b;
+  --ink: #FAF6EE;
+  --ink-2: #A2A5B8;
+  --ink-3: #6F7285;
 
-  --line: rgba(255, 255, 255, 0.12);
-  --line-subtle: rgba(255, 255, 255, 0.07);
-  --line-strong: rgba(255, 255, 255, 0.22);
+  --line: rgba(250, 246, 238, 0.12);
+  --line-subtle: rgba(250, 246, 238, 0.07);
+  --line-strong: rgba(250, 246, 238, 0.22);
 
-  --bl: #2bb4d8;
-  --bl-ink: #38bdf8;
-  --bl-deep: #0284c7;
-  --peach: #fb923c;
-  --peach-surface: rgba(251, 146, 60, 0.15);
-  --peach-ink: #fdba74;
+  --bl: #7C5CFC;
+  --bl-ink: #9B82FD;
+  --bl-deep: #7C5CFC;
+  --peach: #F5FB38;
+  --peach-surface: rgba(245, 251, 56, 0.15);
+  --peach-ink: #F5FB38;
   --gold-ink: #fbbf24;
   --green-ink: #22c55e;
   --danger: #ef4444;
@@ -450,7 +463,7 @@ html.theme-transition *::after {
 }
 
 .dark .bento-card {
-  background-color: #121216;
+  background-color: #0A0A0A;
   border-color: rgba(255, 255, 255, 0.1);
 }
 
@@ -465,31 +478,87 @@ html.theme-transition *::after {
   box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7);
 }
 
-/* Peach Pill Button (Step Up inspired) */
-.btn-peach {
-  background-color: #fb923c;
-  color: #000000 !important;
+/* Sun Butter Pill Button (Soft & Exciting Primary CTA) */
+.btn-peach,
+.btn-sun {
+  background-color: #F5FB38;
+  color: #141418 !important;
   font-weight: 800;
   border-radius: 9999px;
-  transition: all 200ms ease;
+  transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1);
   display: inline-flex;
   align-items: center;
   justify-content: center;
 }
 
-.btn-peach:hover {
-  background-color: #f97316;
+.btn-peach:hover,
+.btn-sun:hover {
+  background-color: #E6EC28;
   transform: scale(1.02);
-  box-shadow: 0 8px 20px -4px rgba(251, 146, 60, 0.5);
+  box-shadow: 0 8px 24px -4px rgba(245, 251, 56, 0.45);
 }
 
-.btn-peach:active {
+.btn-peach:active,
+.btn-sun:active {
+  transform: scale(0.97);
+}
+
+/* Electric Periwinkle Pill Button */
+.btn-periwinkle {
+  background-color: #7C5CFC;
+  color: #FFFFFF !important;
+  font-weight: 800;
+  border-radius: 9999px;
+  transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-periwinkle:hover {
+  background-color: #6A45F5;
+  transform: scale(1.02);
+  box-shadow: 0 8px 24px -4px rgba(124, 92, 252, 0.4);
+}
+
+.btn-periwinkle:active {
   transform: scale(0.97);
 }
 
 /* Editorial Stark Divider */
 .editorial-line {
   border-color: var(--line);
+}
+
+.font-anton {
+  font-family: var(--font-anton), var(--font-display-face), sans-serif;
+  font-weight: 400;
+  text-transform: uppercase;
+}
+
+/* Palette Utilities: Soft & Exciting */
+.bg-sun { background-color: #F5FB38; }
+.text-sun { color: #F5FB38; }
+.border-sun { border-color: #F5FB38; }
+
+.bg-periwinkle { background-color: #7C5CFC; }
+.text-periwinkle { color: #7C5CFC; }
+.border-periwinkle { border-color: #7C5CFC; }
+
+.bg-cream { background-color: #FAF6EE; }
+.text-cream { color: #FAF6EE; }
+
+.bg-velvet { background-color: #000000; }
+.bg-velvet-card { background-color: #0A0A0A; }
+.border-velvet-subtle { border-color: rgba(250, 246, 238, 0.1); }
+
+/* Compatibility aliases for acid */
+.bg-acid { background-color: #F5FB38; }
+.text-acid { color: #F5FB38; }
+.border-acid { border-color: #F5FB38; }
+
+.border-acid {
+  border-color: #d4ff00;
 }
 
 

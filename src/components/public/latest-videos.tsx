@@ -51,10 +51,10 @@ export function LatestVideos() {
     <section id="videos" className="w-full px-4 sm:px-6 md:px-10 py-12 sm:py-16 md:py-20 max-w-[1440px] mx-auto">
       {/* Section Heading */}
       <div className="mb-6 sm:mb-8">
-        <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#FB923C] font-bold block mb-2">
+        <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#7C5CFC] font-bold block mb-2">
           Studio Recitals &amp; Choreo Reels
         </span>
-        <h2 className="heading-urban text-3xl sm:text-5xl md:text-6xl text-ink tracking-tight">
+        <h2 className="font-anton text-4xl sm:text-6xl md:text-7xl text-ink tracking-wide">
           LATEST VIDEOS
         </h2>
       </div>
@@ -64,7 +64,7 @@ export function LatestVideos() {
         {/* Left: Dominant Featured Video (approx 62% / 7 cols) */}
         <div
           onClick={() => setSelectedVideo(FEATURED_MAIN)}
-          className="lg:col-span-7 xl:col-span-7 group relative rounded-xl sm:rounded-2xl overflow-hidden border border-line hover:border-ink bg-[#0A0A0A] cursor-pointer aspect-[16/10] sm:aspect-[16/9] shadow-2xl flex flex-col justify-between p-5 sm:p-7 transition-all duration-300"
+          className="lg:col-span-7 xl:col-span-7 group relative rounded-xl sm:rounded-2xl overflow-hidden border border-line hover:border-[#F5FB38] bg-[#0A0A0A] cursor-pointer aspect-[16/10] sm:aspect-[16/9] shadow-2xl flex flex-col justify-between p-5 sm:p-7 transition-all duration-300"
         >
           {/* Media Backdrop */}
           <div className="absolute inset-0 z-0">
@@ -80,7 +80,7 @@ export function LatestVideos() {
 
           {/* Center Watermark Typography matching reference screenshot */}
           <div className="relative z-10 my-auto text-center flex flex-col items-center justify-center">
-            <span className="heading-urban text-4xl sm:text-6xl md:text-7xl text-white tracking-wider drop-shadow-[0_10px_20px_rgba(0,0,0,0.9)] select-none">
+            <span className="font-anton text-4xl sm:text-6xl md:text-7xl text-white tracking-wider drop-shadow-[0_10px_20px_rgba(0,0,0,0.9)] select-none">
               {FEATURED_MAIN.watermark}
             </span>
             {FEATURED_MAIN.subtitle && (
@@ -92,7 +92,7 @@ export function LatestVideos() {
 
           {/* Bottom Left Caption */}
           <div className="relative z-10">
-            <p className="text-xs sm:text-sm font-bold uppercase tracking-wider text-white group-hover:text-[#2BB4D8] transition-colors">
+            <p className="text-xs sm:text-sm font-bold uppercase tracking-wider text-white group-hover:text-[#F5FB38] transition-colors">
               {FEATURED_MAIN.caption}
             </p>
           </div>
@@ -104,7 +104,7 @@ export function LatestVideos() {
             <div
               key={item.id}
               onClick={() => setSelectedVideo(item)}
-              className="group relative rounded-xl sm:rounded-2xl overflow-hidden border border-line hover:border-ink bg-[#0A0A0A] cursor-pointer aspect-[16/9] sm:aspect-[16/8.5] flex-1 flex flex-col justify-between p-4 sm:p-5 shadow-xl transition-all duration-300"
+              className="group relative rounded-xl sm:rounded-2xl overflow-hidden border border-line hover:border-[#F5FB38] bg-[#0A0A0A] cursor-pointer aspect-[16/9] sm:aspect-[16/8.5] flex-1 flex flex-col justify-between p-4 sm:p-5 shadow-xl transition-all duration-300"
             >
               {/* Media Backdrop */}
               <div className="absolute inset-0 z-0">
@@ -118,8 +118,8 @@ export function LatestVideos() {
                 {/* Electric purple neon glow for the bottom card as seen in screenshot */}
                 {item.purpleTone ? (
                   <>
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#3b0764]/90 via-[#7e22ce]/30 to-black/40 pointer-events-none" />
-                    <div className="absolute inset-0 bg-purple-600/25 mix-blend-screen pointer-events-none" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#2e1065]/90 via-[#7c5cfc]/30 to-black/40 pointer-events-none" />
+                    <div className="absolute inset-0 bg-[#7c5cfc]/25 mix-blend-screen pointer-events-none" />
                   </>
                 ) : (
                   <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/30 pointer-events-none" />
@@ -128,14 +128,14 @@ export function LatestVideos() {
 
               {/* Center Watermark */}
               <div className="relative z-10 my-auto text-center flex items-center justify-center">
-                <span className="heading-urban text-3xl sm:text-4xl md:text-5xl text-white tracking-wider drop-shadow-[0_10px_20px_rgba(0,0,0,0.9)] select-none">
+                <span className="font-anton text-3xl sm:text-4xl md:text-5xl text-white tracking-wider drop-shadow-[0_10px_20px_rgba(0,0,0,0.9)] select-none">
                   {item.watermark}
                 </span>
               </div>
 
               {/* Bottom Caption */}
               <div className="relative z-10">
-                <p className="text-xs font-bold uppercase tracking-wider text-white group-hover:text-[#2BB4D8] transition-colors">
+                <p className="text-xs font-bold uppercase tracking-wider text-white group-hover:text-[#F5FB38] transition-colors">
                   {item.caption}
                 </p>
               </div>

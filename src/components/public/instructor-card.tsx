@@ -1,13 +1,12 @@
 import Image from 'next/image';
-import { SpotlightCard } from '@/components/ui/spotlight';
 
 interface InstructorCardProps {
-  instructor: any; // Type properly in a real scenario
+  instructor: any;
 }
 
 export function InstructorCard({ instructor }: InstructorCardProps) {
   return (
-    <div className="bento-card p-6 flex flex-col justify-between h-full group">
+    <div className="bento-card p-6 flex flex-col justify-between h-full group rounded-[28px] hover:border-line-strong transition-all">
       <div>
         <div className="w-full aspect-[4/5] rounded-2xl overflow-hidden mb-5 relative bg-canvas border border-line">
           {instructor.photo_url ? (
@@ -18,20 +17,22 @@ export function InstructorCard({ instructor }: InstructorCardProps) {
               className="object-cover group-hover:scale-105 transition-transform duration-500"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-4xl text-ink-3 font-bold bg-canvas">
+            <div className="w-full h-full flex items-center justify-center text-4xl text-ink-3 font-anton bg-canvas">
               {instructor.name?.charAt(0) || 'I'}
             </div>
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-surface via-transparent to-transparent opacity-80" />
           <div className="absolute bottom-3 left-3 right-3">
-            <span className="text-[9px] font-mono tracking-[2px] uppercase font-black text-[#FB923C] bg-surface/90 backdrop-blur-md px-2.5 py-1 rounded-full border border-line inline-block">
+            <span className="text-[10px] font-mono tracking-wider uppercase font-bold text-black bg-[#F5FB38] px-2.5 py-1 rounded-md shadow-sm inline-block">
               {instructor.role || 'Senior Coach'}
             </span>
           </div>
         </div>
 
-        <h4 className="heading-urban text-2xl text-ink mb-1">{instructor.name}</h4>
-        <p className="text-xs text-ink-2 leading-relaxed mt-2">
+        <h4 className="font-anton text-2xl text-ink mb-1 group-hover:text-[#7C5CFC] transition-colors tracking-wide uppercase">
+          {instructor.name}
+        </h4>
+        <p className="text-xs text-ink-2 leading-relaxed mt-2 line-clamp-3">
           {instructor.bio}
         </p>
       </div>
@@ -41,9 +42,9 @@ export function InstructorCard({ instructor }: InstructorCardProps) {
           {instructor.certifications.map((cert: string, i: number) => (
             <span
               key={i}
-              className="text-[9px] font-mono tracking-[1px] uppercase font-bold text-ink-2 bg-canvas border border-line rounded-full px-2.5 py-0.5"
+              className="text-[9px] font-mono tracking-wider uppercase font-bold text-[#7C5CFC] bg-canvas border border-line rounded-md px-2.5 py-0.5"
             >
-              {cert}
+              [{cert}]
             </span>
           ))}
         </div>

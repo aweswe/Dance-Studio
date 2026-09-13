@@ -12,11 +12,47 @@ const DEFAULT_INSTRUCTORS = [
     is_active: true,
   },
   {
+    id: "i-amulya",
+    name: "Amulya Rajendran",
+    role: "Co-Founder",
+    bio: "Co-founder of Rhythmzz Academy of Dance, shaping the academy's creative direction, community culture, and holistic dance pedagogy since inception.",
+    photo_url: "/images/amulya-rajendran.jpg",
+    certifications: ["Co-Founder", "Creative Direction", "Academy Leadership"],
+    is_active: true,
+  },
+  {
+    id: "i-sheel",
+    name: "Sheel Awasthi",
+    role: "Strategic Partner",
+    bio: "Strategic partner spearheading institutional alliances, organizational growth, and performing arts development across the region.",
+    photo_url: "/images/sheel-awasthi.png",
+    certifications: ["Strategic Leadership", "Institutional Alliances", "Organizational Growth"],
+    is_active: true,
+  },
+  {
+    id: "i-saurabh",
+    name: "Lion Saurabh Sureka",
+    role: "Director of Event Management",
+    bio: "Social entrepreneur and Founder & CEO of Celebration Makers. 20+ years of event management leadership identifying, producing, and nurturing performing arts talent across India.",
+    photo_url: "/images/saurabh-sureka.png",
+    certifications: ["Event Leadership", "Celebration Makers CEO", "Management Team"],
+    is_active: true,
+  },
+  {
+    id: "i-meghna",
+    name: "Meghna Menon",
+    role: "Manager & Creative Content Lead",
+    bio: "Joined Rhythmzz in 2015 and serves as Studio Manager. Works closely with Nitish on academy growth, creative content, community culture, and digital media.",
+    photo_url: "/images/meghna-menon.png",
+    certifications: ["Studio Manager", "Creative Content Lead", "Management Team"],
+    is_active: true,
+  },
+  {
     id: "i2-pranith",
     name: "Pranith Nair",
     role: "Senior Instructor — Hip Hop & Bolly-Hop",
     bio: "Senior instructor at Rhythmzz since 2015. Trained in contemporary under Nitish Kumar and Ajeesh Balakrishnan, and represented India as part of Rhythmzz at the NATANDA International Dance Festival in Sri Lanka.",
-    photo_url: null,
+    photo_url: "/images/pranith-nair.png",
     certifications: ["Hip Hop & Bolly-Hop Specialist", "Natfest Sri Lanka Artiste", "Fitness Enthusiast"],
     is_active: true,
   },
@@ -25,7 +61,7 @@ const DEFAULT_INSTRUCTORS = [
     name: "Kajal Devi",
     role: "Instructor — Bollywood & Kids Batch",
     bio: "Part of Rhythmzz since 2014, trained under in-house and international faculty. Known as the 'Elastic Girl' for exceptional flexibility, Kajal is the primary instructor for the Kids Foundation Batches.",
-    photo_url: null,
+    photo_url: "/images/kajal-devi.png",
     certifications: ["Kids Dance Specialist", "Contemporary & Flexibility", "Rhythmzz Core Faculty"],
     is_active: true,
   },
@@ -36,6 +72,15 @@ const DEFAULT_INSTRUCTORS = [
     bio: "Joined in 2013 and evolved from a student to core instructor. Renowned for his jovial, high-energy interactive sessions in Bollywood, Tollywood, and adult dance fitness.",
     photo_url: null,
     certifications: ["Bollywood & Tollywood Master", "Dance Fitness Instructor", "10+ Years with Rhythmzz"],
+    is_active: true,
+  },
+  {
+    id: "i-srikanth",
+    name: "Srikanth",
+    role: "Trainer — Gymnastics & Acrobatics",
+    bio: "Specialist trainer in gymnastics, tumbling, martial movement, and aerial acrobatics. Trains kids and dancers in foundational tumbling, spatial awareness, core strength, and dynamic athletic flexibility.",
+    photo_url: "/images/srikanth-gymnastics.png",
+    certifications: ["Gymnastics Specialist", "Acrobatics & Tumbling Coach", "Martial Movement Trainer"],
     is_active: true,
   },
   {
@@ -68,10 +113,10 @@ const DEFAULT_INSTRUCTORS = [
   {
     id: "i8-ajeesh",
     name: "Ajeesh Balakrishnan",
-    role: "Contemporary & Kalaripayattu Trainer",
-    bio: "Certified performer and trainer from Attakkalari since 2006. Has performed in numerous international productions and trained students in contemporary dance and martial movement.",
-    photo_url: null,
-    certifications: ["Attakkalari Certified", "International Production Artiste", "Kalaripayattu Movement"],
+    role: "Guest Trainer — Kalaripayattu & Contemporary",
+    bio: "Certified performer and trainer from Attakkalari since 2006. Has performed in numerous international productions and trains dancers in contemporary dance mechanics and traditional Kalaripayattu martial movement.",
+    photo_url: "/images/ajeesh-balakrishnan.png",
+    certifications: ["Guest Trainer", "Kalaripayattu Master", "Attakkalari Certified"],
     is_active: true,
   },
   {
@@ -88,6 +133,7 @@ const DEFAULT_INSTRUCTORS = [
 export async function getInstructors() {
   try {
     const supabase = getPublicSupabase();
+    if (!supabase) return DEFAULT_INSTRUCTORS;
     const { data } = await supabase
       .from('instructors')
       .select('id, name, role, bio, photo_url, certifications, is_active')

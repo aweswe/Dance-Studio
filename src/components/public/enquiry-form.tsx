@@ -35,8 +35,8 @@ export function EnquiryForm() {
   if (status === 'sent') {
     return (
       <div className="text-center py-8">
-        <CheckCircle2 className="mx-auto mb-4 text-green" size={48} strokeWidth={1.5} />
-        <h3 className="heading-display text-2xl text-ink mb-2">MESSAGE RECEIVED</h3>
+        <CheckCircle2 className="mx-auto mb-4 text-[#7C5CFC]" size={48} strokeWidth={1.5} />
+        <h3 className="font-anton text-2xl text-ink tracking-wide mb-2">MESSAGE RECEIVED</h3>
         <p className="text-sm text-ink-2">
           We&apos;ll get back to you within 24 hours. For anything urgent, WhatsApp us directly.
         </p>
@@ -45,7 +45,7 @@ export function EnquiryForm() {
   }
 
   const textareaClass =
-    'w-full bg-canvas border border-line rounded-xl px-4 py-3 text-sm text-ink placeholder:text-ink-3 h-32 resize-none focus:outline-none focus:border-[#FB923C] focus:ring-1 focus:ring-[#FB923C]/20 transition-all';
+    'w-full bg-canvas border border-line rounded-2xl px-4 py-3 text-sm text-ink placeholder:text-ink-3 h-32 resize-none focus:outline-none focus:border-[#7C5CFC] focus:ring-2 focus:ring-[#7C5CFC]/20 transition-all';
 
   return (
     <form onSubmit={submit} className="space-y-5" noValidate>
@@ -98,7 +98,7 @@ export function EnquiryForm() {
       <button
         type="submit"
         disabled={busy}
-        className="btn-peach w-full py-4 text-xs font-black tracking-[2px] uppercase gap-2 shadow-md cursor-pointer"
+        className="btn-sun w-full py-4 text-xs font-black tracking-[2px] uppercase gap-2 shadow-md cursor-pointer flex items-center justify-center transition-transform active:scale-[0.98]"
       >
         <Send size={14} /> {busy ? 'Sending...' : 'Send Message ──→'}
       </button>

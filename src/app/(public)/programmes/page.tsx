@@ -6,9 +6,7 @@ import { getBatches } from '@/data/batches';
 import { ProgrammeCard } from '@/components/public/programme-card';
 import { scheduleFor } from '@/lib/utils/schedule';
 import { ROUTES, SITE_URL } from '@/lib/utils/constants';
-import { Reveal } from '@/components/motion/reveal';
 import { STUDIO_INFO } from '@/data/studio-info';
-import { ArrowRight, Compass, ShieldCheck } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Dance & Fitness Programmes | Rhythmzz Academy of Dance',
@@ -39,29 +37,23 @@ export default async function ProgrammesPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }}
       />
 
-      {/* Hero with Breathing Room */}
-      <section className="relative overflow-hidden py-20 sm:py-28 md:py-32 px-4 sm:px-6 md:px-16 text-center border-b border-line bg-canvas">
-        <div className="max-w-4xl mx-auto">
-          <div className="inline-flex items-center mb-4 px-3.5 py-1 rounded-full border border-line bg-surface/80 backdrop-blur-sm">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#FB923C] inline-block mr-2" />
-            <span className="text-[10px] sm:text-xs font-mono tracking-[0.25em] text-[#FB923C] uppercase font-bold">
-              ACCREDITED CURRICULUM · IAO USA CERTIFIED
-            </span>
-          </div>
-
-          <h1 className="heading-urban text-4xl sm:text-6xl md:text-7xl text-ink mb-6 leading-tight tracking-tight">
-            KIDS · ADULTS · FITNESS · CLASSICAL
-          </h1>
-
-          <p className="text-ink-2 text-sm sm:text-base md:text-lg leading-relaxed max-w-2xl mx-auto">
-            Structured level-based training at Neredmet X Road, Secunderabad. Your first class is completely free — join a batch today with zero registration fees.
-          </p>
-        </div>
+      {/* Page Header */}
+      <section className="py-16 sm:py-24 px-4 sm:px-8 md:px-14 border-b border-line max-w-[1440px] mx-auto">
+        <p className="text-[11px] font-mono uppercase tracking-[0.25em] text-ink-3 mb-4">
+          All Programmes · Rhythmzz Academy
+        </p>
+        <h1 className="font-anton text-5xl sm:text-7xl md:text-8xl text-ink leading-[0.92] tracking-tight uppercase mb-6">
+          COMMERCIAL<br />FITNESS<br />CLASSICAL
+        </h1>
+        <p className="text-ink-2 text-sm sm:text-base max-w-lg">
+          Fees from ₹2,000/month. No registration fee.
+          First class free — book a trial at Neredmet X Road, Secunderabad.
+        </p>
       </section>
 
-      {/* Programme Cards Grid with Spacious Gutter */}
-      <section className="py-20 sm:py-28 px-4 sm:px-6 md:px-16 max-w-6xl mx-auto">
-        <Reveal stagger={0.08} className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
+      {/* Programme Cards */}
+      <section className="py-14 sm:py-20 px-4 sm:px-8 md:px-14 max-w-[1440px] mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {programmes.map((prog: any) => (
             <ProgrammeCard
               key={prog.id ?? prog.slug}
@@ -69,136 +61,81 @@ export default async function ProgrammesPage() {
               schedule={scheduleFor(prog, batches)}
             />
           ))}
-        </Reveal>
+        </div>
+      </section>
 
-        {/* Spacious Disciplines & Styles Directory (De-Noised & Visual) */}
-        <div className="mt-24 pt-16 border-t border-line">
-          <div className="text-center max-w-3xl mx-auto mb-14">
-            <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#FB923C] font-bold block mb-2">
-              Comprehensive Syllabus
-            </span>
-            <h2 className="heading-urban text-3xl sm:text-4xl md:text-5xl text-ink leading-tight">
-              SPECIALIZED DISCIPLINES TAUGHT
-            </h2>
-            <p className="text-ink-2 text-sm md:text-base mt-2">
-              From foundational rhythm to international production choreography.
-            </p>
-          </div>
+      {/* Disciplines */}
+      <section className="px-4 sm:px-8 md:px-14 pb-14 sm:pb-20 max-w-[1440px] mx-auto">
+        <div className="border-t border-line pt-14">
+          <p className="text-[11px] font-mono uppercase tracking-[0.22em] text-ink-3 mb-3">
+            What We Teach
+          </p>
+          <h2 className="font-anton text-3xl sm:text-4xl text-ink uppercase tracking-tight mb-10">
+            ALL DISCIPLINES
+          </h2>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {/* Indian Classical */}
-            <div className="bento-card p-6 flex flex-col justify-between">
-              <div>
-                <span className="text-[10px] font-mono font-bold uppercase tracking-[2px] text-[#FB923C] block mb-3">
-                  Indian Classical
-                </span>
-                <h3 className="heading-urban text-xl sm:text-2xl text-ink mb-4">HERITAGE FORMS</h3>
-                <div className="flex flex-wrap gap-1.5">
-                  {STUDIO_INFO.danceForms.indianClassical.map((style) => (
-                    <span
-                      key={style.name}
-                      className="px-2.5 py-1 rounded-md bg-canvas border border-line text-[11px] font-medium text-ink"
-                    >
-                      {style.name}
-                    </span>
-                  ))}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-line border border-line rounded-[20px] overflow-hidden">
+            {[
+              {
+                label: 'Indian Classical',
+                note: 'Natyashastra & Tarangam',
+                styles: STUDIO_INFO.danceForms.indianClassical,
+              },
+              {
+                label: 'Street & Screen',
+                note: 'Grooves, Freezing & Music Videos',
+                styles: STUDIO_INFO.danceForms.commercial,
+              },
+              {
+                label: 'Contemporary & Latin',
+                note: 'Floorwork, Fluidity & Partner Dynamics',
+                styles: STUDIO_INFO.danceForms.modernWestern,
+              },
+              {
+                label: 'Fitness & Conditioning',
+                note: 'Cardio Stamina & Kalaripayattu Core',
+                styles: STUDIO_INFO.danceForms.fitness,
+              },
+            ].map(({ label, note, styles }) => (
+              <div key={label} className="bg-canvas p-6 flex flex-col gap-4">
+                <div>
+                  <p className="text-[10px] font-mono uppercase tracking-widest text-ink-3 mb-1">{label}</p>
+                  <div className="flex flex-wrap gap-1.5 mt-2">
+                    {styles.map((s: any) => (
+                      <span
+                        key={s.name}
+                        className="text-[11px] font-medium text-ink border border-line px-2 py-0.5 rounded-md"
+                      >
+                        {s.name}
+                      </span>
+                    ))}
+                  </div>
                 </div>
+                <p className="text-[10px] font-mono text-ink-3 mt-auto">{note}</p>
               </div>
-              <p className="text-[11px] text-ink-3 mt-6 pt-4 border-t border-line font-mono">
-                Rigorous Natyashastra &amp; Tarangam
-              </p>
-            </div>
-
-            {/* Commercial & Urban */}
-            <div className="bento-card p-6 flex flex-col justify-between">
-              <div>
-                <span className="text-[10px] font-mono font-bold uppercase tracking-[2px] text-[#2BB4D8] block mb-3">
-                  Street &amp; Screen
-                </span>
-                <h3 className="heading-urban text-xl sm:text-2xl text-ink mb-4">COMMERCIAL URBAN</h3>
-                <div className="flex flex-wrap gap-1.5">
-                  {STUDIO_INFO.danceForms.commercial.map((style) => (
-                    <span
-                      key={style.name}
-                      className="px-2.5 py-1 rounded-md bg-canvas border border-line text-[11px] font-medium text-ink"
-                    >
-                      {style.name}
-                    </span>
-                  ))}
-                </div>
-              </div>
-              <p className="text-[11px] text-ink-3 mt-6 pt-4 border-t border-line font-mono">
-                Grooves, Freezing &amp; Music Videos
-              </p>
-            </div>
-
-            {/* Modern & Latin */}
-            <div className="bento-card p-6 flex flex-col justify-between">
-              <div>
-                <span className="text-[10px] font-mono font-bold uppercase tracking-[2px] text-[#A855F7] block mb-3">
-                  Movement Arts
-                </span>
-                <h3 className="heading-urban text-xl sm:text-2xl text-ink mb-4">CONTEMPORARY &amp; LATIN</h3>
-                <div className="flex flex-wrap gap-1.5">
-                  {STUDIO_INFO.danceForms.modernWestern.map((style) => (
-                    <span
-                      key={style.name}
-                      className="px-2.5 py-1 rounded-md bg-canvas border border-line text-[11px] font-medium text-ink"
-                    >
-                      {style.name}
-                    </span>
-                  ))}
-                </div>
-              </div>
-              <p className="text-[11px] text-ink-3 mt-6 pt-4 border-t border-line font-mono">
-                Floorwork, Fluidity &amp; Partner Dynamics
-              </p>
-            </div>
-
-            {/* Fitness & Strength */}
-            <div className="bento-card p-6 flex flex-col justify-between">
-              <div>
-                <span className="text-[10px] font-mono font-bold uppercase tracking-[2px] text-[#10B981] block mb-3">
-                  Conditioning
-                </span>
-                <h3 className="heading-urban text-xl sm:text-2xl text-ink mb-4">FITNESS &amp; MARTIAL ARTS</h3>
-                <div className="flex flex-wrap gap-1.5">
-                  {STUDIO_INFO.danceForms.fitness.map((style) => (
-                    <span
-                      key={style.name}
-                      className="px-2.5 py-1 rounded-md bg-canvas border border-line text-[11px] font-medium text-ink"
-                    >
-                      {style.name}
-                    </span>
-                  ))}
-                </div>
-              </div>
-              <p className="text-[11px] text-ink-3 mt-6 pt-4 border-t border-line font-mono">
-                Cardio Stamina &amp; Kalaripayattu Core
-              </p>
-            </div>
+            ))}
           </div>
         </div>
+      </section>
 
-        {/* Free Trial Invitation Card */}
-        <Reveal y={20} className="mt-20 bento-card p-8 sm:p-12 text-center max-w-3xl mx-auto shadow-xl">
-          <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#FB923C] font-bold block mb-2">
-            No Commitment Trial
-          </span>
-          <h2 className="heading-urban text-3xl sm:text-4xl text-ink mb-3">
-            NOT SURE WHICH DISCIPLINE FITS?
-          </h2>
-          <p className="text-sm text-ink-2 mb-6 max-w-lg mx-auto">
-            Attend your first session on us. Our coaches evaluate your rhythm, flexibility, and goals to recommend the perfect batch.
-          </p>
+      {/* CTA */}
+      <section className="px-4 sm:px-8 md:px-14 pb-20 sm:pb-28 max-w-[1440px] mx-auto">
+        <div className="border border-line rounded-[24px] p-8 sm:p-12 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+          <div>
+            <h2 className="font-anton text-2xl sm:text-3xl text-ink uppercase tracking-tight">
+              NOT SURE WHERE TO START?
+            </h2>
+            <p className="text-sm text-ink-2 mt-1">
+              Your first class is free. Our coaches will guide you to the right batch.
+            </p>
+          </div>
           <Link
             href={ROUTES.enrol}
-            className="btn-peach px-8 py-3.5 text-xs font-black uppercase tracking-[0.18em] inline-flex items-center gap-2 active:scale-[0.96] shadow-md"
+            className="btn-sun py-3.5 px-8 text-xs font-black uppercase tracking-[0.18em] shrink-0"
           >
-            <span>Claim Your Free Trial Class</span>
-            <ArrowRight size={14} />
+            Book Free Trial
           </Link>
-        </Reveal>
+        </div>
       </section>
     </div>
   );

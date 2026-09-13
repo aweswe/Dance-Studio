@@ -91,10 +91,10 @@ export function GalleryClient({ images }: { images: ImageType[] }) {
             onClick={() => setFilter(cat)}
             aria-pressed={filter === cat}
             className={cn(
-              "px-5 py-2 text-xs font-mono font-bold tracking-[1.5px] uppercase rounded-full transition-transform duration-100 border focus-visible:focus-ring active:scale-[0.96]",
+              "px-5 py-2 text-xs font-mono font-bold tracking-[1.5px] uppercase rounded-lg transition-all duration-150 border focus-visible:focus-ring active:scale-[0.96] cursor-pointer",
               filter === cat
-                ? "btn-peach border-transparent text-black shadow-sm"
-                : "bg-surface text-ink-2 border-line hover:border-[#FB923C] hover:text-ink"
+                ? "bg-[#F5FB38] text-black border-[#F5FB38] font-black shadow-sm"
+                : "bg-surface text-ink-2 border-line hover:border-[#7C5CFC] hover:text-ink"
             )}
           >
             {cat}
@@ -111,7 +111,7 @@ export function GalleryClient({ images }: { images: ImageType[] }) {
           <button
             key={image.id}
             type="button"
-            className="bento-card relative aspect-square cursor-pointer group focus-visible:focus-ring border border-line text-left p-0 overflow-hidden"
+            className="bento-card rounded-[22px] sm:rounded-[26px] relative aspect-square cursor-pointer group focus-visible:focus-ring border border-line text-left p-0 overflow-hidden"
             onClick={(e) => {
               triggerRef.current = e.currentTarget;
               setLightboxImage(image);
@@ -128,15 +128,15 @@ export function GalleryClient({ images }: { images: ImageType[] }) {
             {/* Always readable title overlay on hover/focus */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity duration-300 flex flex-col justify-between p-5 z-10">
               <div className="flex justify-end">
-                <span className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-md text-white flex items-center justify-center shadow-md">
+                <span className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-md text-[#F5FB38] flex items-center justify-center shadow-md">
                   <ZoomIn size={16} />
                 </span>
               </div>
               <div>
-                <span className="text-[9px] font-mono font-bold uppercase tracking-[2px] text-[#FB923C] px-2 py-0.5 rounded bg-black/60 backdrop-blur-md inline-block mb-1.5 border border-white/10">
+                <span className="text-[9px] font-mono font-bold uppercase tracking-[2px] text-[#F5FB38] px-2.5 py-0.5 rounded-md bg-black/70 backdrop-blur-md inline-block mb-1.5 border border-[#F5FB38]/20">
                   {image.category}
                 </span>
-                <h4 className="heading-urban text-lg text-white line-clamp-2 leading-snug">
+                <h4 className="font-anton text-lg tracking-wide text-white line-clamp-2 leading-snug">
                   {image.title || image.alt}
                 </h4>
               </div>
@@ -183,10 +183,10 @@ export function GalleryClient({ images }: { images: ImageType[] }) {
           </div>
 
           <div className="mt-4 text-center max-w-2xl px-4 z-10 space-y-1">
-            <span className="text-[10px] font-bold uppercase tracking-[2px] text-bl-light px-2.5 py-0.5 rounded bg-white/10 inline-block">
+            <span className="text-[10px] font-mono font-bold uppercase tracking-[2px] text-[#F5FB38] px-2.5 py-0.5 rounded-md bg-black/60 border border-[#F5FB38]/20 inline-block">
               {lightboxImage.category}
             </span>
-            <h3 className="text-lg md:text-xl font-bold text-white">
+            <h3 className="font-anton text-xl md:text-2xl tracking-wide text-white">
               {lightboxImage.title || lightboxImage.alt}
             </h3>
             {lightboxImage.alt && lightboxImage.title !== lightboxImage.alt && (

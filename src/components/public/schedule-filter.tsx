@@ -58,7 +58,7 @@ export function ScheduleFilter({ batches }: ScheduleFilterProps) {
             onClick={() => setActiveDay(day)}
             aria-pressed={activeDay === day}
             className={cn(
-              "shrink-0 text-[11px] font-bold tracking-[1.5px] uppercase py-2 px-4.5 bg-surface border rounded-full cursor-pointer transition-all focus-visible:focus-ring active:scale-[0.98]",
+              "shrink-0 text-[11px] font-bold tracking-[1.5px] uppercase py-2 px-4.5 bg-surface border rounded-lg cursor-pointer transition-all focus-visible:focus-ring active:scale-[0.98]",
               activeDay === day
                 ? "bg-bl text-white border-bl dark:bg-bl dark:text-blk shadow-sm font-extrabold"
                 : "border-line text-ink-2 hover:text-ink hover:border-line-strong hover:bg-canvas-muted"

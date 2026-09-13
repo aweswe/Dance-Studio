@@ -188,21 +188,21 @@ export function EnrolForm({ programmes = [], batches = [], defaultProgramme }: E
           <CheckCircle2 size={36} />
         </div>
         <div className="space-y-1">
-          <span className="text-[10px] font-bold uppercase tracking-[2px] text-green">Payment Confirmed</span>
-          <h3 className="heading-display text-3xl text-ink">WELCOME TO RHYTHMZZ!</h3>
+          <span className="text-[10px] font-mono font-bold uppercase tracking-[2px] text-green">Payment Confirmed</span>
+          <h3 className="font-anton text-3xl sm:text-4xl text-ink tracking-wide">WELCOME TO RHYTHMZZ!</h3>
           <p className="text-xs text-ink-2">
             Your enrolment is complete and your student dashboard is ready.
           </p>
         </div>
 
-        <div className="bg-canvas-muted rounded-xl p-4 text-xs text-ink space-y-2 text-left border border-line-subtle">
-          <div className="flex justify-between items-center py-1 border-b border-line-subtle">
+        <div className="bg-canvas-muted rounded-2xl p-4 text-xs text-ink space-y-2 text-left border border-line">
+          <div className="flex justify-between items-center py-1 border-b border-line">
             <span className="text-ink-2">Dance Programme:</span>
             <span className="font-bold text-ink">{selectedProgramme?.name}</span>
           </div>
-          <div className="flex justify-between items-center py-1 border-b border-line-subtle">
+          <div className="flex justify-between items-center py-1 border-b border-line">
             <span className="text-ink-2">Schedule:</span>
-            <span className="font-semibold text-bl-ink">{batchLabel(selectedBatch)}</span>
+            <span className="font-semibold text-[#7C5CFC]">{batchLabel(selectedBatch)}</span>
           </div>
           <div className="flex justify-between items-center py-1">
             <span className="text-ink-2">Student Name:</span>
@@ -213,7 +213,7 @@ export function EnrolForm({ programmes = [], batches = [], defaultProgramme }: E
         <div className="pt-2 flex flex-col gap-3">
           <a
             href={ROUTES.student}
-            className="w-full text-center text-xs font-semibold tracking-[1.5px] uppercase px-6 py-4 bg-bl text-white hover:bg-bl-deep transition-all rounded-xl shadow-lg active:scale-[0.98] flex items-center justify-center gap-2"
+            className="btn-sun w-full text-center text-xs font-black tracking-[1.5px] uppercase px-6 py-4 rounded-xl shadow-md active:scale-[0.98] flex items-center justify-center gap-2"
           >
             Open Student Dashboard <ArrowRight size={16} />
           </a>
@@ -262,16 +262,16 @@ export function EnrolForm({ programmes = [], batches = [], defaultProgramme }: E
 
   // ---------- Single-View Streamlined Form ----------
   return (
-    <div className="bento-card p-6 md:p-8 shadow-xl max-w-xl mx-auto w-full space-y-6">
+    <div className="bento-card rounded-[28px] sm:rounded-[36px] border border-line p-6 md:p-8 shadow-xl max-w-xl mx-auto w-full space-y-6">
       {/* Mode Switcher: Enrol Now vs Free Trial */}
-      <div className="flex p-1 rounded-full bg-canvas border border-line text-xs font-semibold">
+      <div className="flex p-1 rounded-xl bg-canvas border border-line text-xs font-semibold">
         <button
           type="button"
           onClick={() => setBookingMode('pay')}
           className={cn(
-            "flex-1 py-2.5 rounded-full transition-all flex items-center justify-center gap-2 font-mono text-xs",
+            "flex-1 py-2.5 rounded-lg transition-all flex items-center justify-center gap-2 font-mono text-xs cursor-pointer",
             bookingMode === 'pay'
-              ? "btn-peach shadow-sm"
+              ? "bg-[#F5FB38] text-black font-black shadow-sm"
               : "text-ink-2 hover:text-ink"
           )}
         >
@@ -281,9 +281,9 @@ export function EnrolForm({ programmes = [], batches = [], defaultProgramme }: E
           type="button"
           onClick={() => setBookingMode('trial')}
           className={cn(
-            "flex-1 py-2.5 rounded-full transition-all flex items-center justify-center gap-2 font-mono text-xs",
+            "flex-1 py-2.5 rounded-lg transition-all flex items-center justify-center gap-2 font-mono text-xs cursor-pointer",
             bookingMode === 'trial'
-              ? "btn-peach shadow-sm"
+              ? "bg-[#F5FB38] text-black font-black shadow-sm"
               : "text-ink-2 hover:text-ink"
           )}
         >
@@ -297,7 +297,7 @@ export function EnrolForm({ programmes = [], batches = [], defaultProgramme }: E
           <label className="text-xs font-mono font-bold uppercase tracking-wider text-ink flex items-center justify-between">
             <span>1. Choose Programme</span>
             {selectedProgramme && (
-              <span className="text-[#FB923C] font-semibold">
+              <span className="text-[#7C5CFC] font-semibold">
                 {formatCurrency(selectedProgramme.fees_monthly)}/month
               </span>
             )}
@@ -314,12 +314,12 @@ export function EnrolForm({ programmes = [], batches = [], defaultProgramme }: E
                   className={cn(
                     "p-3 rounded-2xl border text-left transition-all relative flex flex-col justify-between cursor-pointer",
                     isSelected
-                      ? "border-[#FB923C] bg-[#FB923C]/10 shadow-sm"
+                      ? "border-[#7C5CFC] bg-[#7C5CFC]/10 shadow-sm"
                       : "border-line bg-canvas hover:border-line-strong hover:bg-canvas/80"
                   )}
                 >
                   <div>
-                    <p className={cn("text-xs font-bold leading-tight", isSelected ? "text-[#FB923C]" : "text-ink")}>
+                    <p className={cn("text-xs font-bold leading-tight", isSelected ? "text-[#7C5CFC]" : "text-ink")}>
                       {p.name}
                     </p>
                     <p className="text-[10px] text-ink-2 mt-0.5">{p.age_group || 'All Ages'}</p>
@@ -426,7 +426,7 @@ export function EnrolForm({ programmes = [], batches = [], defaultProgramme }: E
             <button
               type="submit"
               disabled={status === 'submitting'}
-              className="btn-peach w-full py-4 text-xs font-black tracking-[2px] uppercase shadow-md cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2"
+              className="btn-sun w-full py-4 text-xs font-black tracking-[2px] uppercase shadow-md cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2 transition-transform active:scale-[0.98]"
             >
               {status === 'submitting' ? (
                 <>
@@ -441,7 +441,7 @@ export function EnrolForm({ programmes = [], batches = [], defaultProgramme }: E
           ) : (
             <button
               type="submit"
-              className="w-full text-xs font-black tracking-[2px] uppercase py-4 bg-[#22c55e] hover:bg-[#16a34a] text-white transition-all rounded-full shadow-md active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full text-xs font-black tracking-[2px] uppercase py-4 bg-[#22c55e] hover:bg-[#16a34a] text-white transition-all rounded-xl shadow-md active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer"
             >
               <MessageSquare size={16} /> Confirm Free Trial on WhatsApp ──→
             </button>

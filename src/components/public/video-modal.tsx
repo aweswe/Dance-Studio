@@ -104,13 +104,13 @@ export function VideoModal({
                     href="https://www.instagram.com/rhythmzzdance.live"
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white text-black text-xs font-bold uppercase tracking-wider hover:bg-[#2BB4D8] hover:text-white transition-all active:scale-[0.96]"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white text-black text-xs font-bold uppercase tracking-wider hover:bg-[#2BB4D8] hover:text-white transition-all active:scale-[0.96]"
                   >
                     Watch on Instagram Reels
                   </a>
                   <button
                     onClick={onClose}
-                    className="px-5 py-2.5 rounded-full border border-white/30 text-white text-xs font-bold uppercase tracking-wider hover:bg-white/10 transition-all active:scale-[0.96]"
+                    className="px-5 py-2.5 rounded-xl border border-white/30 text-white text-xs font-bold uppercase tracking-wider hover:bg-white/10 transition-all active:scale-[0.96]"
                   >
                     Back to Studio
                   </button>

@@ -3,7 +3,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { getBlogPosts } from '@/data/blog';
 import { formatDate } from '@/lib/utils/format';
-import { Reveal } from '@/components/motion/reveal';
 import { ArrowRight } from 'lucide-react';
 
 export const metadata: Metadata = {
@@ -16,35 +15,37 @@ export default async function BlogPage() {
 
   return (
     <div className="bg-canvas text-ink">
-      {/* Hero with Generous Breathing Space */}
-      <section className="relative overflow-hidden py-20 sm:py-28 md:py-32 px-4 sm:px-6 md:px-16 text-center border-b border-line bg-canvas">
-        <div className="max-w-4xl mx-auto">
-          <div className="inline-flex items-center mb-4 px-3.5 py-1 rounded-full border border-line bg-surface/80 backdrop-blur-sm">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#FB923C] inline-block mr-2" />
-            <span className="text-[10px] sm:text-xs font-mono tracking-[0.25em] text-[#FB923C] uppercase font-bold">
-              CHOREOGRAPHY · CONDITIONING · STUDIO JOURNAL
-            </span>
+      {/* 01: Hero with Top Indicator */}
+      <section className="relative overflow-hidden pt-12 pb-16 sm:pt-16 sm:pb-24 px-4 sm:px-6 md:px-16 border-b border-line bg-canvas">
+        <div className="max-w-7xl mx-auto">
+          <div className="max-w-4xl mx-auto text-center">
+            <div className="mb-5">
+              <span className="text-[10px] sm:text-xs font-mono tracking-[0.22em] text-[#7C5CFC] uppercase font-bold">
+                CHOREOGRAPHY · CONDITIONING · STUDIO JOURNAL
+              </span>
+            </div>
+
+            <h1 className="font-anton text-5xl sm:text-7xl md:text-8xl text-ink mb-6 leading-[0.92] tracking-tight uppercase">
+              THE RHYTHMZZ <br className="hidden sm:inline" />
+              <span className="text-[#7C5CFC]">JOURNAL.</span>
+            </h1>
+
+            <p className="text-ink-2 text-base sm:text-lg md:text-xl leading-relaxed max-w-2xl mx-auto">
+              Essays on movement mechanics, musicality, performance mindset, and academy news from our coaching faculty.
+            </p>
           </div>
-
-          <h1 className="heading-urban text-4xl sm:text-6xl md:text-7xl text-ink mb-6 leading-tight tracking-tight">
-            THE RHYTHMZZ JOURNAL
-          </h1>
-
-          <p className="text-ink-2 text-sm sm:text-base md:text-lg leading-relaxed max-w-2xl mx-auto">
-            Essays on movement mechanics, musicality, performance mindset, and academy news from our coaches.
-          </p>
         </div>
       </section>
 
-      {/* Spacious Grid */}
+      {/* 02: Spacious Grid */}
       <section className="py-20 sm:py-28 px-4 sm:px-6 md:px-16 max-w-6xl mx-auto min-h-[50vh]">
         {posts.length > 0 ? (
-          <Reveal stagger={0.08} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {posts.map((post: any) => (
               <Link
                 key={post.id}
                 href={`/blog/${post.slug}`}
-                className="bento-card group flex flex-col justify-between p-0 overflow-hidden active:scale-[0.98] transition-transform"
+                className="bento-card group flex flex-col justify-between p-0 rounded-[28px] overflow-hidden active:scale-[0.98] transition-all hover:border-line-strong shadow-sm"
               >
                 <div className="relative aspect-video bg-canvas w-full overflow-hidden border-b border-line">
                   {post.cover_image_url || post.cover_image ? (
@@ -65,7 +66,7 @@ export default async function BlogPage() {
                 <div className="p-6 flex flex-col flex-grow justify-between">
                   <div>
                     <div className="flex items-center justify-between mb-3">
-                      <span className="text-[10px] font-mono font-bold tracking-[2px] uppercase text-[#FB923C]">
+                      <span className="text-[10px] font-mono font-bold tracking-[2px] uppercase text-[#7C5CFC]">
                         {post.author?.name || 'Academy'}
                       </span>
                       <span className="text-[10px] font-mono text-ink-3 uppercase tracking-wider">
@@ -73,7 +74,7 @@ export default async function BlogPage() {
                       </span>
                     </div>
 
-                    <h3 className="heading-urban text-xl sm:text-2xl mb-2 text-ink group-hover:text-[#FB923C] transition-colors line-clamp-2">
+                    <h3 className="font-anton text-2xl mb-2 text-ink group-hover:text-[#7C5CFC] transition-colors line-clamp-2 uppercase tracking-wide leading-tight">
                       {post.title}
                     </h3>
 
@@ -82,18 +83,18 @@ export default async function BlogPage() {
                     </p>
                   </div>
 
-                  <div className="pt-3 border-t border-line flex items-center gap-1.5 text-xs font-mono font-bold tracking-[1.5px] uppercase text-[#FB923C] group-hover:translate-x-1 transition-transform">
+                  <div className="pt-3 border-t border-line flex items-center gap-1.5 text-xs font-mono font-bold tracking-[1.5px] uppercase text-[#7C5CFC] group-hover:translate-x-1 transition-transform">
                     <span>Read Article</span>
                     <ArrowRight size={13} />
                   </div>
                 </div>
               </Link>
             ))}
-          </Reveal>
+          </div>
         ) : (
-          <div className="text-center py-20 text-ink-2">
-            <h3 className="heading-urban text-3xl mb-2 text-ink">NO POSTS YET</h3>
-            <p>Check back later for new choreo breakdowns and technique essays.</p>
+          <div className="text-center py-20 text-ink-2 bento-card rounded-[28px] max-w-lg mx-auto p-10">
+            <h3 className="font-anton text-3xl mb-2 text-ink uppercase">NO POSTS YET</h3>
+            <p className="text-xs font-mono text-ink-3">Check back soon for new choreo breakdowns and technique essays.</p>
           </div>
         )}
       </section>

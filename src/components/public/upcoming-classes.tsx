@@ -3,43 +3,67 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Play } from 'lucide-react';
+import { Play, Calendar, Users, ArrowUpRight } from 'lucide-react';
 import { ROUTES } from '@/lib/utils/constants';
 import { VideoModal } from '@/components/public/video-modal';
 
 interface ClassCardItem {
   id: string;
   title: string;
-  subtitle: string;
+  batchType: string;
+  timing: string;
+  status: string;
+  statusType: 'urgent' | 'open' | 'new';
+  instructor: string;
+  instructorImg: string;
   image: string;
   href: string;
   videoTitle: string;
+  subtitle: string;
 }
 
 const UPCOMING_CLASSES: ClassCardItem[] = [
   {
     id: 'class-1',
-    title: 'Beginner Urban Hip Hop\nFoundations Batch',
-    subtitle: 'Kids & Teens Foundations (Ages 7–14)',
+    title: 'Beginner Urban Hip Hop Foundations',
+    batchType: 'Kids & Teens · Ages 7–14',
+    timing: 'Tue, Thu, Sat · 5:00 PM',
+    status: '4 SPOTS LEFT',
+    statusType: 'urgent',
+    instructor: 'Pranith Nair',
+    instructorImg: '/images/pranith-nair.png',
     image: '/images/class-1.jpg',
-    href: '/programmes#kids-dance',
+    href: '/enrol?programme=kids-dance',
     videoTitle: 'Beginner Urban Hip Hop Foundations — Studio Showcase',
+    subtitle: 'Kids & Teens Foundations (Ages 7–14)',
   },
   {
     id: 'class-2',
-    title: 'Bolly-Hop Commercial\nChoreography Intensive',
-    subtitle: 'Adults Evening Batch · Mon & Wed 7:00 PM',
+    title: 'Bolly-Hop Commercial Choreo Intensive',
+    batchType: 'Adults Evening Batch · 16+',
+    timing: 'Mon, Wed, Fri · 7:00 PM',
+    status: 'ADMISSIONS OPEN',
+    statusType: 'open',
+    instructor: 'Nitish Kumar',
+    instructorImg: '/images/studio-training/studio-technique.jpg',
     image: '/images/class-2.jpg',
-    href: '/programmes#adults-dance',
+    href: '/enrol?programme=adults-dance',
     videoTitle: 'Bolly-Hop Commercial Choreography — Routine Reel',
+    subtitle: 'Adults Evening Batch · Mon & Wed 7:00 PM',
   },
   {
     id: 'class-3',
-    title: 'Kuchipudi Classical\nMaster Certification',
-    subtitle: '10-Year Master Syllabus · Fri & Sat 6:30 PM',
-    image: '/images/studio-training/raasta-stage-4.jpg',
-    href: '/kuchipudi',
+    title: 'Kuchipudi Classical Master Diploma',
+    batchType: '10-Year Certified Parampara',
+    timing: 'Fri & Sat · 6:30 PM',
+    status: 'NEW BATCH STARTS',
+    statusType: 'new',
+    instructor: 'Srusti Vempati',
+    instructorImg: '/images/kuchipudi/kuchipudi-traditional-standing.jpg',
+    image: '/images/srilanka-tour/raasta-stage-4.jpg',
+    href: '/enrol?programme=kuchipudi',
     videoTitle: 'Kuchipudi Classical Certification — Repertoire Rehearsal',
+    subtitle: '10-Year Master Syllabus · Fri & Sat 6:30 PM',
   },
 ];
 
@@ -47,72 +71,135 @@ export function UpcomingClasses() {
   const [activeVideo, setActiveVideo] = useState<ClassCardItem | null>(null);
 
   return (
-    <section id="classes" className="w-full px-4 sm:px-6 md:px-10 py-12 sm:py-16 md:py-20 max-w-[1440px] mx-auto">
-      {/* Section Heading matching reference typography */}
-      <div className="mb-6 sm:mb-8">
-        <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#FB923C] font-bold block mb-2">
-          New Batches &amp; Routines
-        </span>
-        <h2 className="heading-urban text-3xl sm:text-5xl md:text-6xl text-ink tracking-tight">
-          UPCOMING CLASSES
-        </h2>
+    <section id="classes" className="w-full px-4 sm:px-6 md:px-10 py-16 sm:py-24 max-w-[1440px] mx-auto select-none">
+      {/* Section Heading */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 sm:mb-14">
+        <div>
+          <div className="flex items-center gap-2.5 mb-2.5">
+            <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-[#7C5CFC] font-bold">
+              04 · New Batches &amp; Routines
+            </span>
+          </div>
+          <h2 className="font-anton text-4xl sm:text-6xl md:text-7xl text-ink tracking-wide uppercase leading-[0.92]">
+            UPCOMING CLASSES
+          </h2>
+        </div>
+        <p className="text-xs sm:text-sm text-ink-2 max-w-md leading-relaxed">
+          Limited slots per batch for focused attention and personal stage readiness. Reserve your free trial pass before admissions close.
+        </p>
       </div>
 
-      {/* 3 Widescreen Video Cards Side-by-Side */}
+      {/* 3 Widescreen Interactive Masterclass Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6">
         {UPCOMING_CLASSES.map((item) => (
           <div
             key={item.id}
-            onClick={() => setActiveVideo(item)}
-            className="group relative rounded-xl sm:rounded-2xl overflow-hidden aspect-[16/10] sm:aspect-[16/9.5] border border-line hover:border-ink transition-all duration-300 bg-[#0E0E0E] cursor-pointer shadow-xl"
+            className="group relative rounded-[26px] overflow-hidden border border-line hover:border-[#F5FB38] transition-all duration-300 bg-[#000000] shadow-xl flex flex-col justify-between hover:-translate-y-1.5"
           >
-            {/* Background Media */}
-            <Image
-              src={item.image.includes('raasta') ? '/images/srilanka-tour/raasta-stage-4.jpg' : item.image}
-              alt={item.title.replace('\n', ' ')}
-              fill
-              sizes="(max-width: 768px) 100vw, 33vw"
-              className="object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
-            />
+            {/* Top Aspect Media Showcase */}
+            <div className="relative aspect-[16/10] w-full overflow-hidden">
+              <Image
+                src={item.image}
+                alt={item.title}
+                fill
+                sizes="(max-width: 768px) 100vw, 33vw"
+                className="object-cover object-center group-hover:scale-106 transition-transform duration-700 ease-out"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#000000] via-[#000000]/30 to-black/40 pointer-events-none" />
 
-            {/* Dark studio vignette gradient */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent transition-opacity" />
-
-            {/* Subtle hover play icon */}
-            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/30 backdrop-blur-[1.5px]">
-              <div className="w-12 h-12 rounded-full bg-white text-black flex items-center justify-center transform scale-90 group-hover:scale-100 transition-transform shadow-2xl">
-                <Play className="w-5 h-5 fill-black translate-x-0.5" />
+              {/* Status Urgency Badge */}
+              <div className="absolute top-4 left-4 z-10">
+                <span
+                  className={`text-[9px] font-mono uppercase tracking-widest px-3 py-1 rounded-md font-bold shadow-md flex items-center gap-1.5 ${
+                    item.statusType === 'urgent'
+                      ? 'bg-[#F5FB38] text-[#000000]'
+                      : item.statusType === 'new'
+                      ? 'bg-[#7C5CFC] text-white'
+                      : 'bg-white/90 text-[#000000]'
+                  }`}
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-current animate-pulse" />
+                  <span>{item.status}</span>
+                </span>
               </div>
+
+              {/* Play Video Trigger Button */}
+              <button
+                onClick={() => setActiveVideo(item)}
+                aria-label={`Play preview for ${item.title}`}
+                className="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white hover:bg-[#F5FB38] hover:text-[#000000] flex items-center justify-center transition-all cursor-pointer shadow-lg"
+              >
+                <Play size={13} className="fill-current translate-x-0.5" />
+              </button>
             </div>
 
-            {/* Bottom-left pinned text exactly matching screenshot */}
-            <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6 z-10">
-              <h3 className="text-white text-base sm:text-lg md:text-xl font-bold leading-snug tracking-tight whitespace-pre-line drop-shadow-md mb-2">
-                {item.title}
-              </h3>
-              <div className="inline-flex items-center gap-1.5 text-xs text-white/70 group-hover:text-white font-medium transition-colors">
-                <span>more</span>
-                <span className="translate-x-0 group-hover:translate-x-1 transition-transform">──→</span>
+            {/* Bottom Content Body */}
+            <div className="p-6 sm:p-7 flex flex-col justify-between flex-1">
+              <div>
+                <div className="flex items-center gap-2 text-[10px] font-mono uppercase tracking-wider text-[#7C5CFC] font-bold mb-2">
+                  <Users size={12} />
+                  <span>{item.batchType}</span>
+                </div>
+
+                <h3 className="font-anton text-2xl sm:text-3xl text-white tracking-wide uppercase leading-tight mb-2.5 group-hover:text-[#F5FB38] transition-colors">
+                  {item.title}
+                </h3>
+
+                <div className="flex items-center gap-2 text-xs text-white/70 font-mono mb-5">
+                  <Calendar size={13} className="text-[#F5FB38]" />
+                  <span>{item.timing}</span>
+                </div>
+              </div>
+
+              {/* Card Footer: Instructor Pill + Book Trial Button */}
+              <div className="pt-4 border-t border-white/10 flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2.5">
+                  <div className="relative w-8 h-8 rounded-full overflow-hidden border border-white/20 shrink-0">
+                    <Image
+                      src={item.instructorImg}
+                      alt={item.instructor}
+                      fill
+                      sizes="32px"
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-[11px] font-bold text-white leading-none">
+                      {item.instructor}
+                    </span>
+                    <span className="text-[9px] font-mono text-white/50 tracking-wider">
+                      Mentor
+                    </span>
+                  </div>
+                </div>
+
+                <Link
+                  href={item.href}
+                  className="px-4 py-2 rounded-xl bg-[#F5FB38] text-[#000000] text-[10px] font-mono font-black uppercase tracking-wider hover:bg-white transition-all active:scale-95 flex items-center gap-1 shadow-sm"
+                >
+                  <span>Book Trial</span>
+                  <ArrowUpRight size={12} className="stroke-[2.5]" />
+                </Link>
               </div>
             </div>
           </div>
         ))}
       </div>
 
-      {/* Right-aligned 'More classes ──→' Link */}
-      <div className="flex justify-end mt-6 sm:mt-8">
+      {/* Bottom Link */}
+      <div className="flex justify-end mt-8 sm:mt-10">
         <Link
           href={ROUTES.programmes}
-          className="group inline-flex items-center gap-2 text-xs sm:text-sm font-bold uppercase tracking-[0.2em] text-ink-2 hover:text-ink transition-colors"
+          className="group inline-flex items-center gap-2 text-xs sm:text-sm font-bold uppercase tracking-[0.2em] text-[#7C5CFC] hover:text-[#512BDB] transition-colors"
         >
-          <span>More classes</span>
+          <span>Explore All 12 Programmes</span>
           <span className="font-mono text-base translate-x-0 group-hover:translate-x-1.5 transition-transform">
             ──→
           </span>
         </Link>
       </div>
 
-      {/* Video Modal */}
+      {/* Video Modal Lightbox */}
       {activeVideo && (
         <VideoModal
           isOpen={!!activeVideo}

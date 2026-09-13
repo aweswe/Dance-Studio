@@ -1,64 +1,90 @@
+'use client';
+
 import Link from 'next/link';
+import { ArrowRight, MessageCircle, ShieldCheck } from 'lucide-react';
 import { ROUTES, ACADEMY } from '@/lib/utils/constants';
-import { Reveal } from '@/components/motion/reveal';
 
 const PERKS = [
-  { value: '₹0', label: 'Registration Fee' },
-  { value: '1', label: 'Free Trial Class' },
-  { value: '₹2,000', label: 'Fees From · /Month' },
+  { value: '₹0', title: 'Registration Fee', desc: 'No hidden admission costs' },
+  { value: '1', title: 'Free Trial Pass', desc: 'Full 60-minute studio experience' },
+  { value: '100%', title: 'Stage Confidence', desc: 'Personal feedback from mentors' },
 ];
 
-/** Join band per the reference .join-sec — light blue, three big-number perks. */
 export function JoinCTA() {
   return (
-    <section id="join" className="py-16 sm:py-20 md:py-24 px-4 sm:px-6 md:px-16 bg-bl-pale-surface border-y border-bl/10">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-14 items-center">
-        <Reveal>
-          <div className="section-label mb-3">Join The Academy</div>
-          <h2 className="heading-display text-3xl sm:text-5xl md:text-6xl text-ink leading-tight mb-4">
-            YOUR FIRST CLASS IS ON US.
-          </h2>
-          <p className="text-sm sm:text-base text-ink-2 max-w-md mt-2 leading-relaxed">
-            Every new student starts with one free trial class — no registration fee, no
-            commitment. Kids, adults, fitness and classical batches run Monday to Saturday,
-            6 AM to 9 PM, at Neredmet X Road Bus Stop.
-          </p>
-        </Reveal>
+    <section className="w-full px-4 sm:px-6 md:px-10 py-16 sm:py-24 max-w-[1440px] mx-auto select-none">
+      {/* Outer Luminous Sun Butter & Velvet Obsidian Banner */}
+      <div className="relative rounded-[32px] sm:rounded-[44px] bg-[#F5FB38] text-[#000000] p-8 sm:p-12 md:p-16 overflow-hidden shadow-2xl">
+        {/* Subtle decorative background watermark */}
+        <div className="absolute right-[-20px] bottom-[-40px] font-anton text-[180px] sm:text-[240px] md:text-[300px] text-[#000000]/[0.04] leading-none pointer-events-none select-none">
+          DANCE
+        </div>
 
-        <Reveal y={20} delay={0.1}>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 mb-8">
-            {PERKS.map((perk) => (
+        <div className="relative z-10 max-w-5xl mx-auto flex flex-col items-center text-center">
+          {/* Eyebrow Label */}
+          <div className="flex items-center gap-2 mb-6">
+            <span className="text-[11px] font-mono font-bold tracking-[0.2em] uppercase text-[#000000]">
+              ★ Admissions Open for New Batches
+            </span>
+          </div>
+
+          {/* Monumental Headline */}
+          <h2 className="font-anton text-4xl sm:text-6xl md:text-7xl lg:text-8xl tracking-tight uppercase leading-[0.92] max-w-4xl text-[#000000]">
+            READY TO OWN THE STAGE?
+            <br />
+            <span>YOUR FIRST CLASS IS ON US.</span>
+          </h2>
+
+          <p className="max-w-2xl text-sm sm:text-base text-[#000000]/80 mt-6 mb-10 leading-relaxed font-medium">
+            Step onto our studio floors for a 60-minute free trial session. Experience the energy, meet our faculty, and discover which dance style unleashes your fullest creative potential.
+          </p>
+
+          {/* 3 Guarantee Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5 w-full max-w-3xl mb-10">
+            {PERKS.map((perk, idx) => (
               <div
-                key={perk.label}
-                className="bg-surface border border-bl/20 rounded-tile p-4 sm:p-5 text-center flex flex-col items-center justify-center shadow-sm transition-all hover:border-bl/40"
+                key={idx}
+                className="bg-[#000000] text-white p-6 rounded-2xl border border-white/10 flex flex-col items-center justify-center text-center shadow-lg group hover:scale-[1.02] transition-transform"
               >
-                <div className="heading-display text-3xl sm:text-4xl text-bl leading-none font-bold">{perk.value}</div>
-                <p className="text-[11px] tracking-[1.5px] uppercase font-semibold text-ink-2 mt-2 leading-snug">{perk.label}</p>
+                <span className="font-anton text-3xl sm:text-4xl text-[#F5FB38] leading-none mb-1">
+                  {perk.value}
+                </span>
+                <span className="font-bold text-xs uppercase tracking-wider text-white">
+                  {perk.title}
+                </span>
+                <span className="text-[10px] font-mono text-white/60 mt-1">
+                  {perk.desc}
+                </span>
               </div>
             ))}
           </div>
 
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+          {/* Action Buttons */}
+          <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
             <Link
               href={ROUTES.enrol}
-              className="bg-bl text-white text-[11px] font-semibold tracking-[2px] uppercase py-4 px-8 text-center hover:bg-bl-deep transition-all focus-visible:focus-ring active:scale-[0.98] rounded-control shadow-md"
+              className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-[#000000] text-[#F5FB38] font-anton text-base sm:text-lg uppercase tracking-wider hover:bg-white hover:text-[#000000] transition-all shadow-xl active:scale-95 flex items-center justify-center gap-2 group"
             >
-              Book Your Free Trial
+              <span>Book Your Free Trial Today</span>
+              <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
             </Link>
+
             <a
               href={ACADEMY.whatsapp}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[11px] tracking-[1.5px] uppercase text-ink hover:text-bl-ink transition-colors rounded-sm focus-visible:focus-ring text-center py-2 sm:py-0"
+              className="w-full sm:w-auto px-6 py-4 rounded-2xl bg-white/40 hover:bg-white text-[#000000] font-mono text-xs font-black uppercase tracking-wider transition-all shadow-sm active:scale-95 flex items-center justify-center gap-2 border border-[#000000]/15"
             >
-              or WhatsApp {ACADEMY.phoneDisplay} &rarr;
+              <MessageCircle size={16} />
+              <span>WhatsApp Us: {ACADEMY.phoneDisplay}</span>
             </a>
           </div>
 
-          <p className="text-[11px] tracking-[1px] text-ink-2/80 mt-5 text-center sm:text-left">
+          {/* Studio Info Footnote */}
+          <p className="text-[11px] font-mono uppercase tracking-wider text-[#000000]/65 mt-6">
             Mon–Sat 6 AM–9 PM · Neredmet X Road · Secunderabad
           </p>
-        </Reveal>
+        </div>
       </div>
     </section>
   );

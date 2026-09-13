@@ -52,31 +52,31 @@ export function StudioRentalForm() {
 
   if (success) {
     return (
-      <div className="bg-canvas-muted p-8 rounded-card text-center border border-green/20">
-        <div className="w-16 h-16 bg-green/10 text-green rounded-full flex items-center justify-center mx-auto mb-4">
+      <div className="bento-card rounded-[28px] p-8 sm:p-12 text-center border border-line">
+        <div className="w-16 h-16 bg-[#7C5CFC]/15 text-[#7C5CFC] rounded-full flex items-center justify-center mx-auto mb-4 border border-[#7C5CFC]/30">
           <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
         </div>
-        <h3 className="heading-display text-2xl mb-2">Request Received</h3>
-        <p className="text-ink-2">We&apos;ll get back to you shortly to confirm your booking.</p>
+        <h3 className="font-anton text-2xl sm:text-3xl text-ink tracking-wide mb-2">REQUEST RECEIVED</h3>
+        <p className="text-ink-2 text-sm max-w-sm mx-auto">We&apos;ll get back to you shortly to confirm your booking and slot availability.</p>
         <button
           onClick={() => setSuccess(false)}
-          className="mt-6 text-[11px] font-bold uppercase tracking-wider text-bl-ink hover:text-bl transition-colors rounded-sm focus-visible:focus-ring"
+          className="mt-6 text-xs font-mono font-bold uppercase tracking-wider text-[#7C5CFC] hover:underline transition-colors"
         >
-          Book Another Slot
+          [ Book Another Slot ]
         </button>
       </div>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} className="bento-card p-8 md:p-10 shadow-lg flex flex-col gap-5">
+    <form onSubmit={handleSubmit} className="bento-card rounded-[28px] sm:rounded-[32px] p-8 md:p-10 shadow-lg flex flex-col gap-5 border border-line">
       <div>
-        <div className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#FB923C] font-bold block mb-1">
+        <div className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#7C5CFC] font-bold block mb-1">
           Instant Slot Request
         </div>
-        <h3 className="heading-urban text-2xl sm:text-3xl text-ink mb-1">REQUEST A BOOKING</h3>
+        <h3 className="font-anton text-2xl sm:text-3xl text-ink tracking-wide mb-1">REQUEST A BOOKING</h3>
       </div>
 
       <Input
@@ -142,7 +142,7 @@ export function StudioRentalForm() {
         type="submit"
         disabled={loading}
         className={cn(
-          "btn-peach mt-2 py-4 text-xs font-black tracking-[2px] uppercase shadow-md cursor-pointer w-full",
+          "btn-sun mt-2 py-4 text-xs font-black tracking-[2px] uppercase shadow-md cursor-pointer w-full transition-transform active:scale-[0.98]",
           loading && "opacity-70 cursor-not-allowed",
         )}
       >

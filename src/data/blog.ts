@@ -18,6 +18,7 @@ const DEFAULT_POSTS = [
 export async function getBlogPosts() {
   try {
     const supabase = getPublicSupabase();
+    if (!supabase) return DEFAULT_POSTS;
     const { data } = await supabase
       .from('blog_posts')
       .select('id, title, slug, excerpt, cover_image_url, published_at, tags')
@@ -31,6 +32,7 @@ export async function getBlogPosts() {
 export async function getBlogPostBySlug(slug: string) {
   try {
     const supabase = getPublicSupabase();
+    if (!supabase) return DEFAULT_POSTS.find((p) => p.slug === slug) ?? null;
     const { data } = await supabase
       .from('blog_posts')
       .select('*')
