@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { usePathname } from "next/navigation";
-import { Menu, X } from "lucide-react";
+import Link from "next/link";
+import { Menu, X, ExternalLink } from "lucide-react";
 import { Sidebar } from "@/components/admin/sidebar";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { GsapProvider } from "@/components/motion/gsap-provider";
@@ -43,6 +44,13 @@ export function AdminShell({ email, initial, banner, children }: AdminShellProps
             <h1 className="font-anton text-lg sm:text-xl text-ink tracking-tight truncate capitalize">{title}</h1>
           </div>
           <div className="flex items-center gap-2 shrink-0">
+            <Link
+              href="/"
+              className="hidden sm:inline-flex items-center gap-1.5 min-h-11 px-3 rounded-xl text-xs font-medium text-ink-2 hover:text-ink hover:bg-canvas-muted focus-visible:focus-ring"
+            >
+              <ExternalLink size={14} />
+              Homepage
+            </Link>
             <ThemeToggle />
             <div className="flex items-center gap-2 pl-2 border-l border-line">
               <span className="text-sm text-ink-2 hidden sm:block truncate max-w-[12rem]">{email}</span>

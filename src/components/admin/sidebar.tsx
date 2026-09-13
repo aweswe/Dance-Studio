@@ -19,6 +19,7 @@ import {
   LogOut,
   Loader2,
   Clapperboard,
+  ExternalLink,
 } from 'lucide-react'
 import { useState } from 'react'
 import { triggerActionLoader } from '@/components/shared/navigation-progress'
@@ -128,7 +129,15 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
           ))}
         </nav>
 
-        <div className="p-3 border-t border-line shrink-0">
+        <div className="p-3 border-t border-line shrink-0 space-y-1">
+          <Link
+            href="/"
+            onClick={onClose}
+            className="flex w-full items-center gap-3 min-h-11 px-3 rounded-xl text-sm text-ink-2 hover:bg-canvas-muted hover:text-ink focus-visible:focus-ring"
+          >
+            <ExternalLink size={16} strokeWidth={1.5} />
+            View homepage
+          </Link>
           <form action="/auth/signout" method="post" onSubmit={handleSignOut}>
             <button
               type="submit"

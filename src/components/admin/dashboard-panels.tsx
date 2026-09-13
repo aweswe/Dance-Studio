@@ -87,10 +87,22 @@ export function DashboardPanels({
   })
 
   const maxTotal = Math.max(...revenueSeries.map((p) => p.total), 1)
-  const CHART_H = 140
+  const PAD_TOP = 36
+  const PAD_LEFT = 52
+  const PAD_BOTTOM = 28
+  const CHART_H = 120
   const CHART_W = 360
+  const SVG_W = PAD_LEFT + CHART_W
+  const SVG_H = PAD_TOP + CHART_H + PAD_BOTTOM
   const BAR_W = 40
   const GAP = (CHART_W - revenueSeries.length * BAR_W) / (revenueSeries.length + 1)
+  const chartBase = PAD_TOP + CHART_H
+
+  function barValueLabel(h: number) {
+    const above = chartBase - h - 8
+    if (above >= PAD_TOP + 4) return { y: above, fill: 'var(--ink)' as const }
+    return { y: chartBase - h / 2 + 4, fill: '#fff' as const }
+  }
   const deskClear = pendingRentals.length === 0 && unmarkedToday.length === 0 && newEnquiries.length === 0
 
   return (
@@ -99,13 +111,18 @@ export function DashboardPanels({
         <h3 className="font-anton text-xl text-ink tracking-tight">Fees, last six months</h3>
         <p className="text-[12px] text-ink-3 mt-1 mb-5">Online and desk collections</p>
 
-        <svg viewBox={`0 0 ${CHART_W} ${CHART_H + 40}`} className="w-full" role="img" aria-label="Revenue by month bar chart">
+        <svg
+          viewBox={`0 0 ${SVG_W} ${SVG_H}`}
+          className="w-full overflow-visible"
+          role="img"
+          aria-label="Revenue by month bar chart"
+        >
           {[0.25, 0.5, 0.75, 1].map((f) => {
-            const y = CHART_H - f * CHART_H
+            const y = chartBase - f * CHART_H
             return (
               <g key={f}>
-                <line x1={0} x2={CHART_W} y1={y} y2={y} stroke="var(--line)" strokeDasharray="4 4" />
-                <text x={0} y={y - 4} fontSize={10} fill="var(--ink-3)">
+                <line x1={PAD_LEFT} x2={SVG_W} y1={y} y2={y} stroke="var(--line)" strokeDasharray="4 4" />
+                <text x={0} y={y + 4} fontSize={10} fill="var(--ink-3)">
                   {formatCurrency(Math.round(maxTotal * f))}
                 </text>
               </g>
@@ -114,12 +131,14 @@ export function DashboardPanels({
 
           {revenueSeries.map((p, i) => {
             const h = Math.max((p.total / maxTotal) * CHART_H, p.total > 0 ? 4 : 2)
-            const x = GAP + i * (BAR_W + GAP)
+            const x = PAD_LEFT + GAP + i * (BAR_W + GAP)
+            const label = barValueLabel(h)
+            const valueText = p.total > 0 ? `₹${p.total >= 1000 ? `${(p.total / 1000).toFixed(1)}k` : p.total}` : ''
             return (
               <g key={p.key}>
                 <rect
                   x={x}
-                  y={CHART_H - h}
+                  y={chartBase - h}
                   width={BAR_W}
                   height={h}
                   rx={4}
@@ -127,17 +146,19 @@ export function DashboardPanels({
                 >
                   <title>{`${p.label}: ${formatCurrency(p.total)}`}</title>
                 </rect>
-                <text
-                  x={x + BAR_W / 2}
-                  y={CHART_H - h - 6}
-                  fontSize={10}
-                  textAnchor="middle"
-                  fill="var(--ink)"
-                  fontWeight={600}
-                >
-                  {p.total > 0 ? `₹${p.total >= 1000 ? `${(p.total / 1000).toFixed(1)}k` : p.total}` : ''}
-                </text>
-                <text x={x + BAR_W / 2} y={CHART_H + 18} fontSize={11} textAnchor="middle" fill="var(--ink-3)">
+                {valueText && (
+                  <text
+                    x={x + BAR_W / 2}
+                    y={label.y}
+                    fontSize={10}
+                    textAnchor="middle"
+                    fill={label.fill}
+                    fontWeight={600}
+                  >
+                    {valueText}
+                  </text>
+                )}
+                <text x={x + BAR_W / 2} y={chartBase + 18} fontSize={11} textAnchor="middle" fill="var(--ink-3)">
                   {p.label}
                 </text>
               </g>

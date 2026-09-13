@@ -1,8 +1,6 @@
 import { createServerSupabase, createAdminSupabase } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
 
-export const ACTIVE_STUDENT_COOKIE = "rhythmzz_student_id";
-
 export interface CurrentStudentResult {
   student: any;
   siblings: any[];
@@ -57,11 +55,9 @@ export async function getCurrentStudent(): Promise<CurrentStudentResult> {
       }
     }
 
-    const cookieStore = await cookies();
-    const preferredId = cookieStore.get(ACTIVE_STUDENT_COOKIE)?.value;
     const student =
-      siblings.find((r) => r.id === preferredId) ||
-      siblings.find((r) => r.programme_id || r.batch_id) ||
+      siblings.find((r) => r.batch_id) ||
+      siblings.find((r) => r.programme_id) ||
       siblings[0] ||
       null;
 

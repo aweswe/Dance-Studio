@@ -5,8 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { ConfirmModal } from '@/components/ui/confirm-modal';
-import { createEvent, updateEvent, deleteEvent, slugifyEventTitle } from '@/actions/events';
-import type { EventFormData } from '@/lib/validators/event';
+import { createEvent, updateEvent, deleteEvent } from '@/actions/events';
+import { slugifyEventTitle, type EventFormData } from '@/lib/validators/event';
 import { Loader2, Plus, Pencil, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 

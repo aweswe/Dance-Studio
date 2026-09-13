@@ -24,7 +24,6 @@ import { useState } from "react";
 import { ROUTES } from "@/lib/utils/constants";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { triggerActionLoader } from "@/components/shared/navigation-progress";
-import { switchActiveStudent } from "@/actions/profile";
 
 export type PortalRole = "student" | "instructor";
 
@@ -32,8 +31,6 @@ interface PortalShellProps {
   role: PortalRole;
   name: string;
   isKuchipudi?: boolean;
-  siblings?: { id: string; name: string }[];
-  activeStudentId?: string;
   unreadNotices?: number;
   children: React.ReactNode;
 }
@@ -75,7 +72,7 @@ function getPageLabel(pathname: string, role: PortalRole): string {
   return "Today";
 }
 
-export function PortalShell({ role, name, isKuchipudi, siblings, activeStudentId, unreadNotices, children }: PortalShellProps) {
+export function PortalShell({ role, name, isKuchipudi, unreadNotices, children }: PortalShellProps) {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [isSigningOut, setIsSigningOut] = useState(false);
@@ -119,26 +116,6 @@ export function PortalShell({ role, name, isKuchipudi, siblings, activeStudentId
             <p className="text-[11px] text-ink-3 mt-0.5">{role === "instructor" ? "Instructor" : "Student"}</p>
           </Link>
         </div>
-
-        {role === "student" && siblings && siblings.length > 1 && (
-          <div className="px-4 pb-3">
-            <label className="text-[11px] text-ink-3 px-1">Child</label>
-            <select
-              defaultValue={activeStudentId}
-              onChange={async (e) => {
-                await switchActiveStudent(e.target.value);
-                window.location.reload();
-              }}
-              className="mt-1 w-full min-h-10 bg-canvas-muted border border-line text-ink text-sm rounded-xl px-2.5"
-            >
-              {siblings.map((s) => (
-                <option key={s.id} value={s.id}>
-                  {s.name}
-                </option>
-              ))}
-            </select>
-          </div>
-        )}
 
         <nav className="flex-1 px-3 pb-4 space-y-0.5 overflow-y-auto">
           {navItems.map((item) => {

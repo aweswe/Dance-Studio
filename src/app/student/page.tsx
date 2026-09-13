@@ -67,7 +67,7 @@ export default async function StudentDashboardPage() {
   }
 
   const links = [
-    { href: `${ROUTES.student}/classes`, label: "Classes", hint: hasEnrolledBatch ? "Switch batch" : "Join a batch" },
+    { href: `${ROUTES.student}/classes`, label: "Classes", hint: hasEnrolledBatch ? "Your programme" : "Timetable" },
     { href: `${ROUTES.student}/schedule`, label: "Schedule", hint: "Weekly days and times" },
     { href: `${ROUTES.student}/attendance`, label: "Attendance", hint: "Marks from the front desk" },
     { href: `${ROUTES.student}/fees`, label: "Fees", hint: feePaid ? "Receipts" : "Pay this month" },

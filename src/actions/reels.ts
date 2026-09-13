@@ -10,47 +10,58 @@ function extractStoragePath(publicUrl: string): string | null {
   return parts.length > 1 ? parts[parts.length - 1] : null;
 }
 
-export async function uploadHomepageReel(formData: FormData) {
+/** Step 1: mint a signed upload URL (no file bytes — avoids Vercel 4.5 MB body limit). */
+export async function prepareHomepageReelUpload() {
   const supabase = await createServerSupabase();
   if (!(await isAdmin(supabase))) return { success: false, error: 'Not authorized' };
 
-  const file = formData.get('file') as File | null;
-  const title = ((formData.get('title') as string) || '').trim();
-  const href = ((formData.get('href') as string) || 'https://www.instagram.com/rhythmzzdance.live').trim();
-  const widthRaw = formData.get('width') as string | null;
-  const heightRaw = formData.get('height') as string | null;
-  const width = widthRaw ? Number(widthRaw) : null;
-  const height = heightRaw ? Number(heightRaw) : null;
-
-  if (!file) return { success: false, error: 'No video selected' };
-  if (!title) return { success: false, error: 'Title is required' };
-  if (file.type !== 'video/mp4') return { success: false, error: 'Only MP4 videos are allowed' };
-  if (file.size > MAX_REEL_BYTES) return { success: false, error: 'Video must be 20 MB or smaller' };
-
-  if (width && height && width >= height) {
-    return { success: false, error: 'Only portrait videos are allowed (height must exceed width)' };
-  }
-
   const admin = createAdminSupabase();
-
-  const { count } = await admin
-    .from('homepage_reels')
-    .select('*', { count: 'exact', head: true });
+  const { count } = await admin.from('homepage_reels').select('*', { count: 'exact', head: true });
 
   if ((count ?? 0) >= MAX_HOMEPAGE_REELS) {
     return { success: false, error: `Maximum ${MAX_HOMEPAGE_REELS} reels — delete one before uploading` };
   }
 
   const path = `${Date.now()}-${crypto.randomUUID()}.mp4`;
-  const buffer = Buffer.from(await file.arrayBuffer());
+  const { data, error } = await admin.storage.from('reels').createSignedUploadUrl(path);
 
-  const { error: uploadErr } = await admin.storage.from('reels').upload(path, buffer, {
-    contentType: 'video/mp4',
-    upsert: false,
-  });
-  if (uploadErr) return { success: false, error: uploadErr.message };
+  if (error || !data) return { success: false, error: error?.message ?? 'Could not prepare upload' };
 
-  const { data: publicUrl } = admin.storage.from('reels').getPublicUrl(path);
+  return { success: true, path: data.path, token: data.token };
+}
+
+/** Step 2: after the browser uploads to Supabase Storage, register the reel row. */
+export async function finalizeHomepageReelUpload(input: {
+  storagePath: string;
+  title: string;
+  href: string;
+  width: number;
+  height: number;
+  fileSize: number;
+}) {
+  const supabase = await createServerSupabase();
+  if (!(await isAdmin(supabase))) return { success: false, error: 'Not authorized' };
+
+  const title = input.title.trim();
+  const href = (input.href.trim() || 'https://www.instagram.com/rhythmzzdance.live');
+  const { storagePath, width, height, fileSize } = input;
+
+  if (!title) return { success: false, error: 'Title is required' };
+  if (!storagePath.endsWith('.mp4')) return { success: false, error: 'Invalid storage path' };
+  if (fileSize > MAX_REEL_BYTES) return { success: false, error: 'Video must be 20 MB or smaller' };
+  if (width >= height) {
+    return { success: false, error: 'Only portrait videos are allowed (height must exceed width)' };
+  }
+
+  const admin = createAdminSupabase();
+
+  const { count } = await admin.from('homepage_reels').select('*', { count: 'exact', head: true });
+  if ((count ?? 0) >= MAX_HOMEPAGE_REELS) {
+    await admin.storage.from('reels').remove([storagePath]);
+    return { success: false, error: `Maximum ${MAX_HOMEPAGE_REELS} reels — delete one before uploading` };
+  }
+
+  const { data: publicUrl } = admin.storage.from('reels').getPublicUrl(storagePath);
 
   const { data: last } = await admin
     .from('homepage_reels')
@@ -65,7 +76,7 @@ export async function uploadHomepageReel(formData: FormData) {
     .insert({
       title,
       video_url: publicUrl.publicUrl,
-      storage_path: path,
+      storage_path: storagePath,
       href,
       sort_order: sortOrder,
       is_visible: true,
@@ -76,7 +87,7 @@ export async function uploadHomepageReel(formData: FormData) {
     .single();
 
   if (insertErr) {
-    await admin.storage.from('reels').remove([path]);
+    await admin.storage.from('reels').remove([storagePath]);
     return { success: false, error: insertErr.message };
   }
 

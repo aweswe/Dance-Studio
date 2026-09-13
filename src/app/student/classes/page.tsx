@@ -45,7 +45,7 @@ export default async function StudentClassesPage() {
 
   return (
     <div className="space-y-6">
-      <p className="text-sm text-ink-2">Live timetable. Pay to join, or waitlist when a batch is full.</p>
+      <p className="text-sm text-ink-2">Your assigned class and the studio timetable.</p>
       <StudentClassesView currentStudent={student} feePaid={feePaid} programmes={programmes} />
     </div>
   );

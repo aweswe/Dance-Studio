@@ -2,28 +2,7 @@
 import { createServerSupabase, createAdminSupabase } from '@/lib/supabase/server';
 import { profileSchema, type ProfileData } from '@/lib/validators/profile';
 import { normalizeIndianPhone } from '@/lib/utils/format';
-import { cookies } from 'next/headers';
 import { revalidatePath } from 'next/cache';
-import { ACTIVE_STUDENT_COOKIE } from '@/lib/auth/student';
-import { isDue } from '@/lib/fees/ledger';
-
-export async function switchActiveStudent(studentId: string) {
-  const { getCurrentStudent } = await import('@/lib/auth/student');
-  const { siblings, user } = await getCurrentStudent();
-  if (!user) return { success: false, error: 'Not signed in' };
-  if (!siblings.some((s: any) => s.id === studentId)) {
-    return { success: false, error: 'That student is not on this account' };
-  }
-  const store = await cookies();
-  store.set(ACTIVE_STUDENT_COOKIE, studentId, {
-    path: '/',
-    httpOnly: true,
-    sameSite: 'lax',
-    maxAge: 60 * 60 * 24 * 365,
-  });
-  revalidatePath('/student');
-  return { success: true };
-}
 
 export async function uploadProfilePhoto(formData: FormData) {
   const { getCurrentStudent } = await import('@/lib/auth/student');
@@ -171,62 +150,5 @@ export async function completeStudentOnboarding(phone: string, name?: string) {
   }
 
   revalidatePath('/student');
-  return { success: true };
-}
-
-/**
- * Switch batch only when the current month is paid (or the student is already
- * on a batch for the same programme). Capacity is enforced by the DB trigger.
- */
-export async function assignStudentBatch(batchId: string) {
-  const { getCurrentStudent } = await import('@/lib/auth/student');
-  const { student } = await getCurrentStudent();
-  if (!student || !student.id) {
-    return { success: false, error: 'Student profile not found. Please refresh.' };
-  }
-
-  const admin = createAdminSupabase();
-
-  const { data: batch, error: batchErr } = await (admin as any)
-    .from('batches')
-    .select('id, programme_id, status, capacity, enrolled_count')
-    .eq('id', batchId)
-    .single();
-
-  if (batchErr || !batch) {
-    return { success: false, error: 'Selected batch was not found.' };
-  }
-
-  if (batch.status === 'full' || (batch.capacity > 0 && batch.enrolled_count >= batch.capacity)) {
-    return { success: false, error: 'This batch is full. Join the waitlist instead.' };
-  }
-
-  const { data: payments } = await admin
-    .from('fee_payments')
-    .select('for_month, paid_at, status')
-    .eq('student_id', student.id);
-
-  const sameProgramme = student.programme_id && student.programme_id === batch.programme_id;
-  if (!sameProgramme && isDue((payments || []) as any[])) {
-    return { success: false, error: 'Pay this month\'s fee before joining a new batch.' };
-  }
-
-  const { error: updateErr } = await (admin as any)
-    .from('students')
-    .update({
-      programme_id: batch.programme_id,
-      batch_id: batch.id,
-      status: 'active',
-    })
-    .eq('id', student.id);
-
-  if (updateErr) {
-    return { success: false, error: updateErr.message };
-  }
-
-  revalidatePath('/student');
-  revalidatePath('/student/schedule');
-  revalidatePath('/student/fees');
-  revalidatePath('/student/classes');
   return { success: true };
 }

@@ -5,11 +5,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ConfirmModal } from '@/components/ui/confirm-modal';
 import {
-  uploadHomepageReel,
+  prepareHomepageReelUpload,
+  finalizeHomepageReelUpload,
   updateHomepageReel,
   deleteHomepageReel,
   reorderHomepageReels,
 } from '@/actions/reels';
+import { createClient } from '@/lib/supabase/client';
 import { MAX_HOMEPAGE_REELS, type HomepageReelRow } from '@/lib/reels/constants';
 import { ArrowUp, ArrowDown, Loader2, Trash2, Upload, Video } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -79,14 +81,32 @@ export function ReelsManager({ initialItems }: { initialItems: HomepageReelRow[]
 
     try {
       const { width, height } = await probePortrait(selectedFile);
-      const fd = new FormData();
-      fd.set('file', selectedFile);
-      fd.set('title', uploadTitle.trim());
-      fd.set('href', uploadHref.trim());
-      fd.set('width', String(width));
-      fd.set('height', String(height));
 
-      const res = await uploadHomepageReel(fd);
+      const prep = await prepareHomepageReelUpload();
+      if (!prep.success || !prep.path || !prep.token) {
+        setFeedback({ ok: false, text: prep.error ?? 'Could not start upload' });
+        return;
+      }
+
+      const supabase = createClient();
+      const { error: uploadErr } = await supabase.storage
+        .from('reels')
+        .uploadToSignedUrl(prep.path, prep.token, selectedFile, { contentType: 'video/mp4' });
+
+      if (uploadErr) {
+        setFeedback({ ok: false, text: uploadErr.message || 'Storage upload failed' });
+        return;
+      }
+
+      const res = await finalizeHomepageReelUpload({
+        storagePath: prep.path,
+        title: uploadTitle.trim(),
+        href: uploadHref.trim(),
+        width,
+        height,
+        fileSize: selectedFile.size,
+      });
+
       if (!res.success) {
         setFeedback({ ok: false, text: res.error ?? 'Upload failed' });
         return;
@@ -96,6 +116,11 @@ export function ReelsManager({ initialItems }: { initialItems: HomepageReelRow[]
       setUploadTitle('');
       setFeedback({ ok: true, text: 'Reel uploaded — visible on homepage after refresh' });
       router.refresh();
+    } catch (err) {
+      setFeedback({
+        ok: false,
+        text: err instanceof Error ? err.message : 'Upload failed — try a smaller MP4 (under 20 MB)',
+      });
     } finally {
       setBusy(false);
     }
@@ -141,7 +166,7 @@ export function ReelsManager({ initialItems }: { initialItems: HomepageReelRow[]
           <div>
             <h3 className="font-display text-lg text-ink">Upload reel</h3>
             <p className="text-sm text-ink-2 mt-1">
-              Portrait MP4 only · max 20 MB · up to {MAX_HOMEPAGE_REELS} reels on homepage
+              Portrait MP4 only · max 20 MB · uploads go direct to storage (not through Vercel)
             </p>
           </div>
           <span className="text-xs font-mono uppercase tracking-wider text-ink-3 shrink-0">

@@ -12,7 +12,7 @@ export default async function StudentLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { student, siblings, user } = await getCurrentStudent();
+  const { student, user } = await getCurrentStudent();
 
   if (!user) {
     redirect(ROUTES.login);
@@ -37,8 +37,6 @@ export default async function StudentLayout({
       role="student"
       name={displayName}
       isKuchipudi={isKuchipudi}
-      siblings={(siblings || []).map((s: any) => ({ id: s.id, name: s.name }))}
-      activeStudentId={student?.id}
       unreadNotices={unreadNotices}
     >
       <GsapProvider>{children}</GsapProvider>

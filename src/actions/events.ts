@@ -2,7 +2,7 @@
 
 import { createServerSupabase, createAdminSupabase } from '@/lib/supabase/server';
 import { isAdmin } from '@/lib/supabase/guards';
-import { eventSchema, slugifyEventTitle, type EventFormData } from '@/lib/validators/event';
+import { eventSchema, type EventFormData } from '@/lib/validators/event';
 import { revalidatePath } from 'next/cache';
 
 export async function createEvent(data: EventFormData) {
@@ -98,5 +98,3 @@ export async function deleteEvent(id: string) {
   if (row?.slug) revalidatePath(`/events/${row.slug}`);
   return { success: true };
 }
-
-export { slugifyEventTitle };

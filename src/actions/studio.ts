@@ -7,28 +7,6 @@ import { revalidatePath } from 'next/cache';
 import { sendWhatsAppTemplate } from '@/lib/whatsapp/client';
 import { WHATSAPP_TEMPLATES } from '@/lib/whatsapp/templates';
 
-export async function joinWaitlist(batchId: string) {
-  const { getCurrentStudent } = await import('@/lib/auth/student');
-  const { student } = await getCurrentStudent();
-  if (!student?.id || !student.phone) {
-    return { success: false, error: 'Sign in with a phone number first.' };
-  }
-
-  const admin = createAdminSupabase();
-  const { error } = await admin.from('batch_waitlist').insert({
-    batch_id: batchId,
-    student_id: student.id,
-    name: student.name,
-    phone: student.phone,
-  } as any);
-  if (error) {
-    if (error.code === '23505') return { success: false, error: 'You are already on this waitlist.' };
-    return { success: false, error: error.message };
-  }
-  revalidatePath('/student/classes');
-  return { success: true };
-}
-
 export async function requestLeave(input: {
   date: string;
   kind: 'leave' | 'makeup';
