@@ -9,18 +9,23 @@ import { ROUTES } from '@/lib/utils/constants';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { createClient } from '@/lib/supabase/client';
 
-const LINKS = [
+type NavLink = { name: string; href: string };
+
+const PRIMARY_LINKS: NavLink[] = [
   { name: 'Programmes', href: ROUTES.programmes },
   { name: 'Schedule', href: ROUTES.schedule },
   { name: 'Gallery', href: ROUTES.gallery },
-  { name: 'Blog', href: ROUTES.blog },
-  { name: 'Annual Day', href: ROUTES.annualDay },
-  { name: 'Studio Rental', href: ROUTES.studioRental },
   { name: 'About', href: ROUTES.about },
   { name: 'Contact', href: ROUTES.contact },
 ];
 
-const SYLLABUS_LINKS = [
+const MORE_LINKS: NavLink[] = [
+  { name: 'Blog', href: ROUTES.blog },
+  { name: 'Annual Day', href: ROUTES.annualDay },
+  { name: 'Studio Rental', href: ROUTES.studioRental },
+];
+
+const SYLLABUS_LINKS: NavLink[] = [
   { name: 'Kuchipudi', href: ROUTES.syllabusKuchipudi },
   { name: 'Kathak', href: ROUTES.syllabusKathak },
 ];
@@ -29,52 +34,123 @@ interface AuthInfo {
   isLoggedIn: boolean;
   role: 'student' | 'admin' | 'instructor';
   label: string;
+  shortLabel: string;
   href: string;
   name?: string;
+}
+
+function NavLinkItem({
+  link,
+  active,
+  className,
+  onClick,
+}: {
+  link: NavLink;
+  active: boolean;
+  className?: string;
+  onClick?: () => void;
+}) {
+  return (
+    <Link
+      href={link.href}
+      prefetch
+      onClick={onClick}
+      className={cn(
+        'whitespace-nowrap text-[10px] xl:text-[11px] font-bold uppercase tracking-[0.12em] xl:tracking-[0.14em] transition-colors relative py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7C5CFC] rounded-sm',
+        active ? 'text-ink font-extrabold' : 'text-ink-2 hover:text-[#7C5CFC]',
+        className,
+      )}
+    >
+      {link.name}
+      {active && (
+        <span className="absolute left-0 right-0 -bottom-0.5 h-[2px] bg-[#7C5CFC] rounded-full" aria-hidden />
+      )}
+    </Link>
+  );
+}
+
+function DropdownPanel({
+  title,
+  links,
+  isActive,
+  onNavigate,
+}: {
+  title: string;
+  links: NavLink[];
+  isActive: (href: string) => boolean;
+  onNavigate?: () => void;
+}) {
+  return (
+    <div
+      role="menu"
+      className="absolute left-0 top-full mt-2 min-w-[210px] rounded-2xl border border-line bg-canvas shadow-overlay p-2 z-[70]"
+    >
+      <p className="px-3 pt-2 pb-1 text-[10px] font-mono uppercase tracking-widest text-ink-3">{title}</p>
+      {links.map((item) => (
+        <Link
+          key={item.href}
+          role="menuitem"
+          href={item.href}
+          onClick={onNavigate}
+          className={cn(
+            'block rounded-xl px-3 py-2.5 text-xs font-bold uppercase tracking-wider',
+            isActive(item.href) ? 'bg-surface text-ink' : 'text-ink-2 hover:bg-surface hover:text-ink',
+          )}
+        >
+          {item.name}
+        </Link>
+      ))}
+    </div>
+  );
 }
 
 export function Nav() {
   const [isOpen, setIsOpen] = useState(false);
   const [syllabusOpen, setSyllabusOpen] = useState(false);
+  const [moreOpen, setMoreOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [authInfo, setAuthInfo] = useState<AuthInfo | null>(null);
   const pathname = usePathname();
   const [lastPathname, setLastPathname] = useState(pathname);
   const syllabusRef = useRef<HTMLDivElement>(null);
+  const moreRef = useRef<HTMLDivElement>(null);
 
   if (lastPathname !== pathname) {
     setLastPathname(pathname);
     setIsOpen(false);
     setSyllabusOpen(false);
+    setMoreOpen(false);
   }
 
   useEffect(() => {
     const supabase = createClient();
     async function checkAuth() {
       try {
-        const { data: { user } } = await supabase.auth.getUser();
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
         if (user) {
-          const { data: profile } = await supabase
-            .from('users')
-            .select('role')
-            .eq('id', user.id)
-            .maybeSingle();
+          const { data: profile } = await supabase.from('users').select('role').eq('id', user.id).maybeSingle();
 
           const role = profile?.role || 'student';
           let href: string = ROUTES.student;
           let label = 'Student Portal';
+          let shortLabel = 'Portal';
           if (role === 'admin') {
             href = '/admin';
             label = 'Admin Portal';
+            shortLabel = 'Admin';
           } else if (role === 'instructor') {
             href = '/instructor';
             label = 'Instructor Portal';
+            shortLabel = 'Instructor';
           }
 
           setAuthInfo({
             isLoggedIn: true,
             role,
             label,
+            shortLabel,
             href,
             name: user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0],
           });
@@ -105,12 +181,15 @@ export function Nav() {
 
   useEffect(() => {
     const onPointer = (event: MouseEvent) => {
-      if (!syllabusRef.current?.contains(event.target as Node)) {
-        setSyllabusOpen(false);
-      }
+      if (!syllabusRef.current?.contains(event.target as Node)) setSyllabusOpen(false);
+      if (!moreRef.current?.contains(event.target as Node)) setMoreOpen(false);
     };
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setSyllabusOpen(false);
+      if (event.key === 'Escape') {
+        setSyllabusOpen(false);
+        setMoreOpen(false);
+        setIsOpen(false);
+      }
     };
     document.addEventListener('mousedown', onPointer);
     document.addEventListener('keydown', onKey);
@@ -120,64 +199,63 @@ export function Nav() {
     };
   }, []);
 
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
+
   const isActive = (href: string) => pathname === href;
   const syllabusActive = pathname.startsWith('/syllabus');
+  const moreActive = MORE_LINKS.some((link) => isActive(link.href));
+  const closeMobile = () => setIsOpen(false);
+
+  const accountInitial = authInfo?.name?.charAt(0).toUpperCase() || 'S';
 
   return (
     <header
       className={cn(
         'w-full z-50 transition-all duration-300',
         scrolled
-          ? 'bg-surface/90 dark:bg-black/90 backdrop-blur-md border-b border-line py-2.5 shadow-md'
-          : 'bg-canvas/80 dark:bg-black/60 backdrop-blur-md border-b border-line/40 py-3.5'
+          ? 'bg-surface/90 dark:bg-black/90 backdrop-blur-md border-b border-line py-2 shadow-md'
+          : 'bg-canvas/80 dark:bg-black/60 backdrop-blur-md border-b border-line/40 py-3',
       )}
     >
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-10 flex items-center justify-between">
-        {/* Left: Brand Identity */}
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-10 flex items-center justify-between lg:grid lg:grid-cols-[auto_minmax(0,1fr)_auto] lg:items-center lg:gap-x-4 xl:gap-x-6">
+        {/* Brand */}
         <Link
           href={ROUTES.home}
-          className="group flex items-center gap-3 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7C5CFC]"
+          className="group flex items-center gap-3 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7C5CFC] shrink-0 lg:col-start-1"
         >
           <div className="flex flex-col leading-none">
             <span className="font-anton text-xl sm:text-2xl tracking-wide text-ink group-hover:text-[#7C5CFC] transition-colors">
               RHYTHMZZ
             </span>
-            <span className="text-[10px] font-bold tracking-[0.25em] uppercase text-[#7C5CFC]">
-              DANCE ACADEMY
-            </span>
+            <span className="text-[10px] font-bold tracking-[0.25em] uppercase text-[#7C5CFC]">DANCE ACADEMY</span>
           </div>
         </Link>
 
-        {/* Desktop Navigation Links (Original Pages) */}
-        <nav className="hidden lg:flex items-center gap-4 xl:gap-6">
-          {LINKS.slice(0, 1).map((link) => {
-            const active = isActive(link.href);
-            return (
-              <Link
-                key={link.name}
-                href={link.href}
-                prefetch={true}
-                className={cn(
-                  'text-[10px] xl:text-[11px] font-bold uppercase tracking-[0.14em] transition-colors relative py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7C5CFC]',
-                  active ? 'text-ink font-extrabold' : 'text-ink-2 hover:text-[#7C5CFC]',
-                )}
-              >
-                {link.name}
-                {active && (
-                  <span className="absolute left-0 right-0 -bottom-0.5 h-[2px] bg-[#7C5CFC] rounded-full" />
-                )}
-              </Link>
-            );
-          })}
+        {/* Desktop nav — centred column, never pushes actions off-screen */}
+        <nav
+          className="hidden lg:flex items-center justify-center gap-3 xl:gap-5 min-w-0"
+          aria-label="Main navigation"
+        >
+          {PRIMARY_LINKS.map((link) => (
+            <NavLinkItem key={link.name} link={link} active={isActive(link.href)} />
+          ))}
 
-          <div className="relative" ref={syllabusRef}>
+          <div className="relative shrink-0" ref={syllabusRef}>
             <button
               type="button"
               aria-expanded={syllabusOpen}
               aria-haspopup="menu"
-              onClick={() => setSyllabusOpen((open) => !open)}
+              onClick={() => {
+                setSyllabusOpen((open) => !open);
+                setMoreOpen(false);
+              }}
               className={cn(
-                'inline-flex items-center gap-1 text-[10px] xl:text-[11px] font-bold uppercase tracking-[0.14em] py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7C5CFC]',
+                'inline-flex items-center gap-1 whitespace-nowrap text-[10px] xl:text-[11px] font-bold uppercase tracking-[0.12em] xl:tracking-[0.14em] py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7C5CFC] rounded-sm',
                 syllabusActive ? 'text-ink' : 'text-ink-2 hover:text-[#7C5CFC]',
               )}
             >
@@ -185,187 +263,254 @@ export function Nav() {
               <ChevronDown size={12} className={cn('transition-transform', syllabusOpen && 'rotate-180')} />
             </button>
             {syllabusOpen && (
-              <div
-                role="menu"
-                className="absolute left-0 top-full mt-2 min-w-[200px] rounded-2xl border border-line bg-canvas shadow-overlay p-2 z-[70]"
-              >
-                <p className="px-3 pt-2 pb-1 text-[10px] font-mono uppercase tracking-widest text-ink-3">
-                  Syllabus adoption
-                </p>
-                {SYLLABUS_LINKS.map((item) => (
-                  <Link
-                    key={item.href}
-                    role="menuitem"
-                    href={item.href}
-                    className={cn(
-                      'block rounded-xl px-3 py-2.5 text-xs font-bold uppercase tracking-wider',
-                      isActive(item.href) ? 'bg-surface text-ink' : 'text-ink-2 hover:bg-surface hover:text-ink',
-                    )}
-                  >
-                    {item.name}
-                  </Link>
-                ))}
-              </div>
+              <DropdownPanel title="Syllabus adoption" links={SYLLABUS_LINKS} isActive={isActive} />
             )}
           </div>
 
-          {LINKS.slice(1).map((link) => {
-            const active = isActive(link.href);
-            return (
-              <Link
-                key={link.name}
-                href={link.href}
-                prefetch={true}
-                className={cn(
-                  'text-[10px] xl:text-[11px] font-bold uppercase tracking-[0.14em] transition-colors relative py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7C5CFC]',
-                  link.name === 'Studio Rental' && 'hidden xl:inline',
-                  active ? 'text-ink font-extrabold' : 'text-ink-2 hover:text-[#7C5CFC]',
-                )}
-              >
-                {link.name}
-                {active && (
-                  <span className="absolute left-0 right-0 -bottom-0.5 h-[2px] bg-[#7C5CFC] rounded-full" />
-                )}
-              </Link>
-            );
-          })}
+          {/* Blog + Annual Day inline from xl */}
+          {MORE_LINKS.slice(0, 2).map((link) => (
+            <NavLinkItem
+              key={link.name}
+              link={link}
+              active={isActive(link.href)}
+              className="hidden xl:inline-flex"
+            />
+          ))}
+
+          {/* Studio Rental inline from 2xl only */}
+          <NavLinkItem
+            link={MORE_LINKS[2]}
+            active={isActive(MORE_LINKS[2].href)}
+            className="hidden 2xl:inline-flex"
+          />
+
+          {/* More dropdown on lg–xl (and lg-only for Blog/Annual/Studio) */}
+          <div className="relative shrink-0 xl:hidden" ref={moreRef}>
+            <button
+              type="button"
+              aria-expanded={moreOpen}
+              aria-haspopup="menu"
+              onClick={() => {
+                setMoreOpen((open) => !open);
+                setSyllabusOpen(false);
+              }}
+              className={cn(
+                'inline-flex items-center gap-1 whitespace-nowrap text-[10px] font-bold uppercase tracking-[0.12em] py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7C5CFC] rounded-sm',
+                moreActive ? 'text-ink' : 'text-ink-2 hover:text-[#7C5CFC]',
+              )}
+            >
+              More
+              <ChevronDown size={12} className={cn('transition-transform', moreOpen && 'rotate-180')} />
+            </button>
+            {moreOpen && <DropdownPanel title="Explore" links={MORE_LINKS} isActive={isActive} />}
+          </div>
+
+          {/* xl–2xl: Studio Rental stays in More */}
+          <div className="relative shrink-0 hidden xl:block 2xl:hidden" ref={moreRef}>
+            <button
+              type="button"
+              aria-expanded={moreOpen}
+              aria-haspopup="menu"
+              onClick={() => {
+                setMoreOpen((open) => !open);
+                setSyllabusOpen(false);
+              }}
+              className={cn(
+                'inline-flex items-center gap-1 whitespace-nowrap text-[10px] xl:text-[11px] font-bold uppercase tracking-[0.14em] py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7C5CFC] rounded-sm',
+                isActive(MORE_LINKS[2].href) ? 'text-ink' : 'text-ink-2 hover:text-[#7C5CFC]',
+              )}
+            >
+              More
+              <ChevronDown size={12} className={cn('transition-transform', moreOpen && 'rotate-180')} />
+            </button>
+            {moreOpen && (
+              <DropdownPanel title="Explore" links={[MORE_LINKS[2]]} isActive={isActive} />
+            )}
+          </div>
         </nav>
 
-        {/* Desktop Right CTAs */}
-        <div className="hidden lg:flex items-center gap-3 xl:gap-4">
-          {/* Account Portal Link */}
+        {/* Desktop actions — fixed width column, never wraps */}
+        <div className="hidden lg:flex items-center justify-end gap-2 xl:gap-3 shrink-0">
           {authInfo?.isLoggedIn ? (
             <Link
               href={authInfo.href}
-              className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-[#7C5CFC] hover:underline transition-colors px-2 py-1"
+              title={authInfo.label}
+              className="inline-flex items-center gap-1.5 min-h-9 px-2.5 xl:px-3 rounded-xl border border-[#7C5CFC]/25 bg-[#7C5CFC]/5 text-[#7C5CFC] hover:bg-[#7C5CFC]/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7C5CFC]"
             >
-              <LayoutDashboard size={13} />
-              <span>{authInfo.label}</span>
+              <LayoutDashboard size={14} className="shrink-0" />
+              <span className="text-[10px] xl:text-[11px] font-bold uppercase tracking-[0.12em] max-w-[8rem] truncate 2xl:max-w-none">
+                <span className="2xl:hidden">{authInfo.shortLabel}</span>
+                <span className="hidden 2xl:inline">{authInfo.label}</span>
+              </span>
             </Link>
           ) : (
             <Link
               href="/login"
-              className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-ink-2 hover:text-ink transition-colors px-2 py-1"
+              title="Student login"
+              className="inline-flex items-center gap-1.5 min-h-9 px-2.5 xl:px-3 rounded-xl border border-line text-ink-2 hover:text-ink hover:border-line-strong transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7C5CFC]"
             >
-              <User size={13} />
-              <span>Login</span>
+              <User size={14} className="shrink-0" />
+              <span className="text-[10px] xl:text-[11px] font-bold uppercase tracking-[0.12em]">Login</span>
             </Link>
           )}
 
-          {/* Book A Class Pill Button in Sun Butter */}
           <Link
             href={ROUTES.enrol}
-            className="btn-sun px-5 py-2 text-[11px] font-black uppercase tracking-[0.16em] shadow-sm active:scale-95"
+            className="btn-sun px-3.5 xl:px-5 py-2 text-[10px] xl:text-[11px] font-black uppercase tracking-[0.14em] shadow-sm active:scale-95 whitespace-nowrap"
           >
-            Book a Class
+            <span className="xl:hidden">Book</span>
+            <span className="hidden xl:inline">Book a Class</span>
           </Link>
 
-          {/* Theme Toggle Button */}
           <ThemeToggle />
         </div>
 
-        {/* Mobile Header Controls (Below lg breakpoint) */}
-        <div className="flex lg:hidden items-center gap-2">
-          <ThemeToggle className="w-7 h-7" />
+        {/* Mobile header controls */}
+        <div className="flex lg:hidden items-center gap-2 shrink-0">
+          <ThemeToggle className="w-8 h-8" />
           <Link
             href={ROUTES.enrol}
-            className="btn-sun px-3.5 py-1 text-[10px] font-black uppercase tracking-wider shadow-sm active:scale-[0.96]"
+            className="btn-sun px-3.5 py-1.5 text-[10px] font-black uppercase tracking-wider shadow-sm active:scale-[0.96]"
           >
             Book
           </Link>
           <button
+            type="button"
             onClick={() => setIsOpen(!isOpen)}
-            aria-label="Toggle mobile menu"
-            className="p-1.5 text-ink hover:text-[#7C5CFC] transition-colors cursor-pointer rounded-lg border border-line bg-surface/50"
+            aria-expanded={isOpen}
+            aria-controls="mobile-nav-drawer"
+            aria-label={isOpen ? 'Close menu' : 'Open menu'}
+            className="p-2 min-h-9 min-w-9 flex items-center justify-center text-ink hover:text-[#7C5CFC] transition-colors cursor-pointer rounded-xl border border-line bg-surface/80"
           >
             {isOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
       </div>
 
-      {/* Sleek Mobile Slide-Down Drawer (Mobile Only: lg:hidden) */}
+      {/* Mobile backdrop */}
+      <div
+        className={cn(
+          'fixed inset-0 z-40 bg-black/40 backdrop-blur-[2px] lg:hidden transition-opacity duration-300',
+          isOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none',
+        )}
+        onClick={closeMobile}
+        aria-hidden
+      />
+
+      {/* Mobile drawer */}
       <div
         id="mobile-nav-drawer"
         className={cn(
-          'fixed inset-x-0 top-[var(--public-header-h,60px)] z-50 lg:hidden bg-canvas/95 backdrop-blur-xl px-5 py-6 flex flex-col justify-between transition-all duration-300 ease-out border-b border-line shadow-2xl max-h-[calc(100svh-var(--public-header-h,60px))] overflow-y-auto',
-          isOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2 pointer-events-none'
+          'fixed top-[var(--public-header-h,72px)] bottom-0 right-0 z-50 w-full max-w-sm lg:hidden bg-canvas border-l border-line shadow-2xl flex flex-col transition-transform duration-300 ease-out',
+          isOpen ? 'translate-x-0' : 'translate-x-full pointer-events-none',
         )}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Site navigation"
       >
-        <div className="space-y-4">
-          <div className="flex items-center justify-between pb-3 border-b border-line">
-            <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#7C5CFC] font-bold">
-              Academy Navigation
-            </span>
-            <button
-              onClick={() => setIsOpen(false)}
-              className="text-xs font-mono text-ink-2 hover:text-ink flex items-center gap-1 cursor-pointer"
-            >
-              <X size={14} /> Close
-            </button>
+        <div className="flex items-center justify-between px-5 py-4 border-b border-line shrink-0">
+          <div>
+            <p className="font-anton text-lg text-ink tracking-wide">Menu</p>
+            <p className="text-[10px] font-mono uppercase tracking-widest text-ink-3">Rhythmzz Academy</p>
           </div>
+          <button
+            type="button"
+            onClick={closeMobile}
+            className="p-2 rounded-xl border border-line text-ink-2 hover:text-ink"
+            aria-label="Close menu"
+          >
+            <X size={18} />
+          </button>
+        </div>
 
-          <nav className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            {LINKS.map((link) => (
-              <Link
-                key={link.name}
-                href={link.href}
-                prefetch={true}
-                onClick={() => setIsOpen(false)}
-                className="px-3.5 py-2.5 rounded-xl border border-line bg-surface/70 hover:border-[#7C5CFC] hover:bg-surface text-ink text-xs font-bold uppercase tracking-wider transition-all active:scale-[0.96] flex items-center justify-between"
-              >
-                <span>{link.name}</span>
-                <span className="text-[#7C5CFC] text-[10px] font-mono">→</span>
-              </Link>
-            ))}
-          </nav>
-
-          <div className="rounded-2xl border border-line p-3 space-y-2">
-            <p className="text-[10px] font-mono uppercase tracking-widest text-ink-3 px-1">
-              Syllabus adoption
-            </p>
-            {SYLLABUS_LINKS.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setIsOpen(false)}
-                className="block px-3 py-2 rounded-xl text-xs font-bold uppercase tracking-wider text-ink hover:bg-surface"
-              >
-                {item.name}
-              </Link>
-            ))}
-          </div>
-
-          <div className="pt-3 border-t border-line space-y-2">
+        {authInfo?.isLoggedIn && (
+          <div className="px-5 py-4 border-b border-line bg-surface/50 shrink-0">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-[#7C5CFC]/15 border border-[#7C5CFC]/30 flex items-center justify-center text-sm font-bold text-[#7C5CFC]">
+                {accountInitial}
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-semibold text-ink truncate">{authInfo.name}</p>
+                <p className="text-[10px] uppercase tracking-wider text-ink-3">{authInfo.label}</p>
+              </div>
+            </div>
             <Link
-              href={ROUTES.enrol}
-              prefetch={true}
-              onClick={() => setIsOpen(false)}
-              className="btn-sun w-full py-3 text-xs font-black uppercase tracking-wider text-center block shadow-sm active:scale-[0.96]"
+              href={authInfo.href}
+              onClick={closeMobile}
+              className="mt-3 flex items-center justify-center gap-2 w-full min-h-11 rounded-xl bg-[#7C5CFC] text-white text-xs font-bold uppercase tracking-wider active:scale-[0.98]"
             >
-              Book Free Trial Class
+              <LayoutDashboard size={14} />
+              Open {authInfo.shortLabel}
             </Link>
-
-            {authInfo?.isLoggedIn ? (
-              <Link
-                href={authInfo.href}
-                onClick={() => setIsOpen(false)}
-                className="w-full py-2 text-xs font-mono uppercase tracking-wider text-center block text-[#7C5CFC] hover:underline"
-              >
-                {authInfo.label}
-              </Link>
-            ) : (
-              <Link
-                href="/login"
-                onClick={() => setIsOpen(false)}
-                className="w-full py-2 text-xs font-mono uppercase tracking-wider text-center block text-ink-2 hover:text-ink"
-              >
-                Student / Instructor Login
-              </Link>
-            )}
           </div>
+        )}
+
+        <div className="flex-1 overflow-y-auto px-5 py-5 space-y-6">
+          <section>
+            <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-ink-3 mb-3">Pages</p>
+            <nav className="grid grid-cols-2 gap-2">
+              {[...PRIMARY_LINKS, ...MORE_LINKS].map((link) => (
+                <Link
+                  key={link.name}
+                  href={link.href}
+                  prefetch
+                  onClick={closeMobile}
+                  className={cn(
+                    'px-3 py-3 rounded-xl border text-xs font-bold uppercase tracking-wider transition-all active:scale-[0.98]',
+                    isActive(link.href)
+                      ? 'border-[#7C5CFC] bg-[#7C5CFC]/10 text-ink'
+                      : 'border-line bg-surface/70 text-ink-2 hover:border-[#7C5CFC]/40 hover:text-ink',
+                  )}
+                >
+                  {link.name}
+                </Link>
+              ))}
+            </nav>
+          </section>
+
+          <section>
+            <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-ink-3 mb-3">Syllabus</p>
+            <div className="space-y-2">
+              {SYLLABUS_LINKS.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={closeMobile}
+                  className={cn(
+                    'block px-4 py-3 rounded-xl border text-xs font-bold uppercase tracking-wider',
+                    isActive(item.href)
+                      ? 'border-[#7C5CFC] bg-[#7C5CFC]/10 text-ink'
+                      : 'border-line text-ink-2 hover:border-[#7C5CFC]/40',
+                  )}
+                >
+                  {item.name}
+                </Link>
+              ))}
+            </div>
+          </section>
+        </div>
+
+        <div className="px-5 py-4 border-t border-line space-y-2 shrink-0 pb-[max(1rem,env(safe-area-inset-bottom))]">
+          <Link
+            href={ROUTES.enrol}
+            prefetch
+            onClick={closeMobile}
+            className="btn-sun w-full min-h-11 flex items-center justify-center text-xs font-black uppercase tracking-wider shadow-sm active:scale-[0.98]"
+          >
+            Book Free Trial Class
+          </Link>
+          {!authInfo?.isLoggedIn && (
+            <Link
+              href="/login"
+              onClick={closeMobile}
+              className="w-full min-h-11 flex items-center justify-center gap-2 rounded-xl border border-line text-xs font-bold uppercase tracking-wider text-ink-2 hover:text-ink"
+            >
+              <User size={14} />
+              Student Login
+            </Link>
+          )}
         </div>
       </div>
     </header>
   );
 }
-

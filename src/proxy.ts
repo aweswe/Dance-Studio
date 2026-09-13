@@ -1,5 +1,37 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { createAdminSupabase } from "@/lib/supabase/server";
+import type { User } from "@supabase/supabase-js";
+
+function last10(phone: string | null | undefined): string | null {
+  if (!phone) return null;
+  const digits = phone.replace(/\D/g, "");
+  return digits.slice(-10) || null;
+}
+
+/** True when the signed-in user has a roster row (same rules as getCurrentStudent). */
+async function hasStudentProfile(user: User): Promise<boolean> {
+  if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    return false;
+  }
+  const admin = createAdminSupabase();
+  const phone = last10(user.phone || user.user_metadata?.phone);
+  const orConditions = [
+    `auth_id.eq.${user.id}`,
+    user.email ? `email.ilike.${user.email}` : null,
+    phone ? `phone.eq.${phone}` : null,
+  ]
+    .filter(Boolean)
+    .join(",");
+
+  const { data: rows } = await admin
+    .from("students")
+    .select("id")
+    .or(orConditions)
+    .limit(1);
+
+  return (rows?.length ?? 0) > 0;
+}
 
 export async function proxy(request: NextRequest) {
   let response = NextResponse.next({
@@ -125,7 +157,7 @@ export async function proxy(request: NextRequest) {
     }
   }
 
-  // Redirect logged-in users away from login pages
+  // Redirect logged-in users away from login pages (once onboarding is done)
   if (pathname === "/login" || pathname === "/admin-login") {
     if (user) {
       const { data: profile } = await supabase
@@ -135,6 +167,8 @@ export async function proxy(request: NextRequest) {
         .maybeSingle();
 
       const url = request.nextUrl.clone();
+      url.search = "";
+
       if (profile?.role === "admin") {
         url.pathname = "/admin";
         return NextResponse.redirect(url);
@@ -143,6 +177,13 @@ export async function proxy(request: NextRequest) {
         url.pathname = "/instructor";
         return NextResponse.redirect(url);
       }
+
+      // Students without a roster row must finish /login onboarding — do not bounce to /student.
+      const onboardingStep = request.nextUrl.searchParams.get("step");
+      if (onboardingStep === "phone" || !(await hasStudentProfile(user))) {
+        return response;
+      }
+
       url.pathname = "/student";
       return NextResponse.redirect(url);
     }

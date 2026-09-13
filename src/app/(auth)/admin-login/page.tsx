@@ -38,33 +38,32 @@ export default function AdminLoginPage() {
     setIsLoading(true);
 
     try {
-      const { error: authError } = await supabase.auth.signInWithPassword({
+      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
       if (authError) throw authError;
 
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const user = authData.user;
+      if (!user) throw new Error("Sign-in succeeded but no session was returned.");
 
-      if (user) {
-        const { data: profile } = await supabase
-          .from("users")
-          .select("role")
-          .eq("id", user.id)
-          .maybeSingle();
+      const { data: profile } = await supabase
+        .from("users")
+        .select("role")
+        .eq("id", user.id)
+        .maybeSingle();
 
-        const role = profile?.role;
-        if (role === "admin") {
-          window.location.href = "/admin";
-        } else if (role === "instructor") {
-          window.location.href = "/instructor";
-        } else {
-          setError("This login is for staff only.");
-          await supabase.auth.signOut();
-        }
+      const role = profile?.role;
+      if (role === "admin") {
+        router.replace("/admin");
+        router.refresh();
+      } else if (role === "instructor") {
+        router.replace("/instructor");
+        router.refresh();
+      } else {
+        setError("This login is for staff only.");
+        await supabase.auth.signOut();
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not sign in");

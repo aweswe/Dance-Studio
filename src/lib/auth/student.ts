@@ -48,10 +48,11 @@ export async function getCurrentStudent(): Promise<CurrentStudentResult> {
 
     const siblings: any[] = matchedRows ?? [];
 
-    for (const row of siblings) {
-      if (row.auth_id !== user.id) {
-        await (admin as any).from("students").update({ auth_id: user.id }).eq("id", row.id);
-        row.auth_id = user.id;
+    const unlinkedIds = siblings.filter((row) => row.auth_id !== user.id).map((row) => row.id);
+    if (unlinkedIds.length > 0) {
+      await (admin as any).from("students").update({ auth_id: user.id }).in("id", unlinkedIds);
+      for (const row of siblings) {
+        if (unlinkedIds.includes(row.id)) row.auth_id = user.id;
       }
     }
 

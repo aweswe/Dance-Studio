@@ -38,12 +38,35 @@ function LoginForm() {
   const [currentUser, setCurrentUser] = useState<any>(null);
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => {
-      if (data?.user) {
-        setCurrentUser(data.user);
+    let cancelled = false;
+
+    async function syncSession() {
+      const { data } = await supabase.auth.getUser();
+      if (cancelled || !data?.user) return;
+
+      setCurrentUser(data.user);
+
+      if (searchParams.get("step") === "phone") {
+        setStep("phone_prompt");
+        return;
       }
-    });
-  }, [supabase]);
+
+      const { data: student } = await supabase
+        .from("students")
+        .select("id")
+        .eq("auth_id", data.user.id)
+        .maybeSingle();
+
+      if (!student && !cancelled) {
+        setStep("phone_prompt");
+      }
+    }
+
+    syncSession();
+    return () => {
+      cancelled = true;
+    };
+  }, [supabase, searchParams]);
 
   // Google OAuth Login
   async function handleGoogleLogin() {
@@ -102,16 +125,10 @@ function LoginForm() {
       });
       if (authError) throw authError;
       if (data?.user) {
-        const { data: student } = await supabase
-          .from("students")
-          .select("id, phone")
-          .eq("auth_id", data.user.id)
-          .maybeSingle();
-        if (!student) {
-          await completeStudentOnboarding(cleaned, name.trim() || undefined);
-        }
+        await completeStudentOnboarding(cleaned, name.trim() || undefined);
       }
-      router.push("/student");
+      router.replace("/student");
+      router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Invalid or expired code");
       setIsLoading(false);
@@ -240,11 +257,16 @@ function LoginForm() {
               <p className="text-sm font-medium text-ink mt-0.5 truncate">{currentUser.email}</p>
             </div>
             <div className="pt-1 flex flex-col gap-2">
-              <Link href="/student">
-                <Button className="w-full" type="button">
-                  <LayoutDashboard size={14} /> Open portal <ArrowRight size={14} />
-                </Button>
-              </Link>
+              <Button
+                className="w-full"
+                type="button"
+                onClick={() => {
+                  router.replace("/student");
+                  router.refresh();
+                }}
+              >
+                <LayoutDashboard size={14} /> Open portal <ArrowRight size={14} />
+              </Button>
               <button
                 type="button"
                 onClick={async () => {
