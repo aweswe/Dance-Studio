@@ -89,7 +89,7 @@ const DEFAULT_BATCHES = [
     capacity: 15,
     enrolled_count: 7,
     status: "active",
-    batch_title: "Kathak Lucknow Gharana Cohort (Tatkar & Visharad)",
+    batch_title: "Kathak with Poonam",
     programme: { name: "Structured Level-Based Certification (Classical Dance)", slug: "classical-dance", sort_order: 3 },
     instructor: { name: "Guru Poonam Nayak Jamwale", photo_url: "/images/studio-training/alignment-drills-1.jpg" },
   },
@@ -101,7 +101,7 @@ export async function getBatches() {
     if (!supabase) return DEFAULT_BATCHES;
     const { data } = await supabase
       .from('batches')
-      .select('id, programme_id, days, time_start, time_end, capacity, enrolled_count, status, programme:programmes(name, slug, sort_order), instructor:instructors(name, photo_url)')
+      .select('id, programme_id, name, days, time_start, time_end, capacity, enrolled_count, status, programme:programmes(name, slug, sort_order), instructor:instructors(name, photo_url)')
       .eq('status', 'active');
     if (data && data.length > 0) return data;
   } catch {}

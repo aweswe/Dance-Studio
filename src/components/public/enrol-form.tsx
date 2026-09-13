@@ -335,7 +335,7 @@ export function EnrolForm({
                   )}
                 >
                   <p className={cn("text-xs font-bold leading-tight", isSelected ? "text-[#7C5CFC]" : "text-ink")}>{p.name}</p>
-                  <p className="text-[10px] text-ink-2 mt-0.5">{p.age_group || 'All ages'}</p>
+                  <p className="text-[10px] text-ink-2 mt-0.5">{p.age_group || 'Ask the desk'}</p>
                   {isPay && (
                     <p className="text-[11px] font-mono font-bold text-ink mt-2">{formatCurrency(p.fees_monthly)}</p>
                   )}

@@ -36,7 +36,7 @@ export function CreativeFamilySection() {
         </div>
 
         {/* ── Centerpiece Giant Headline ── */}
-        <h2 className="font-anton text-5xl sm:text-6xl md:text-7xl lg:text-[88px] xl:text-[104px] uppercase leading-[0.92] tracking-tight max-w-4xl text-[#000000]">
+        <h2 className="font-anton text-5xl sm:text-6xl md:text-7xl lg:text-[88px] xl:text-[104px] uppercase leading-[1.08] sm:leading-[0.92] tracking-tight max-w-4xl text-[#000000]">
           <span>MORE THAN</span>
           <br />
           <span>A </span>
@@ -49,7 +49,7 @@ export function CreativeFamilySection() {
 
         {/* Subtitle statement */}
         <p className="max-w-xl text-sm sm:text-base text-[#000000]/75 mt-6 mb-8 leading-relaxed font-medium">
-          Whether you&apos;re taking your first steps or training for the stage, we offer a nurturing community where technique meets authentic artistic expression.
+          People stay because the batch knows their name and the recital is on a real stage, not a school auditorium with folding chairs.
         </p>
 
         {/* Action Button */}

@@ -36,19 +36,18 @@ export function LevelCertificationSection({
           {/* Heading */}
           <div>
             <p className="text-[11px] font-mono uppercase tracking-[0.22em] text-ink-3 mb-3">
-              05 · Classical Certification
+              Classical · Kuchipudi
             </p>
-            <h2 className="font-anton text-4xl sm:text-5xl md:text-6xl text-ink tracking-tight uppercase leading-[0.95]">
-              STRUCTURED<br />LEVEL-BASED<br />CERTIFICATION
+            <h2 className="font-anton text-4xl sm:text-5xl md:text-6xl text-ink tracking-tight uppercase leading-[1.05]">
+              THE KUCHIPUDI<br />SYLLABUS
             </h2>
           </div>
 
-          {/* Three facts — no icons, no badges, just clean lines */}
           <div className="divide-y divide-line border-t border-b border-line">
             {[
-              { label: 'Certified Curriculums', value: 'Kuchipudi · Kathak · Bharatnatyam · Ballet' },
-              { label: 'Fixed Terms Only', value: 'Monthly & 3-Month enrolment cycles — no drop-ins' },
-              { label: 'Board Examinations', value: 'Graded progression → Rangapravesham solo debut' },
+              { label: 'Who', value: 'Srusti · Fri & Sat 6:30' },
+              { label: 'How', value: 'Monthly or quarterly. Not a drop-in.' },
+              { label: 'Then', value: 'Exam when she says you are ready' },
             ].map(({ label, value }) => (
               <div key={label} className="py-4 flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-6">
                 <span className="font-mono text-[11px] uppercase tracking-widest text-ink-3 shrink-0 w-40">{label}</span>
@@ -67,7 +66,7 @@ export function LevelCertificationSection({
             </Link>
             {showExploreCurriculum && (
               <Link
-                href="/programmes/classical-dance#curriculum"
+                href={ROUTES.syllabusKuchipudi}
                 className="py-3 px-6 rounded-xl text-xs font-mono font-bold tracking-[0.15em] uppercase bg-surface text-ink border border-line hover:border-ink transition-all active:scale-[0.97]"
               >
                 View Syllabus

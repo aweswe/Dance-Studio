@@ -78,6 +78,9 @@ export const ROUTES = {
   contact: "/contact",
   events: "/events",
   annualDay: "/events/annual-day",
+  syllabus: "/syllabus",
+  syllabusKuchipudi: "/syllabus/kuchipudi",
+  syllabusKathak: "/syllabus/kathak",
   // Auth
   login: "/login",
   adminLogin: "/admin-login",

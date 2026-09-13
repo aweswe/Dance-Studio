@@ -521,6 +521,45 @@ export type Database = {
           },
         ]
       }
+      homepage_reels: {
+        Row: {
+          created_at: string | null
+          height: number | null
+          href: string
+          id: string
+          is_visible: boolean | null
+          sort_order: number
+          storage_path: string | null
+          title: string
+          video_url: string
+          width: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          height?: number | null
+          href?: string
+          id?: string
+          is_visible?: boolean | null
+          sort_order?: number
+          storage_path?: string | null
+          title: string
+          video_url: string
+          width?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          height?: number | null
+          href?: string
+          id?: string
+          is_visible?: boolean | null
+          sort_order?: number
+          storage_path?: string | null
+          title?: string
+          video_url?: string
+          width?: number | null
+        }
+        Relationships: []
+      }
       instructors: {
         Row: {
           auth_id: string | null
@@ -763,6 +802,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      rate_limit_hits: {
+        Row: {
+          bucket_key: string
+          hit_at: string
+          id: number
+        }
+        Insert: {
+          bucket_key: string
+          hit_at?: string
+          id?: number
+        }
+        Update: {
+          bucket_key?: string
+          hit_at?: string
+          id?: number
+        }
+        Relationships: []
       }
       programmes: {
         Row: {

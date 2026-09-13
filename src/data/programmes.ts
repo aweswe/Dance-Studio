@@ -1,4 +1,5 @@
 import { getPublicSupabase } from '@/lib/supabase/public';
+import { mergeProgrammeWithDefaults } from '@/lib/programmes/merge-defaults';
 
 export interface ProgrammeBatchInfo {
   name: string;
@@ -35,7 +36,7 @@ export const DEFAULT_PROGRAMMES: ProgrammeItem[] = [
     badge: "Kids & Adults Batches",
     tagline: "Bollywood · Hip Hop · Contemporary · Tollywood · Gymnastics",
     description:
-      "Comprehensive commercial and expressive dance training split into dedicated Kids and Adults batches. Covers Bollywood routines, authentic Hip Hop foundations, expressive Contemporary floorwork, commercial Tollywood, and acrobatic gymnastics.",
+      "Kids 5–14 at 5 pm, adults 15+ at 7 pm, Monday to Wednesday. Bollywood, hip-hop, contemporary, Tollywood, and a bit of gymnastics — the same floor, two rooms of energy.",
     styles_highlight: ["Bollywood", "Hip Hop", "Contemporary", "Tollywood", "Gymnastics"],
     batches_info: [
       {
@@ -54,11 +55,11 @@ export const DEFAULT_PROGRAMMES: ProgrammeItem[] = [
       },
     ],
     includes: [
-      "Dedicated Kids Batch: Technique, rhythm, acro-gymnastics & stage confidence",
-      "Dedicated Adults Batch: Trending choreography, isolation drills, popping & lyrical flow",
-      "Tollywood & Bollywood commercial screen choreography",
-      "Annual recital, video showcase & live stage performance opportunities",
-      "No prior experience required · Free trial evaluation class",
+      "Kids 5–14, Mon–Wed 5 to 7",
+      "Adults 15+, Mon–Wed 7 to 9",
+      "Bollywood, hip-hop, contemporary, Tollywood",
+      "One recital a year — you will be on stage",
+      "First class free. No registration fee",
     ],
     fees_monthly: 2000,
     fees_quarterly: 5000,
@@ -73,7 +74,7 @@ export const DEFAULT_PROGRAMMES: ProgrammeItem[] = [
     badge: "Morning Wellness Batch",
     tagline: "Yoga · Zumba · Dance Fitness · Core Conditioning",
     description:
-      "High-energy weekday morning conditioning combining calorie-burning Zumba dance fitness, flexibility-building Hatha & Vinyasa Yoga, Pilates core alignment, HIIT cardio, and guided breathwork.",
+      "Weekday mornings, 9:30 to 10:30. Zumba, yoga, pilates, and a hard 20 minutes of HIIT when Shailaja feels like it. Come in gym clothes. No dance background needed.",
     styles_highlight: ["Yoga", "Zumba", "Dance Fitness", "Pilates", "HIIT"],
     batches_info: [
       {
@@ -85,11 +86,11 @@ export const DEFAULT_PROGRAMMES: ProgrammeItem[] = [
       },
     ],
     includes: [
-      "Zumba — high-calorie-burn dance fitness & rhythm cardio",
-      "Hatha & Vinyasa Yoga for joint mobility, flexibility & posture",
-      "Pilates & core conditioning for functional strength",
-      "HIIT stamina training & guided breathwork stress relief",
-      "Suitable for all fitness levels · No dance background required",
+      "Zumba that actually makes you sweat",
+      "Yoga for tight hips after sitting all week",
+      "Pilates and a short HIIT block",
+      "Monday to Friday, 9:30–10:30",
+      "No dance background. Gym clothes are fine",
     ],
     fees_monthly: 2500,
     fees_quarterly: 6500,
@@ -101,35 +102,28 @@ export const DEFAULT_PROGRAMMES: ProgrammeItem[] = [
     id: "p3-classical-certification",
     name: "Structured Level-Based Certification (Classical Dance)",
     slug: "classical-dance",
-    badge: "Kuchipudi & Kathak Syllabi",
-    tagline: "Kuchipudi · Kathak · Bharatnatyam · Ballet",
+    badge: "Kuchipudi syllabus",
+    tagline: "Kuchipudi · Friday & Saturday · exams",
     description:
-      "Rigorous level-based classical training adhering to Natyashastra traditions with fixed-term enrolment cycles (prohibiting casual drop-ins) and recognized board examinations leading to sacred Rangapravesham solo debuts. Active master syllabi available for Kuchipudi and Kathak.",
-    styles_highlight: ["Kuchipudi", "Kathak", "Bharatnatyam", "Ballet"],
-    active_syllabi: ["Kuchipudi", "Kathak"],
-    catalog_styles: ["Kuchipudi", "Kathak", "Bharatnatyam", "Ballet"],
+      "Srusti teaches Kuchipudi on Friday and Saturday evenings. There is a published year-by-year syllabus, board exams, and a path toward Rangapravesham. This is a term class, not a drop-in.",
+    styles_highlight: ["Kuchipudi"],
+    active_syllabi: ["Kuchipudi"],
+    catalog_styles: ["Kuchipudi"],
     batches_info: [
       {
-        name: "Kuchipudi Classical Cohort",
-        age: "Ages 5+ to Adults · Foundation to Advanced",
-        styles: "10-Year Master Syllabus & 6-Year Accelerated Certificate Track",
+        name: "Kuchipudi",
+        age: "From age 5 through adults",
+        styles: "10-year foundation or 6-year certificate track",
         schedule: "Fri & Sat · 6:30 PM – 7:30 PM",
-        instructors: "Guru Srushti Nidhi",
-      },
-      {
-        name: "Kathak Classical Cohort",
-        age: "Ages 5+ to Adults · Prarambhik to Visharad",
-        styles: "Lucknow Gharana Tatkar, Chakkars, Toda-Tukra & Abhinaya",
-        schedule: "Saturday & Sunday Weekend Batches",
-        instructors: "Guru Poonam Nayak Jamwale",
+        instructors: "Srusti",
       },
     ],
     includes: [
-      "Structured Master Syllabi: Active curriculums for Kuchipudi and Kathak",
-      "Foundational Adavus / Tatkar, Jathis, Samyuta/Asamyuta Hastas & Abhinaya",
-      "Fixed Terms: Monthly & 3-Month enrolment cycles (strictly zero casual drops)",
-      "Official board examinations & grade certificate progression",
-      "Stage repertoire, Tarangam brass plate dance & Rangapravesham solo debut",
+      "Year-wise Kuchipudi syllabus (the one on this site)",
+      "Adavus, jathis, hastas, and abhinaya in class, not on a handout",
+      "Monthly or quarterly fees — you stay on the batch",
+      "Board exams when Srusti says you are ready",
+      "Stage work and Rangapravesham when the dancer is actually there",
     ],
     fees_monthly: 2000,
     fees_quarterly: 5000,
@@ -148,7 +142,9 @@ export async function getProgrammes() {
       .select('id, name, slug, description, includes, fees_monthly, fees_quarterly, age_group, sort_order')
       .eq('is_active', true)
       .order('sort_order');
-    if (data && data.length > 0) return data;
+    if (data && data.length > 0) {
+      return data.map((row) => mergeProgrammeWithDefaults(row as Record<string, unknown>));
+    }
   } catch {}
   return DEFAULT_PROGRAMMES;
 }
@@ -177,7 +173,7 @@ export async function getProgrammeBySlug(slug: string) {
       .eq('slug', normalizedSlug)
       .eq('is_active', true)
       .single();
-    if (data) return data;
+    if (data) return mergeProgrammeWithDefaults(data as Record<string, unknown>);
   } catch {}
 
   return (

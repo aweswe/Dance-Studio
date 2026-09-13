@@ -174,7 +174,7 @@ export const STUDIO_INFO = {
   danceForms: {
     indianClassical: [
       { name: "Kuchipudi", desc: "Classical dance-drama originating from Krishna district, Andhra Pradesh, rooted in the Natya Shastra." },
-      { name: "Kathak", desc: "Northern Indian classical storytelling dance with intricate footwork and spins from the Lucknow Gharana." },
+      { name: "Kathak", desc: "Lucknow Gharana with Poonam. Five levels from foundation to masterclass — see the syllabus page. Ask the desk for her batch." },
       { name: "Semi-Classical", desc: "Fluid mixture of classical mudras and folk expression designed for accessible grace." }
     ],
     commercial: [

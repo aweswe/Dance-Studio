@@ -93,5 +93,13 @@ export async function GET(request: Request) {
     return Response.json({ ok: false, error: error.message }, { status: 500 });
   }
 
+  const { logPortalNotice } = await import('@/lib/notices/log-portal-notice');
+  await logPortalNotice(supabase, {
+    message: `Fee reminders sent for ${monthKey}. Check student/fees if yours is pending.`,
+    templateName: WHATSAPP_TEMPLATES.feeReminder.name,
+    scope: 'all',
+    recipientCount: rows.length,
+  });
+
   return Response.json({ ok: true, queued: rows.length });
 }

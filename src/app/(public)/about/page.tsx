@@ -36,8 +36,8 @@ export default async function AboutPage() {
           STAGE MASTERY.
         </h1>
         <p className="text-ink-2 text-sm sm:text-base md:text-lg max-w-xl leading-relaxed">
-          Established in 2010 by Nitish Kumar at Neredmet X Road, Secunderabad.
-          We build confident dancers through structured technique, physical conditioning, and live stage performance.
+          Nitish started Rhythmzz in 2010 above the ICICI ATM at Neredmet X Road.
+          We still teach in that room — sprung floor, mirrors, AC, the same number on WhatsApp.
         </p>
 
         {/* Flat Stat Strip */}
@@ -68,10 +68,10 @@ export default async function AboutPage() {
             </h2>
             <div className="text-sm sm:text-base text-ink-2 leading-relaxed space-y-4">
               <p>
-                After earning a Diploma in Movement Arts from ISPTD Bengaluru, founder <strong className="text-ink">Nitish Kumar</strong> established Rhythmzz in 2010. By 2014, the academy achieved formal international accreditation from the <strong className="text-ink">International Accreditation Organization (IAO), USA</strong>.
+                Nitish came back from ISPTD Bengaluru and opened the academy in 2010. In 2014 we took IAO accreditation because parents kept asking for a certificate that wasn’t a printout from CorelDRAW.
               </p>
               <p>
-                Classes are structured to balance anatomy, musicality, and stage confidence. We believe that with dedicated coaching and safe technique, anybody can dance.
+                Class is technique first. Recital is once a year. If you miss two weeks, WhatsApp the desk — don’t ghost the batch.
               </p>
             </div>
 

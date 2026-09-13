@@ -1,148 +1,103 @@
 'use client';
 
-import { useRef, useState } from 'react';
-import Image from 'next/image';
+import { useCallback, useEffect, useRef, useState, type RefObject } from 'react';
 import { Play, ChevronLeft, ChevronRight } from 'lucide-react';
+import type { PublicReel } from '@/data/reels';
+import { ACADEMY } from '@/lib/utils/constants';
 
-interface Reel {
-  id: string;
-  title: string;
-  image: string;
-  /** Direct mp4 preview — plays on hover. Drop files in `public/reels/` and point here. */
-  videoSrc?: string;
-  /** Full reel URL on Instagram — opened on click. */
-  href: string;
-}
+const PROFILE_URL = ACADEMY.socials.instagram;
 
-const PROFILE_URL = 'https://www.instagram.com/rhythmzzdance.live';
-
-const REELS: Reel[] = [
-  {
-    id: 'r1',
-    title: 'Top Skills Pro — Crew Routine',
-    image: '/images/bento/bento-acrobat.png',
-    videoSrc: '/reels/r1.mp4',
-    href: PROFILE_URL,
-  },
-  {
-    id: 'r2',
-    title: 'Raasta — Live Stage Cut',
-    image: '/images/srilanka-tour/raasta-stage-4.jpg',
-    videoSrc: '/reels/r2.mp4',
-    href: PROFILE_URL,
-  },
-  {
-    id: 'r3',
-    title: 'Studio Leaps — Batch Rehearsal',
-    image: '/images/studio-training/studio-leaps.jpg',
-    videoSrc: '/reels/r3.mp4',
-    href: PROFILE_URL,
-  },
-  {
-    id: 'r4',
-    title: 'Kuchipudi — Hasta Showcase',
-    image: '/images/kuchipudi/kuchipudi-traditional-standing.jpg',
-    videoSrc: '/reels/r4.mp4',
-    href: PROFILE_URL,
-  },
-  {
-    id: 'r5',
-    title: 'Arena Night — Concert Lighting',
-    image: '/images/bento/bento-stage.png',
-    videoSrc: '/reels/r5.mp4',
-    href: PROFILE_URL,
-  },
-  {
-    id: 'r6',
-    title: 'Bolly-Hop — Commercial Cut',
-    image: '/images/class-1.jpg',
-    videoSrc: '/reels/r6.mp4',
-    href: PROFILE_URL,
-  },
-  {
-    id: 'r7',
-    title: 'Contemporary Flow — Floorwork',
-    image: '/images/class-2.jpg',
-    videoSrc: '/reels/r7.mp4',
-    href: PROFILE_URL,
-  },
-];
-
-function ReelCard({ reel }: { reel: Reel }) {
+function ReelCard({ reel, scrollRoot }: { reel: PublicReel; scrollRoot: RefObject<HTMLDivElement | null> }) {
+  const cardRef = useRef<HTMLAnchorElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [inView, setInView] = useState(false);
+  const [hovered, setHovered] = useState(false);
   const [playing, setPlaying] = useState(false);
 
-  const handleEnter = () => {
-    videoRef.current?.play().then(() => setPlaying(true)).catch(() => {});
-  };
+  const shouldPlay = inView || hovered;
 
-  const handleLeave = () => {
+  const syncPlayback = useCallback(() => {
     const video = videoRef.current;
     if (!video) return;
-    video.pause();
-    video.currentTime = 0;
-    setPlaying(false);
-  };
+
+    if (shouldPlay) {
+      video.play().then(() => setPlaying(true)).catch(() => setPlaying(false));
+    } else {
+      video.pause();
+      setPlaying(false);
+    }
+  }, [shouldPlay]);
+
+  useEffect(() => {
+    const card = cardRef.current;
+    const root = scrollRoot.current;
+    if (!card) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setInView(entry.isIntersecting && entry.intersectionRatio > 0.35),
+      { root, threshold: [0, 0.35, 0.6, 1] },
+    );
+
+    observer.observe(card);
+    return () => observer.disconnect();
+  }, [scrollRoot]);
+
+  useEffect(() => {
+    syncPlayback();
+  }, [syncPlayback]);
 
   return (
     <a
+      ref={cardRef}
       href={reel.href}
       target="_blank"
       rel="noopener noreferrer"
       aria-label={`${reel.title} — watch on Instagram`}
-      onMouseEnter={handleEnter}
-      onMouseLeave={handleLeave}
-      onFocus={handleEnter}
-      onBlur={handleLeave}
-      className="group relative shrink-0 snap-start w-[180px] sm:w-[210px] aspect-[9/16] rounded-2xl overflow-hidden bg-surface border border-line hover:border-[#F5FB38] transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-[#F5FB38]"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onFocus={() => setHovered(true)}
+      onBlur={() => setHovered(false)}
+      className="group relative shrink-0 snap-start w-[180px] sm:w-[210px] aspect-[9/16] rounded-2xl overflow-hidden bg-black border border-line hover:border-[#F5FB38] transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-[#F5FB38]"
     >
-      <Image
-        src={reel.image}
-        alt={reel.title}
-        fill
-        sizes="220px"
-        className={`object-cover object-center transition-all duration-500 ${
-          playing ? 'opacity-0' : 'opacity-100 group-hover:scale-105'
-        }`}
+      <video
+        ref={videoRef}
+        src={reel.videoSrc}
+        muted
+        loop
+        playsInline
+        autoPlay
+        preload="auto"
+        aria-hidden="true"
+        tabIndex={-1}
+        onLoadedData={syncPlayback}
+        className="absolute inset-0 w-full h-full object-cover"
       />
-      {reel.videoSrc && (
-        <video
-          ref={videoRef}
-          src={reel.videoSrc}
-          muted
-          loop
-          playsInline
-          preload="none"
-          poster={reel.image}
-          aria-hidden="true"
-          tabIndex={-1}
-          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${
-            playing ? 'opacity-100' : 'opacity-0'
-          }`}
-        />
-      )}
+
       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
 
-      {/* Play — only on hover */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <span className="w-12 h-12 rounded-full bg-[#F5FB38] text-black flex items-center justify-center shadow-lg opacity-0 scale-75 group-hover:opacity-100 group-hover:scale-100 transition-all duration-300">
-          <Play size={20} className="fill-black ml-0.5" />
-        </span>
-      </div>
+      {!playing && (
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <span className="w-12 h-12 rounded-full bg-[#F5FB38]/90 text-black flex items-center justify-center shadow-lg">
+            <Play size={20} className="fill-black ml-0.5" />
+          </span>
+        </div>
+      )}
 
-      <p className="absolute bottom-0 left-0 right-0 p-3.5 text-sm font-bold text-white leading-snug line-clamp-2">
+      <p className="absolute bottom-0 left-0 right-0 p-3.5 text-sm font-bold text-white leading-snug line-clamp-2 z-10">
         {reel.title}
       </p>
     </a>
   );
 }
 
-export function ReelsStrip() {
+export function ReelsStrip({ reels }: { reels: PublicReel[] }) {
   const trackRef = useRef<HTMLDivElement>(null);
 
   const scrollBy = (dir: 1 | -1) => {
     trackRef.current?.scrollBy({ left: dir * 280, behavior: 'smooth' });
   };
+
+  if (reels.length === 0) return null;
 
   return (
     <section aria-label="Instagram reels" className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 md:px-14 pb-20 sm:pb-28 select-none">
@@ -188,8 +143,8 @@ export function ReelsStrip() {
         className="flex gap-4 overflow-x-auto py-2 snap-x snap-mandatory"
         style={{ scrollbarWidth: 'none' }}
       >
-        {REELS.map((reel) => (
-          <ReelCard key={reel.id} reel={reel} />
+        {reels.map((reel) => (
+          <ReelCard key={reel.id} reel={reel} scrollRoot={trackRef} />
         ))}
       </div>
     </section>

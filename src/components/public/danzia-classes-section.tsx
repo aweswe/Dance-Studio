@@ -1,104 +1,60 @@
-'use client';
-
 import Image from 'next/image';
 import Link from 'next/link';
+import { SnapCarousel, snapSlideClass } from '@/components/public/snap-carousel';
+import { getProgrammes } from '@/data/programmes';
 import { ROUTES } from '@/lib/utils/constants';
 
-interface DanziaClassItem {
-  id: string;
-  name: string;
-  category: string;
-  tagline: string;
-  image: string;
-  href: string;
-}
+const PROGRAMME_IMAGES: Record<string, string> = {
+  'commercial-expressive': '/images/class-1.jpg',
+  'mind-body-fitness': '/images/studio-training/studio-technique.jpg',
+  'classical-dance': '/images/kuchipudi/kuchipudi-traditional-standing.jpg',
+  'kids-dance': '/images/class-1.jpg',
+  'adults-dance': '/images/class-2.jpg',
+  kuchipudi: '/images/kuchipudi/kuchipudi-traditional-standing.jpg',
+};
 
-const CLASSES: DanziaClassItem[] = [
-  {
-    id: 'contemporary',
-    name: 'CONTEMPORARY',
-    category: 'Fluidity and modern form',
-    tagline: 'Explore weight distribution, floorwork, and expressive storytelling through fluid motion.',
-    image: '/images/srilanka-tour/raasta-stage-4.jpg',
-    href: '/programmes/adults-dance',
-  },
-  {
-    id: 'hiphop',
-    name: 'HIP-HOP',
-    category: 'High-energy, street style, and groove',
-    tagline: 'Master rhythm control, isolations, popping, and performance-ready street choreography.',
-    image: '/images/class-1.jpg',
-    href: '/programmes/adults-dance',
-  },
-  {
-    id: 'kuchipudi',
-    name: 'KUCHIPUDI',
-    category: 'Indian classical tradition & grace',
-    tagline: 'Centuries-old Natya tradition with intricate footwork, mudras, and certified examinations.',
-    image: '/images/srilanka-tour/raasta-stage-5.jpg',
-    href: '/programmes/kuchipudi',
-  },
-  {
-    id: 'bollyhop',
-    name: 'BOLLY-HOP',
-    category: 'Bold, upbeat, and commercial',
-    tagline: 'Dynamic commercial choreography blending Bollywood charisma with street dance energy.',
-    image: '/images/class-2.jpg',
-    href: '/programmes/adults-dance',
-  },
-];
+export async function DanziaClassesSection() {
+  const programmes = await getProgrammes();
+  const active = programmes.filter((p) => p.is_active !== false);
 
-export function DanziaClassesSection() {
   return (
-    <section className="w-full px-4 sm:px-8 md:px-14 py-24 sm:py-32 max-w-[1440px] mx-auto select-none">
-      {/* Editorial Header with generous breathing space */}
-      <div className="max-w-3xl mb-12 sm:mb-16">
-        <h2 className="font-anton text-4xl sm:text-6xl md:text-7xl lg:text-8xl tracking-tight text-ink uppercase leading-[0.92]">
-          CLASSES FOR ALL AGES AND LEVELS
+    <section className="w-full px-4 sm:px-8 md:px-14 py-20 sm:py-32 max-w-[1440px] mx-auto">
+      <div className="max-w-3xl mb-10 sm:mb-16">
+        <h2 className="font-anton text-4xl sm:text-6xl md:text-7xl lg:text-8xl tracking-tight text-ink uppercase leading-[1.05] sm:leading-[0.92]">
+          WHAT WE TEACH
         </h2>
-        <p className="text-sm sm:text-base md:text-lg text-ink-2 mt-5 leading-relaxed max-w-2xl font-medium">
-          Whether you&apos;re taking your first steps or training for the stage, we offer a variety of dance styles taught with care, discipline, and creativity.
+        <p className="text-sm sm:text-base text-ink-2 mt-4 leading-relaxed max-w-xl">
+          Same programmes the desk manages — fees and batches stay in sync.
         </p>
       </div>
 
-      {/* Spacious 4-Card Clean Layout */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-7">
-        {CLASSES.map((item) => (
+      <SnapCarousel>
+        {active.map((item) => (
           <Link
             key={item.id}
-            href={item.href}
-            className="group flex flex-col justify-between transition-all duration-300"
+            href={ROUTES.programme(item.slug)}
+            className={`${snapSlideClass} flex flex-col group`}
           >
-            {/* Image Frame with rounded corners & clean crop */}
-            <div className="relative aspect-[3/4] w-full rounded-[24px] sm:rounded-[28px] overflow-hidden bg-[#000000] shadow-lg mb-5">
+            <div className="relative aspect-[3/4] w-full rounded-[24px] sm:rounded-[28px] overflow-hidden bg-canvas-muted mb-4">
               <Image
-                src={item.image}
+                src={PROGRAMME_IMAGES[item.slug] ?? '/images/class-2.jpg'}
                 alt={item.name}
                 fill
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                className="object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
+                sizes="(max-width: 1024px) 80vw, 25vw"
+                className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
             </div>
-
-            {/* Typography & Minimalist Bracket Action */}
-            <div className="flex flex-col">
-              <span className="text-[11px] font-mono uppercase tracking-[0.2em] text-[#7C5CFC] font-bold mb-1.5">
-                {item.category}
-              </span>
-              <h3 className="font-anton text-2xl sm:text-3xl tracking-wide uppercase text-ink group-hover:text-[#7C5CFC] transition-colors mb-2">
-                {item.name}
-              </h3>
-              <p className="text-xs sm:text-sm text-ink-2 leading-relaxed mb-4 line-clamp-2">
-                {item.tagline}
-              </p>
-              <div className="inline-flex items-center gap-1 font-mono text-xs uppercase tracking-[0.2em] font-bold text-ink group-hover:text-[#7C5CFC] transition-colors">
-                <span className="group-hover:underline underline-offset-4 mx-0.5">view more</span>
-              </div>
-            </div>
+            <span className="text-[11px] font-mono uppercase tracking-[0.16em] text-[#7C5CFC] font-bold mb-1">
+              {item.badge ?? item.age_group ?? 'Open batch'}
+            </span>
+            <h3 className="font-anton text-2xl sm:text-3xl tracking-wide uppercase text-ink mb-1.5 group-hover:text-[#7C5CFC] transition-colors">
+              {item.name.split(' ').slice(0, 2).join(' ')}
+            </h3>
+            <p className="text-sm text-ink-2 leading-relaxed line-clamp-2">{item.tagline}</p>
           </Link>
         ))}
-      </div>
+      </SnapCarousel>
     </section>
   );
 }

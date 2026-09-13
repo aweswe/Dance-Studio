@@ -1,10 +1,9 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { Menu, X, User, LayoutDashboard } from 'lucide-react';
+import { ChevronDown, Menu, X, User, LayoutDashboard } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import { ROUTES } from '@/lib/utils/constants';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
@@ -14,10 +13,16 @@ const LINKS = [
   { name: 'Programmes', href: ROUTES.programmes },
   { name: 'Schedule', href: ROUTES.schedule },
   { name: 'Gallery', href: ROUTES.gallery },
+  { name: 'Blog', href: ROUTES.blog },
   { name: 'Annual Day', href: ROUTES.annualDay },
   { name: 'Studio Rental', href: ROUTES.studioRental },
   { name: 'About', href: ROUTES.about },
   { name: 'Contact', href: ROUTES.contact },
+];
+
+const SYLLABUS_LINKS = [
+  { name: 'Kuchipudi', href: ROUTES.syllabusKuchipudi },
+  { name: 'Kathak', href: ROUTES.syllabusKathak },
 ];
 
 interface AuthInfo {
@@ -30,9 +35,11 @@ interface AuthInfo {
 
 export function Nav() {
   const [isOpen, setIsOpen] = useState(false);
+  const [syllabusOpen, setSyllabusOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [authInfo, setAuthInfo] = useState<AuthInfo | null>(null);
   const pathname = usePathname();
+  const syllabusRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const supabase = createClient();
@@ -89,9 +96,30 @@ export function Nav() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const isActive = (href: string) => {
-    return pathname === href;
-  };
+  useEffect(() => {
+    setIsOpen(false);
+    setSyllabusOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    const onPointer = (event: MouseEvent) => {
+      if (!syllabusRef.current?.contains(event.target as Node)) {
+        setSyllabusOpen(false);
+      }
+    };
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setSyllabusOpen(false);
+    };
+    document.addEventListener('mousedown', onPointer);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('mousedown', onPointer);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, []);
+
+  const isActive = (href: string) => pathname === href;
+  const syllabusActive = pathname.startsWith('/syllabus');
 
   return (
     <header
@@ -119,8 +147,8 @@ export function Nav() {
         </Link>
 
         {/* Desktop Navigation Links (Original Pages) */}
-        <nav className="hidden lg:flex items-center gap-5 xl:gap-7">
-          {LINKS.map((link) => {
+        <nav className="hidden lg:flex items-center gap-4 xl:gap-6">
+          {LINKS.slice(0, 1).map((link) => {
             const active = isActive(link.href);
             return (
               <Link
@@ -128,8 +156,68 @@ export function Nav() {
                 href={link.href}
                 prefetch={true}
                 className={cn(
-                  'text-[11px] font-bold uppercase tracking-[0.16em] transition-colors relative py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7C5CFC]',
-                  active ? 'text-ink font-extrabold' : 'text-ink-2 hover:text-[#7C5CFC]'
+                  'text-[10px] xl:text-[11px] font-bold uppercase tracking-[0.14em] transition-colors relative py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7C5CFC]',
+                  active ? 'text-ink font-extrabold' : 'text-ink-2 hover:text-[#7C5CFC]',
+                )}
+              >
+                {link.name}
+                {active && (
+                  <span className="absolute left-0 right-0 -bottom-0.5 h-[2px] bg-[#7C5CFC] rounded-full" />
+                )}
+              </Link>
+            );
+          })}
+
+          <div className="relative" ref={syllabusRef}>
+            <button
+              type="button"
+              aria-expanded={syllabusOpen}
+              aria-haspopup="menu"
+              onClick={() => setSyllabusOpen((open) => !open)}
+              className={cn(
+                'inline-flex items-center gap-1 text-[10px] xl:text-[11px] font-bold uppercase tracking-[0.14em] py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7C5CFC]',
+                syllabusActive ? 'text-ink' : 'text-ink-2 hover:text-[#7C5CFC]',
+              )}
+            >
+              Syllabus
+              <ChevronDown size={12} className={cn('transition-transform', syllabusOpen && 'rotate-180')} />
+            </button>
+            {syllabusOpen && (
+              <div
+                role="menu"
+                className="absolute left-0 top-full mt-2 min-w-[200px] rounded-2xl border border-line bg-canvas shadow-overlay p-2 z-[70]"
+              >
+                <p className="px-3 pt-2 pb-1 text-[10px] font-mono uppercase tracking-widest text-ink-3">
+                  Syllabus adoption
+                </p>
+                {SYLLABUS_LINKS.map((item) => (
+                  <Link
+                    key={item.href}
+                    role="menuitem"
+                    href={item.href}
+                    className={cn(
+                      'block rounded-xl px-3 py-2.5 text-xs font-bold uppercase tracking-wider',
+                      isActive(item.href) ? 'bg-surface text-ink' : 'text-ink-2 hover:bg-surface hover:text-ink',
+                    )}
+                  >
+                    {item.name}
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {LINKS.slice(1).map((link) => {
+            const active = isActive(link.href);
+            return (
+              <Link
+                key={link.name}
+                href={link.href}
+                prefetch={true}
+                className={cn(
+                  'text-[10px] xl:text-[11px] font-bold uppercase tracking-[0.14em] transition-colors relative py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7C5CFC]',
+                  link.name === 'Studio Rental' && 'hidden xl:inline',
+                  active ? 'text-ink font-extrabold' : 'text-ink-2 hover:text-[#7C5CFC]',
                 )}
               >
                 {link.name}
@@ -197,7 +285,7 @@ export function Nav() {
       <div
         id="mobile-nav-drawer"
         className={cn(
-          'fixed inset-x-0 top-[60px] z-50 lg:hidden bg-canvas/95 backdrop-blur-xl px-5 py-6 flex flex-col justify-between transition-all duration-300 ease-out border-b border-line shadow-2xl max-h-[calc(100vh-60px)] overflow-y-auto',
+          'fixed inset-x-0 top-[var(--public-header-h,60px)] z-50 lg:hidden bg-canvas/95 backdrop-blur-xl px-5 py-6 flex flex-col justify-between transition-all duration-300 ease-out border-b border-line shadow-2xl max-h-[calc(100svh-var(--public-header-h,60px))] overflow-y-auto',
           isOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2 pointer-events-none'
         )}
       >
@@ -228,6 +316,22 @@ export function Nav() {
               </Link>
             ))}
           </nav>
+
+          <div className="rounded-2xl border border-line p-3 space-y-2">
+            <p className="text-[10px] font-mono uppercase tracking-widest text-ink-3 px-1">
+              Syllabus adoption
+            </p>
+            {SYLLABUS_LINKS.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={() => setIsOpen(false)}
+                className="block px-3 py-2 rounded-xl text-xs font-bold uppercase tracking-wider text-ink hover:bg-surface"
+              >
+                {item.name}
+              </Link>
+            ))}
+          </div>
 
           <div className="pt-3 border-t border-line space-y-2">
             <Link

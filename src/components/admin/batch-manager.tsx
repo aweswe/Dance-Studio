@@ -9,7 +9,7 @@ import { Select } from '@/components/ui/select'
 import { Modal } from '@/components/ui/modal'
 import { Users, Clock, UserCircle, Plus } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { createProgramme, createBatch } from '@/actions/classes'
+import { createProgramme, createBatch, updateBatchStatus } from '@/actions/classes'
 import { formatTime } from '@/lib/utils/format'
 
 type Programme = any
@@ -177,6 +177,40 @@ export function BatchManager({
                     <span>{batch.instructor.name}</span>
                   </div>
                 )}
+                <div className="pt-3 flex gap-2">
+                  <Badge variant={batch.status === 'active' ? 'green' : 'default'}>{batch.status ?? 'active'}</Badge>
+                  {batch.status === 'active' ? (
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="secondary"
+                      disabled={busy}
+                      onClick={async () => {
+                        setBusy(true)
+                        await updateBatchStatus(batch.id, 'paused')
+                        setBusy(false)
+                        router.refresh()
+                      }}
+                    >
+                      Pause
+                    </Button>
+                  ) : (
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="secondary"
+                      disabled={busy}
+                      onClick={async () => {
+                        setBusy(true)
+                        await updateBatchStatus(batch.id, 'active')
+                        setBusy(false)
+                        router.refresh()
+                      }}
+                    >
+                      Activate
+                    </Button>
+                  )}
+                </div>
               </div>
             </Card>
           ))}

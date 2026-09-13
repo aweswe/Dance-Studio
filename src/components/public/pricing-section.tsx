@@ -3,6 +3,7 @@ import { getProgrammes } from '@/data/programmes';
 import { enrolHref, ROUTES } from '@/lib/utils/constants';
 import { ArrowUpRight } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
+import { SnapCarousel, snapSlideClass } from '@/components/public/snap-carousel';
 
 const TILES = ['ink', 'sun', 'velvet'] as const;
 
@@ -28,7 +29,7 @@ export async function PricingSection() {
         </Link>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+      <SnapCarousel columns={3}>
         {active.map((programme, i) => {
           const tile = TILES[i % TILES.length];
           const arrowOn =
@@ -43,6 +44,7 @@ export async function PricingSection() {
               key={programme.id}
               href={enrolHref({ programme: programme.slug, intent: 'pay' })}
               className={cn(
+                snapSlideClass,
                 'group block rounded-[24px] overflow-hidden hover:-translate-y-1 transition-transform duration-300 ease-[cubic-bezier(0.2,0,0,1)] active:scale-[0.96]',
                 tile === 'ink' && 'fee-tile-ink',
                 tile === 'sun' && 'fee-tile-sun',
@@ -84,7 +86,7 @@ export async function PricingSection() {
             </Link>
           );
         })}
-      </div>
+      </SnapCarousel>
 
       <div className="sm:hidden text-center mt-6">
         <Link

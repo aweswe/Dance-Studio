@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { SITE_URL, ROUTES } from '@/lib/utils/constants';
 import { WeekScheduleGrid } from '@/components/public/week-schedule-grid';
 import { ArrowRight } from 'lucide-react';
+import { getBatches } from '@/data/batches';
+import { buildWeekScheduleFromBatches } from '@/lib/schedule/from-batches';
 
 export const metadata: Metadata = {
   title: 'Weekly Batch Schedule & Timings | Rhythmzz Academy of Dance',
@@ -11,7 +13,10 @@ export const metadata: Metadata = {
   alternates: { canonical: `${SITE_URL}/schedule` },
 };
 
-export default function SchedulePage() {
+export default async function SchedulePage() {
+  const batches = await getBatches();
+  const weekDays = buildWeekScheduleFromBatches(batches as any[]);
+
   return (
     <div className="bg-canvas text-ink min-h-screen">
       {/* 01: Hero Section */}
@@ -36,7 +41,7 @@ export default function SchedulePage() {
 
       {/* 02: Interactive Weekly Schedule Grid */}
       <section className="py-12 sm:py-24">
-        <WeekScheduleGrid />
+        <WeekScheduleGrid weekDays={weekDays} />
       </section>
 
       {/* 03: Bottom CTA */}

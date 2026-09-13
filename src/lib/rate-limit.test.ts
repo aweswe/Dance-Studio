@@ -9,6 +9,8 @@ describe('rateLimit', () => {
     vi.setSystemTime(new Date('2026-08-25T10:00:00Z'));
     delete process.env.UPSTASH_REDIS_REST_URL;
     delete process.env.UPSTASH_REDIS_REST_TOKEN;
+    delete process.env.SUPABASE_SERVICE_ROLE_KEY;
+    delete process.env.NEXT_PUBLIC_SUPABASE_URL;
   });
   afterEach(() => {
     vi.useRealTimers();

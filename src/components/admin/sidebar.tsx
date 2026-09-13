@@ -18,6 +18,7 @@ import {
   FileText,
   LogOut,
   Loader2,
+  Clapperboard,
 } from 'lucide-react'
 import { useState } from 'react'
 import { triggerActionLoader } from '@/components/shared/navigation-progress'
@@ -50,10 +51,11 @@ const navGroups = [
     label: 'Site',
     items: [
       { name: 'Gallery', href: '/admin/gallery', icon: ImageIcon },
+      { name: 'Reels', href: '/admin/reels', icon: Clapperboard },
       { name: 'Blog', href: '/admin/blog', icon: FileText },
       { name: 'Content', href: '/admin/content', icon: Settings },
       { name: 'Studio rental', href: '/admin/studio-rental', icon: Calendar },
-      { name: 'Annual day', href: '/admin/events', icon: Calendar },
+      { name: 'Events', href: '/admin/events', icon: Calendar },
     ],
   },
 ]

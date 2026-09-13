@@ -92,6 +92,21 @@ export async function createBatch(data: CreateBatchData) {
   if (error) return { success: false, error: error.message }
 
   revalidatePath('/programmes')
+  revalidatePath('/schedule')
+  revalidatePath('/')
+  return { success: true }
+}
+
+export async function updateBatchStatus(id: string, status: 'active' | 'paused' | 'full') {
+  const supabase = await createServerSupabase()
+  if (!(await isAdmin(supabase))) return { success: false, error: 'Not authorized' }
+
+  const { error } = await supabase.from('batches').update({ status }).eq('id', id)
+  if (error) return { success: false, error: error.message }
+
+  revalidatePath('/admin/classes')
+  revalidatePath('/programmes')
+  revalidatePath('/schedule')
   revalidatePath('/')
   return { success: true }
 }

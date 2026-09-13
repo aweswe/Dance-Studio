@@ -55,8 +55,18 @@ export function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href={ROUTES.syllabus} className="text-[#FAF6EE]/75 hover:text-[#7C5CFC] transition-colors">
+                  Syllabus
+                </Link>
+              </li>
+              <li>
                 <Link href={ROUTES.gallery} className="text-[#FAF6EE]/75 hover:text-[#7C5CFC] transition-colors">
                   Gallery
+                </Link>
+              </li>
+              <li>
+                <Link href={ROUTES.blog} className="text-[#FAF6EE]/75 hover:text-[#7C5CFC] transition-colors">
+                  Blog
                 </Link>
               </li>
             </ul>

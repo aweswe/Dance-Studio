@@ -5,12 +5,10 @@ import { ROUTES } from '@/lib/utils/constants';
 
 export function Hero() {
   return (
-    <section className="relative w-full px-3 sm:px-6 md:px-10 pt-4 sm:pt-6 pb-6 max-w-[1440px] mx-auto select-none">
-      {/* Main Rounded Hero Frame */}
-      <div className="relative w-full rounded-[28px] sm:rounded-[38px] md:rounded-[48px] border border-white/15 overflow-hidden min-h-[82vh] sm:min-h-[86vh] md:min-h-[90vh] flex flex-col justify-between p-6 sm:p-8 md:p-12 shadow-[0_25px_60px_rgba(0,0,0,0.5)] bg-[#07131F]">
-
-        {/* ── Background: Real Studio / Stage Photo ── */}
-        <div className="absolute inset-0 z-0">
+    <section className="relative w-full px-3 sm:px-6 md:px-10 pt-3 sm:pt-6 pb-6 max-w-[1440px] mx-auto">
+      <div className="relative overflow-hidden rounded-[28px] sm:rounded-[38px] md:rounded-[48px] border border-white/15 bg-[#07131F] md:min-h-[86vh] md:flex md:flex-col shadow-[0_25px_60px_rgba(0,0,0,0.5)] md:p-12">
+        {/* Photo is its own block on a phone so type never sits on top of it. */}
+        <div className="relative aspect-[4/5] sm:aspect-[5/4] md:absolute md:inset-0 md:aspect-auto">
           <Image
             src="/images/srilanka-tour/raasta-stage-3.jpg"
             alt="Rhythmzz performers on stage"
@@ -19,70 +17,46 @@ export function Hero() {
             sizes="(max-width: 1440px) 100vw, 1440px"
             className="object-cover object-top"
           />
-          {/* Top gradient — keeps nav readable */}
-          <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-black/60 via-black/20 to-transparent pointer-events-none" />
-          {/* Bottom gradient — keeps copy readable */}
-          <div className="absolute inset-x-0 bottom-0 h-[55%] bg-gradient-to-t from-black/85 via-black/50 to-transparent pointer-events-none" />
-        </div>
+          <div className="absolute inset-x-0 top-0 h-24 md:h-40 bg-gradient-to-b from-black/55 to-transparent pointer-events-none" />
+          <div className="absolute inset-x-0 bottom-0 h-1/4 md:h-[55%] bg-gradient-to-t from-[#07131F] md:from-black/85 to-transparent pointer-events-none" />
 
-        {/* ── Top Bar: Location ── */}
-        <div className="relative z-20 flex items-center">
-          <div className="flex items-center gap-1.5 text-[10px] font-mono tracking-[0.2em] uppercase text-white/65 bg-black/30 backdrop-blur-md px-3 py-1.5 rounded-md border border-white/10">
-            <MapPin size={10} className="shrink-0" />
-            Hyderabad &amp; Secunderabad
+          <div className="absolute top-4 left-4 md:top-12 md:left-12 z-20">
+            <div className="inline-flex items-center gap-1.5 text-[10px] font-mono tracking-[0.12em] uppercase text-white/80 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-md border border-white/10">
+              <MapPin size={10} className="shrink-0" />
+              Neredmet · Secunderabad
+            </div>
           </div>
         </div>
 
-        {/* ── Bottom: Headline + Sub + CTA ── */}
-        <div className="relative z-20 flex flex-col gap-5 max-w-2xl">
-          {/* Eyebrow */}
-          <p className="text-[10px] font-mono tracking-[0.25em] uppercase text-[#F5FB38]/80">
-            Rhythmzz Academy · Teaching since 2010
+        <div className="relative z-20 px-5 pt-6 pb-20 sm:px-8 sm:pb-10 md:px-0 md:pt-0 md:pb-0 md:mt-auto md:max-w-xl space-y-4">
+          <p className="text-[10px] font-mono tracking-[0.16em] uppercase text-[#F5FB38]/85">
+            Since 2010
           </p>
 
-          {/* Main headline */}
-          <h1 className="font-anton text-[13vw] sm:text-[9vw] md:text-[7.5vw] lg:text-[90px] leading-[0.88] text-white tracking-tight">
-            RHYTHMZZ<br />
-            <span className="text-[#F5FB38]">ACADEMY.</span>
+          <h1 className="font-anton text-[clamp(2.25rem,8vw,5.625rem)] leading-[1.1] text-white tracking-normal">
+            <span className="block">RHYTHMZZ</span>
+            <span className="block mt-1 text-[#F5FB38]">ACADEMY</span>
           </h1>
 
-          {/* Body copy — real info about the studio */}
-          <p className="text-sm sm:text-base text-white/75 leading-relaxed max-w-[480px] font-medium">
-            Rhythmzz Academy — Hyderabad&apos;s training ground for Hip-Hop,
-            Contemporary, Bollywood &amp; Classical Kuchipudi.
-            Batches for age 5 and above. Certificate &amp; Diploma programmes available.
+          <p className="text-sm sm:text-base text-white/75 leading-relaxed max-w-md">
+            Hip-hop, Bollywood, contemporary, Kuchipudi. First class is free.
           </p>
 
-          {/* CTAs */}
-          <div className="flex flex-wrap items-center gap-3 pt-1">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-1 max-w-xs sm:max-w-none pr-16 sm:pr-0">
             <Link
               href={ROUTES.enrol}
-              className="inline-flex items-center gap-2 bg-[#F5FB38] text-black text-xs font-black uppercase tracking-[0.2em] px-6 py-3.5 rounded-xl hover:bg-white transition-all active:scale-[0.97] shadow-lg shadow-[#F5FB38]/20"
+              className="inline-flex items-center justify-center bg-[#F5FB38] text-black text-xs font-black uppercase tracking-[0.16em] px-6 py-3.5 rounded-xl hover:bg-white transition-colors active:scale-[0.96]"
             >
               Enrol Now
             </Link>
             <Link
               href={ROUTES.schedule}
-              className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 text-white text-xs font-bold uppercase tracking-[0.15em] px-6 py-3.5 rounded-xl hover:bg-white/20 transition-all active:scale-[0.97]"
+              className="inline-flex items-center justify-center bg-white/10 border border-white/20 text-white text-xs font-bold uppercase tracking-[0.12em] px-6 py-3.5 rounded-xl hover:bg-white/20 transition-colors active:scale-[0.96]"
             >
-              This week&apos;s timetable
+              Timetable
             </Link>
           </div>
-
-          {/* Trust strip */}
-          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 pt-1">
-            {[
-              'Teaching since 2010',
-              'Kuchipudi · Hip-Hop · Contemporary',
-              'Ages 5 & Above',
-            ].map((item) => (
-              <span key={item} className="text-[10px] font-mono tracking-wider text-white/45 uppercase">
-                {item}
-              </span>
-            ))}
-          </div>
         </div>
-
       </div>
     </section>
   );

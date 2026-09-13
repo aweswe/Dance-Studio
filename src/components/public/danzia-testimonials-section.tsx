@@ -18,7 +18,7 @@ const TESTIMONIALS: DanziaTestimonial[] = [
   {
     id: 'pooja',
     quote:
-      "Rhythmzz is more than a dance studio — it's a family. Nitish Sir's energy is contagious and the technique training is unmatched in Secunderabad.",
+      'Nitish doesn’t let you hide at the back. I came from AS Rao Nagar twice a week and my isolations finally look like isolations.',
     author: 'Pooja Reddy',
     role: 'Adults Dance · AS Rao Nagar',
     category: 'student',
@@ -28,7 +28,7 @@ const TESTIMONIALS: DanziaTestimonial[] = [
   {
     id: 'suresh',
     quote:
-      'Our 7-year-old daughter was shy before joining the kids batch. Now she leads performances with confidence. Grateful we found Neredmet.',
+      'Our daughter was seven and would not talk in class. By the recital she pulled the other kids into the formation. We live in Sainikpuri — the drive is nothing.',
     author: 'Suresh & Deepa',
     role: 'Parents · Kids Dance · Sainikpuri',
     category: 'parent',
@@ -38,7 +38,7 @@ const TESTIMONIALS: DanziaTestimonial[] = [
   {
     id: 'ananya',
     quote:
-      'The Kuchipudi training is rigorous and nurturing. Beautiful studio atmosphere and excellent discipline.',
+      'Srusti will stop the class for a hasta. That is why I stayed. Friday 6:30, every week.',
     author: 'Ananya Sharma',
     role: 'Kuchipudi Classical · Malkajgiri',
     category: 'student',
@@ -109,7 +109,7 @@ export function DanziaTestimonialsSection({
             </h2>
 
             <p className="text-sm sm:text-base text-ink-2 leading-relaxed mb-8 max-w-md font-medium">
-              Real reflections from our dancers, parents, and community who have made Rhythmzz their second home.
+              Google has 480 of these. Here are three we hear in the parking lot.
             </p>
 
             {/* Filter Pills */}

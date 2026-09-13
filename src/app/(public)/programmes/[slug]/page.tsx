@@ -2,21 +2,11 @@ import { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { getProgrammes, getProgrammeBySlug } from '@/data/programmes';
+import { getProgrammeBySlug } from '@/data/programmes';
 import { getBatches } from '@/data/batches';
-import { CheckCircle2, Clock, Calendar, IndianRupee, MapPin } from 'lucide-react';
+import { Clock, Calendar, IndianRupee, MapPin } from 'lucide-react';
 import { formatTime } from '@/lib/utils/format';
-import { enrolHref, SITE_URL } from '@/lib/utils/constants';
-import { KuchipudiCurriculum } from '@/components/public/kuchipudi-curriculum';
-import { ClassicalCurriculumMatrix } from '@/components/public/classical-curriculum-matrix';
-import { LevelCertificationSection } from '@/components/public/level-certification-section';
-import {
-  KuchipudiRoadmap,
-  KuchipudiRepertoireFlow,
-  KuchipudiClassFlow,
-  KuchipudiFaqAccordion,
-} from '@/components/public/kuchipudi-interactive';
-
+import { enrolHref, SITE_URL, ROUTES } from '@/lib/utils/constants';
 import { KuchipudiShowcase } from '@/components/public/kuchipudi-showcase';
 
 interface Props {
@@ -31,7 +21,6 @@ export async function generateStaticParams() {
     { slug: 'kids-dance' },
     { slug: 'adults-dance' },
     { slug: 'kuchipudi' },
-    { slug: 'kathak' },
   ];
 }
 
@@ -63,19 +52,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 const PROGRAMME_NOTES: Record<string, string> = {
   'commercial-expressive':
-    'Commercial & Expressive Style at Rhythmzz runs Monday to Wednesday, 5 to 9 PM, divided into dedicated Kids (5–14 yrs) and Adults (15+ yrs) cohorts taught by Nitish, Pranith, Deepak, and Kajal — covering Bollywood, Hip Hop, Contemporary, Tollywood, and Gymnastics with annual recital stage performance opportunities.',
+    'Monday to Wednesday. Kids 5–14 from 5 to 7 with Deepak and Kajal. Adults 15+ from 7 to 9 with Nitish and Pranith. Bollywood, hip-hop, contemporary, Tollywood.',
   'mind-body-fitness':
-    'Mind & Body Fitness runs weekday mornings, 9:30 to 10:30 AM, with Shailaja — Zumba, Yoga, Pilates, HIIT, strength, Tabata, core and mobility on a rotating weekly schedule.',
+    'Shailaja, weekday mornings 9:30 to 10:30. Zumba, yoga, pilates, HIIT. Bring a bottle. The room is cold.',
   'classical-dance':
-    'Structured Level-Based Classical Dance Certification offers certified training in Kuchipudi, Kathak, Bharatnatyam, and Ballet, with active master syllabi for Kuchipudi (Guru Srushti) and Kathak (Guru Poonam). Prohibits casual drop-ins to guarantee rigorous progression toward Rangapravesham solo debuts.',
+    'Srusti takes Kuchipudi on Friday and Saturday, 6:30 to 7:30. Poonam teaches Kathak — see /syllabus/kathak for the level plan, or WhatsApp the desk for her batch.',
   'kids-dance':
-    'Kids Batch (Ages 5–14) under Commercial & Expressive Style — Bollywood, Hip Hop, Contemporary, and Gymnastics taught step by step.',
+    'Kids, 5 to 14, Monday to Wednesday 5 to 7. Bollywood, hip-hop, contemporary, and gymnastics when the room can take it.',
   'adults-dance':
-    'Adults Batch (Ages 15+) under Commercial & Expressive Style — Bollywood, Commercial Hip Hop, Contemporary, and Tollywood choreography.',
+    'Adults from 15, Monday to Wednesday 7 to 9. Same styles as the kids batch, faster music, longer phrases.',
   kuchipudi:
-    'Kuchipudi Classical is a level-based, certified programme taught by Srusti on Fridays and Saturdays, 6:30 to 7:30 PM — 10-Year Foundation through Advanced and 6-Year Accelerated Certificate tracks with formal public examination.',
+    'Kuchipudi with Srusti, Friday and Saturday 6:30 to 7:30. Ten-year foundation or six-year certificate. You sit the exam when she says you are ready.',
   kathak:
-    'Kathak Classical is a Lucknow Gharana certified programme taught by Poonam Nayak Jamwale — Tatkar footwork, Chakkars, Toda-Tukra, and Abhinaya leading to Gandharva Mahavidyalaya Visharad certification.',
+    'Kathak with Poonam. Five levels from foundation to masterclass — full syllabus at /syllabus/kathak. WhatsApp the desk for batch days and fees.',
 };
 
 const PROGRAMME_HERO_IMAGES: Record<string, { src: string; alt: string }> = {
@@ -105,7 +94,7 @@ const PROGRAMME_HERO_IMAGES: Record<string, { src: string; alt: string }> = {
   },
   kathak: {
     src: '/images/classical-certification-dancer.png',
-    alt: 'Kathak classical dance Lucknow Gharana posture',
+    alt: 'Classical class at Rhythmzz Academy',
   },
 };
 
@@ -163,7 +152,7 @@ export default async function ProgrammeDetailPage({ params }: Props) {
             <div className="lg:col-span-7 space-y-6">
               <div className="mb-2">
                 <span className="text-[10px] sm:text-xs font-mono tracking-[0.22em] text-[#7C5CFC] uppercase font-bold">
-                  {programme.age_group || 'All Ages'} · CERTIFIED BATCHES
+                  {programme.age_group || 'Open batch'}
                 </span>
               </div>
 
@@ -379,51 +368,24 @@ export default async function ProgrammeDetailPage({ params }: Props) {
 
       </section>
 
-      {/* Embedded Classical Certification Curriculum & Interactive Modules */}
-      {(slug === 'classical-dance' ||
-        slug === 'kuchipudi' ||
-        slug === 'classical-certification' ||
-        slug === 'kathak') && (
-        <div className="border-t border-line divide-y divide-line">
-          {/* Structured Level-Based Certification Overview */}
-          <LevelCertificationSection showExploreCurriculum={false} className="py-12 sm:py-16" />
-
-          {/* Master Curriculum Matrix (Kuchipudi & Kathak) */}
-          <section id="curriculum" className="py-16 sm:py-24 px-4 sm:px-6 md:px-16 max-w-7xl mx-auto">
-            <ClassicalCurriculumMatrix />
-          </section>
-
-          {/* Roadmap to Rangapravesham */}
-          <section className="py-16 sm:py-24 px-4 sm:px-6 md:px-16 max-w-7xl mx-auto">
-            <div className="text-center max-w-3xl mx-auto mb-12 space-y-3">
-              <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#7C5CFC] font-bold block">
-                The Classical Journey
-              </span>
-              <h2 className="font-anton tracking-wide uppercase text-3xl sm:text-4xl md:text-5xl text-ink">
-                ROADMAP TO RANGAPRAVESHAM
-              </h2>
-              <p className="text-xs sm:text-sm md:text-base text-ink-2 leading-relaxed">
-                From the first Aramandi stamp to the final bow accompanied by a full live Carnatic orchestra — explore the progressive milestones of classical mastery.
-              </p>
-            </div>
-            <KuchipudiRoadmap />
-          </section>
-
-          {/* Repertoire Flow */}
-          <section className="py-16 sm:py-24 px-4 sm:px-6 md:px-16 max-w-7xl mx-auto">
-            <KuchipudiRepertoireFlow />
-          </section>
-
-          {/* Class Ritual Flow */}
-          <section className="py-16 sm:py-24 px-4 sm:px-6 md:px-16 max-w-7xl mx-auto">
-            <KuchipudiClassFlow />
-          </section>
-
-          {/* FAQ Accordion */}
-          <section className="py-16 sm:py-24 px-4 sm:px-6 md:px-16 max-w-7xl mx-auto">
-            <KuchipudiFaqAccordion />
-          </section>
-        </div>
+      {(slug === 'classical-dance' || slug === 'classical-certification') && (
+        <section className="border-t border-line px-4 sm:px-8 md:px-16 py-16 max-w-3xl mx-auto">
+          <p className="text-[11px] font-mono uppercase tracking-[0.22em] text-ink-3 mb-3">
+            Syllabus adoption
+          </p>
+          <h2 className="font-anton text-3xl sm:text-4xl uppercase tracking-tight mb-3">
+            Kuchipudi, year by year
+          </h2>
+          <p className="text-sm text-ink-2 leading-relaxed mb-6 max-w-md">
+            Srusti. Friday and Saturday. The full list lives on the syllabus page — not here.
+          </p>
+          <Link
+            href={ROUTES.syllabusKuchipudi}
+            className="btn-sun inline-flex px-6 py-3 text-xs font-black uppercase tracking-[0.16em]"
+          >
+            Open syllabus
+          </Link>
+        </section>
       )}
     </div>
   );

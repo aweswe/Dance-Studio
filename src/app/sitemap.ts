@@ -11,12 +11,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${baseUrl}/programmes`, lastModified: buildDate, changeFrequency: "weekly", priority: 0.9 },
     { url: `${baseUrl}/about`, lastModified: buildDate, changeFrequency: "monthly", priority: 0.8 },
     { url: `${baseUrl}/gallery`, lastModified: buildDate, changeFrequency: "weekly", priority: 0.7 },
+    { url: `${baseUrl}/schedule`, lastModified: buildDate, changeFrequency: "weekly", priority: 0.8 },
+    { url: `${baseUrl}/blog`, lastModified: buildDate, changeFrequency: "weekly", priority: 0.6 },
     { url: `${baseUrl}/contact`, lastModified: buildDate, changeFrequency: "monthly", priority: 0.7 },
     { url: `${baseUrl}/enrol`, lastModified: buildDate, changeFrequency: "monthly", priority: 0.9 },
     { url: `${baseUrl}/studio-rental`, lastModified: buildDate, changeFrequency: "monthly", priority: 0.6 },
     { url: `${baseUrl}/events`, lastModified: buildDate, changeFrequency: "monthly", priority: 0.7 },
     { url: `${baseUrl}/events/annual-day`, lastModified: buildDate, changeFrequency: "monthly", priority: 0.7 },
-    { url: `${baseUrl}/blog`, lastModified: buildDate, changeFrequency: "weekly", priority: 0.6 },
+    { url: `${baseUrl}/syllabus`, lastModified: buildDate, changeFrequency: "monthly", priority: 0.8 },
+    { url: `${baseUrl}/syllabus/kuchipudi`, lastModified: buildDate, changeFrequency: "monthly", priority: 0.8 },
+    { url: `${baseUrl}/syllabus/kathak`, lastModified: buildDate, changeFrequency: "monthly", priority: 0.7 },
   ];
 
   const supabase = getPublicSupabase();
@@ -50,5 +54,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.5,
   }));
 
-  return [...staticPages, ...programmePages, ...blogPages];
+  const { data: events } = await supabase
+    .from("events")
+    .select("slug, starts_at")
+    .eq("is_published", true);
+
+  const eventPages: MetadataRoute.Sitemap = ((events ?? []) as any[]).map((e) => ({
+    url: `${baseUrl}/events/${e.slug}`,
+    lastModified: e.starts_at ? new Date(e.starts_at) : buildDate,
+    changeFrequency: "monthly" as const,
+    priority: 0.6,
+  }));
+
+  return [...staticPages, ...programmePages, ...blogPages, ...eventPages];
 }

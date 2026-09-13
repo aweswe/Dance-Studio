@@ -46,7 +46,7 @@ export function BentoHighlights() {
                 Hyderabad &amp; Secunderabad
               </span>
               <span className="text-[11px] font-mono uppercase tracking-widest text-[#000000]/70 font-bold">
-                Hip-Hop · Bollywood · Contemporary · Kuchipudi · Kathak
+                Hip-Hop · Bollywood · Contemporary · Kuchipudi
               </span>
             </div>
           </div>
@@ -107,7 +107,7 @@ export function BentoHighlights() {
               Contemporary &amp; Acrobatic Staging
             </h4>
             <p className="text-xs text-white/70 mt-1 leading-relaxed">
-              Precision partnering, weight-sharing, and high-elevation choreography.
+              Leaps, partner work, and the phrases we take to Raasta.
             </p>
           </div>
         </div>
@@ -116,13 +116,13 @@ export function BentoHighlights() {
         <div className="lg:col-span-2 rounded-[28px] sm:rounded-[36px] bg-[#F5FB38] text-[#000000] p-7 sm:p-9 flex flex-col sm:flex-row sm:items-center justify-between gap-6 relative overflow-hidden shadow-xl group transition-transform duration-300 hover:-translate-y-1">
           <div className="flex flex-col max-w-xl z-10">
             <span className="text-[11px] font-mono font-bold tracking-[0.2em] uppercase text-[#000000]/60 mb-2">
-              Certificate &amp; Diploma · All Ages
+              Kids · teens · adults
             </span>
             <h3 className="font-anton text-3xl sm:text-4xl md:text-5xl text-[#000000] uppercase tracking-tight leading-[0.95]">
-              STRUCTURED PROGRAMMES FOR EVERY LEVEL
+              PICK A BATCH.<br />SHOW UP.
             </h3>
             <span className="font-mono text-sm text-[#000000]/70 mt-3 tracking-wide">
-              Kids · Teens · Adults · Morning Batches
+              After school, after work, weekend Kuchipudi
             </span>
           </div>
           <Link
@@ -149,7 +149,7 @@ export function BentoHighlights() {
           </div>
           <div className="relative z-10">
             <h4 className="font-anton text-2xl sm:text-3xl text-[#000000] uppercase tracking-tight leading-[0.95] max-w-[220px]">
-              GOVERNMENT RECOGNIZED CERTIFICATE &amp; DIPLOMA
+              KUCHIPUDI EXAMS<br />&amp; IAO PAPERS
             </h4>
           </div>
           <div className="relative z-10 mt-auto">

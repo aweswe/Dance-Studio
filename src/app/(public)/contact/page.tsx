@@ -31,7 +31,7 @@ export default function ContactPage() {
             </h1>
 
             <p className="text-ink-2 text-base sm:text-lg md:text-xl leading-relaxed max-w-2xl mx-auto">
-              Have questions about batches, schedules, or our free trial sessions? Reach out directly via WhatsApp or send us an enquiry below.
+              WhatsApp +91 90529 80859. Or fill the form — we reply the same day if it isn’t a class hour.
             </p>
           </div>
         </div>

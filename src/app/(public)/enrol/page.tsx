@@ -69,9 +69,9 @@ export default async function EnrolPage({
                 )}
               </h1>
               <p className="text-ink-2 text-sm sm:text-base leading-relaxed">
-                {isPay
-                  ? 'Complete enrolment from the fee card you picked. Pay online when Razorpay is on, or finish on WhatsApp / UPI. Portal login uses this mobile number.'
-                  : 'Every dancer starts with one complimentary trial session at Neredmet X Road, Secunderabad. No upfront cost or commitment — we confirm the slot on WhatsApp.'}
+                  {isPay
+                  ? 'Pay the first month or quarter from here. If checkout is down, we finish on WhatsApp. Use this mobile number to log into the student portal.'
+                  : 'First class is free. No admission fee. We confirm the slot on WhatsApp after you send the form.'}
               </p>
             </div>
 

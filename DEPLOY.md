@@ -17,6 +17,7 @@ npm run build                                      # 4. build + live smoke on :3
 
 - Canonical migrations live in `supabase/migrations/0001…0016` (what `supabase db push` applies to a fresh project). Never apply `supabase/rhythmzz-supabase-backup/`.
 - After pulling this branch, apply `supabase/migrations/0016_admin_attendance.sql` to live so instructors cannot write attendance via RLS (the app already refuses non-admin marking).
+- Apply `supabase/migrations/0017_homepage_reels.sql` for admin-managed homepage reels (`/admin/reels`) and Supabase-backed rate limits.
 - `supabase/config.toml` is already linked to the production project id.
 - Apply only **idempotent** statements to live (`DROP … IF EXISTS` / `ON CONFLICT` / guards).
 - `supabase db query -f` cannot run multi-statement files — always use `scripts/apply-migration.js`.

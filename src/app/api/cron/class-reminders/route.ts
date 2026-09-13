@@ -26,13 +26,16 @@ export async function GET(request: Request) {
     .neq('status', 'paused');
 
   const todays = (batches || []).filter((b: any) => Array.isArray(b.days) && b.days.includes(weekday));
+  const { logPortalNotice } = await import('@/lib/notices/log-portal-notice');
   let queued = 0;
   for (const batch of todays) {
+    const b = batch as any;
     const { data: students } = await supabase
       .from('students')
       .select('name, phone')
-      .eq('batch_id', (batch as any).id)
+      .eq('batch_id', b.id)
       .eq('status', 'active');
+    let batchCount = 0;
     for (const s of students || []) {
       if (!(s as any).phone) continue;
       await sendWhatsAppTemplate({
@@ -40,11 +43,21 @@ export async function GET(request: Request) {
         templateName: WHATSAPP_TEMPLATES.classReminder.name,
         variables: WHATSAPP_TEMPLATES.classReminder.variables({
           studentName: (s as any).name,
-          programmeName: (batch as any).programme?.name || 'Rhythmzz',
-          time: `${formatTime((batch as any).time_start)} – ${formatTime((batch as any).time_end)}`,
+          programmeName: b.programme?.name || 'Rhythmzz',
+          time: `${formatTime(b.time_start)} – ${formatTime(b.time_end)}`,
         }),
       });
       queued++;
+      batchCount++;
+    }
+    if (batchCount > 0) {
+      await logPortalNotice(supabase, {
+        message: `Class tomorrow (${weekday}): ${b.programme?.name || 'Rhythmzz'} · ${formatTime(b.time_start)} – ${formatTime(b.time_end)}`,
+        templateName: WHATSAPP_TEMPLATES.classReminder.name,
+        scope: 'batch',
+        scopeId: b.id,
+        recipientCount: batchCount,
+      });
     }
   }
 

@@ -13,9 +13,11 @@ import { DanziaGallerySection } from '@/components/public/danzia-gallery-section
 import { DanziaTestimonialsSection } from '@/components/public/danzia-testimonials-section';
 import { DanziaCTASection } from '@/components/public/danzia-cta-section';
 import { ReelsStrip } from '@/components/public/reels-strip';
+import { getHomepageReels } from '@/data/reels';
 import { GoogleProofStrip } from '@/components/public/google-proof-strip';
 import { FAQAccordion } from '@/components/public/faq-accordion';
 import { StructuredData } from '@/components/shared/structured-data';
+import { Stats } from '@/components/public/stats';
 
 export const metadata: Metadata = {
   alternates: { canonical: SITE_URL },
@@ -25,12 +27,19 @@ export const revalidate = 3600;
 
 export default async function HomePage() {
   const { getFAQs, getTestimonials } = await import('@/data/content');
-  const [faqs, testimonials] = await Promise.all([getFAQs(), getTestimonials()]);
+  const { getStats } = await import('@/data/content');
+  const [faqs, testimonials, reels, stats] = await Promise.all([
+    getFAQs(),
+    getTestimonials(),
+    getHomepageReels(),
+    getStats(),
+  ]);
 
   return (
     <div className="relative bg-canvas text-ink font-body overflow-x-hidden min-h-screen transition-colors duration-300">
       <StructuredData />
       <Hero />
+      <Stats stats={stats} />
       <GoogleProofStrip />
       <CreativeFamilySection />
       <BentoHighlights />
@@ -46,7 +55,7 @@ export default async function HomePage() {
         <FAQAccordion faqs={Array.isArray(faqs) ? faqs : []} />
       </section>
       <DanziaCTASection />
-      <ReelsStrip />
+      <ReelsStrip reels={reels} />
     </div>
   );
 }

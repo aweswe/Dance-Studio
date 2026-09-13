@@ -36,7 +36,7 @@ export function JoinCTA() {
           </h2>
 
           <p className="max-w-2xl text-sm sm:text-base text-[#000000]/80 mt-6 mb-10 leading-relaxed font-medium">
-            Step onto our studio floors for a 60-minute free trial session. Experience the energy, meet our faculty, and discover which dance style unleashes your fullest creative potential.
+            One free class. Sixty minutes. Wear what you can move in. If it fits, you join the next week.
           </p>
 
           {/* 3 Guarantee Cards */}

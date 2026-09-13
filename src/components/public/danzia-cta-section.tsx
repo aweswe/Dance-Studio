@@ -12,14 +12,14 @@ export function DanziaCTASection() {
 
         <div className="relative z-10 max-w-4xl flex flex-col items-center">
           {/* Monumental Danzia Closing Headline */}
-          <h2 className="font-anton text-5xl sm:text-7xl md:text-8xl lg:text-9xl tracking-tight uppercase leading-[0.88] text-[#FAF6EE] mb-6 sm:mb-8">
+          <h2 className="font-anton text-4xl sm:text-7xl md:text-8xl lg:text-9xl tracking-tight uppercase leading-[1.08] sm:leading-[0.88] text-[#FAF6EE] mb-6 sm:mb-8">
             LET’S DANCE
             <br />
             <span className="text-[#F5FB38]">TOGETHER</span>
           </h2>
 
           <p className="max-w-xl text-base sm:text-lg md:text-xl text-[#FAF6EE]/80 leading-relaxed font-medium mb-10 sm:mb-12">
-            Have questions or want to schedule a trial class? We’d love to hear from you and welcome you into our creative family.
+            Message +91 90529 80859 with the dancer’s age and a time that works. We’ll put you in a trial.
           </p>
 
           {/* Minimalist Signature Bracket CTA */}

@@ -11,7 +11,7 @@ import { STUDIO_INFO } from '@/data/studio-info';
 export const metadata: Metadata = {
   title: 'Dance & Fitness Programmes | Rhythmzz Academy of Dance',
   description:
-    'Kids dance, adult dance, mind & body fitness and Kuchipudi classes at Neredmet X Road, Secunderabad. Certified training across Classical, Contemporary, Commercial, and Fitness styles.',
+    'Certified training across commercial, fitness, and Kuchipudi at Neredmet X Road. First class free.',
   alternates: { canonical: `${SITE_URL}/programmes` },
 };
 
@@ -46,8 +46,7 @@ export default async function ProgrammesPage() {
           COMMERCIAL<br />FITNESS<br />CLASSICAL
         </h1>
         <p className="text-ink-2 text-sm sm:text-base max-w-lg">
-          Fees from ₹2,000/month. No registration fee.
-          First class free — book a trial at Neredmet X Road, Secunderabad.
+          Fees from ₹2,000 a month. No registration fee. First class free — WhatsApp or use the form.
         </p>
       </section>
 

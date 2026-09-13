@@ -9,8 +9,8 @@ import { GsapProvider } from '@/components/motion/gsap-provider';
 // The banner fetch lives in its own suspending child: loading.tsx does not wrap
 // this layout, so awaiting getBanner() here would block the whole route shell.
 async function BannerFetcher() {
-  const bannerContent = await getBanner();
-  return <AnnouncementBanner content={bannerContent ?? undefined} />;
+  const banner = await getBanner();
+  return <AnnouncementBanner banner={banner} />;
 }
 
 export default function PublicLayout({ children }: { children: ReactNode }) {
