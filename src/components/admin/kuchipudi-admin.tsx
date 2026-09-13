@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { Card } from '@/components/ui/card'
 import { Select } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
-import { updateProgress } from '@/actions/kuchipudi'
+import { updateProgress, generateCertificate } from '@/actions/kuchipudi'
 import {
   KUCHIPUDI_LEVELS,
   KUCHIPUDI_LEVEL_LABELS,
@@ -49,8 +49,9 @@ export function KuchipudiAdmin({
 
   return (
     <Card className="p-6">
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-4 gap-3 flex-wrap">
         <h3 className="font-display text-xl text-ink">Kuchipudi Progress</h3>
+        <div className="flex gap-2">
         <Button
           onClick={save}
           disabled={busy}
@@ -59,6 +60,24 @@ export function KuchipudiAdmin({
         >
           {busy ? 'Saving…' : 'Save Progress'}
         </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          disabled={busy}
+          onClick={async () => {
+            setBusy(true)
+            const result = await generateCertificate(studentId, level)
+            setFeedback(
+              result.success
+                ? { ok: true, text: `PDF certificate ready${result.pdfUrl ? `: ${result.pdfUrl}` : ''}` }
+                : { ok: false, text: result.error || 'Could not generate certificate' },
+            )
+            setBusy(false)
+          }}
+        >
+          PDF certificate
+        </Button>
+        </div>
       </div>
 
       <div className="mb-4 max-w-xs">

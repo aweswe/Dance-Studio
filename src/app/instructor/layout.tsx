@@ -1,5 +1,6 @@
 import { createServerSupabase } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import { getLinkedInstructor } from "@/lib/auth/instructor";
 import { PortalShell } from "@/components/portal/portal-shell";
 import { ROUTES } from "@/lib/utils/constants";
 import { GsapProvider } from "@/components/motion/gsap-provider";
@@ -18,11 +19,7 @@ export default async function InstructorLayout({
     redirect(ROUTES.adminLogin);
   }
 
-  const { data: instructorData } = await supabase
-    .from("instructors")
-    .select("id, name")
-    .or(`auth_id.eq.${user.id},email.ilike.${user.email || 'none'}`)
-    .maybeSingle();
+  const instructorData = await getLinkedInstructor(supabase, user);
 
   const { data: profile } = await supabase
     .from("users")

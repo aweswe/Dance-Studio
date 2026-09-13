@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input'
 import { Modal } from '@/components/ui/modal'
 import { Plus, Mail, Phone } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { createInstructor } from '@/actions/instructors'
+import { createInstructor, linkInstructorAuth } from '@/actions/instructors'
 
 export function InstructorManager({ initialInstructors }: { initialInstructors: any[] }) {
   const router = useRouter()
@@ -97,6 +97,12 @@ export function InstructorManager({ initialInstructors }: { initialInstructors: 
                   <Phone size={14} className="text-bl" /> {instructor.phone}
                 </div>
               )}
+              <p className="text-xs text-ink-2">
+                Portal login: {instructor.auth_id ? 'linked' : 'not linked'}
+              </p>
+              {!instructor.auth_id && (
+                <InstructorLinkForm instructorId={instructor.id} email={instructor.email || ''} />
+              )}
             </div>
           </Card>
         ))}
@@ -164,5 +170,38 @@ export function InstructorManager({ initialInstructors }: { initialInstructors: 
         </div>
       </Modal>
     </div>
+  )
+}
+
+function InstructorLinkForm({ instructorId, email }: { instructorId: string; email: string }) {
+  const router = useRouter()
+  const [value, setValue] = useState(email)
+  const [busy, setBusy] = useState(false)
+  const [text, setText] = useState<string | null>(null)
+
+  return (
+    <form
+      className="flex flex-col gap-2 pt-2"
+      onSubmit={async (e) => {
+        e.preventDefault()
+        setBusy(true)
+        const res = await linkInstructorAuth(instructorId, value)
+        setText(res.success ? 'Login linked — they can sign in with this email.' : res.error || 'Could not link')
+        setBusy(false)
+        if (res.success) router.refresh()
+      }}
+    >
+      <Input
+        type="email"
+        required
+        placeholder="Instructor email"
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+      />
+      <Button type="submit" size="sm" disabled={busy}>
+        {busy ? 'Linking…' : 'Link portal login'}
+      </Button>
+      {text && <p className="text-xs text-ink-2">{text}</p>}
+    </form>
   )
 }

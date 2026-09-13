@@ -2,7 +2,10 @@ import { createServerSupabase } from "@/lib/supabase/server";
 import { getCurrentStudent } from "@/lib/auth/student";
 import { redirect } from "next/navigation";
 import { ROUTES } from "@/lib/utils/constants";
-import { StudentClassesView } from "@/components/student/student-classes-view";
+import { StudentClassesView, type LiveProgramme } from "@/components/student/student-classes-view";
+import { isDue } from "@/lib/fees/ledger";
+import { getProgrammes } from "@/data/programmes";
+import { getBatches } from "@/data/batches";
 
 export const metadata = {
   title: "Dance Classes & Batches | Student Portal",
@@ -11,37 +14,39 @@ export const metadata = {
 
 export default async function StudentClassesPage() {
   const supabase = await createServerSupabase();
-  const { student, user } = await getCurrentStudent();
-
+  const { student } = await getCurrentStudent();
   if (!student) redirect(ROUTES.login);
 
-  // Check fee status
-  const { data: payments } = await supabase
-    .from("fee_payments")
-    .select("id, paid_at, amount")
-    .eq("student_id", student.id)
-    .order("paid_at", { ascending: false })
-    .limit(1);
+  const [{ data: progRows }, { data: batchRows }, { data: payments }] = await Promise.all([
+    supabase.from("programmes").select("id, name, slug, description, fees_monthly, is_active").eq("is_active", true).order("sort_order"),
+    supabase.from("batches").select("id, name, days, time_start, time_end, capacity, enrolled_count, status, programme_id"),
+    supabase.from("fee_payments").select("for_month, paid_at, status").eq("student_id", student.id),
+  ]);
 
-  const now = new Date();
-  const lastPaid = payments?.[0] ? new Date((payments[0] as any).paid_at) : null;
-  const feePaid =
-    !!lastPaid &&
-    lastPaid.getFullYear() === now.getFullYear() &&
-    lastPaid.getMonth() === now.getMonth();
+  let programmes: LiveProgramme[] = [];
+  if (progRows && progRows.length > 0) {
+    programmes = (progRows as any[]).map((p) => ({
+      ...p,
+      batches: ((batchRows || []) as any[]).filter((b) => b.programme_id === p.id),
+    }));
+  } else {
+    const [fallbackP, fallbackB] = await Promise.all([getProgrammes(), getBatches()]);
+    programmes = fallbackP.map((p) => ({
+      id: p.id,
+      name: p.name,
+      slug: p.slug,
+      description: p.description,
+      fees_monthly: p.fees_monthly,
+      batches: (fallbackB as any[]).filter((b) => b.programme_id === p.id || b.programme?.slug === p.slug),
+    }));
+  }
+
+  const feePaid = !isDue((payments || []) as any[]);
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="font-display text-3xl md:text-4xl tracking-[2px] mb-2 text-ink">
-          Dance Classes & Batches
-        </h1>
-        <p className="text-sm text-ink-2">
-          Explore all academy dance disciplines, join a batch, or pay monthly fees online.
-        </p>
-      </div>
-
-      <StudentClassesView currentStudent={student} feePaid={feePaid} />
+      <p className="text-sm text-ink-2">Live timetable. Pay to join, or waitlist when a batch is full.</p>
+      <StudentClassesView currentStudent={student} feePaid={feePaid} programmes={programmes} />
     </div>
   );
 }

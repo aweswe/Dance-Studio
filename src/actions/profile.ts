@@ -2,15 +2,57 @@
 import { createServerSupabase, createAdminSupabase } from '@/lib/supabase/server';
 import { profileSchema, type ProfileData } from '@/lib/validators/profile';
 import { normalizeIndianPhone } from '@/lib/utils/format';
+import { cookies } from 'next/headers';
 import { revalidatePath } from 'next/cache';
+import { ACTIVE_STUDENT_COOKIE } from '@/lib/auth/student';
+import { isDue } from '@/lib/fees/ledger';
 
-/**
- * Student self-service profile update.
- * The student session has no UPDATE rights on `students`, so the row write
- * goes through the service role — gated by the caller owning the row via
- * auth_id. Phone changes also update the Supabase Auth user so future
- * OTP logins work on the new number.
- */
+export async function switchActiveStudent(studentId: string) {
+  const { getCurrentStudent } = await import('@/lib/auth/student');
+  const { siblings, user } = await getCurrentStudent();
+  if (!user) return { success: false, error: 'Not signed in' };
+  if (!siblings.some((s: any) => s.id === studentId)) {
+    return { success: false, error: 'That student is not on this account' };
+  }
+  const store = await cookies();
+  store.set(ACTIVE_STUDENT_COOKIE, studentId, {
+    path: '/',
+    httpOnly: true,
+    sameSite: 'lax',
+    maxAge: 60 * 60 * 24 * 365,
+  });
+  revalidatePath('/student');
+  return { success: true };
+}
+
+export async function uploadProfilePhoto(formData: FormData) {
+  const { getCurrentStudent } = await import('@/lib/auth/student');
+  const { student, user } = await getCurrentStudent();
+  if (!student?.id || !user) return { success: false, error: 'Not signed in' };
+
+  const file = formData.get('file') as File | null;
+  if (!file) return { success: false, error: 'Choose a photo' };
+  if (!file.type.startsWith('image/')) return { success: false, error: 'Only images are allowed' };
+  if (file.size > 2 * 1024 * 1024) return { success: false, error: 'Photo must be 2 MB or smaller' };
+
+  const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg';
+  const path = `avatars/${student.id}.${ext}`;
+  const admin = createAdminSupabase();
+  const buffer = Buffer.from(await file.arrayBuffer());
+  const { error: uploadErr } = await admin.storage.from('gallery').upload(path, buffer, {
+    contentType: file.type,
+    upsert: true,
+  });
+  if (uploadErr) return { success: false, error: uploadErr.message };
+
+  const { data: publicUrl } = admin.storage.from('gallery').getPublicUrl(path);
+  const url = `${publicUrl.publicUrl}?v=${Date.now()}`;
+  const { error } = await admin.from('students').update({ profile_photo_url: url }).eq('id', student.id);
+  if (error) return { success: false, error: error.message };
+  revalidatePath('/student/profile');
+  return { success: true, url };
+}
+
 export async function updateProfile(input: ProfileData) {
   const supabase = await createServerSupabase();
   const {
@@ -26,35 +68,14 @@ export async function updateProfile(input: ProfileData) {
   }
   const { name, phone, email } = parsed.data;
 
-  const { data: student } = await supabase
-    .from('students')
-    .select('id, phone')
-    .eq('auth_id', user.id)
-    .single();
-
+  const { getCurrentStudent } = await import('@/lib/auth/student');
+  const { student } = await getCurrentStudent();
   if (!student) {
     return { success: false, error: 'Student record not found' };
   }
 
   const admin = createAdminSupabase();
   const phoneChanged = student.phone !== phone;
-
-  // App-level duplicate check — students.phone lost its UNIQUE constraint
-  // when shared family phones became possible, so surface conflicts here.
-  if (phoneChanged) {
-    const digits = normalizeIndianPhone(phone);
-    const last10 = digits;
-    const { data: conflict } = await admin
-      .from('students')
-      .select('id')
-      .ilike('phone', `%${last10}`)
-      .neq('id', student.id)
-      .limit(1)
-      .maybeSingle();
-    if (conflict) {
-      return { success: false, error: 'A student with this phone number already exists' };
-    }
-  }
 
   const { error: updateError } = await admin
     .from('students')
@@ -66,7 +87,6 @@ export async function updateProfile(input: ProfileData) {
     return { success: false, error: 'Could not save your details — try again' };
   }
 
-  // Keep the auth user in sync so phone-based login keeps working.
   if (phoneChanged) {
     const { error: authError } = await admin.auth.admin.updateUserById(user.id, {
       phone: `+91${phone}`,
@@ -86,9 +106,8 @@ export async function updateProfile(input: ProfileData) {
 }
 
 /**
- * Completes student phone registration after Email / Google login.
- * Validates 10-digit Indian phone number, links/creates student record,
- * and sets user role to 'student'.
+ * Completes student phone registration after Email / Google / phone login.
+ * Creates a pending row (not active) until payment or staff confirm.
  */
 export async function completeStudentOnboarding(phone: string, name?: string) {
   const supabase = await createServerSupabase();
@@ -104,49 +123,49 @@ export async function completeStudentOnboarding(phone: string, name?: string) {
 
   const admin = createAdminSupabase();
 
-  // Ensure role is student in users table
   await (admin as any).from('users').upsert({
     id: user.id,
     role: 'student',
   });
 
-  // Check if student exists by auth_id or email
-  let { data: student } = await (admin as any)
+  const { data: byAuth } = await (admin as any)
     .from('students')
     .select('id, auth_id, name, phone, email')
-    .or(`auth_id.eq.${user.id},email.ilike.${user.email || 'none'}`)
-    .maybeSingle();
+    .eq('auth_id', user.id)
+    .limit(20);
 
-  const studentName = name || user.user_metadata?.full_name || user.user_metadata?.name || student?.name || 'Dance Student';
+  const studentName = name || user.user_metadata?.full_name || user.user_metadata?.name || 'Dance Student';
 
-  if (student) {
+  if (byAuth && byAuth.length > 0) {
     await (admin as any).from('students').update({
-      auth_id: user.id,
       phone: cleaned,
-      email: user.email || student.email || null,
+      email: user.email || byAuth[0].email || null,
       name: studentName,
-    }).eq('id', student.id);
+    }).eq('id', byAuth[0].id);
   } else {
-    // Also check if phone exists
-    const { data: phoneMatch } = await (admin as any)
+    const { data: phoneMatches } = await (admin as any)
       .from('students')
-      .select('id')
-      .eq('phone', cleaned)
-      .maybeSingle();
+      .select('id, auth_id')
+      .eq('phone', cleaned);
 
-    if (phoneMatch) {
+    const unlinked = (phoneMatches || []).find((r: any) => !r.auth_id);
+    if (unlinked) {
       await (admin as any).from('students').update({
         auth_id: user.id,
         email: user.email || null,
         name: studentName,
-      }).eq('id', phoneMatch.id);
+      }).eq('id', unlinked.id);
+    } else if (phoneMatches && phoneMatches.length > 0) {
+      await (admin as any).from('students').update({
+        auth_id: user.id,
+      }).eq('id', phoneMatches[0].id);
     } else {
       await (admin as any).from('students').insert({
         auth_id: user.id,
         name: studentName,
         phone: cleaned,
         email: user.email || null,
-        status: 'active',
+        status: 'pending',
       });
     }
   }
@@ -156,7 +175,8 @@ export async function completeStudentOnboarding(phone: string, name?: string) {
 }
 
 /**
- * Allows an authenticated student to select their dance batch & programme.
+ * Switch batch only when the current month is paid (or the student is already
+ * on a batch for the same programme). Capacity is enforced by the DB trigger.
  */
 export async function assignStudentBatch(batchId: string) {
   const { getCurrentStudent } = await import('@/lib/auth/student');
@@ -167,10 +187,9 @@ export async function assignStudentBatch(batchId: string) {
 
   const admin = createAdminSupabase();
 
-  // Find batch and associated programme
   const { data: batch, error: batchErr } = await (admin as any)
     .from('batches')
-    .select('id, programme_id')
+    .select('id, programme_id, status, capacity, enrolled_count')
     .eq('id', batchId)
     .single();
 
@@ -178,11 +197,26 @@ export async function assignStudentBatch(batchId: string) {
     return { success: false, error: 'Selected batch was not found.' };
   }
 
+  if (batch.status === 'full' || (batch.capacity > 0 && batch.enrolled_count >= batch.capacity)) {
+    return { success: false, error: 'This batch is full. Join the waitlist instead.' };
+  }
+
+  const { data: payments } = await admin
+    .from('fee_payments')
+    .select('for_month, paid_at, status')
+    .eq('student_id', student.id);
+
+  const sameProgramme = student.programme_id && student.programme_id === batch.programme_id;
+  if (!sameProgramme && isDue((payments || []) as any[])) {
+    return { success: false, error: 'Pay this month\'s fee before joining a new batch.' };
+  }
+
   const { error: updateErr } = await (admin as any)
     .from('students')
     .update({
       programme_id: batch.programme_id,
       batch_id: batch.id,
+      status: 'active',
     })
     .eq('id', student.id);
 
@@ -190,13 +224,9 @@ export async function assignStudentBatch(batchId: string) {
     return { success: false, error: updateErr.message };
   }
 
-  // Increment batch enrollment count
-  try {
-    await (admin as any).rpc('increment_batch_enrollment', { p_batch_id: batch.id });
-  } catch {}
-
   revalidatePath('/student');
   revalidatePath('/student/schedule');
   revalidatePath('/student/fees');
+  revalidatePath('/student/classes');
   return { success: true };
 }

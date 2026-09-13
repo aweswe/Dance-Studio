@@ -114,6 +114,20 @@ export const WHATSAPP_TEMPLATES = {
     }),
   },
 
+  /** Night-before class reminder */
+  classReminder: {
+    name: "class_reminder",
+    variables: (data: {
+      studentName: string;
+      programmeName: string;
+      time: string;
+    }) => ({
+      student_name: data.studentName,
+      programme_name: data.programmeName,
+      time: data.time,
+    }),
+  },
+
   /** Schedule change notification */
   scheduleChange: {
     name: "schedule_change",

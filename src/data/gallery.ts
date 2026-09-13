@@ -574,6 +574,7 @@ export const ALL_AUTHENTIC_GALLERY_IMAGES: GalleryItem[] = [
 export async function getGalleryImages(limit = 60) {
   try {
     const supabase = getPublicSupabase();
+    if (!supabase) throw new Error('no public client');
     const { data } = await supabase
       .from('gallery')
       .select('id, url, thumbnail_url, type, title, tags, is_visible, sort_order')

@@ -70,9 +70,9 @@ export function PayNowButton({ amount }: PayNowButtonProps) {
         onClick={pay}
         disabled={busy}
         isLoading={busy}
-        className="px-8 py-4 rounded"
+        className="min-h-11 px-5 rounded-xl"
       >
-        {busy ? 'Opening payment…' : 'Pay Now'}
+        {busy ? 'Opening payment…' : 'Pay now'}
       </Button>
       {error && (
         <div className="flex gap-2 items-start bg-danger/10 border border-danger/30 rounded-lg p-3 text-xs text-danger leading-relaxed">

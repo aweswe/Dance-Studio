@@ -64,11 +64,24 @@ export function WhoOwes({ students }: { students: WhoOwesStudent[] }) {
                         onClick={async () => {
                           setState((m) => ({ ...m, [s.id]: 'sending' }))
                           const res = await sendFeeReminder(s.id)
-                          setState((m) => ({ ...m, [s.id]: res.success ? 'sent' : 'failed' }))
+                          const next = res.mocked
+                            ? 'mocked'
+                            : res.success
+                              ? 'sent'
+                              : 'failed'
+                          setState((m) => ({ ...m, [s.id]: next }))
                         }}
                       >
                         <MessageCircle size={14} className="mr-1.5" />
-                        {state[s.id] === 'sending' ? 'Sending…' : state[s.id] === 'sent' ? '✓ Sent' : state[s.id] === 'failed' ? 'Retry' : 'Remind'}
+                        {state[s.id] === 'sending'
+                          ? 'Sending…'
+                          : state[s.id] === 'sent'
+                            ? '✓ Sent'
+                            : state[s.id] === 'mocked'
+                              ? 'Logged (not sent)'
+                              : state[s.id] === 'failed'
+                                ? 'Retry'
+                                : 'Remind'}
                       </Button>
                     </div>
                   </td>

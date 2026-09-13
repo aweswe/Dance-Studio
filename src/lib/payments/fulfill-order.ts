@@ -2,29 +2,27 @@ import { createAdminSupabase } from '@/lib/supabase/server';
 import { sendWhatsAppTemplate } from '@/lib/whatsapp/client';
 import { WHATSAPP_TEMPLATES } from '@/lib/whatsapp/templates';
 import { SITE_URL } from '@/lib/utils/constants';
+import { coverageMonths } from '@/lib/fees/ledger';
 
 export interface FulfillOrderParams {
   razorpayOrderId: string;
   paymentId?: string | null;
-  /** Full Razorpay event payload — stored on the order once processed. */
   webhookPayload?: unknown;
 }
 
 export interface FulfillOrderResult {
   fulfilled: boolean;
-  /** True when the order was already provisioned by an earlier call. */
   alreadyProcessed?: boolean;
   reason?: 'ORDER_NOT_FOUND';
 }
 
+function digitsPhone(value: string | null | undefined): string {
+  return (value || '').replace(/\D/g, '').slice(-10);
+}
+
 /**
- * Provision a student from a paid payment order: create the auth user +
- * student row (if missing), record the fee payment, increment the batch
- * counter and send the WhatsApp welcome.
- *
- * Idempotent via `payment_orders.status` — the first caller marks the order
- * `webhook_processed`, later calls (webhook after verify, or vice versa)
- * return `alreadyProcessed` without duplicating anything.
+ * Claim the order first (status → webhook_processed), then provision.
+ * Concurrent verify + webhook cannot double-insert fees.
  */
 export async function provisionStudentFromOrder(
   params: FulfillOrderParams,
@@ -32,98 +30,121 @@ export async function provisionStudentFromOrder(
   const { razorpayOrderId, paymentId = null, webhookPayload = null } = params;
   const supabase = createAdminSupabase();
 
-  const { data: orderData } = await supabase
+  const { data: claimed } = await (supabase as any)
     .from('payment_orders')
-    .select('*')
+    .update({
+      status: 'webhook_processed',
+      webhook_payload: webhookPayload,
+    })
     .eq('razorpay_order_id', razorpayOrderId)
-    .single();
+    .neq('status', 'webhook_processed')
+    .select('*')
+    .maybeSingle();
 
-  const order = orderData as any;
-  if (!order) return { fulfilled: false, reason: 'ORDER_NOT_FOUND' };
-  if (order.status === 'webhook_processed') return { fulfilled: true, alreadyProcessed: true };
-
-  // Check if student exists — portal flow links via student_id, enrol flow
-  // matches on phone + programme or email.
-  let student: any = null;
-  if (order.student_id) {
-    const { data } = await supabase.from('students').select('*').eq('id', order.student_id).single();
-    student = data as any;
-  } else {
-    const { data } = await supabase
-      .from('students')
-      .select('*')
-      .or(`phone.eq.${order.student_phone},email.ilike.${order.student_email || 'none'}`)
-      .order('created_at', { ascending: false })
-      .limit(1)
+  if (!claimed) {
+    const { data: existing } = await supabase
+      .from('payment_orders')
+      .select('status')
+      .eq('razorpay_order_id', razorpayOrderId)
       .maybeSingle();
-    student = data as any;
+    if ((existing as any)?.status === 'webhook_processed') {
+      return { fulfilled: true, alreadyProcessed: true };
+    }
+    return { fulfilled: false, reason: 'ORDER_NOT_FOUND' };
   }
 
-  // If student already exists, ensure programme and batch are updated from the order
+  const order = claimed as any;
+  const plan: 'monthly' | 'quarterly' = order.plan === 'quarterly' ? 'quarterly' : 'monthly';
+  const months = coverageMonths(plan);
+
+  let student: any = null;
+  if (order.student_id) {
+    const { data } = await supabase.from('students').select('*').eq('id', order.student_id).maybeSingle();
+    student = data;
+  } else {
+    const phone = digitsPhone(order.student_phone);
+    const orParts = [
+      order.programme_id && phone ? `and(phone.eq.${phone},programme_id.eq.${order.programme_id})` : null,
+      phone ? `phone.eq.${phone}` : null,
+      order.student_email ? `email.ilike.${order.student_email}` : null,
+    ].filter(Boolean);
+    if (orParts.length) {
+      const { data } = await supabase
+        .from('students')
+        .select('*')
+        .or(orParts.join(','))
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      student = data;
+    }
+  }
+
   if (student && (order.programme_id || order.batch_id)) {
     await (supabase as any).from('students').update({
       programme_id: order.programme_id || student.programme_id,
       batch_id: order.batch_id || student.batch_id,
+      status: 'active',
     }).eq('id', student.id);
-    if (order.batch_id && student.batch_id !== order.batch_id) {
-      await (supabase as any).rpc('increment_batch_enrollment', { p_batch_id: order.batch_id });
-    }
   }
 
   if (!student) {
-    // Create auth user if needed
     let authUserId: string | null = null;
+    const e164 = order.student_phone ? `+91${digitsPhone(order.student_phone)}` : undefined;
     try {
-      const { data: authUser } = await supabase.auth.admin.createUser({
-        phone: order.student_phone ? `+91${order.student_phone.replace(/\D/g, '')}` : undefined,
+      const { data: authUser, error } = await supabase.auth.admin.createUser({
+        phone: e164,
         email: order.student_email || undefined,
-        phone_confirm: true,
+        phone_confirm: Boolean(e164),
+        email_confirm: Boolean(order.student_email),
       });
-      authUserId = authUser?.user?.id ?? null;
+      if (!error) authUserId = authUser?.user?.id ?? null;
     } catch {
-      // User may already exist in Auth
+      // already registered — try lookup by phone
+    }
+
+    if (!authUserId && e164) {
+      const { data: existing } = await supabase.auth.admin.listUsers({ page: 1, perPage: 200 });
+      const found = existing?.users?.find((u) => u.phone === e164 || u.email === order.student_email);
+      authUserId = found?.id ?? null;
     }
 
     if (authUserId) {
-      await (supabase as any).from('users').upsert({
-        id: authUserId,
-        role: 'student',
-      });
+      await (supabase as any).from('users').upsert({ id: authUserId, role: 'student' });
     }
 
     const { data: newStudent } = await (supabase as any).from('students').insert({
       auth_id: authUserId,
       name: order.student_name || 'New Student',
-      phone: order.student_phone,
+      phone: digitsPhone(order.student_phone) || order.student_phone,
       email: order.student_email || null,
       programme_id: order.programme_id,
       batch_id: order.batch_id,
       status: 'active',
     }).select().single();
 
-    student = newStudent as any;
-
-    // Increment batch
-    if (order.batch_id) {
-      await (supabase as any).rpc('increment_batch_enrollment', { p_batch_id: order.batch_id });
-    }
+    student = newStudent;
   }
 
   if (student) {
-    await (supabase as any).from('fee_payments').insert({
-      student_id: student.id,
-      amount: order.amount,
-      source: 'razorpay',
-      razorpay_payment_id: paymentId,
-      payment_order_id: order.id,
-      // The ledger keys off for_month — this payment covers the current month.
-      for_month: new Date().toISOString().slice(0, 7) + '-01',
-    });
+    const perMonth = Math.round(Number(order.amount) / months.length);
+    for (const for_month of months) {
+      const { error: feeErr } = await (supabase as any).from('fee_payments').insert({
+        student_id: student.id,
+        amount: perMonth,
+        source: 'razorpay',
+        razorpay_payment_id: paymentId,
+        payment_order_id: order.id,
+        for_month,
+        status: 'confirmed',
+      });
+      if (feeErr && feeErr.code !== '23505') {
+        console.error('fee insert failed', feeErr);
+      }
+    }
 
-    // Look up programme name for WhatsApp
-    const { data: progData } = await supabase.from('programmes').select('name').eq('id', order.programme_id).single();
+    const { data: progData } = await supabase.from('programmes').select('name').eq('id', order.programme_id).maybeSingle();
     const progName = (progData as any)?.name || 'Dance Class';
-
     const waPhone = order.student_phone || student.phone;
     if (waPhone) {
       await sendWhatsAppTemplate({
@@ -135,13 +156,20 @@ export async function provisionStudentFromOrder(
           loginUrl: `${SITE_URL}/login`,
         }),
       });
+      if (paymentId) {
+        await sendWhatsAppTemplate({
+          phone: waPhone,
+          templateName: WHATSAPP_TEMPLATES.paymentReceipt.name,
+          variables: WHATSAPP_TEMPLATES.paymentReceipt.variables({
+            studentName: order.student_name || student.name || 'Student',
+            amount: String(order.amount),
+            date: new Date().toLocaleDateString('en-IN'),
+            transactionId: paymentId,
+          }),
+        });
+      }
     }
   }
-
-  await (supabase as any).from('payment_orders').update({
-    status: 'webhook_processed',
-    webhook_payload: webhookPayload,
-  }).eq('razorpay_order_id', razorpayOrderId);
 
   return { fulfilled: true };
 }

@@ -121,6 +121,48 @@ export type Database = {
           },
         ]
       }
+      batch_waitlist: {
+        Row: {
+          batch_id: string
+          created_at: string | null
+          id: string
+          name: string
+          phone: string
+          student_id: string | null
+        }
+        Insert: {
+          batch_id: string
+          created_at?: string | null
+          id?: string
+          name: string
+          phone: string
+          student_id?: string | null
+        }
+        Update: {
+          batch_id?: string
+          created_at?: string | null
+          id?: string
+          name?: string
+          phone?: string
+          student_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "batch_waitlist_batch_id_fkey"
+            columns: ["batch_id"]
+            isOneToOne: false
+            referencedRelation: "batches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "batch_waitlist_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       blog_posts: {
         Row: {
           author_id: string | null
@@ -181,6 +223,8 @@ export type Database = {
         Row: {
           id: string
           message: string
+          message_hi: string | null
+          message_te: string | null
           recipient_count: number | null
           recipients: Json | null
           sent_at: string | null
@@ -190,6 +234,8 @@ export type Database = {
         Insert: {
           id?: string
           message: string
+          message_hi?: string | null
+          message_te?: string | null
           recipient_count?: number | null
           recipients?: Json | null
           sent_at?: string | null
@@ -199,6 +245,8 @@ export type Database = {
         Update: {
           id?: string
           message?: string
+          message_hi?: string | null
+          message_te?: string | null
           recipient_count?: number | null
           recipients?: Json | null
           sent_at?: string | null
@@ -295,6 +343,74 @@ export type Database = {
         }
         Relationships: []
       }
+      event_rsvps: {
+        Row: {
+          created_at: string | null
+          event_id: string
+          guests: number | null
+          id: string
+          name: string
+          phone: string
+        }
+        Insert: {
+          created_at?: string | null
+          event_id: string
+          guests?: number | null
+          id?: string
+          name: string
+          phone: string
+        }
+        Update: {
+          created_at?: string | null
+          event_id?: string
+          guests?: number | null
+          id?: string
+          name?: string
+          phone?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_rsvps_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      events: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          is_published: boolean | null
+          slug: string
+          starts_at: string
+          title: string
+          venue: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_published?: boolean | null
+          slug: string
+          starts_at: string
+          title: string
+          venue?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_published?: boolean | null
+          slug?: string
+          starts_at?: string
+          title?: string
+          venue?: string | null
+        }
+        Relationships: []
+      }
       fee_payments: {
         Row: {
           amount: number
@@ -305,8 +421,10 @@ export type Database = {
           paid_at: string | null
           payment_order_id: string | null
           razorpay_payment_id: string | null
+          receipt_number: string | null
           receipt_url: string | null
           source: Database["public"]["Enums"]["payment_source"]
+          status: string | null
           student_id: string | null
         }
         Insert: {
@@ -318,8 +436,10 @@ export type Database = {
           paid_at?: string | null
           payment_order_id?: string | null
           razorpay_payment_id?: string | null
+          receipt_number?: string | null
           receipt_url?: string | null
           source: Database["public"]["Enums"]["payment_source"]
+          status?: string | null
           student_id?: string | null
         }
         Update: {
@@ -331,8 +451,10 @@ export type Database = {
           paid_at?: string | null
           payment_order_id?: string | null
           razorpay_payment_id?: string | null
+          receipt_number?: string | null
           receipt_url?: string | null
           source?: Database["public"]["Enums"]["payment_source"]
+          status?: string | null
           student_id?: string | null
         }
         Relationships: [
@@ -489,6 +611,83 @@ export type Database = {
           },
         ]
       }
+      leave_requests: {
+        Row: {
+          batch_id: string | null
+          created_at: string | null
+          date: string
+          id: string
+          kind: string
+          notes: string | null
+          status: string
+          student_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          batch_id?: string | null
+          created_at?: string | null
+          date: string
+          id?: string
+          kind?: string
+          notes?: string | null
+          status?: string
+          student_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          batch_id?: string | null
+          created_at?: string | null
+          date?: string
+          id?: string
+          kind?: string
+          notes?: string | null
+          status?: string
+          student_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "leave_requests_batch_id_fkey"
+            columns: ["batch_id"]
+            isOneToOne: false
+            referencedRelation: "batches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "leave_requests_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notice_reads: {
+        Row: {
+          log_id: string
+          read_at: string | null
+          user_id: string
+        }
+        Insert: {
+          log_id: string
+          read_at?: string | null
+          user_id: string
+        }
+        Update: {
+          log_id?: string
+          read_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notice_reads_log_id_fkey"
+            columns: ["log_id"]
+            isOneToOne: false
+            referencedRelation: "broadcast_logs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       payment_orders: {
         Row: {
           amount: number
@@ -496,6 +695,7 @@ export type Database = {
           created_at: string | null
           currency: string | null
           id: string
+          plan: string | null
           programme_id: string | null
           razorpay_order_id: string | null
           status: string | null
@@ -512,6 +712,7 @@ export type Database = {
           created_at?: string | null
           currency?: string | null
           id?: string
+          plan?: string | null
           programme_id?: string | null
           razorpay_order_id?: string | null
           status?: string | null
@@ -528,6 +729,7 @@ export type Database = {
           created_at?: string | null
           currency?: string | null
           id?: string
+          plan?: string | null
           programme_id?: string | null
           razorpay_order_id?: string | null
           status?: string | null

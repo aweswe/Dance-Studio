@@ -2,7 +2,6 @@ import { Suspense } from 'react'
 import { AnalyticsCards, type AnalyticsData } from '@/components/admin/analytics-cards'
 import { DashboardPanels } from '@/components/admin/dashboard-panels'
 import { createServerSupabase } from '@/lib/supabase/server'
-import { StatCardSkeleton } from '@/components/ui/skeleton'
 import { PageHeader } from '@/components/ui/page-header'
 
 const EMPTY_ANALYTICS: AnalyticsData = {
@@ -153,22 +152,24 @@ async function getPanelsData() {
 
 export default async function AdminDashboardPage() {
   const [initialData, panels] = await Promise.all([getAnalytics(), getPanelsData()])
+  const waiting =
+    panels.unmarkedToday.length + panels.pendingRentals.length + panels.newEnquiries.length
+  const deskLine =
+    waiting === 0
+      ? 'Nothing waiting at the desk.'
+      : [
+          panels.unmarkedToday.length ? `${panels.unmarkedToday.length} unmarked` : null,
+          panels.pendingRentals.length ? `${panels.pendingRentals.length} rentals` : null,
+          panels.newEnquiries.length ? `${panels.newEnquiries.length} enquiries` : null,
+        ]
+          .filter(Boolean)
+          .join(' · ')
 
   return (
     <div className="space-y-8">
-      <PageHeader
-        label="Overview"
-        title="Admin Dashboard"
-        description="Welcome back. Here is what is happening today."
-      />
+      <PageHeader label="Front desk" title="Today" description={deskLine} />
 
-      <Suspense fallback={
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <StatCardSkeleton key={i} />
-          ))}
-        </div>
-      }>
+      <Suspense fallback={<div className="h-[5.75rem] rounded-[20px] border border-line bg-surface-card shadow-lift animate-pulse" />}>
         <AnalyticsCards initialData={initialData} />
       </Suspense>
 

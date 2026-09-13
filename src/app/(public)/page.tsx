@@ -13,6 +13,8 @@ import { DanziaGallerySection } from '@/components/public/danzia-gallery-section
 import { DanziaTestimonialsSection } from '@/components/public/danzia-testimonials-section';
 import { DanziaCTASection } from '@/components/public/danzia-cta-section';
 import { ReelsStrip } from '@/components/public/reels-strip';
+import { GoogleProofStrip } from '@/components/public/google-proof-strip';
+import { FAQAccordion } from '@/components/public/faq-accordion';
 import { StructuredData } from '@/components/shared/structured-data';
 
 export const metadata: Metadata = {
@@ -21,42 +23,29 @@ export const metadata: Metadata = {
 
 export const revalidate = 3600;
 
-export default function HomePage() {
+export default async function HomePage() {
+  const { getFAQs, getTestimonials } = await import('@/data/content');
+  const [faqs, testimonials] = await Promise.all([getFAQs(), getTestimonials()]);
+
   return (
     <div className="relative bg-canvas text-ink font-body overflow-x-hidden min-h-screen transition-colors duration-300">
       <StructuredData />
-
-      {/* 01: HERO STAGE (Danzia 3D Layered Hero with Monumental Typography behind Dancer) */}
       <Hero />
-
-      {/* 02: CREATIVE FAMILY (More Than a Dance School, A Creative Family + Floating Polaroids) */}
+      <GoogleProofStrip />
       <CreativeFamilySection />
-
-      {/* 03: TOP SKILLS PRO BENTO (Modular 7-Block Acid-Lime & Velvet Obsidian Grid) */}
       <BentoHighlights />
-
-      {/* 04: CLASSES & PRICING (Compact price cards from Supabase programmes) */}
       <PricingSection />
-
-      {/* 05: CLASSES FOR ALL AGES AND LEVELS (Clean, Spacious Large-Format Cards) */}
       <DanziaClassesSection />
-
-      {/* 05: STRUCTURED LEVEL-BASED CERTIFICATION */}
       <LevelCertificationSection />
-
-      {/* 06: MEET OUR INSTRUCTORS (Airy High-Fashion Dancer Portraits) */}
       <DanziaInstructorsSection />
-
-      {/* 06: SNAPSHOTS OF MOVEMENT AND MAGIC (Cinematic Photo Mosaic of Stage Moments) */}
       <DanziaGallerySection />
-
-      {/* 07: WHAT OUR STUDENTS & PARENTS SAY (Large Editorial Magazine Pull-Quotes) */}
-      <DanziaTestimonialsSection />
-
-      {/* 08: LET'S DANCE TOGETHER (Monumental Minimalist Closing Call to Action) */}
+      <DanziaTestimonialsSection quotes={Array.isArray(testimonials) ? testimonials : []} />
+      <section className="px-4 sm:px-8 md:px-14 py-16 max-w-[1440px] mx-auto">
+        <p className="text-[11px] font-mono uppercase tracking-[0.22em] text-ink-3 mb-3">Questions parents ask</p>
+        <h2 className="font-anton text-4xl sm:text-5xl text-ink tracking-tight uppercase mb-8">FAQ</h2>
+        <FAQAccordion faqs={Array.isArray(faqs) ? faqs : []} />
+      </section>
       <DanziaCTASection />
-
-      {/* 09: STAGE REELS (Horizontal hover-reactive Instagram strip) */}
       <ReelsStrip />
     </div>
   );

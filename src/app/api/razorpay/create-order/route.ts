@@ -2,17 +2,24 @@ import { NextResponse } from 'next/server';
 import { getRazorpay } from '@/lib/razorpay/client';
 import { createServerSupabase, createAdminSupabase } from '@/lib/supabase/server';
 import { rateLimit, clientIp } from '@/lib/rate-limit';
+import {
+  applySiblingDiscount,
+  monthlyAmount,
+  quarterlyAmount,
+} from '@/lib/fees/ledger';
+import { ACADEMY } from '@/lib/utils/constants';
 
 export const dynamic = 'force-dynamic';
 
 export async function POST(req: Request) {
   try {
-    if (!rateLimit(`order:${clientIp(req.headers)}`, { limit: 15, windowMs: 60 * 1000 })) {
+    if (!(await rateLimit(`order:${clientIp(req.headers)}`, { limit: 15, windowMs: 60 * 1000 }))) {
       return NextResponse.json({ error: 'Too many requests. Please try again later.' }, { status: 429 });
     }
 
     const body = await req.json().catch(() => ({}));
     const { programmeId, batchId, name, phone, email } = body;
+    const plan: 'monthly' | 'quarterly' = body.plan === 'quarterly' ? 'quarterly' : 'monthly';
 
     const razorpay = getRazorpay();
     if (!razorpay) {
@@ -23,68 +30,52 @@ export async function POST(req: Request) {
     }
 
     const supabase = await createServerSupabase();
-
-    // Portal flow: a logged-in student pays their own month — everything is
-    // derived server-side so the client can't forge another student's order.
-    let studentId: string | null = null;
-    let resolved = { programmeId, batchId, name, phone, email };
-    let feeAmount = body.amount ? Number(body.amount) : 0;
-
     const { getCurrentStudent } = await import('@/lib/auth/student');
-    const { student } = await getCurrentStudent();
+    const { student, siblings } = await getCurrentStudent();
+
+    let studentId: string | null = student?.id ?? null;
+    let resolved = { programmeId, batchId, name, phone, email };
 
     if (student) {
-      studentId = student.id;
-      const targetProgId = programmeId || student.programme_id || student.programme?.id || null;
-      const targetBatchId = batchId || student.batch_id || student.batch?.id || null;
-
       resolved = {
-        programmeId: targetProgId,
-        batchId: targetBatchId,
+        programmeId: programmeId || student.programme_id || student.programme?.id || null,
+        batchId: batchId || student.batch_id || student.batch?.id || null,
         name: name || student.name,
         phone: phone || student.phone,
         email: email || student.email || null,
       };
-
-      if (!feeAmount) {
-        if (targetProgId) {
-          const { data: prog } = await supabase
-            .from('programmes')
-            .select('fees_monthly')
-            .eq('id', targetProgId)
-            .maybeSingle();
-          feeAmount = (prog as any)?.fees_monthly || student.programme?.fees_monthly || 2000;
-        } else {
-          feeAmount = student.programme?.fees_monthly || 2000;
-        }
-      }
     }
 
-    // Enrol flow: anonymous visitor books a programme from the form body.
-    if (studentId === null) {
-      if (!programmeId) {
-        return NextResponse.json({ error: 'Programme not found' }, { status: 404 });
-      }
-      const { data: programmeData, error: progError } = await supabase
-        .from('programmes')
-        .select('fees_monthly')
-        .eq('id', programmeId)
-        .single();
-
-      const programme = programmeData as any;
-      if (progError || !programme) {
-        return NextResponse.json({ error: 'Programme not found' }, { status: 404 });
-      }
-      feeAmount = feeAmount || programme.fees_monthly || 2500;
+    const targetProgId = resolved.programmeId;
+    if (!targetProgId) {
+      return NextResponse.json({ error: 'Programme not found' }, { status: 404 });
     }
+
+    const { data: programmeData, error: progError } = await supabase
+      .from('programmes')
+      .select('id, fees_monthly, fees_quarterly')
+      .eq('id', targetProgId)
+      .maybeSingle();
+
+    const programme = programmeData as any;
+    if (progError || !programme) {
+      return NextResponse.json({ error: 'Programme not found' }, { status: 404 });
+    }
+
+    let feeAmount =
+      plan === 'quarterly'
+        ? quarterlyAmount(programme.fees_quarterly, programme.fees_monthly)
+        : monthlyAmount(programme.fees_monthly);
+
+    const siblingCount = Math.max(siblings?.length ?? 0, student ? 1 : 0);
+    feeAmount = applySiblingDiscount(feeAmount, siblingCount, ACADEMY.siblingDiscountPercent);
 
     const order = await razorpay.orders.create({
-      amount: feeAmount * 100, // in paise
+      amount: feeAmount * 100,
       currency: 'INR',
       receipt: `receipt_${Date.now()}`,
     });
 
-    // Store in payment_orders using admin service client
     const adminSupabase = createAdminSupabase();
     const { error: insertError } = await (adminSupabase as any)
       .from('payment_orders')
@@ -92,6 +83,7 @@ export async function POST(req: Request) {
         razorpay_order_id: order.id,
         amount: feeAmount,
         status: 'created',
+        plan,
         student_id: studentId,
         student_phone: resolved.phone,
         student_name: resolved.name,
@@ -105,7 +97,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Failed to create order record' }, { status: 500 });
     }
 
-    return NextResponse.json({ order_id: order.id, amount: feeAmount });
+    return NextResponse.json({ order_id: order.id, amount: feeAmount, plan });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });

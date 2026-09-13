@@ -33,8 +33,8 @@ export function KuchipudiProgress({ progress }: { progress: ProgressData | null 
   return (
     <div className="space-y-8">
       <Card>
-        <p className="text-sm text-ink-2 mb-1 uppercase tracking-widest font-semibold">Current Level</p>
-        <h2 className="font-display text-4xl text-purp">
+        <p className="text-[11px] text-ink-3 mb-1">Level</p>
+        <h2 className="font-anton text-3xl text-ink tracking-tight">
           {KUCHIPUDI_LEVEL_LABELS[(KUCHIPUDI_LEVELS[currentIdx] as KuchipudiLevel)]}
         </h2>
 
@@ -45,7 +45,7 @@ export function KuchipudiProgress({ progress }: { progress: ProgressData | null 
               const isCompleted = idx < currentIdx;
               const isCurrent = idx === currentIdx;
               return (
-                <div key={level} className="flex flex-col items-center gap-2 bg-surface px-2">
+                <div key={level} className="flex flex-col items-center gap-2 bg-surface-card px-2">
                   <div className={`w-6 h-6 rounded-full flex items-center justify-center z-10 ${
                     isCompleted ? "bg-purp text-white" : isCurrent ? "border-4 border-purp bg-surface" : "bg-canvas-muted-2"
                   }`}>

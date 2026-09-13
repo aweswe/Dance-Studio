@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { Award, ArrowUpRight, Instagram } from 'lucide-react';
+import { Award, ArrowUpRight } from 'lucide-react';
 import { ROUTES } from '@/lib/utils/constants';
 
 interface CoachItem {

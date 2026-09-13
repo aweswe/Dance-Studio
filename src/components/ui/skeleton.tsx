@@ -53,17 +53,17 @@ export function StatSkeleton() {
 /** Skeleton for programme cards */
 export function ProgrammeCardSkeleton() {
   return (
-    <div className="rounded-2xl bg-deep border border-white/[.08] p-10">
-      <Skeleton dark className="h-5 w-24 rounded-full mb-4" />
-      <Skeleton dark className="h-8 w-48 mb-2" />
-      <Skeleton dark className="h-3 w-32 mb-5" />
+    <div className="rounded-[20px] bg-surface-card border border-line shadow-lift p-10">
+      <Skeleton className="h-5 w-24 rounded-full mb-4" />
+      <Skeleton className="h-8 w-48 mb-2" />
+      <Skeleton className="h-3 w-32 mb-5" />
       <div className="space-y-2 mb-6">
         {[1, 2, 3, 4].map((i) => (
-          <Skeleton dark key={i} className="h-4 w-full" />
+          <Skeleton key={i} className="h-4 w-full" />
         ))}
       </div>
-      <Skeleton dark className="h-20 w-full rounded-lg mb-5" />
-      <Skeleton dark className="h-12 w-full" />
+      <Skeleton className="h-20 w-full rounded-lg mb-5" />
+      <Skeleton className="h-12 w-full" />
     </div>
   );
 }
@@ -156,7 +156,7 @@ export function CardSkeleton({ dark = false, className }: { dark?: boolean; clas
     <div
       className={cn(
         "rounded-card p-8 border",
-        dark ? "bg-deep border-white/[.08]" : "bg-surface border-line",
+        dark ? "bg-surface-raised border-line" : "bg-surface-card border-line shadow-lift",
         className,
       )}
     >

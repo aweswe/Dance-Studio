@@ -33,7 +33,9 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
         <GsapProvider>{children}</GsapProvider>
       </main>
       <Footer />
-      <WhatsappFloat />
+      <Suspense fallback={null}>
+        <WhatsappFloat />
+      </Suspense>
     </div>
   );
 }

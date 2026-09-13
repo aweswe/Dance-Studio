@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { ROUTES } from '@/lib/utils/constants';
+import { enrolHref, ROUTES } from '@/lib/utils/constants';
 import { formatCurrency } from '@/lib/utils/format';
 import { ArrowUpRight } from 'lucide-react';
 
@@ -78,10 +78,10 @@ export function ProgrammeCard({ programme, schedule }: ProgrammeCardProps) {
               Details
             </Link>
             <Link
-              href={`${ROUTES.enrol}?programme=${programme.slug}`}
+              href={enrolHref({ programme: programme.slug, intent: 'pay' })}
               className="btn-sun py-2.5 px-4 text-[11px] font-black uppercase tracking-[0.15em] flex items-center gap-1.5"
             >
-              Enrol <ArrowUpRight size={12} />
+              Enrol &amp; pay <ArrowUpRight size={12} />
             </Link>
           </div>
         </div>

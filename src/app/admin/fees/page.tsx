@@ -12,7 +12,7 @@ export default async function FeesPage() {
 
   const { data: payments } = await supabase
     .from('fee_payments')
-    .select('id, amount, source, notes, paid_at, for_month, student:students(name)')
+    .select('id, amount, source, notes, paid_at, for_month, status, receipt_number, student:students(name)')
     .order('paid_at', { ascending: false })
     .limit(100)
 
@@ -25,7 +25,7 @@ export default async function FeesPage() {
   const now = new Date()
   const ledgerPayments = await supabase
     .from('fee_payments')
-    .select('student_id, for_month, paid_at')
+    .select('student_id, for_month, paid_at, status')
 
   const paymentsByStudent = new Map<string, { for_month: string | null; paid_at: string }[]>()
   for (const p of (ledgerPayments.data ?? []) as any[]) {

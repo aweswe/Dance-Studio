@@ -27,6 +27,11 @@ export function KuchipudiCurriculum() {
 
   const currentPlan =
     activeTrack === '10-year' ? KUCHIPUDI_10_YEAR_PLAN : KUCHIPUDI_6_YEAR_PLAN;
+  const currentTrackInfo = {
+    title: currentPlan.title,
+    description: currentPlan.summary,
+    pacing: 'targetAudience' in currentPlan ? currentPlan.targetAudience : 'Fast-track',
+  };
 
   const toggleYear = (year: number) => {
     setExpandedYear((prev) => (prev === year ? null : year));

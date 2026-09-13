@@ -26,8 +26,8 @@ export default async function StudentDetailPage({ params }: { params: Promise<{ 
   if (!studentData) notFound()
   const student = studentData as any
 
-  // Kuchipudi students get inline module marking (instructor marking deferred —
-  // no instructor auth accounts exist yet).
+  // Kuchipudi students get inline module marking. Instructors mark the same
+  // progress from their roster for students in their own batches.
   const isKuchipudi = (student.programme as any)?.slug === 'kuchipudi'
   let kuchipudiProgress = null
   if (isKuchipudi) {

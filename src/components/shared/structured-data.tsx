@@ -51,7 +51,7 @@ export async function StructuredData() {
     image: `${SITE}/og-image.jpg`,
     description:
       'Rhythmzz Academy of Dance is a dance and fitness studio at Neredmet X Road, Secunderabad — teaching since 2010 with 5,000+ students trained. Programmes: Kids Dance, Adults Dance, Mind and Body Fitness and Kuchipudi Classical, plus studio rental.',
-    foundingDate: '2013',
+    foundingDate: '2010',
     address: {
       '@type': 'PostalAddress',
       streetAddress: 'Plot 597, 3rd Floor, Above ICICI ATM, Neredmet X Road Bus Stop',

@@ -22,3 +22,22 @@ export async function isAdmin(
     .single();
   return profile?.role === "admin";
 }
+
+export async function getUserRole(
+  supabase: SupabaseClient<Database>
+): Promise<"admin" | "instructor" | "student" | null> {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return null;
+
+  const { data: profile } = await supabase
+    .from("users")
+    .select("role")
+    .eq("id", user.id)
+    .maybeSingle();
+
+  const role = profile?.role;
+  if (role === "admin" || role === "instructor" || role === "student") return role;
+  return null;
+}

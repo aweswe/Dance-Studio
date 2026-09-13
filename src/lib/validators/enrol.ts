@@ -2,10 +2,20 @@ import { z } from "zod";
 import { indianPhoneSchema } from "./phone";
 
 export const enrolFormSchema = z.object({
-  name: z
+  childName: z
     .string()
-    .min(2, "Name must be at least 2 characters")
+    .min(2, "Student name must be at least 2 characters")
     .max(100, "Name is too long"),
+  parentName: z
+    .string()
+    .max(100, "Name is too long")
+    .optional()
+    .or(z.literal("")),
+  age: z
+    .string()
+    .max(10)
+    .optional()
+    .or(z.literal("")),
   phone: indianPhoneSchema,
   email: z
     .string()

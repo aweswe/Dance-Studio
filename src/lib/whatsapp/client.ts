@@ -9,36 +9,48 @@ interface SendTemplateParams {
   variables: Record<string, string>;
 }
 
-interface SendResult {
+export interface SendResult {
   success: boolean;
+  mocked?: boolean;
   error?: string;
+}
+
+export function isWhatsAppConfigured(): boolean {
+  return Boolean(process.env.WHATSAPP_API_KEY);
 }
 
 /**
  * Send a WhatsApp template message to a phone number.
+ * When no API key is set, returns mocked: true and success: false so
+ * callers cannot pretend the parent was messaged.
  */
 export async function sendWhatsAppTemplate(
   params: SendTemplateParams,
 ): Promise<SendResult> {
   const provider = process.env.WHATSAPP_PROVIDER || "interakt";
 
-  // No API key configured → mock mode: log and report success so callers
-  // (queue drain, enrolment welcome, fee reminders) behave end-to-end.
   if (!process.env.WHATSAPP_API_KEY) {
     console.log("[WhatsApp Mock]", provider, params.templateName, params.phone);
-    return { success: true };
+    return {
+      success: false,
+      mocked: true,
+      error: "TEST MODE: WhatsApp is not configured — message logged, not sent",
+    };
   }
 
   try {
     if (provider === "interakt") {
       return await sendViaInterakt(params);
-    } else if (provider === "wati") {
-      return await sendViaWati(params);
-    } else {
-      console.warn(`Unknown WhatsApp provider: ${provider}. Logging message.`);
-      console.log("[WhatsApp Mock]", params);
-      return { success: true };
     }
+    if (provider === "wati") {
+      return await sendViaWati(params);
+    }
+    console.warn(`Unknown WhatsApp provider: ${provider}. Logging message.`);
+    return {
+      success: false,
+      mocked: true,
+      error: `Unknown WhatsApp provider: ${provider}`,
+    };
   } catch (error) {
     console.error("[WhatsApp Error]", error);
     return {
@@ -51,68 +63,77 @@ export async function sendWhatsAppTemplate(
 async function sendViaInterakt(params: SendTemplateParams): Promise<SendResult> {
   const apiKey = process.env.WHATSAPP_API_KEY!;
   const apiUrl = process.env.WHATSAPP_API_URL || "https://api.interakt.ai/v1/public/message/";
-
-  // Normalize phone: remove +, ensure 91 prefix
   const phone = params.phone.replace(/\D/g, "").replace(/^(\+?91)?/, "91");
-
   const bodyValues = Object.values(params.variables);
 
-  const response = await fetch(apiUrl, {
-    method: "POST",
-    headers: {
-      Authorization: `Basic ${Buffer.from(apiKey + ":").toString("base64")}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      phoneNumber: phone,
-      type: "template",
-      template: {
-        name: params.templateName,
-        languageCode: "en",
-        bodyValues,
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 12_000);
+
+  try {
+    const response = await fetch(apiUrl, {
+      method: "POST",
+      headers: {
+        Authorization: `Basic ${Buffer.from(apiKey + ":").toString("base64")}`,
+        "Content-Type": "application/json",
       },
-    }),
-  });
+      body: JSON.stringify({
+        phoneNumber: phone,
+        type: "template",
+        template: {
+          name: params.templateName,
+          languageCode: "en",
+          bodyValues,
+        },
+      }),
+      signal: controller.signal,
+    });
 
-  if (!response.ok) {
-    const text = await response.text();
-    return { success: false, error: `Interakt API error: ${response.status} ${text}` };
+    if (!response.ok) {
+      const text = await response.text();
+      return { success: false, error: `Interakt API error: ${response.status} ${text}` };
+    }
+    return { success: true };
+  } finally {
+    clearTimeout(timer);
   }
-
-  return { success: true };
 }
 
 async function sendViaWati(params: SendTemplateParams): Promise<SendResult> {
   const apiKey = process.env.WHATSAPP_API_KEY!;
   const apiUrl = process.env.WHATSAPP_API_URL!;
-
   const phone = params.phone.replace(/\D/g, "").replace(/^(\+?91)?/, "91");
-
   const watiParams = Object.entries(params.variables).map(([name, value]) => ({
     name,
     value,
   }));
 
-  const response = await fetch(
-    `${apiUrl}/api/v2/sendTemplateMessage?whatsappNumber=${phone}`,
-    {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 12_000);
+
+  try {
+    const response = await fetch(
+      `${apiUrl}/api/v2/sendTemplateMessage?whatsappNumber=${phone}`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          template_name: params.templateName,
+          broadcast_name: `auto_${Date.now()}`,
+          parameters: watiParams,
+        }),
+        signal: controller.signal,
       },
-      body: JSON.stringify({
-        template_name: params.templateName,
-        broadcast_name: `auto_${Date.now()}`,
-        parameters: watiParams,
-      }),
-    },
-  );
+    );
 
-  if (!response.ok) {
-    const text = await response.text();
-    return { success: false, error: `WATI API error: ${response.status} ${text}` };
+    if (!response.ok) {
+      const text = await response.text();
+      return { success: false, error: `WATI API error: ${response.status} ${text}` };
+    }
+    return { success: true };
+  } finally {
+    clearTimeout(timer);
   }
-
-  return { success: true };
 }

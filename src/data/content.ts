@@ -20,6 +20,7 @@ const DEFAULT_FAQS = [
 export async function getSiteContent(key: string) {
   try {
     const supabase = getPublicSupabase();
+    if (!supabase) throw new Error('no public client');
     const { data } = await supabase
       .from('site_content')
       .select('content_value')
@@ -33,6 +34,7 @@ export async function getSiteContent(key: string) {
 export async function getStats() {
   try {
     const supabase = getPublicSupabase();
+    if (!supabase) throw new Error('no public client');
     const { data } = await supabase
       .from('site_content')
       .select('content_key, content_value')
@@ -47,6 +49,7 @@ export async function getStats() {
 export async function getFAQs() {
   try {
     const supabase = getPublicSupabase();
+    if (!supabase) throw new Error('no public client');
     const { data } = await supabase
       .from('site_content')
       .select('content_value')
@@ -65,6 +68,7 @@ export async function getFAQs() {
 export async function getBanner(): Promise<string | null> {
   try {
     const supabase = getPublicSupabase();
+    if (!supabase) throw new Error('no public client');
     const { data } = await supabase
       .from('site_content')
       .select('content_value')
@@ -82,6 +86,7 @@ export async function getBanner(): Promise<string | null> {
 export async function getTestimonials() {
   try {
     const supabase = getPublicSupabase();
+    if (!supabase) throw new Error('no public client');
     const { data } = await supabase
       .from('site_content')
       .select('content_value')

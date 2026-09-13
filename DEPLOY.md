@@ -15,7 +15,8 @@ bash scripts/regen-types.sh "$DB_URL"              # 3. regenerate src/lib/supab
 npm run build                                      # 4. build + live smoke on :3010
 ```
 
-- Canonical migrations live in `supabase/migrations/0001…0009` (what `supabase db push` applies to a fresh project).
+- Canonical migrations live in `supabase/migrations/0001…0016` (what `supabase db push` applies to a fresh project). Never apply `supabase/rhythmzz-supabase-backup/`.
+- After pulling this branch, apply `supabase/migrations/0016_admin_attendance.sql` to live so instructors cannot write attendance via RLS (the app already refuses non-admin marking).
 - `supabase/config.toml` is already linked to the production project id.
 - Apply only **idempotent** statements to live (`DROP … IF EXISTS` / `ON CONFLICT` / guards).
 - `supabase db query -f` cannot run multi-statement files — always use `scripts/apply-migration.js`.
@@ -42,9 +43,11 @@ ON CONFLICT (id) DO UPDATE SET role = 'admin';
    | `RAZORPAY_KEY_ID` / `RAZORPAY_KEY_SECRET` | Phase 3 | Server-side order creation |
    | `RAZORPAY_WEBHOOK_SECRET` | Phase 3 | Webhook signature verification |
    | `WHATSAPP_API_URL` / `WHATSAPP_API_KEY` / `WHATSAPP_PROVIDER` | Phase 7 | WATI/Interakt; absent → mock mode |
+   | `NEXT_PUBLIC_UPI_ID` | optional | UPI VPA shown when Razorpay is off |
+   | `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` | optional | Durable rate limits |
    | `CRON_SECRET` | Phase 7 | Guards `/api/cron/*` (Vercel sends `Authorization: Bearer`) |
 
-3. **Crons** are already configured in `vercel.json` (broadcast `*/5 * * * *`, fee reminders `03:30 UTC`). The routes are stubs until Phase 7 — safe to deploy.
+3. **Crons** are already configured in `vercel.json` (broadcast `*/5 * * * *`, fee reminders `03:30 UTC`, class reminders `14:30 UTC`).
 4. **Custom domain**: Settings → Domains → add `rhythmzz.in` and `www.rhythmzz.in` (redirect to apex).
    - DNS at the registrar: apex `A 76.76.21.21`, `www CNAME cname.vercel-dns.com` (or use Vercel's nameservers).
    - After DNS resolves: HTTPS cert is issued automatically; enable "Force HTTPS".
@@ -55,8 +58,11 @@ ON CONFLICT (id) DO UPDATE SET role = 'admin';
 | Setting | Value |
 |---|---|
 | Site URL | `https://rhythmzz.in` |
-| Redirect URLs | `https://rhythmzz.in/api/auth/callback`, `https://rhythmzz.in/**` |
-| | (dev: `http://localhost:3000/**`) |
+| Redirect URLs | `https://rhythmzz.in/api/auth/callback` |
+| | `https://rhythmzz.in/**` |
+| | `http://localhost:3000/api/auth/callback` |
+| | `http://localhost:3000/**` |
+| | `http://127.0.0.1:3000/api/auth/callback` |
 
 Phone OTP sign-in is the primary login path — keep the SMS provider configured in Auth → Providers.
 

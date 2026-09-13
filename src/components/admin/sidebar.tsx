@@ -24,41 +24,41 @@ import { triggerActionLoader } from '@/components/shared/navigation-progress'
 
 const navGroups = [
   {
-    label: 'Overview',
+    label: 'Studio',
     items: [
-      { name: 'Dashboard', href: '/admin', icon: LayoutDashboard }
-    ]
+      { name: 'Today', href: '/admin', icon: LayoutDashboard },
+    ],
   },
   {
-    label: 'Management',
+    label: 'People',
     items: [
       { name: 'Students', href: '/admin/students', icon: Users },
       { name: 'Classes', href: '/admin/classes', icon: GraduationCap },
-      { name: 'Instructors', href: '/admin/instructors', icon: UserCircle }
-    ]
+      { name: 'Instructors', href: '/admin/instructors', icon: UserCircle },
+    ],
   },
   {
-    label: 'Operations',
+    label: 'Desk',
     items: [
       { name: 'Attendance', href: '/admin/attendance', icon: CalendarCheck },
       { name: 'Fees', href: '/admin/fees', icon: IndianRupee },
       { name: 'Broadcast', href: '/admin/broadcast', icon: MessageSquare },
-      { name: 'Enquiries', href: '/admin/enquiries', icon: Inbox }
-    ]
+      { name: 'Enquiries', href: '/admin/enquiries', icon: Inbox },
+    ],
   },
   {
-    label: 'Content',
+    label: 'Site',
     items: [
       { name: 'Gallery', href: '/admin/gallery', icon: ImageIcon },
       { name: 'Blog', href: '/admin/blog', icon: FileText },
-      { name: 'Website Controls', href: '/admin/content', icon: Settings },
-      { name: 'Studio Rental', href: '/admin/studio-rental', icon: Calendar }
-    ]
-  }
+      { name: 'Content', href: '/admin/content', icon: Settings },
+      { name: 'Studio rental', href: '/admin/studio-rental', icon: Calendar },
+      { name: 'Annual day', href: '/admin/events', icon: Calendar },
+    ],
+  },
 ]
 
 interface SidebarProps {
-  /** Drawer open state (mobile) — owned by AdminShell. */
   isOpen: boolean;
   onClose: () => void;
 }
@@ -70,7 +70,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const handleSignOut = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSigningOut(true)
-    triggerActionLoader("Logging out · Redirecting to Home...")
+    triggerActionLoader("Signing out")
     try {
       const { createClient } = await import("@/lib/supabase/client")
       const supabase = createClient()
@@ -85,24 +85,22 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 
   return (
     <>
-      {/* Sidebar */}
       <div className={cn(
-        "fixed inset-y-0 left-0 z-40 w-64 bg-surface border-r border-line transform transition-transform duration-250 ease-out-snap md:translate-x-0 md:static md:h-screen md:shrink-0 flex flex-col",
+        "fixed inset-y-0 left-0 z-40 w-[15.5rem] bg-canvas border-r border-line transform transition-transform duration-200 ease-[cubic-bezier(0.2,0,0,1)] md:translate-x-0 md:static md:h-dvh md:shrink-0 flex flex-col",
         isOpen ? "translate-x-0" : "-translate-x-full"
       )}>
-        <div className="p-6 shrink-0">
-          <Link href="/admin" className="font-display text-2xl text-ink tracking-widest block focus-visible:focus-ring rounded-sm">
-            RHYTHMZZ<span className="text-bl">.</span>
+        <div className="px-5 pt-5 pb-4 shrink-0">
+          <Link href="/admin" className="block focus-visible:focus-ring rounded-lg">
+            <p className="font-anton text-xl text-ink tracking-tight">Rhythmzz</p>
+            <p className="text-[11px] text-ink-3 mt-0.5">Front desk</p>
           </Link>
         </div>
 
-        <nav className="flex-1 overflow-y-auto px-4 pb-6 space-y-8">
+        <nav className="flex-1 overflow-y-auto px-3 pb-4 space-y-5">
           {navGroups.map((group) => (
             <div key={group.label}>
-              <h3 className="px-3 text-xs font-display tracking-[5px] text-ink-2 uppercase mb-3">
-                {group.label}
-              </h3>
-              <ul className="space-y-1">
+              <p className="px-3 mb-1 text-[11px] text-ink-3">{group.label}</p>
+              <ul className="space-y-0.5">
                 {group.items.map((item) => {
                   const isActive = pathname === item.href || (item.href !== '/admin' && pathname.startsWith(item.href))
                   return (
@@ -111,16 +109,13 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                         href={item.href}
                         onClick={onClose}
                         className={cn(
-                          "flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-body transition-colors relative focus-visible:focus-ring",
+                          "flex items-center gap-3 min-h-11 px-3 rounded-xl text-sm font-medium focus-visible:focus-ring",
                           isActive
-                            ? "text-bl-ink bg-bl-pale font-medium"
-                            : "text-ink hover:bg-canvas-muted"
+                            ? "bg-surface-card text-ink shadow-lift"
+                            : "text-ink-2 hover:bg-canvas-muted hover:text-ink"
                         )}
                       >
-                        {isActive && (
-                          <span className="absolute left-0 top-0 bottom-0 w-1 bg-bl rounded-r-full" aria-hidden />
-                        )}
-                        <item.icon size={18} className={isActive ? "text-bl" : "text-ink-2"} />
+                        <item.icon size={16} strokeWidth={isActive ? 2 : 1.5} className={isActive ? "text-bl" : "text-ink-3"} />
                         {item.name}
                       </Link>
                     </li>
@@ -131,32 +126,23 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
           ))}
         </nav>
 
-        <div className="p-4 border-t border-line shrink-0">
-          <form 
-            action="/auth/signout" 
-            method="post"
-            onSubmit={handleSignOut}
-          >
+        <div className="p-3 border-t border-line shrink-0">
+          <form action="/auth/signout" method="post" onSubmit={handleSignOut}>
             <button
               type="submit"
               disabled={isSigningOut}
-              className="flex w-full items-center gap-3 px-3 py-2 rounded-lg text-sm font-body text-ink-2 hover:bg-canvas-muted hover:text-ink transition-colors focus-visible:focus-ring disabled:opacity-50"
+              className="flex w-full items-center gap-3 min-h-11 px-3 rounded-xl text-sm text-ink-2 hover:bg-canvas-muted hover:text-ink focus-visible:focus-ring disabled:opacity-50"
             >
-              {isSigningOut ? (
-                <Loader2 size={18} className="animate-spin text-bl" />
-              ) : (
-                <LogOut size={18} />
-              )}
-              <span>{isSigningOut ? "Signing Out..." : "Sign Out"}</span>
+              {isSigningOut ? <Loader2 size={16} className="animate-spin" /> : <LogOut size={16} strokeWidth={1.5} />}
+              {isSigningOut ? "Signing out" : "Sign out"}
             </button>
           </form>
         </div>
       </div>
 
-      {/* Overlay */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-blk/50 z-30 md:hidden"
+          className="fixed inset-0 bg-black/50 z-30 md:hidden"
           onClick={onClose}
           aria-hidden
         />

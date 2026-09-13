@@ -36,6 +36,7 @@ export async function logOfflinePayment(
       source: parsed.data.source,
       notes: parsed.data.notes || null,
       for_month,
+      status: 'confirmed',
     })
     .select('id')
     .single();
@@ -82,7 +83,7 @@ export async function sendFeeReminder(studentId: string) {
   });
 
   revalidatePath('/admin/fees');
-  return { success: true, whatsapp };
+  return { success: true, mocked: Boolean(whatsapp.mocked), whatsapp };
 }
 
 export async function bulkSendFeeReminders(studentIds: string[]) {
@@ -93,8 +94,52 @@ export async function bulkSendFeeReminders(studentIds: string[]) {
   let failed = 0;
   for (const id of studentIds) {
     const res = await sendFeeReminder(id);
-    if (res.success) sent++;
+    if (res.success && !res.whatsapp?.mocked) sent++;
     else failed++;
   }
   return { success: true, sent, failed };
 }
+
+export async function reportUpiPayment(amount: number, forMonth?: string, notes?: string) {
+  const { getCurrentStudent } = await import('@/lib/auth/student');
+  const { student } = await getCurrentStudent();
+  if (!student?.id) return { success: false, error: 'Not signed in' };
+
+  const for_month = forMonth ? `${forMonth}-01` : new Date().toISOString().slice(0, 7) + '-01';
+  const admin = (await import('@/lib/supabase/server')).createAdminSupabase();
+  const { error } = await admin.from('fee_payments').insert({
+    student_id: student.id,
+    amount,
+    source: 'upi_offline',
+    notes: notes || 'Parent reported UPI payment — awaiting academy confirmation',
+    for_month,
+    status: 'pending',
+  } as any);
+  if (error) return { success: false, error: error.message };
+  revalidatePath('/student/fees');
+  revalidatePath('/admin/fees');
+  return { success: true };
+}
+
+export async function confirmPendingPayment(paymentId: string, approve: boolean) {
+  const supabase = await createServerSupabase();
+  if (!(await isAdmin(supabase))) return { success: false, error: 'Not authorized' };
+  const { data: updated, error } = await supabase
+    .from('fee_payments')
+    .update({ status: approve ? 'confirmed' : 'rejected' } as any)
+    .eq('id', paymentId)
+    .eq('status', 'pending' as any)
+    .select('id')
+    .maybeSingle();
+  if (error) return { success: false, error: error.message };
+  if (approve && updated) {
+    await supabase
+      .from('fee_payments')
+      .update({ receipt_url: `${SITE_URL}/receipt/${updated.id}` })
+      .eq('id', updated.id);
+  }
+  revalidatePath('/admin/fees');
+  revalidatePath('/student/fees');
+  return { success: true };
+}
+

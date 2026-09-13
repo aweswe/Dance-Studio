@@ -40,12 +40,12 @@ export function Footer() {
             </h4>
             <ul className="flex flex-col gap-2 list-none p-0 m-0 text-xs sm:text-sm font-bold uppercase tracking-wider">
               <li>
-                <Link href="#schedule" className="text-[#FAF6EE]/75 hover:text-[#7C5CFC] transition-colors">
+                <Link href={ROUTES.schedule} className="text-[#FAF6EE]/75 hover:text-[#7C5CFC] transition-colors">
                   Schedule
                 </Link>
               </li>
               <li>
-                <Link href="#coaches" className="text-[#FAF6EE]/75 hover:text-[#7C5CFC] transition-colors">
+                <Link href={ROUTES.about} className="text-[#FAF6EE]/75 hover:text-[#7C5CFC] transition-colors">
                   Coaches
                 </Link>
               </li>
@@ -55,8 +55,8 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="#videos" className="text-[#FAF6EE]/75 hover:text-[#7C5CFC] transition-colors">
-                  Video
+                <Link href={ROUTES.gallery} className="text-[#FAF6EE]/75 hover:text-[#7C5CFC] transition-colors">
+                  Gallery
                 </Link>
               </li>
             </ul>
@@ -79,8 +79,8 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href={ROUTES.enrol} className="text-[#FAF6EE]/75 hover:text-[#7C5CFC] transition-colors">
-                  Book A Class
+                <Link href={ROUTES.annualDay} className="text-[#FAF6EE]/75 hover:text-[#7C5CFC] transition-colors">
+                  Annual Day
                 </Link>
               </li>
             </ul>

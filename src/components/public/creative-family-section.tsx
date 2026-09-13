@@ -13,8 +13,8 @@ export function CreativeFamilySection() {
         <div className="hidden md:block absolute left-4 lg:left-12 top-6 z-10 transform -rotate-12 hover:rotate-0 hover:scale-105 transition-all duration-300 shadow-[0_20px_35px_rgba(0,0,0,0.14)] rounded-xl bg-white p-2.5 border border-[#000000]/5">
           <div className="relative w-28 h-28 lg:w-36 lg:h-36 rounded-lg overflow-hidden">
             <Image
-              src="/images/danzia/card-1.webp"
-              alt="Dancer in motion in studio"
+              src="/images/studio-training/studio-leaps.jpg"
+              alt="Rhythmzz dancer in the Neredmet studio"
               fill
               sizes="144px"
               className="object-cover object-center"
@@ -26,8 +26,8 @@ export function CreativeFamilySection() {
         <div className="hidden md:block absolute right-4 lg:right-12 bottom-12 z-10 transform rotate-12 hover:rotate-0 hover:scale-105 transition-all duration-300 shadow-[0_20px_35px_rgba(0,0,0,0.14)] rounded-xl bg-white p-2.5 border border-[#000000]/5">
           <div className="relative w-28 h-28 lg:w-36 lg:h-36 rounded-lg overflow-hidden">
             <Image
-              src="/images/danzia/card-3.webp"
-              alt="Dancer leap in desert"
+              src="/images/srilanka-tour/raasta-stage-2.jpg"
+              alt="Rhythmzz on stage"
               fill
               sizes="144px"
               className="object-cover object-center"

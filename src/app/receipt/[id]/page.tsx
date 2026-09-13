@@ -23,7 +23,7 @@ export default async function ReceiptPage({ params }: { params: Promise<{ id: st
 
   const { data: payment } = await adminSupabase
     .from("fee_payments")
-    .select("id, amount, source, notes, paid_at, for_month, student:students(id, name, phone, auth_id, programme:programmes(name))")
+    .select("id, amount, source, notes, paid_at, for_month, receipt_number, student:students(id, name, phone, auth_id, programme:programmes(name))")
     .eq("id", id)
     .single();
 
@@ -61,7 +61,7 @@ export default async function ReceiptPage({ params }: { params: Promise<{ id: st
             </div>
             <div className="text-right">
               <p className="font-display text-lg text-ink tracking-wide">PAYMENT RECEIPT</p>
-              <p className="text-xs text-ink-2 mt-1">Receipt No: {p.id.slice(0, 8).toUpperCase()}</p>
+              <p className="text-xs text-ink-2 mt-1">GST Receipt No: {p.receipt_number || p.id.slice(0, 8).toUpperCase()}</p>
               <p className="text-xs text-ink-2">Date: {formatDate(p.paid_at)}</p>
             </div>
           </div>
@@ -114,7 +114,7 @@ export default async function ReceiptPage({ params }: { params: Promise<{ id: st
           {/* Footer */}
           <div className="text-center text-xs text-ink-2 leading-relaxed">
             <p>Thank you for dancing with us!</p>
-            <p className="mt-1">This is a computer-generated receipt. For queries, call {ACADEMY.phoneDisplay ?? ACADEMY.phone}.</p>
+            <p>This is a GST-style computer-generated receipt ({p.receipt_number || "pending number"}). For queries, call {ACADEMY.phoneDisplay ?? ACADEMY.phone}.</p>
           </div>
         </div>
       </div>

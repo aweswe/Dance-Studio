@@ -26,11 +26,11 @@ export async function estimateBroadcastReach(scope: string, scopeId: string) {
   return { count: count ?? 0 };
 }
 
-export async function sendBroadcast(scope: string, scopeId: string, message: string) {
+export async function sendBroadcast(scope: string, scopeId: string, message: string, messageTe?: string, messageHi?: string) {
   const supabase = await createServerSupabase();
   if (!(await isAdmin(supabase))) return { success: false, error: 'Not authorized' };
 
-  const parsed = sendBroadcastSchema.safeParse({ scope, scopeId, message });
+  const parsed = sendBroadcastSchema.safeParse({ scope, scopeId, message, messageTe, messageHi });
   if (!parsed.success) {
     return { success: false, error: parsed.error.issues[0]?.message ?? 'Invalid broadcast' };
   }
@@ -41,7 +41,7 @@ export async function sendBroadcast(scope: string, scopeId: string, message: str
   } = await supabase.auth.getUser();
 
   // Mass-send endpoint — throttle per admin (5/hour) before any sends
-  if (!rateLimit(`broadcast:${user?.id ?? 'anon'}`, { limit: 5, windowMs: 60 * 60 * 1000 })) {
+  if (!(await rateLimit(`broadcast:${user?.id ?? 'anon'}`, { limit: 5, windowMs: 60 * 60 * 1000 }))) {
     return { success: false, error: 'Too many broadcasts. Please wait before sending again.' };
   }
 
@@ -73,11 +73,13 @@ export async function sendBroadcast(scope: string, scopeId: string, message: str
 
     const { error: logErr } = await supabase.from('broadcast_logs').insert({
       message: d.message,
+      message_te: d.messageTe || null,
+      message_hi: d.messageHi || null,
       template_name: WHATSAPP_TEMPLATES.broadcast.name,
       recipients: { scope: d.scope, scopeId: d.scopeId || null, total },
       recipient_count: queued,
       sent_by: user?.id ?? null,
-    });
+    } as any);
 
     if (logErr) {
       console.error('Broadcast log insert failed:', logErr);

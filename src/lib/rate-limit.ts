@@ -1,16 +1,8 @@
 /**
- * In-memory sliding-window rate limiter.
+ * Sliding-window rate limiter.
  *
- * Deliberately dependency-free: this protects the anonymous endpoints
- * (studio rental, export, certificate) and expensive actions (broadcast)
- * from spam and cost abuse. It is per-server-instance — limits reset on
- * redeploy and are not shared across instances. That is the right trade
- * for a single-instance deployment; move to Upstash/Redis if the app
- * ever runs horizontally.
- *
- * Note on auth endpoints: OTP and password login call Supabase Auth
- * directly from the browser, so they cannot be throttled here — they
- * are covered by Supabase Auth's built-in per-phone/per-email limits.
+ * Uses Upstash Redis REST when UPSTASH_REDIS_REST_URL + TOKEN are set
+ * (shared across Vercel instances). Falls back to in-memory per instance.
  */
 
 const buckets = new Map<string, number[]>();
@@ -21,8 +13,7 @@ function prune(bucket: number[], windowMs: number, now: number): number[] {
   return firstFresh === -1 ? [] : bucket.slice(firstFresh);
 }
 
-/** Returns true when the request is allowed; false when over the limit. */
-export function rateLimit(
+function memoryLimit(
   key: string,
   { limit, windowMs }: { limit: number; windowMs: number },
 ): boolean {
@@ -37,7 +28,6 @@ export function rateLimit(
   bucket.push(now);
   buckets.set(key, bucket);
 
-  // Sweep stale keys so a long-running server doesn't accumulate memory.
   if (buckets.size > 5000) {
     for (const [k, v] of buckets) {
       if (prune(v, windowMs, now).length === 0) buckets.delete(k);
@@ -45,6 +35,48 @@ export function rateLimit(
   }
 
   return true;
+}
+
+async function upstashLimit(
+  key: string,
+  { limit, windowMs }: { limit: number; windowMs: number },
+): Promise<boolean> {
+  const url = process.env.UPSTASH_REDIS_REST_URL!;
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN!;
+  const redisKey = `rl:${key}`;
+  const ttl = Math.max(1, Math.ceil(windowMs / 1000));
+
+  const res = await fetch(`${url}/pipeline`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify([
+      ["INCR", redisKey],
+      ["EXPIRE", redisKey, ttl, "NX"],
+    ]),
+  });
+
+  if (!res.ok) throw new Error(`Upstash ${res.status}`);
+  const json = (await res.json()) as Array<{ result: number }>;
+  const count = Number(json?.[0]?.result ?? 0);
+  return count <= limit;
+}
+
+/** Returns true when the request is allowed; false when over the limit. */
+export async function rateLimit(
+  key: string,
+  opts: { limit: number; windowMs: number },
+): Promise<boolean> {
+  if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {
+    try {
+      return await upstashLimit(key, opts);
+    } catch (err) {
+      console.error("[rate-limit] Upstash failed, using memory", err);
+    }
+  }
+  return memoryLimit(key, opts);
 }
 
 /** Extract a best-effort client IP from request headers (serverless-safe). */

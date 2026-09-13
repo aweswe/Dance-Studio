@@ -4,7 +4,6 @@ import { useRef } from 'react'
 import { Card } from '@/components/ui/card'
 import { useRealtime } from '@/hooks/use-realtime'
 import { useRouter } from 'next/navigation'
-import { CalendarClock, ClipboardList, IndianRupee, Mail, UserCheck } from 'lucide-react'
 import { formatCurrency, formatDate } from '@/lib/utils/format'
 
 interface RevenuePoint {
@@ -66,7 +65,6 @@ export function DashboardPanels({
 }: DashboardPanelsProps) {
   const refresh = useDebouncedRefresh()
 
-  // Live-update the panels when new rentals arrive or attendance is marked.
   useRealtime({
     table: 'studio_rentals',
     event: 'INSERT',
@@ -88,26 +86,18 @@ export function DashboardPanels({
     onEvent: () => refresh(),
   })
 
-  // ---------- Revenue bar chart (hand-rolled SVG, no chart lib) ----------
   const maxTotal = Math.max(...revenueSeries.map((p) => p.total), 1)
   const CHART_H = 140
   const CHART_W = 360
   const BAR_W = 40
   const GAP = (CHART_W - revenueSeries.length * BAR_W) / (revenueSeries.length + 1)
+  const deskClear = pendingRentals.length === 0 && unmarkedToday.length === 0 && newEnquiries.length === 0
 
   return (
-    <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-      {/* Revenue chart */}
-      <Card className="p-6 xl:col-span-2">
-        <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center text-gold">
-            <IndianRupee size={20} />
-          </div>
-          <div>
-            <h3 className="font-display text-xl text-ink">Revenue — Last 6 Months</h3>
-            <p className="text-xs text-ink-2">From the fee ledger (online + offline)</p>
-          </div>
-        </div>
+    <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 sm:gap-6">
+      <Card className="p-5 sm:p-6 xl:col-span-2">
+        <h3 className="font-anton text-xl text-ink tracking-tight">Fees, last six months</h3>
+        <p className="text-[12px] text-ink-3 mt-1 mb-5">Online and desk collections</p>
 
         <svg viewBox={`0 0 ${CHART_W} ${CHART_H + 40}`} className="w-full" role="img" aria-label="Revenue by month bar chart">
           {[0.25, 0.5, 0.75, 1].map((f) => {
@@ -115,7 +105,7 @@ export function DashboardPanels({
             return (
               <g key={f}>
                 <line x1={0} x2={CHART_W} y1={y} y2={y} stroke="var(--line)" strokeDasharray="4 4" />
-                <text x={0} y={y - 4} fontSize={10} fill="var(--ink-2)">
+                <text x={0} y={y - 4} fontSize={10} fill="var(--ink-3)">
                   {formatCurrency(Math.round(maxTotal * f))}
                 </text>
               </g>
@@ -147,7 +137,7 @@ export function DashboardPanels({
                 >
                   {p.total > 0 ? `₹${p.total >= 1000 ? `${(p.total / 1000).toFixed(1)}k` : p.total}` : ''}
                 </text>
-                <text x={x + BAR_W / 2} y={CHART_H + 18} fontSize={11} textAnchor="middle" fill="var(--ink-2)">
+                <text x={x + BAR_W / 2} y={CHART_H + 18} fontSize={11} textAnchor="middle" fill="var(--ink-3)">
                   {p.label}
                 </text>
               </g>
@@ -156,48 +146,34 @@ export function DashboardPanels({
         </svg>
       </Card>
 
-      {/* Pending-items feed */}
-      <Card className="p-6">
-        <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 rounded-full bg-bl-pale flex items-center justify-center text-bl">
-            <ClipboardList size={20} />
-          </div>
-          <div>
-            <h3 className="font-display text-xl text-ink">Needs Attention</h3>
-            <p className="text-xs text-ink-2">Pending approvals and unmarked classes</p>
-          </div>
-        </div>
+      <Card className="p-5 sm:p-6">
+        <h3 className="font-anton text-xl text-ink tracking-tight">Desk</h3>
+        <p className="text-[12px] text-ink-3 mt-1 mb-5">Waiting on you</p>
 
-        <div className="space-y-3">
-          {pendingRentals.length === 0 && unmarkedToday.length === 0 && newEnquiries.length === 0 && (
-            <p className="text-sm text-ink-2 py-4 text-center">All studio actions up to date.</p>
+        <div className="space-y-2">
+          {deskClear && (
+            <p className="text-sm text-ink-2 py-6 text-center">Nothing waiting.</p>
           )}
 
           {pendingRentals.map((r) => (
             <a
               key={r.id}
               href="/admin/studio-rental"
-              className="flex items-start gap-3 rounded-lg border border-gold/30 bg-gold/5 p-3 hover:bg-gold/10 transition-colors focus-visible:focus-ring"
+              className="block rounded-xl bg-canvas-muted border border-line p-3 hover:bg-canvas-muted-2 focus-visible:focus-ring"
             >
-              <CalendarClock size={16} className="text-gold mt-0.5 shrink-0" />
-              <div className="text-sm">
-                <p className="font-medium text-ink">Rental request: {r.name}</p>
-                <p className="text-xs text-ink-2">{formatDate(r.preferred_date, 'long')} — awaiting approval</p>
-              </div>
+              <p className="text-sm font-medium text-ink">Rental · {r.name}</p>
+              <p className="text-[12px] text-ink-3">{formatDate(r.preferred_date, 'long')}</p>
             </a>
           ))}
 
           {unmarkedToday.map((b) => (
             <a
               key={b.id}
-              href="/admin/attendance"
-              className="flex items-start gap-3 rounded-lg border border-bl/20 bg-bl-pale/30 p-3 hover:bg-bl-pale/50 transition-colors focus-visible:focus-ring"
+              href={`/admin/attendance?batch=${b.id}`}
+              className="block rounded-xl bg-canvas-muted border border-line p-3 hover:bg-canvas-muted-2 focus-visible:focus-ring"
             >
-              <ClipboardList size={16} className="text-bl mt-0.5 shrink-0" />
-              <div className="text-sm">
-                <p className="font-medium text-ink">{b.programmeName} — {b.name}</p>
-                <p className="text-xs text-ink-2">Attendance not marked yet today</p>
-              </div>
+              <p className="text-sm font-medium text-ink">{b.programmeName} · {b.name}</p>
+              <p className="text-[12px] text-ink-3">Attendance not marked</p>
             </a>
           ))}
 
@@ -205,49 +181,40 @@ export function DashboardPanels({
             <a
               key={e.id}
               href="/admin/enquiries"
-              className="flex items-start gap-3 rounded-lg border border-purp/30 bg-purp/5 p-3 hover:bg-purp/10 transition-colors focus-visible:focus-ring"
+              className="block rounded-xl bg-canvas-muted border border-line p-3 hover:bg-canvas-muted-2 focus-visible:focus-ring"
             >
-              <Mail size={16} className="text-purp mt-0.5 shrink-0" />
-              <div className="text-sm">
-                <p className="font-medium text-ink">Enquiry from {e.name}</p>
-                <p className="text-xs text-ink-2">{e.phone} — awaiting reply</p>
-              </div>
+              <p className="text-sm font-medium text-ink">{e.name}</p>
+              <p className="text-[12px] text-ink-3">{e.phone}</p>
             </a>
           ))}
         </div>
       </Card>
 
-      {/* Per-batch attendance rate */}
-      <Card className="p-6 xl:col-span-3">
-        <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 rounded-full bg-green/10 flex items-center justify-center text-green">
-            <UserCheck size={20} />
-          </div>
-          <div>
-            <h3 className="font-display text-xl text-ink">Attendance This Month — By Batch</h3>
-            <p className="text-xs text-ink-2">Present ÷ total marks recorded this month</p>
-          </div>
-        </div>
+      <Card className="p-5 sm:p-6 xl:col-span-3">
+        <h3 className="font-anton text-xl text-ink tracking-tight">Attendance this month</h3>
+        <p className="text-[12px] text-ink-3 mt-1 mb-5">Present ÷ marks recorded</p>
 
         {batchAttendance.length === 0 ? (
-          <p className="text-sm text-ink-2 py-4 text-center">No attendance marked this month yet.</p>
+          <p className="text-sm text-ink-2 py-4">No marks this month yet.</p>
         ) : (
           <div className="space-y-4">
             {batchAttendance.map((b) => (
-              <div key={b.id} className="flex items-center gap-4">
-                <div className="w-56 shrink-0">
+              <div key={b.id} className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+                <div className="sm:w-52 shrink-0 min-w-0">
                   <p className="text-sm font-medium text-ink truncate">{b.programmeName}</p>
-                  <p className="text-xs text-ink-2 truncate">{b.name}</p>
+                  <p className="text-[12px] text-ink-3 truncate">{b.name}</p>
                 </div>
-                <div className="flex-1 h-3 rounded-full bg-line overflow-hidden">
-                  <div
-                    className={`h-full rounded-full transition-all ${b.rate >= 80 ? 'bg-green' : b.rate >= 60 ? 'bg-gold' : 'bg-danger'}`}
-                    style={{ width: `${Math.max(b.rate, 2)}%` }}
-                  />
-                </div>
-                <div className="w-24 text-right shrink-0">
-                  <span className="font-display text-lg text-ink">{b.rate}%</span>
-                  <span className="text-xs text-ink-2 ml-1">({b.marked} marks)</span>
+                <div className="flex items-center gap-3 flex-1 min-w-0">
+                  <div className="flex-1 h-2 rounded-full bg-canvas-muted-2 overflow-hidden">
+                    <div
+                      className={`h-full rounded-full ${b.rate >= 80 ? 'bg-green' : b.rate >= 60 ? 'bg-gold' : 'bg-danger'}`}
+                      style={{ width: `${Math.max(b.rate, 2)}%` }}
+                    />
+                  </div>
+                  <p className="w-20 shrink-0 text-right tabular-nums">
+                    <span className="font-anton text-lg text-ink tracking-tight">{b.rate}%</span>
+                    <span className="block text-[11px] text-ink-3">{b.marked} marks</span>
+                  </p>
                 </div>
               </div>
             ))}

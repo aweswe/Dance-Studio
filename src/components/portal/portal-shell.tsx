@@ -18,13 +18,13 @@ import {
   BookOpen,
   Home,
   Layers,
-  ExternalLink,
   Loader2,
 } from "lucide-react";
 import { useState } from "react";
 import { ROUTES } from "@/lib/utils/constants";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { triggerActionLoader } from "@/components/shared/navigation-progress";
+import { switchActiveStudent } from "@/actions/profile";
 
 export type PortalRole = "student" | "instructor";
 
@@ -32,45 +32,50 @@ interface PortalShellProps {
   role: PortalRole;
   name: string;
   isKuchipudi?: boolean;
+  siblings?: { id: string; name: string }[];
+  activeStudentId?: string;
+  unreadNotices?: number;
   children: React.ReactNode;
 }
 
 const STUDENT_NAV = [
-  { name: "Dashboard", href: ROUTES.student, icon: LayoutDashboard },
-  { name: "Classes & Batches", href: `${ROUTES.student}/classes`, icon: Layers },
+  { name: "Home", href: ROUTES.student, icon: LayoutDashboard },
+  { name: "Classes", href: `${ROUTES.student}/classes`, icon: Layers },
   { name: "Schedule", href: `${ROUTES.student}/schedule`, icon: Calendar },
   { name: "Attendance", href: `${ROUTES.student}/attendance`, icon: CheckSquare },
-  { name: "Fees & Receipts", href: `${ROUTES.student}/fees`, icon: CreditCard },
+  { name: "Fees", href: `${ROUTES.student}/fees`, icon: CreditCard },
   { name: "Notices", href: `${ROUTES.student}/notices`, icon: Bell },
-  { name: "My Profile", href: `${ROUTES.student}/profile`, icon: User },
+  { name: "Leave", href: `${ROUTES.student}/leave`, icon: Calendar },
+  { name: "Profile", href: `${ROUTES.student}/profile`, icon: User },
 ];
 
 const INSTRUCTOR_NAV = [
-  { name: "Dashboard", href: ROUTES.instructor, icon: LayoutDashboard },
-  { name: "My Classes", href: `${ROUTES.instructor}/classes`, icon: BookOpen },
-  { name: "Mark Attendance", href: `${ROUTES.instructor}/attendance`, icon: CheckSquare },
+  { name: "Home", href: ROUTES.instructor, icon: LayoutDashboard },
+  { name: "Classes", href: `${ROUTES.instructor}/classes`, icon: BookOpen },
+  { name: "Roster", href: `${ROUTES.instructor}/attendance`, icon: CheckSquare },
   { name: "Students", href: `${ROUTES.instructor}/students`, icon: Users },
 ];
 
 function getPageLabel(pathname: string, role: PortalRole): string {
   if (role === "instructor") {
-    if (pathname.includes("/classes")) return "Instructor Classes";
-    if (pathname.includes("/attendance")) return "Mark Attendance";
-    if (pathname.includes("/students")) return "Student Directory";
-    return "Instructor Dashboard";
+    if (pathname.includes("/classes")) return "Classes";
+    if (pathname.includes("/attendance")) return "Roster";
+    if (pathname.includes("/students")) return "Students";
+    return "Today";
   }
-  if (pathname === ROUTES.student || pathname === `${ROUTES.student}/`) return "Student Dashboard";
-  if (pathname.startsWith(`${ROUTES.student}/classes`)) return "Classes & Batches";
-  if (pathname.startsWith(`${ROUTES.student}/schedule`)) return "Class Schedule";
-  if (pathname.startsWith(`${ROUTES.student}/attendance`)) return "Attendance Record";
-  if (pathname.startsWith(`${ROUTES.student}/fees`)) return "Fees & Receipts";
-  if (pathname.startsWith(`${ROUTES.student}/notices`)) return "Academy Notices";
-  if (pathname.startsWith(`${ROUTES.student}/profile`)) return "My Profile";
-  if (pathname.startsWith(`${ROUTES.student}/progress`)) return "Kuchipudi Progress";
-  return "Student Dashboard";
+  if (pathname === ROUTES.student || pathname === `${ROUTES.student}/`) return "Today";
+  if (pathname.startsWith(`${ROUTES.student}/classes`)) return "Classes";
+  if (pathname.startsWith(`${ROUTES.student}/schedule`)) return "Schedule";
+  if (pathname.startsWith(`${ROUTES.student}/attendance`)) return "Attendance";
+  if (pathname.startsWith(`${ROUTES.student}/fees`)) return "Fees";
+  if (pathname.startsWith(`${ROUTES.student}/notices`)) return "Notices";
+  if (pathname.startsWith(`${ROUTES.student}/leave`)) return "Leave";
+  if (pathname.startsWith(`${ROUTES.student}/profile`)) return "Profile";
+  if (pathname.startsWith(`${ROUTES.student}/progress`)) return "Progress";
+  return "Today";
 }
 
-export function PortalShell({ role, name, isKuchipudi, children }: PortalShellProps) {
+export function PortalShell({ role, name, isKuchipudi, siblings, activeStudentId, unreadNotices, children }: PortalShellProps) {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [isSigningOut, setIsSigningOut] = useState(false);
@@ -87,7 +92,7 @@ export function PortalShell({ role, name, isKuchipudi, children }: PortalShellPr
   const handleSignOut = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSigningOut(true);
-    triggerActionLoader("Logging out · Redirecting to Home...");
+    triggerActionLoader("Signing out");
     try {
       const { createClient } = await import("@/lib/supabase/client");
       const supabase = createClient();
@@ -101,63 +106,41 @@ export function PortalShell({ role, name, isKuchipudi, children }: PortalShellPr
   };
 
   return (
-    <div className="min-h-screen bg-canvas-muted flex">
-      {/* Sidebar - Single Dynamic Logo */}
-      <div
+    <div className="min-h-dvh bg-canvas flex">
+      <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-40 w-64 bg-deep text-white transform transition-transform duration-250 ease-out-snap md:translate-x-0 flex flex-col shadow-2xl",
-          isOpen ? "translate-x-0" : "-translate-x-full"
+          "fixed inset-y-0 left-0 z-40 w-[15.5rem] bg-canvas border-r border-line flex flex-col transform transition-transform duration-200 ease-[cubic-bezier(0.2,0,0,1)] md:translate-x-0",
+          isOpen ? "translate-x-0" : "-translate-x-full",
         )}
       >
-        {/* Single Brand Logo with Dynamic Page Subtitle */}
-        <div className="p-6 border-b border-white/10 shrink-0 bg-surface-dark/40">
-          <Link href={home} className="group block focus-visible:focus-ring rounded">
-            <div className="flex items-center gap-3">
-              <span className="w-9 h-9 rounded-xl bg-bl text-white flex items-center justify-center font-display font-black text-xl shadow-[0_0_20px_rgba(43,180,216,0.5)]">
-                R
-              </span>
-              <div>
-                <h2 className="font-display text-2xl tracking-[2px] text-white leading-none group-hover:text-bl transition-colors">
-                  RHYTHMZZ<span className="text-bl">.</span>
-                </h2>
-                <p className="text-[10px] uppercase tracking-[1.5px] text-bl font-semibold mt-1">
-                  {pageTitle}
-                </p>
-              </div>
-            </div>
+        <div className="px-5 pt-5 pb-4 shrink-0">
+          <Link href={home} className="block focus-visible:focus-ring rounded-lg">
+            <p className="font-anton text-xl text-ink tracking-tight">Rhythmzz</p>
+            <p className="text-[11px] text-ink-3 mt-0.5">{role === "instructor" ? "Instructor" : "Student"}</p>
           </Link>
+        </div>
 
-          {/* User Profile Pill */}
-          <div className="mt-5 flex items-center gap-3 p-2.5 rounded-xl bg-white/5 border border-white/10">
-            <div className="w-8 h-8 rounded-full bg-bl flex items-center justify-center font-bold text-white text-xs shadow-sm shrink-0">
-              {initial}
-            </div>
-            <div className="min-w-0">
-              <p className="text-xs font-semibold text-white truncate">{name}</p>
-              <p className="text-[10px] text-white/50">{role === "instructor" ? "Instructor" : "Student"}</p>
-            </div>
+        {role === "student" && siblings && siblings.length > 1 && (
+          <div className="px-4 pb-3">
+            <label className="text-[11px] text-ink-3 px-1">Child</label>
+            <select
+              defaultValue={activeStudentId}
+              onChange={async (e) => {
+                await switchActiveStudent(e.target.value);
+                window.location.reload();
+              }}
+              className="mt-1 w-full min-h-10 bg-canvas-muted border border-line text-ink text-sm rounded-xl px-2.5"
+            >
+              {siblings.map((s) => (
+                <option key={s.id} value={s.id}>
+                  {s.name}
+                </option>
+              ))}
+            </select>
           </div>
-        </div>
+        )}
 
-        {/* Home & Website quick link */}
-        <div className="px-4 pt-3 pb-1 shrink-0">
-          <Link
-            href="/"
-            className="flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold text-white/70 bg-white/5 hover:bg-white/10 hover:text-white border border-white/5 transition-all group focus-visible:focus-ring"
-          >
-            <span className="flex items-center gap-2">
-              <Home size={14} className="text-bl group-hover:scale-110 transition-transform" />
-              Website Home
-            </span>
-            <ExternalLink size={12} className="text-white/40 group-hover:text-white/70" />
-          </Link>
-        </div>
-
-        {/* Navigation Items */}
-        <nav className="flex-1 px-3 py-2 space-y-1 overflow-y-auto">
-          <p className="text-[10px] uppercase font-bold tracking-[1.5px] text-white/40 px-3 py-1.5">
-            Menu
-          </p>
+        <nav className="flex-1 px-3 pb-4 space-y-0.5 overflow-y-auto">
           {navItems.map((item) => {
             const isActive = pathname === item.href || (item.href !== home && pathname.startsWith(item.href));
             const Icon = item.icon;
@@ -167,102 +150,79 @@ export function PortalShell({ role, name, isKuchipudi, children }: PortalShellPr
                 href={item.href}
                 onClick={() => setIsOpen(false)}
                 className={cn(
-                  "flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-semibold transition-all relative focus-visible:focus-ring",
+                  "flex items-center gap-3 min-h-11 px-3 rounded-xl text-sm font-medium focus-visible:focus-ring",
                   isActive
-                    ? "bg-bl/20 text-bl border border-bl/30 shadow-[0_0_15px_rgba(43,180,216,0.15)]"
-                    : "text-white/70 hover:bg-white/5 hover:text-white"
+                    ? "bg-surface-card text-ink shadow-lift"
+                    : "text-ink-2 hover:bg-canvas-muted hover:text-ink",
                 )}
               >
-                {isActive && (
-                  <span className="absolute left-0 top-1 bottom-1 w-1 bg-bl rounded-r-full" aria-hidden />
-                )}
-                <Icon size={16} className={isActive ? "text-bl" : "text-white/60"} />
+                <Icon size={16} strokeWidth={isActive ? 2 : 1.5} className={isActive ? "text-bl" : "text-ink-3"} />
                 {item.name}
+                {item.name === "Notices" && unreadNotices ? (
+                  <span className="ml-auto text-[10px] font-semibold bg-bl text-white rounded-md px-1.5 py-0.5">
+                    {unreadNotices}
+                  </span>
+                ) : null}
               </Link>
             );
           })}
         </nav>
 
-        {/* Sign out */}
-        <div className="p-4 border-t border-white/10 shrink-0 bg-surface-dark/20">
-          <form
-            action="/auth/signout"
-            method="post"
-            onSubmit={handleSignOut}
+        <div className="p-3 border-t border-line shrink-0 space-y-1">
+          <Link
+            href="/"
+            className="flex items-center gap-3 min-h-11 px-3 rounded-xl text-sm text-ink-2 hover:bg-canvas-muted hover:text-ink focus-visible:focus-ring"
           >
+            <Home size={16} strokeWidth={1.5} />
+            Studio site
+          </Link>
+          <form action="/auth/signout" method="post" onSubmit={handleSignOut}>
             <button
               type="submit"
               disabled={isSigningOut}
-              className="flex w-full items-center gap-3 px-3 py-2 rounded-lg text-xs font-semibold text-white/60 hover:text-red-400 hover:bg-white/5 transition-colors focus-visible:focus-ring disabled:opacity-50"
+              className="flex w-full items-center gap-3 min-h-11 px-3 rounded-xl text-sm text-ink-2 hover:bg-canvas-muted hover:text-ink focus-visible:focus-ring disabled:opacity-50"
             >
-              {isSigningOut ? (
-                <Loader2 size={16} className="animate-spin text-bl" />
-              ) : (
-                <LogOut size={16} />
-              )}
-              <span>{isSigningOut ? "Signing Out..." : "Sign Out"}</span>
+              {isSigningOut ? <Loader2 size={16} className="animate-spin" /> : <LogOut size={16} strokeWidth={1.5} />}
+              {isSigningOut ? "Signing out" : "Sign out"}
             </button>
           </form>
         </div>
-      </div>
+      </aside>
 
-      {/* Content column */}
-      <div className="flex-1 md:ml-64 flex flex-col overflow-hidden">
-        {/* Simple & Clean Header (No duplicate logo) */}
-        <header className="h-16 bg-surface border-b border-line flex items-center gap-3 px-4 md:px-8 justify-between shrink-0 sticky top-0 z-30 backdrop-blur-md bg-surface/95">
-          <div className="flex items-center gap-3 min-w-0">
+      <div className="flex-1 md:ml-[15.5rem] flex flex-col min-w-0">
+        <header className="h-14 sm:h-16 sticky top-0 z-50 flex items-center gap-3 px-3 sm:px-6 justify-between bg-canvas/90 backdrop-blur-md border-b border-line">
+          <div className="flex items-center gap-2 min-w-0">
             <button
               type="button"
-              aria-label="Toggle navigation menu"
+              aria-label={isOpen ? "Close menu" : "Open menu"}
               aria-expanded={isOpen}
               onClick={() => setIsOpen(!isOpen)}
-              className="md:hidden p-2 -ml-1 text-ink rounded-lg hover:bg-canvas-muted transition-colors focus-visible:focus-ring active:scale-95 border border-line"
+              className="md:hidden min-h-11 min-w-11 inline-flex items-center justify-center text-ink rounded-xl hover:bg-canvas-muted focus-visible:focus-ring"
             >
               {isOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
-
-            {/* Clean Breadcrumb Title */}
-            <div className="flex items-center gap-2 min-w-0">
-              <span className="text-xs font-semibold text-ink-2 uppercase tracking-wider hidden sm:inline shrink-0">Portal /</span>
-              <h2 className="font-display text-base sm:text-lg text-ink font-bold tracking-wide truncate max-w-[140px] sm:max-w-none">
-                {pageTitle}
-              </h2>
-            </div>
+            <h2 className="font-anton text-lg sm:text-xl text-ink tracking-tight truncate">{pageTitle}</h2>
           </div>
 
-          <div className="flex items-center gap-3 sm:gap-4 shrink-0">
-            <Link
-              href="/"
-              className="hidden sm:flex items-center gap-1.5 text-xs font-semibold text-ink-2 hover:text-bl px-2.5 py-1.5 rounded-lg hover:bg-canvas-muted transition-colors border border-transparent hover:border-line"
-            >
-              <Home size={14} />
-              <span>Website</span>
-            </Link>
-
+          <div className="flex items-center gap-2 shrink-0">
             <ThemeToggle />
-
-            <div className="flex items-center gap-2 sm:gap-2.5 pl-2 border-l border-line">
-              <div className="hidden sm:flex flex-col text-right">
-                <span className="text-xs font-bold text-ink leading-tight">{name}</span>
-                <span className="text-[10px] text-bl font-medium">{role === "instructor" ? "Instructor" : "Student"}</span>
-              </div>
-              <div className="w-8 h-8 rounded-full bg-bl flex items-center justify-center text-white font-display text-sm font-bold shadow-sm">
+            <div className="flex items-center gap-2 pl-2 border-l border-line">
+              <span className="hidden sm:block text-sm font-medium text-ink truncate max-w-[9rem]">{name}</span>
+              <div className="w-8 h-8 rounded-full bg-surface-raised border border-line text-ink text-xs font-semibold flex items-center justify-center">
                 {initial}
               </div>
             </div>
           </div>
         </header>
 
-        <main className="flex-1 overflow-y-auto p-3.5 sm:p-6 md:p-8">
-          <div className="max-w-6xl mx-auto">{children}</div>
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
+          <div className="max-w-5xl mx-auto">{children}</div>
         </main>
       </div>
 
-      {/* Overlay for mobile */}
       {isOpen && (
-        <div className="fixed inset-0 bg-blk/50 z-30 md:hidden" onClick={() => setIsOpen(false)} aria-hidden />
+        <div className="fixed inset-0 bg-black/50 z-30 md:hidden" onClick={() => setIsOpen(false)} aria-hidden />
       )}
     </div>
   );
 }
-

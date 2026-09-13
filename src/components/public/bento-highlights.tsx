@@ -11,7 +11,7 @@ export function BentoHighlights() {
       {/* Section Label */}
       <div className="flex items-center justify-between mb-8 px-1">
         <span className="text-[11px] font-mono uppercase tracking-[0.22em] text-ink-2">
-          02 · Rhythmzz Academy · Est. 2012
+          02 · Rhythmzz Academy · Since 2010
         </span>
         <div className="flex items-center gap-2 text-[10px] font-mono tracking-widest text-[#F5FB38] bg-[#000000] px-3.5 py-1.5 rounded-md border border-[#F5FB38]/40 shadow-sm">
           <span className="w-1.5 h-1.5 rounded-full bg-[#F5FB38]" />

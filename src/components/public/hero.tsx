@@ -37,13 +37,13 @@ export function Hero() {
         <div className="relative z-20 flex flex-col gap-5 max-w-2xl">
           {/* Eyebrow */}
           <p className="text-[10px] font-mono tracking-[0.25em] uppercase text-[#F5FB38]/80">
-            Est. 2012 · Hyderabad
+            Rhythmzz Academy · Teaching since 2010
           </p>
 
           {/* Main headline */}
           <h1 className="font-anton text-[13vw] sm:text-[9vw] md:text-[7.5vw] lg:text-[90px] leading-[0.88] text-white tracking-tight">
-            LEARN TO<br />
-            <span className="text-[#F5FB38]">DANCE.</span>
+            RHYTHMZZ<br />
+            <span className="text-[#F5FB38]">ACADEMY.</span>
           </h1>
 
           {/* Body copy — real info about the studio */}
@@ -62,17 +62,17 @@ export function Hero() {
               Enrol Now
             </Link>
             <Link
-              href={ROUTES.programmes}
+              href={ROUTES.schedule}
               className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 text-white text-xs font-bold uppercase tracking-[0.15em] px-6 py-3.5 rounded-xl hover:bg-white/20 transition-all active:scale-[0.97]"
             >
-              View Programmes
+              This week&apos;s timetable
             </Link>
           </div>
 
           {/* Trust strip */}
           <div className="flex flex-wrap items-center gap-x-5 gap-y-2 pt-1">
             {[
-              '12+ Years',
+              'Teaching since 2010',
               'Kuchipudi · Hip-Hop · Contemporary',
               'Ages 5 & Above',
             ].map((item) => (

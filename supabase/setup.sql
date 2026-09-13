@@ -1,10 +1,9 @@
 -- ════════════════════════════════════════════════════════════════
 -- Rhythmzz Academy — Supabase setup (combined)
--- Run ONCE in Supabase Dashboard → SQL Editor → New query → paste all → Run.
--- Safe to re-run: everything is idempotent (IF NOT EXISTS / guards).
--- Seed data matches the locked reference: fees, ages, slugs, batch
--- windows, 7 FAQs, 3 testimonials. Programme/batch UUIDs mirror the
--- app's built-in defaults so enrol submissions stay consistent.
+-- Generated from supabase/migrations/0001–0016. Do not edit by hand.
+-- Run ONCE in Supabase Dashboard → SQL Editor → paste all → Run.
+-- Safe to re-run: IF NOT EXISTS / DROP POLICY IF EXISTS / guards.
+-- NEVER apply supabase/rhythmzz-supabase-backup/ (stale fees/slugs).
 -- ════════════════════════════════════════════════════════════════
 
 -- 001_create_tables.sql
@@ -93,6 +92,7 @@ CREATE TABLE IF NOT EXISTS instructors (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     auth_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
     name TEXT NOT NULL,
+    role TEXT, -- app selects instructors.role; default set by the app on insert
     photo_url TEXT,
     bio TEXT,
     certifications TEXT[],
@@ -298,8 +298,6 @@ COMMENT ON TABLE blog_posts IS 'Blog posts for the website';
 DROP TRIGGER IF EXISTS update_blog_posts_updated_at ON blog_posts;
 CREATE TRIGGER update_blog_posts_updated_at BEFORE UPDATE ON blog_posts FOR EACH ROW EXECUTE FUNCTION set_updated_at();
 
--- Missing column: instructors.role (the app selects it)
-ALTER TABLE instructors ADD COLUMN IF NOT EXISTS role TEXT;
 
 -- 002_create_indexes.sql
 
@@ -348,6 +346,7 @@ CREATE INDEX IF NOT EXISTS idx_studio_rentals_preferred_date ON studio_rentals(p
 
 -- Kuchipudi Progress
 CREATE INDEX IF NOT EXISTS idx_kuchipudi_progress_student_id ON kuchipudi_progress(student_id);
+
 
 -- 003_rls_policies.sql
 
@@ -485,6 +484,7 @@ CREATE POLICY blog_posts_read_published ON blog_posts FOR SELECT USING (is_publi
 DROP POLICY IF EXISTS blog_posts_admin_all ON blog_posts;
 CREATE POLICY blog_posts_admin_all ON blog_posts FOR ALL USING (public.get_user_role() = 'admin');
 
+
 -- 006_features.sql
 -- Batches display name, gallery storage bucket, student notices RLS.
 
@@ -533,73 +533,7 @@ CREATE POLICY broadcast_logs_students_read ON broadcast_logs FOR SELECT USING (
     )
 );
 
--- ══ Seed: programmes (reference fees & ages, fixed UUIDs = app defaults) ══
-INSERT INTO programmes (id, name, slug, description, includes, fees_monthly, fees_quarterly, age_group, is_active, sort_order)
-VALUES
-  ('a1b2c3d4-4001-4000-8000-000000000001', 'Kids Dance', 'kids-dance', 'Bollywood, Hip Hop and Contemporary training for children aged 5 and above — technique, rhythm and stage confidence, taught step by step.', ARRAY['Bollywood & Hip Hop routines','Basic technique & rhythm training','Stage performance opportunities','Annual recital participation','Confidence & coordination building'], 2000, 5000, '5+ Years', true, 1),
-  ('a1b2c3d4-4002-4000-8000-000000000002', 'Adults Dance', 'adults-dance', 'Bollywood, Hip Hop, Contemporary and choreography for adults aged 16 and above — from first steps to full performance pieces.', ARRAY['Bollywood choreography & trending tracks','Hip Hop foundations & isolation drills','Contemporary movement & expression','Freestyle & musicality development','No prior dance experience required'], 2500, 6500, '16+ Years', true, 2),
-  ('a1b2c3d4-4003-4000-8000-000000000003', 'Mind & Body Fitness', 'mind-body-fitness', 'Zumba, Yoga, Pilates, HIIT and strength training — one hour every weekday morning to build stamina, flexibility and core strength.', ARRAY['Zumba — high-calorie-burn dance fitness','Hatha & Vinyasa Yoga for flexibility','Core conditioning & posture alignment','Breathwork & guided stress relief','Suitable for all fitness levels'], 2500, 6500, '16+ Years', true, 3),
-  ('a1b2c3d4-4004-4000-8000-000000000004', 'Kuchipudi Classical', 'kuchipudi', 'Level-based classical Kuchipudi training — Foundation through Advanced — adavus, jathis, hastas and abhinaya taught the traditional way.', ARRAY['Structured curriculum: Foundation → Intermediate → Advanced','Adavus (basic steps) & Jathis (rhythmic patterns)','Asamyuta & Samyuta Hastas (hand gestures)','Abhinaya (facial expression & storytelling)','Stage performance & Arangetram preparation'], 2000, 5000, '5+ Years', true, 4)
-ON CONFLICT (slug) DO UPDATE SET
-  name = EXCLUDED.name, description = EXCLUDED.description, includes = EXCLUDED.includes,
-  fees_monthly = EXCLUDED.fees_monthly, fees_quarterly = EXCLUDED.fees_quarterly,
-  age_group = EXCLUDED.age_group, sort_order = EXCLUDED.sort_order;
 
--- ══ Seed: instructors (fixed UUIDs, guarded by name) ══
-INSERT INTO instructors (id, name, role, bio, certifications, is_active)
-SELECT v.* FROM (VALUES
-  ('a1b2c3d4-5001-4000-8000-000000000001'::uuid, 'Nitish', 'Founder & Artistic Director', 'Founder of Rhythmzz Academy. 15+ years of teaching, 5,000+ students trained in Bollywood, Hip Hop and Contemporary. ISPTD-certified; represented India at the nATFEST International Contemporary Dance Festival, Sri Lanka 2017.', ARRAY['ISPTD Certified','nATFEST International Festival, Sri Lanka 2017','15+ Years Teaching Experience'], true),
-  ('a1b2c3d4-5002-4000-8000-000000000002'::uuid, 'Deepak', 'Kids Dance Instructor', 'Leads the Kids Dance programme — Bollywood and Hip Hop fundamentals, choreography and stage confidence for children aged 5 and above. Mon–Wed, 5 to 7 PM.', ARRAY['Bollywood & Hip Hop Specialist'], true),
-  ('a1b2c3d4-5003-4000-8000-000000000003'::uuid, 'Kajal', 'Kids Dance Instructor', 'Kids Dance instructor — 6 to 7 PM batch, Mon–Wed.', ARRAY['Kids Dance Specialist'], true),
-  ('a1b2c3d4-5004-4000-8000-000000000004'::uuid, 'Pranith', 'Adults Dance Instructor', 'Adults Dance instructor — 8 to 9 PM batch, Mon–Wed.', ARRAY['Bollywood Choreography'], true),
-  ('a1b2c3d4-5005-4000-8000-000000000005'::uuid, 'Shailaja', 'Mind & Body Fitness Instructor', 'Runs the Mind & Body Fitness programme — Zumba, Yoga, Pilates, HIIT and strength training every weekday morning, 9:30 to 10:30 AM.', ARRAY['Zumba Certified','Yoga Instructor'], true),
-  ('a1b2c3d4-5006-4000-8000-000000000006'::uuid, 'Srusti', 'Kuchipudi Classical Instructor', 'Certified Kuchipudi instructor guiding students from Foundation to Advanced level through adavus, jathis, hastas and abhinaya. Fri–Sat, 6:30 to 7:30 PM.', ARRAY['Certified Kuchipudi Instructor'], true)
-) AS v(id, name, role, bio, certifications, is_active)
-WHERE NOT EXISTS (SELECT 1 FROM instructors i WHERE i.name = v.name);
-
--- ══ Seed: batches (reference windows, fixed UUIDs = app defaults) ══
-INSERT INTO batches (id, name, programme_id, instructor_id, days, time_start, time_end, capacity, enrolled_count, status)
-SELECT v.* FROM (VALUES
-  ('a1b2c3d4-4101-4000-8000-000000000001'::uuid, 'Kids Dance · Mon–Wed 5–6 PM', 'a1b2c3d4-4001-4000-8000-000000000001'::uuid, 'a1b2c3d4-5002-4000-8000-000000000002'::uuid, ARRAY['Monday','Tuesday','Wednesday'], '17:00:00'::time, '18:00:00'::time, 25, 16, 'active'::batch_status),
-  ('a1b2c3d4-4102-4000-8000-000000000002'::uuid, 'Kids Dance · Mon–Wed 6–7 PM', 'a1b2c3d4-4001-4000-8000-000000000001'::uuid, 'a1b2c3d4-5003-4000-8000-000000000003'::uuid, ARRAY['Monday','Tuesday','Wednesday'], '18:00:00'::time, '19:00:00'::time, 25, 15, 'active'::batch_status),
-  ('a1b2c3d4-4103-4000-8000-000000000003'::uuid, 'Adults Dance · Mon–Wed 7–8 PM', 'a1b2c3d4-4002-4000-8000-000000000002'::uuid, 'a1b2c3d4-5001-4000-8000-000000000001'::uuid, ARRAY['Monday','Tuesday','Wednesday'], '19:00:00'::time, '20:00:00'::time, 30, 20, 'active'::batch_status),
-  ('a1b2c3d4-4104-4000-8000-000000000004'::uuid, 'Adults Dance · Mon–Wed 8–9 PM', 'a1b2c3d4-4002-4000-8000-000000000002'::uuid, 'a1b2c3d4-5004-4000-8000-000000000004'::uuid, ARRAY['Monday','Tuesday','Wednesday'], '20:00:00'::time, '21:00:00'::time, 30, 14, 'active'::batch_status),
-  ('a1b2c3d4-4105-4000-8000-000000000005'::uuid, 'Mind & Body Fitness · Mon–Fri 9:30–10:30 AM', 'a1b2c3d4-4003-4000-8000-000000000003'::uuid, 'a1b2c3d4-5005-4000-8000-000000000005'::uuid, ARRAY['Monday','Tuesday','Wednesday','Thursday','Friday'], '09:30:00'::time, '10:30:00'::time, 25, 15, 'active'::batch_status),
-  ('a1b2c3d4-4106-4000-8000-000000000006'::uuid, 'Kuchipudi · Fri–Sat 6:30–7:30 PM', 'a1b2c3d4-4004-4000-8000-000000000004'::uuid, 'a1b2c3d4-5006-4000-8000-000000000006'::uuid, ARRAY['Friday','Saturday'], '18:30:00'::time, '19:30:00'::time, 15, 8, 'active'::batch_status)
-) AS v(id, name, programme_id, instructor_id, days, time_start, time_end, capacity, enrolled_count, status)
-WHERE NOT EXISTS (SELECT 1 FROM batches b WHERE b.id = v.id);
-
--- ══ Seed: site content (stats + reference FAQs + testimonials) ══
--- Key names match the app's data layer: getStats() reads stats_% scalar rows,
--- getFAQs() reads 'faqs', getTestimonials() reads 'testimonials'.
-DELETE FROM site_content WHERE content_key IN ('faq', 'stats'); -- drop any legacy keys
-INSERT INTO site_content (content_key, content_value)
-VALUES
-  ('stats_students', '"5000+"'::jsonb),
-  ('stats_years', '"15+"'::jsonb),
-  ('stats_programmes', '"4"'::jsonb),
-  ('stats_awards', '"3"'::jsonb),
-  ('faqs', $json$[
-    {"question": "Where are dance classes near Sainikpuri?", "answer": "Rhythmzz Academy of Dance is at Neredmet X Road Bus Stop, just 8 to 12 minutes from Sainikpuri by drive. We offer Kids Dance, Adults Dance, Mind and Body Fitness and Kuchipudi Classical. Call +91 90529 80859 to book a free trial."},
-    {"question": "Is there a free trial class for dance classes in Secunderabad?", "answer": "Yes. Rhythmzz Academy of Dance offers one free trial class for all new students. No registration fee. Call or WhatsApp +91 90529 80859 to book your trial class."},
-    {"question": "What are the dance class fees at Rhythmzz Academy?", "answer": "Kids Dance: 2000 rupees per month or 5000 rupees per quarter. Adults Dance: 2500 rupees per month or 6500 rupees per quarter. Mind and Body Fitness: 2500 rupees per month or 6500 rupees per quarter. Kuchipudi Classical: 2000 rupees per month or 5000 rupees per quarter. No registration fee."},
-    {"question": "Does Rhythmzz offer Kuchipudi classes near AS Rao Nagar?", "answer": "Yes. Rhythmzz Academy of Dance offers certified Kuchipudi Classical Dance classes at Neredmet X Road, about 10 to 14 minutes from AS Rao Nagar. Classes run every Friday and Saturday 6:30 to 7:30 PM. Taught by Srusti, a certified Kuchipudi instructor."},
-    {"question": "Are there Zumba classes near Neredmet?", "answer": "Yes. Rhythmzz Academy of Dance offers Zumba as part of the Mind and Body Fitness programme at Neredmet X Road, Secunderabad. Classes run Monday to Friday, 9:30 to 10:30 AM. 2500 rupees per month."},
-    {"question": "Can I rent a dance studio in Secunderabad?", "answer": "Yes. Rhythmzz Academy of Dance offers studio rental at Neredmet X Road, Secunderabad. Rates are 1000 rupees per hour on weekdays and 1500 rupees per hour on weekends. The studio is fully air-conditioned with mirrors, a dance floor, and a sound system. WhatsApp +91 90529 80859 to check availability."},
-    {"question": "Which areas does Rhythmzz Academy serve?", "answer": "Rhythmzz Academy of Dance at Neredmet X Road serves students from Sainikpuri, AS Rao Nagar, Yapral, Malkajgiri, Hastinapuri, Kapra and surrounding areas in Secunderabad and East Hyderabad. Most students are within 15 minutes by drive."}
-  ]$json$::jsonb),
-  ('testimonials', $json$[
-    {"name": "Pooja Reddy", "quote": "Rhythmzz is more than a dance studio — it's a family. Nitish Sir's energy is contagious and the technique training is unmatched in Secunderabad.", "programme": "Adults Dance", "rating": 5},
-    {"name": "Suresh & Deepa", "quote": "Our 7-year-old daughter was shy before joining the kids batch. Now she leads performances with absolute confidence. Truly grateful!", "programme": "Kids Dance", "rating": 5},
-    {"name": "Ananya Sharma", "quote": "The Kuchipudi training under traditional guidance is rigorous yet so nurturing. Beautiful studio atmosphere and excellent discipline.", "programme": "Kuchipudi Classical", "rating": 5}
-  ]$json$::jsonb)
-ON CONFLICT (content_key) DO UPDATE SET content_value = EXCLUDED.content_value;
-
--- ══ Admin user — run AFTER creating the admin login in Authentication ══
--- In Supabase Dashboard: Authentication → Add user → Email + Password.
--- Then copy the new user's UUID and run:
---   INSERT INTO public.users (id, role) VALUES ('<paste-auth-uid>', 'admin')
---   ON CONFLICT (id) DO UPDATE SET role = 'admin';
 -- 005_functions.sql
 
 -- Dashboard Analytics Function
@@ -770,6 +704,7 @@ BEGIN
     RETURN TRUE;
 END;
 $$ LANGUAGE plpgsql;
+
 
 -- ════════════════════════════════════════════════════════════════
 -- 007_security.sql — RPC privilege lockdown + gallery storage write lockdown
@@ -1018,6 +953,7 @@ DROP POLICY IF EXISTS gallery_storage_admin_delete ON storage.objects;
 CREATE POLICY gallery_storage_admin_delete ON storage.objects FOR DELETE TO authenticated
   USING (bucket_id = 'gallery' AND public.get_user_role() = 'admin');
 
+
 -- ════════════════════════════════════════════════════════════════
 -- 008_auth_provisioning.sql — keep public.users in sync with auth.users
 --
@@ -1053,6 +989,83 @@ FROM auth.users u
 LEFT JOIN public.users pu ON pu.id = u.id
 WHERE pu.id IS NULL;
 
+
+-- ══ Seed: programmes (reference fees & ages, fixed UUIDs = app defaults) ══
+INSERT INTO programmes (id, name, slug, description, includes, fees_monthly, fees_quarterly, age_group, is_active, sort_order)
+VALUES
+  ('a1b2c3d4-4001-4000-8000-000000000001', 'Kids Dance', 'kids-dance', 'Bollywood, Hip Hop and Contemporary training for children aged 5 and above — technique, rhythm and stage confidence, taught step by step.', ARRAY['Bollywood & Hip Hop routines','Basic technique & rhythm training','Stage performance opportunities','Annual recital participation','Confidence & coordination building'], 2000, 5000, '5+ Years', true, 1),
+  ('a1b2c3d4-4002-4000-8000-000000000002', 'Adults Dance', 'adults-dance', 'Bollywood, Hip Hop, Contemporary and choreography for adults aged 16 and above — from first steps to full performance pieces.', ARRAY['Bollywood choreography & trending tracks','Hip Hop foundations & isolation drills','Contemporary movement & expression','Freestyle & musicality development','No prior dance experience required'], 2500, 6500, '16+ Years', true, 2),
+  ('a1b2c3d4-4003-4000-8000-000000000003', 'Mind & Body Fitness', 'mind-body-fitness', 'Zumba, Yoga, Pilates, HIIT and strength training — one hour every weekday morning to build stamina, flexibility and core strength.', ARRAY['Zumba — high-calorie-burn dance fitness','Hatha & Vinyasa Yoga for flexibility','Core conditioning & posture alignment','Breathwork & guided stress relief','Suitable for all fitness levels'], 2500, 6500, '16+ Years', true, 3),
+  ('a1b2c3d4-4004-4000-8000-000000000004', 'Kuchipudi Classical', 'kuchipudi', 'Level-based classical Kuchipudi training — Foundation through Advanced — adavus, jathis, hastas and abhinaya taught the traditional way.', ARRAY['Structured curriculum: Foundation → Intermediate → Advanced','Adavus (basic steps) & Jathis (rhythmic patterns)','Asamyuta & Samyuta Hastas (hand gestures)','Abhinaya (facial expression & storytelling)','Stage performance & Arangetram preparation'], 2000, 5000, '5+ Years', true, 4)
+ON CONFLICT (slug) DO UPDATE SET
+  name = EXCLUDED.name, description = EXCLUDED.description, includes = EXCLUDED.includes,
+  fees_monthly = EXCLUDED.fees_monthly, fees_quarterly = EXCLUDED.fees_quarterly,
+  age_group = EXCLUDED.age_group, sort_order = EXCLUDED.sort_order;
+
+-- ══ Seed: instructors (fixed UUIDs, guarded by name) ══
+INSERT INTO instructors (id, name, role, bio, certifications, is_active)
+SELECT v.* FROM (VALUES
+  ('a1b2c3d4-5001-4000-8000-000000000001'::uuid, 'Nitish', 'Founder & Artistic Director', 'Founder of Rhythmzz Academy. 15+ years of teaching, 5,000+ students trained in Bollywood, Hip Hop and Contemporary. ISPTD-certified; represented India at the nATFEST International Contemporary Dance Festival, Sri Lanka 2017.', ARRAY['ISPTD Certified','nATFEST International Festival, Sri Lanka 2017','15+ Years Teaching Experience'], true),
+  ('a1b2c3d4-5002-4000-8000-000000000002'::uuid, 'Deepak', 'Kids Dance Instructor', 'Leads the Kids Dance programme — Bollywood and Hip Hop fundamentals, choreography and stage confidence for children aged 5 and above. Mon–Wed, 5 to 7 PM.', ARRAY['Bollywood & Hip Hop Specialist'], true),
+  ('a1b2c3d4-5003-4000-8000-000000000003'::uuid, 'Kajal', 'Kids Dance Instructor', 'Kids Dance instructor — 6 to 7 PM batch, Mon–Wed.', ARRAY['Kids Dance Specialist'], true),
+  ('a1b2c3d4-5004-4000-8000-000000000004'::uuid, 'Pranith', 'Adults Dance Instructor', 'Adults Dance instructor — 8 to 9 PM batch, Mon–Wed.', ARRAY['Bollywood Choreography'], true),
+  ('a1b2c3d4-5005-4000-8000-000000000005'::uuid, 'Shailaja', 'Mind & Body Fitness Instructor', 'Runs the Mind & Body Fitness programme — Zumba, Yoga, Pilates, HIIT and strength training every weekday morning, 9:30 to 10:30 AM.', ARRAY['Zumba Certified','Yoga Instructor'], true),
+  ('a1b2c3d4-5006-4000-8000-000000000006'::uuid, 'Srusti', 'Kuchipudi Classical Instructor', 'Certified Kuchipudi instructor guiding students from Foundation to Advanced level through adavus, jathis, hastas and abhinaya. Fri–Sat, 6:30 to 7:30 PM.', ARRAY['Certified Kuchipudi Instructor'], true)
+) AS v(id, name, role, bio, certifications, is_active)
+WHERE NOT EXISTS (SELECT 1 FROM instructors i WHERE i.name = v.name);
+
+-- ══ Seed: batches (reference windows, fixed UUIDs = app defaults) ══
+INSERT INTO batches (id, name, programme_id, instructor_id, days, time_start, time_end, capacity, enrolled_count, status)
+SELECT v.* FROM (VALUES
+  ('a1b2c3d4-4101-4000-8000-000000000001'::uuid, 'Kids Dance · Mon–Wed 5–6 PM', 'a1b2c3d4-4001-4000-8000-000000000001'::uuid, 'a1b2c3d4-5002-4000-8000-000000000002'::uuid, ARRAY['Monday','Tuesday','Wednesday'], '17:00:00'::time, '18:00:00'::time, 25, 16, 'active'::batch_status),
+  ('a1b2c3d4-4102-4000-8000-000000000002'::uuid, 'Kids Dance · Mon–Wed 6–7 PM', 'a1b2c3d4-4001-4000-8000-000000000001'::uuid, 'a1b2c3d4-5003-4000-8000-000000000003'::uuid, ARRAY['Monday','Tuesday','Wednesday'], '18:00:00'::time, '19:00:00'::time, 25, 15, 'active'::batch_status),
+  ('a1b2c3d4-4103-4000-8000-000000000003'::uuid, 'Adults Dance · Mon–Wed 7–8 PM', 'a1b2c3d4-4002-4000-8000-000000000002'::uuid, 'a1b2c3d4-5001-4000-8000-000000000001'::uuid, ARRAY['Monday','Tuesday','Wednesday'], '19:00:00'::time, '20:00:00'::time, 30, 20, 'active'::batch_status),
+  ('a1b2c3d4-4104-4000-8000-000000000004'::uuid, 'Adults Dance · Mon–Wed 8–9 PM', 'a1b2c3d4-4002-4000-8000-000000000002'::uuid, 'a1b2c3d4-5004-4000-8000-000000000004'::uuid, ARRAY['Monday','Tuesday','Wednesday'], '20:00:00'::time, '21:00:00'::time, 30, 14, 'active'::batch_status),
+  ('a1b2c3d4-4105-4000-8000-000000000005'::uuid, 'Mind & Body Fitness · Mon–Fri 9:30–10:30 AM', 'a1b2c3d4-4003-4000-8000-000000000003'::uuid, 'a1b2c3d4-5005-4000-8000-000000000005'::uuid, ARRAY['Monday','Tuesday','Wednesday','Thursday','Friday'], '09:30:00'::time, '10:30:00'::time, 25, 15, 'active'::batch_status),
+  ('a1b2c3d4-4106-4000-8000-000000000006'::uuid, 'Kuchipudi · Fri–Sat 6:30–7:30 PM', 'a1b2c3d4-4004-4000-8000-000000000004'::uuid, 'a1b2c3d4-5006-4000-8000-000000000006'::uuid, ARRAY['Friday','Saturday'], '18:30:00'::time, '19:30:00'::time, 15, 8, 'active'::batch_status)
+) AS v(id, name, programme_id, instructor_id, days, time_start, time_end, capacity, enrolled_count, status)
+WHERE NOT EXISTS (SELECT 1 FROM batches b WHERE b.id = v.id);
+
+-- ══ Seed: site content (stats + reference FAQs + testimonials) ══
+-- Key names match the app's data layer: getStats() reads stats_% scalar rows,
+-- getFAQs() reads 'faqs', getTestimonials() reads 'testimonials'.
+DELETE FROM site_content WHERE content_key IN ('faq', 'stats'); -- drop any legacy keys
+INSERT INTO site_content (content_key, content_value)
+VALUES
+  ('stats_students', '"5000+"'::jsonb),
+  ('stats_years', '"15+"'::jsonb),
+  ('stats_programmes', '"4"'::jsonb),
+  ('stats_awards', '"3"'::jsonb),
+  ('faqs', $json$[
+    {"question": "Where are dance classes near Sainikpuri?", "answer": "Rhythmzz Academy of Dance is at Neredmet X Road Bus Stop, just 8 to 12 minutes from Sainikpuri by drive. We offer Kids Dance, Adults Dance, Mind and Body Fitness and Kuchipudi Classical. Call +91 90529 80859 to book a free trial."},
+    {"question": "Is there a free trial class for dance classes in Secunderabad?", "answer": "Yes. Rhythmzz Academy of Dance offers one free trial class for all new students. No registration fee. Call or WhatsApp +91 90529 80859 to book your trial class."},
+    {"question": "What are the dance class fees at Rhythmzz Academy?", "answer": "Kids Dance: 2000 rupees per month or 5000 rupees per quarter. Adults Dance: 2500 rupees per month or 6500 rupees per quarter. Mind and Body Fitness: 2500 rupees per month or 6500 rupees per quarter. Kuchipudi Classical: 2000 rupees per month or 5000 rupees per quarter. No registration fee."},
+    {"question": "Does Rhythmzz offer Kuchipudi classes near AS Rao Nagar?", "answer": "Yes. Rhythmzz Academy of Dance offers certified Kuchipudi Classical Dance classes at Neredmet X Road, about 10 to 14 minutes from AS Rao Nagar. Classes run every Friday and Saturday 6:30 to 7:30 PM. Taught by Srusti, a certified Kuchipudi instructor."},
+    {"question": "Are there Zumba classes near Neredmet?", "answer": "Yes. Rhythmzz Academy of Dance offers Zumba as part of the Mind and Body Fitness programme at Neredmet X Road, Secunderabad. Classes run Monday to Friday, 9:30 to 10:30 AM. 2500 rupees per month."},
+    {"question": "Can I rent a dance studio in Secunderabad?", "answer": "Yes. Rhythmzz Academy of Dance offers studio rental at Neredmet X Road, Secunderabad. Rates are 1000 rupees per hour on weekdays and 1500 rupees per hour on weekends. The studio is fully air-conditioned with mirrors, a dance floor, and a sound system. WhatsApp +91 90529 80859 to check availability."},
+    {"question": "Which areas does Rhythmzz Academy serve?", "answer": "Rhythmzz Academy of Dance at Neredmet X Road serves students from Sainikpuri, AS Rao Nagar, Yapral, Malkajgiri, Hastinapuri, Kapra and surrounding areas in Secunderabad and East Hyderabad. Most students are within 15 minutes by drive."}
+  ]$json$::jsonb),
+  ('testimonials', $json$[
+    {"name": "Pooja Reddy", "quote": "Rhythmzz is more than a dance studio — it's a family. Nitish Sir's energy is contagious and the technique training is unmatched in Secunderabad.", "programme": "Adults Dance", "rating": 5},
+    {"name": "Suresh & Deepa", "quote": "Our 7-year-old daughter was shy before joining the kids batch. Now she leads performances with absolute confidence. Truly grateful!", "programme": "Kids Dance", "rating": 5},
+    {"name": "Ananya Sharma", "quote": "The Kuchipudi training under traditional guidance is rigorous yet so nurturing. Beautiful studio atmosphere and excellent discipline.", "programme": "Kuchipudi Classical", "rating": 5}
+  ]$json$::jsonb)
+ON CONFLICT (content_key) DO UPDATE SET content_value = EXCLUDED.content_value;
+
+-- ══ Admin user — run AFTER creating the admin login in Authentication ══
+-- In Supabase Dashboard: Authentication → Add user → Email + Password.
+-- Then copy the new user's UUID and run:
+--   INSERT INTO public.users (id, role) VALUES ('<paste-auth-uid>', 'admin')
+--   ON CONFLICT (id) DO UPDATE SET role = 'admin';
+
+
+-- ══ Realtime: live updates for dashboards ══
+DO $$ BEGIN ALTER PUBLICATION supabase_realtime ADD TABLE attendance; EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN ALTER PUBLICATION supabase_realtime ADD TABLE fee_payments; EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN ALTER PUBLICATION supabase_realtime ADD TABLE studio_rentals; EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN ALTER PUBLICATION supabase_realtime ADD TABLE students; EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+
+
 -- ══ Fee ledger: monthly coverage ══
 -- for_month marks which calendar month a payment covers. Backfill assumes
 -- each historical payment covered its paid_at month (note when real data
@@ -1066,6 +1079,7 @@ CREATE INDEX IF NOT EXISTS idx_fee_payments_student_month ON fee_payments (stude
 -- idx_students_phone (0002) already exists, so lookups stay fast.
 ALTER TABLE students DROP CONSTRAINT IF EXISTS students_phone_key;
 
+
 -- ══ Default grants (platform parity) ══
 -- Supabase's hosted platform grants table privileges to anon/authenticated/
 -- service_role by default; local `supabase start` does not. RLS still gates
@@ -1077,6 +1091,7 @@ GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO anon, authenticated, serv
 GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO anon, authenticated, service_role;
 ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO anon, authenticated, service_role;
 ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO anon, authenticated, service_role;
+
 
 -- ══ Payment order policies: anon checkout + student portal checkout ══
 -- payment_orders was admin-only. These open exactly the two checkout
@@ -1110,6 +1125,7 @@ CREATE POLICY payment_orders_student_update ON payment_orders FOR UPDATE TO auth
     AND student_id = (SELECT id FROM students WHERE auth_id = auth.uid())
   );
 
+
 -- Enquiries from the public contact form.
 -- Anon visitors may submit (app-side rate limited); admins read/update via RLS.
 
@@ -1142,6 +1158,7 @@ CREATE POLICY enquiries_admin_all ON enquiries
 
 -- Helpers: admin contact list + dashboard pending feed.
 CREATE INDEX IF NOT EXISTS idx_enquiries_status_created ON enquiries (status, created_at DESC);
+
 
 -- WhatsApp broadcast queue.
 -- sendBroadcast enqueues rows instead of sending synchronously; the Vercel
@@ -1179,8 +1196,417 @@ CREATE POLICY broadcast_queue_admin_all ON broadcast_queue
 
 CREATE INDEX IF NOT EXISTS idx_broadcast_queue_status_created ON broadcast_queue (status, created_at);
 
--- ══ Realtime: live updates for dashboards ══
-DO $$ BEGIN ALTER PUBLICATION supabase_realtime ADD TABLE attendance; EXCEPTION WHEN duplicate_object THEN NULL; END $$;
-DO $$ BEGIN ALTER PUBLICATION supabase_realtime ADD TABLE fee_payments; EXCEPTION WHEN duplicate_object THEN NULL; END $$;
-DO $$ BEGIN ALTER PUBLICATION supabase_realtime ADD TABLE studio_rentals; EXCEPTION WHEN duplicate_object THEN NULL; END $$;
-DO $$ BEGIN ALTER PUBLICATION supabase_realtime ADD TABLE students; EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+
+-- 0015_integrity.sql
+-- Phase 0–4 schema: payment integrity, family-safe RLS, fee months,
+-- enrollment trigger, attendance-per-batch, waitlist, leave, events,
+-- notice reads, bilingual broadcasts, GST receipts, UPI pending status.
+
+-- ══ Payment orders: never let a student PATCH amount/status ══
+DROP POLICY IF EXISTS payment_orders_student_update ON payment_orders;
+DROP POLICY IF EXISTS payment_orders_student_insert ON payment_orders;
+DROP POLICY IF EXISTS payment_orders_student_insert ON payment_orders;
+CREATE POLICY payment_orders_student_insert ON payment_orders FOR INSERT TO authenticated
+  WITH CHECK (
+    public.get_user_role() = 'student'
+    AND (
+      student_id IS NULL
+      OR student_id IN (SELECT id FROM students WHERE auth_id = auth.uid())
+    )
+  );
+
+ALTER TABLE payment_orders ADD COLUMN IF NOT EXISTS plan TEXT DEFAULT 'monthly';
+ALTER TABLE payment_orders DROP CONSTRAINT IF EXISTS payment_orders_plan_check;
+ALTER TABLE payment_orders ADD CONSTRAINT payment_orders_plan_check
+  CHECK (plan IS NULL OR plan IN ('monthly', 'quarterly'));
+
+-- ══ Unique Razorpay payment ids (NULLs remain allowed) ══
+CREATE UNIQUE INDEX IF NOT EXISTS fee_payments_razorpay_payment_id_key
+  ON fee_payments (razorpay_payment_id)
+  WHERE razorpay_payment_id IS NOT NULL;
+
+-- ══ Fee coverage + GST receipt + confirmation status ══
+ALTER TABLE fee_payments ADD COLUMN IF NOT EXISTS receipt_number TEXT;
+ALTER TABLE fee_payments ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'confirmed';
+ALTER TABLE fee_payments DROP CONSTRAINT IF EXISTS fee_payments_status_check;
+ALTER TABLE fee_payments ADD CONSTRAINT fee_payments_status_check
+  CHECK (status IN ('pending', 'confirmed', 'rejected'));
+
+CREATE UNIQUE INDEX IF NOT EXISTS fee_payments_receipt_number_key
+  ON fee_payments (receipt_number)
+  WHERE receipt_number IS NOT NULL;
+
+-- Deduplicate same-month coverage before unique index
+DELETE FROM fee_payments a
+USING fee_payments b
+WHERE a.student_id IS NOT NULL
+  AND a.for_month IS NOT NULL
+  AND a.student_id = b.student_id
+  AND a.for_month = b.for_month
+  AND a.id > b.id;
+
+CREATE UNIQUE INDEX IF NOT EXISTS fee_payments_student_month_unique
+  ON fee_payments (student_id, for_month)
+  WHERE student_id IS NOT NULL AND for_month IS NOT NULL
+    AND COALESCE(status, 'confirmed') = 'confirmed';
+
+CREATE SEQUENCE IF NOT EXISTS receipt_seq START 1;
+
+CREATE OR REPLACE FUNCTION assign_receipt_number()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF NEW.receipt_number IS NULL AND COALESCE(NEW.status, 'confirmed') = 'confirmed' THEN
+    NEW.receipt_number := 'RHY-' || to_char(now(), 'YYYY') || '-' || lpad(nextval('receipt_seq')::text, 5, '0');
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS set_receipt_number ON fee_payments;
+CREATE TRIGGER set_receipt_number
+  BEFORE INSERT OR UPDATE OF status ON fee_payments
+  FOR EACH ROW EXECUTE FUNCTION assign_receipt_number();
+
+-- Backfill receipt numbers for existing confirmed rows
+UPDATE fee_payments
+SET receipt_number = 'RHY-' || to_char(COALESCE(paid_at, now()), 'YYYY') || '-' || lpad(nextval('receipt_seq')::text, 5, '0')
+WHERE receipt_number IS NULL AND COALESCE(status, 'confirmed') = 'confirmed';
+
+-- ══ Attendance: one mark per student per batch per day ══
+ALTER TABLE attendance DROP CONSTRAINT IF EXISTS attendance_student_id_date_key;
+DROP INDEX IF EXISTS attendance_student_id_date_key;
+CREATE UNIQUE INDEX IF NOT EXISTS attendance_student_batch_date_key
+  ON attendance (student_id, batch_id, date);
+
+-- ══ Instructor auth_id unique ══
+CREATE UNIQUE INDEX IF NOT EXISTS instructors_auth_id_unique
+  ON instructors (auth_id)
+  WHERE auth_id IS NOT NULL;
+
+-- ══ Enrolled count from live student rows ══
+CREATE OR REPLACE FUNCTION refresh_batch_enrolled_count(p_batch_id UUID)
+RETURNS VOID AS $$
+DECLARE
+  v_count INT;
+  v_capacity INT;
+BEGIN
+  IF p_batch_id IS NULL THEN RETURN; END IF;
+  SELECT COUNT(*) INTO v_count
+    FROM students WHERE batch_id = p_batch_id AND status = 'active';
+  SELECT capacity INTO v_capacity FROM batches WHERE id = p_batch_id;
+  UPDATE batches SET
+    enrolled_count = v_count,
+    status = CASE
+      WHEN status = 'paused' THEN 'paused'::batch_status
+      WHEN v_capacity > 0 AND v_count >= v_capacity THEN 'full'::batch_status
+      ELSE 'active'::batch_status
+    END
+  WHERE id = p_batch_id;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
+
+CREATE OR REPLACE FUNCTION students_enrollment_sync()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF TG_OP = 'DELETE' THEN
+    PERFORM refresh_batch_enrolled_count(OLD.batch_id);
+    RETURN OLD;
+  ELSIF TG_OP = 'UPDATE' THEN
+    IF OLD.batch_id IS DISTINCT FROM NEW.batch_id OR OLD.status IS DISTINCT FROM NEW.status THEN
+      PERFORM refresh_batch_enrolled_count(OLD.batch_id);
+      PERFORM refresh_batch_enrolled_count(NEW.batch_id);
+    END IF;
+    RETURN NEW;
+  ELSE
+    PERFORM refresh_batch_enrolled_count(NEW.batch_id);
+    RETURN NEW;
+  END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS students_enrollment_sync ON students;
+CREATE TRIGGER students_enrollment_sync
+  AFTER INSERT OR UPDATE OF batch_id, status OR DELETE ON students
+  FOR EACH ROW EXECUTE FUNCTION students_enrollment_sync();
+
+UPDATE batches b SET enrolled_count = (
+  SELECT COUNT(*) FROM students s WHERE s.batch_id = b.id AND s.status = 'active'
+);
+
+-- Capacity-check RPCs (count is maintained by the trigger — do not increment here)
+CREATE OR REPLACE FUNCTION public.increment_batch_enrollment(p_batch_id UUID)
+RETURNS BOOLEAN AS $$
+DECLARE
+  v_batch RECORD;
+BEGIN
+  IF public.get_user_role() IS DISTINCT FROM 'admin'
+     AND public.get_user_role() IS DISTINCT FROM 'instructor'
+     AND auth.uid() IS NOT NULL
+     AND public.get_user_role() IS DISTINCT FROM 'student' THEN
+    RAISE EXCEPTION 'insufficient_privilege' USING ERRCODE = '42501';
+  END IF;
+
+  SELECT * INTO v_batch FROM batches WHERE id = p_batch_id FOR UPDATE;
+  IF NOT FOUND THEN RAISE EXCEPTION 'Batch not found'; END IF;
+  IF v_batch.capacity > 0 AND COALESCE(v_batch.enrolled_count, 0) >= v_batch.capacity THEN
+    RAISE EXCEPTION 'Batch is full';
+  END IF;
+  PERFORM refresh_batch_enrolled_count(p_batch_id);
+  RETURN TRUE;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
+
+CREATE OR REPLACE FUNCTION public.decrement_batch_enrollment(p_batch_id UUID)
+RETURNS BOOLEAN AS $$
+BEGIN
+  IF public.get_user_role() IS DISTINCT FROM 'admin'
+     AND public.get_user_role() IS DISTINCT FROM 'instructor'
+     AND auth.uid() IS NOT NULL THEN
+    RAISE EXCEPTION 'insufficient_privilege' USING ERRCODE = '42501';
+  END IF;
+  PERFORM refresh_batch_enrolled_count(p_batch_id);
+  RETURN TRUE;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
+
+-- True consecutive-absence streak
+CREATE OR REPLACE FUNCTION public.check_consecutive_absences(p_student_id UUID, p_threshold INT)
+RETURNS BOOLEAN AS $$
+DECLARE
+  v_streak INT := 0;
+  v_row RECORD;
+BEGIN
+  IF public.get_user_role() NOT IN ('admin', 'instructor', 'student') THEN
+    RAISE EXCEPTION 'insufficient_privilege' USING ERRCODE = '42501';
+  END IF;
+  IF public.get_user_role() = 'student' THEN
+    IF NOT EXISTS (
+      SELECT 1 FROM students WHERE id = p_student_id AND auth_id = auth.uid()
+    ) THEN
+      RAISE EXCEPTION 'insufficient_privilege' USING ERRCODE = '42501';
+    END IF;
+  END IF;
+
+  FOR v_row IN
+    SELECT status FROM attendance
+    WHERE student_id = p_student_id
+    ORDER BY date DESC
+    LIMIT GREATEST(p_threshold, 1)
+  LOOP
+    IF v_row.status = 'absent' THEN
+      v_streak := v_streak + 1;
+    ELSE
+      EXIT;
+    END IF;
+  END LOOP;
+  RETURN v_streak >= p_threshold;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
+
+-- Instructor write on kuchipudi progress for their batch students
+DROP POLICY IF EXISTS kuchipudi_progress_instructor_write ON kuchipudi_progress;
+CREATE POLICY kuchipudi_progress_instructor_write ON kuchipudi_progress
+  FOR ALL USING (
+    public.get_user_role() = 'instructor' AND student_id IN (
+      SELECT s.id FROM students s
+      JOIN batches b ON b.id = s.batch_id
+      JOIN instructors i ON i.id = b.instructor_id
+      WHERE i.auth_id = auth.uid()
+    )
+  );
+
+-- ══ Bilingual broadcasts ══
+ALTER TABLE broadcast_logs ADD COLUMN IF NOT EXISTS message_te TEXT;
+ALTER TABLE broadcast_logs ADD COLUMN IF NOT EXISTS message_hi TEXT;
+
+-- ══ Notice reads (unread badges) ══
+CREATE TABLE IF NOT EXISTS notice_reads (
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  log_id UUID NOT NULL REFERENCES broadcast_logs(id) ON DELETE CASCADE,
+  read_at TIMESTAMPTZ DEFAULT now(),
+  PRIMARY KEY (user_id, log_id)
+);
+ALTER TABLE notice_reads ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS notice_reads_own ON notice_reads;
+DROP POLICY IF EXISTS notice_reads_own ON notice_reads;
+CREATE POLICY notice_reads_own ON notice_reads FOR ALL
+  USING (user_id = auth.uid())
+  WITH CHECK (user_id = auth.uid());
+DROP POLICY IF EXISTS notice_reads_admin ON notice_reads;
+DROP POLICY IF EXISTS notice_reads_admin ON notice_reads;
+CREATE POLICY notice_reads_admin ON notice_reads FOR ALL
+  USING (public.get_user_role() = 'admin');
+
+-- ══ Waitlist ══
+CREATE TABLE IF NOT EXISTS batch_waitlist (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  batch_id UUID NOT NULL REFERENCES batches(id) ON DELETE CASCADE,
+  student_id UUID REFERENCES students(id) ON DELETE SET NULL,
+  name TEXT NOT NULL,
+  phone TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  UNIQUE (batch_id, phone)
+);
+ALTER TABLE batch_waitlist ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS waitlist_admin_all ON batch_waitlist;
+DROP POLICY IF EXISTS waitlist_admin_all ON batch_waitlist;
+CREATE POLICY waitlist_admin_all ON batch_waitlist FOR ALL
+  USING (public.get_user_role() = 'admin');
+DROP POLICY IF EXISTS waitlist_student_insert ON batch_waitlist;
+DROP POLICY IF EXISTS waitlist_student_insert ON batch_waitlist;
+CREATE POLICY waitlist_student_insert ON batch_waitlist FOR INSERT TO authenticated
+  WITH CHECK (
+    student_id IN (SELECT id FROM students WHERE auth_id = auth.uid())
+  );
+DROP POLICY IF EXISTS waitlist_student_read ON batch_waitlist;
+DROP POLICY IF EXISTS waitlist_student_read ON batch_waitlist;
+CREATE POLICY waitlist_student_read ON batch_waitlist FOR SELECT TO authenticated
+  USING (student_id IN (SELECT id FROM students WHERE auth_id = auth.uid())
+         OR public.get_user_role() = 'admin');
+
+-- ══ Leave / makeup requests ══
+CREATE TABLE IF NOT EXISTS leave_requests (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  student_id UUID NOT NULL REFERENCES students(id) ON DELETE CASCADE,
+  batch_id UUID REFERENCES batches(id) ON DELETE SET NULL,
+  date DATE NOT NULL,
+  kind TEXT NOT NULL DEFAULT 'leave' CHECK (kind IN ('leave', 'makeup')),
+  status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'declined')),
+  notes TEXT,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+DROP TRIGGER IF EXISTS update_leave_requests_updated_at ON leave_requests;
+CREATE TRIGGER update_leave_requests_updated_at
+  BEFORE UPDATE ON leave_requests FOR EACH ROW EXECUTE FUNCTION set_updated_at();
+ALTER TABLE leave_requests ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS leave_requests_own ON leave_requests;
+DROP POLICY IF EXISTS leave_requests_own ON leave_requests;
+CREATE POLICY leave_requests_own ON leave_requests FOR ALL
+  USING (student_id IN (SELECT id FROM students WHERE auth_id = auth.uid()))
+  WITH CHECK (student_id IN (SELECT id FROM students WHERE auth_id = auth.uid()));
+DROP POLICY IF EXISTS leave_requests_admin ON leave_requests;
+DROP POLICY IF EXISTS leave_requests_admin ON leave_requests;
+CREATE POLICY leave_requests_admin ON leave_requests FOR ALL
+  USING (public.get_user_role() = 'admin');
+DROP POLICY IF EXISTS leave_requests_instructor ON leave_requests;
+DROP POLICY IF EXISTS leave_requests_instructor ON leave_requests;
+CREATE POLICY leave_requests_instructor ON leave_requests FOR ALL
+  USING (
+    public.get_user_role() = 'instructor' AND batch_id IN (
+      SELECT id FROM batches WHERE instructor_id IN (
+        SELECT id FROM instructors WHERE auth_id = auth.uid()
+      )
+    )
+  );
+
+-- ══ Annual-day / events + RSVP ══
+CREATE TABLE IF NOT EXISTS events (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  title TEXT NOT NULL,
+  slug TEXT UNIQUE NOT NULL,
+  starts_at TIMESTAMPTZ NOT NULL,
+  venue TEXT,
+  description TEXT,
+  is_published BOOLEAN DEFAULT false,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+CREATE TABLE IF NOT EXISTS event_rsvps (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  event_id UUID NOT NULL REFERENCES events(id) ON DELETE CASCADE,
+  name TEXT NOT NULL,
+  phone TEXT NOT NULL,
+  guests INT DEFAULT 1,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+ALTER TABLE events ENABLE ROW LEVEL SECURITY;
+ALTER TABLE event_rsvps ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS events_read_published ON events;
+DROP POLICY IF EXISTS events_read_published ON events;
+CREATE POLICY events_read_published ON events FOR SELECT
+  USING (is_published = true OR public.get_user_role() = 'admin');
+DROP POLICY IF EXISTS events_admin_all ON events;
+DROP POLICY IF EXISTS events_admin_all ON events;
+CREATE POLICY events_admin_all ON events FOR ALL
+  USING (public.get_user_role() = 'admin');
+DROP POLICY IF EXISTS event_rsvps_insert_anon ON event_rsvps;
+DROP POLICY IF EXISTS event_rsvps_insert_anon ON event_rsvps;
+CREATE POLICY event_rsvps_insert_anon ON event_rsvps FOR INSERT
+  WITH CHECK (true);
+DROP POLICY IF EXISTS event_rsvps_admin_all ON event_rsvps;
+DROP POLICY IF EXISTS event_rsvps_admin_all ON event_rsvps;
+CREATE POLICY event_rsvps_admin_all ON event_rsvps FOR ALL
+  USING (public.get_user_role() = 'admin');
+
+INSERT INTO events (title, slug, starts_at, venue, description, is_published)
+VALUES (
+  'Rhythmzz Annual Day',
+  'annual-day',
+  '2026-12-20 18:00:00+05:30',
+  'Rhythmzz Academy, Neredmet X Road, Secunderabad',
+  'Our yearly stage showcase — kids, adults, fitness, and Kuchipudi. RSVP so we can save seats for your family.',
+  true
+)
+ON CONFLICT (slug) DO NOTHING;
+
+-- Grants for new tables (0011 ran before these existed)
+GRANT ALL ON TABLE public.notice_reads TO anon, authenticated, service_role;
+GRANT ALL ON TABLE public.batch_waitlist TO anon, authenticated, service_role;
+GRANT ALL ON TABLE public.leave_requests TO anon, authenticated, service_role;
+GRANT ALL ON TABLE public.events TO anon, authenticated, service_role;
+GRANT ALL ON TABLE public.event_rsvps TO anon, authenticated, service_role;
+
+
+-- 0016_admin_attendance.sql
+-- Only academy admin may write attendance. Instructors keep read access
+-- on their own batches so they can see the roster. Students keep SELECT
+-- on their own marks. Students cannot self-approve leave requests.
+
+-- Attendance: drop instructor write, keep instructor SELECT
+DROP POLICY IF EXISTS attendance_instructor_read_write ON attendance;
+DROP POLICY IF EXISTS attendance_instructor_read ON attendance;
+DROP POLICY IF EXISTS attendance_instructor_read ON attendance;
+CREATE POLICY attendance_instructor_read ON attendance FOR SELECT USING (
+    public.get_user_role() = 'instructor' AND batch_id IN (
+        SELECT id FROM batches WHERE instructor_id = (
+            SELECT id FROM instructors WHERE auth_id = (SELECT auth.uid())
+        )
+    )
+);
+
+-- Leave: students may read and insert pending rows, not change status
+DROP POLICY IF EXISTS leave_requests_own ON leave_requests;
+DROP POLICY IF EXISTS leave_requests_own_select ON leave_requests;
+DROP POLICY IF EXISTS leave_requests_own_insert ON leave_requests;
+DROP POLICY IF EXISTS leave_requests_own_select ON leave_requests;
+CREATE POLICY leave_requests_own_select ON leave_requests FOR SELECT
+  USING (student_id IN (SELECT id FROM students WHERE auth_id = auth.uid()));
+DROP POLICY IF EXISTS leave_requests_own_insert ON leave_requests;
+CREATE POLICY leave_requests_own_insert ON leave_requests FOR INSERT
+  WITH CHECK (
+    student_id IN (SELECT id FROM students WHERE auth_id = auth.uid())
+    AND status = 'pending'
+  );
+
+-- Leave: instructors may read and review (update) their own batches only
+DROP POLICY IF EXISTS leave_requests_instructor ON leave_requests;
+DROP POLICY IF EXISTS leave_requests_instructor_select ON leave_requests;
+DROP POLICY IF EXISTS leave_requests_instructor_update ON leave_requests;
+DROP POLICY IF EXISTS leave_requests_instructor_select ON leave_requests;
+CREATE POLICY leave_requests_instructor_select ON leave_requests FOR SELECT
+  USING (
+    public.get_user_role() = 'instructor' AND batch_id IN (
+      SELECT id FROM batches WHERE instructor_id IN (
+        SELECT id FROM instructors WHERE auth_id = auth.uid()
+      )
+    )
+  );
+DROP POLICY IF EXISTS leave_requests_instructor_update ON leave_requests;
+CREATE POLICY leave_requests_instructor_update ON leave_requests FOR UPDATE
+  USING (
+    public.get_user_role() = 'instructor' AND batch_id IN (
+      SELECT id FROM batches WHERE instructor_id IN (
+        SELECT id FROM instructors WHERE auth_id = auth.uid()
+      )
+    )
+  );

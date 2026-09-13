@@ -1,18 +1,21 @@
 'use client';
 
 import { MessageCircle } from 'lucide-react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { whatsappLink } from '@/lib/utils/format';
 
 export function WhatsappFloat() {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const paying = pathname === '/enrol' && searchParams.get('intent') === 'pay';
 
-  // Contextual message depending on where the visitor is.
-  const message = pathname === '/enrol'
-    ? 'Hi, I am trying to book a class at Rhythmzz Academy and need a hand.'
-    : pathname?.startsWith('/programmes')
-      ? 'Hi, I would like to know more about a programme at Rhythmzz Academy.'
-      : 'Hi, I would like to know more about the classes at Rhythmzz Academy.';
+  const message = paying
+    ? 'Hi, I am trying to enrol and pay at Rhythmzz Academy and need a hand.'
+    : pathname === '/enrol'
+      ? 'Hi, I would like to book a free trial class at Rhythmzz Academy.'
+      : pathname?.startsWith('/programmes')
+        ? 'Hi, I would like to know more about a programme at Rhythmzz Academy.'
+        : 'Hi, I would like to know more about the classes at Rhythmzz Academy.';
 
   return (
     <a

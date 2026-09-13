@@ -3,7 +3,7 @@ import { getCurrentStudent } from "@/lib/auth/student";
 import { redirect } from "next/navigation";
 import { ROUTES } from "@/lib/utils/constants";
 import { AttendanceCalendar } from "@/components/student/attendance-calendar";
-import { Card } from "@/components/ui/card";
+import { MetricStrip } from "@/components/ui/metric-strip";
 
 export const metadata = {
   title: "My Attendance | Student Dashboard",
@@ -11,7 +11,7 @@ export const metadata = {
 
 export default async function AttendancePage() {
   const supabase = await createServerSupabase();
-  const { student, user } = await getCurrentStudent();
+  const { student } = await getCurrentStudent();
 
   if (!student) redirect(ROUTES.login);
 
@@ -42,71 +42,29 @@ export default async function AttendancePage() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="font-display text-4xl tracking-[2px] mb-2">Attendance Record</h1>
-        <p className="text-ink-2">Track your class attendance and history.</p>
-      </div>
+      <p className="text-sm text-ink-2">Marks from the front desk. You cannot mark yourself present.</p>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card>
-          <p className="text-sm text-ink-2 mb-1 uppercase tracking-widest font-semibold">Overall Attendance</p>
-          {total > 0 ? (
-            <>
-              <p className="font-display text-5xl mb-2">{percentage}%</p>
-              <div className="w-full bg-canvas-muted-2 h-2 rounded-full overflow-hidden">
-                <div
-                  className={`h-full ${percentage >= 75 ? "bg-green" : percentage >= 50 ? "bg-gold" : "bg-danger"}`}
-                  style={{ width: `${percentage}%` }}
-                />
-              </div>
-            </>
-          ) : (
-            <p className="text-sm text-ink-2 mt-2">No classes marked yet — your attendance will appear here once classes begin.</p>
-          )}
-        </Card>
+      <MetricStrip
+        items={[
+          {
+            label: "Overall",
+            value: total > 0 ? `${percentage}%` : "—",
+            hint: total > 0 ? undefined : "Not marked yet",
+          },
+          {
+            label: "This month",
+            value: monthTotal > 0 ? `${monthPresent}/${monthTotal}` : "—",
+            hint: monthTotal > 0 ? "Present / marked" : "Nothing this month",
+          },
+          {
+            label: "Present",
+            value: String(present),
+            hint: `${absent} absent · ${leave} leave`,
+          },
+        ]}
+      />
 
-        <Card>
-          <p className="text-sm text-ink-2 mb-1 uppercase tracking-widest font-semibold">This Month</p>
-          {monthTotal > 0 ? (
-            <>
-              <p className="font-display text-5xl mb-2">
-                {monthPresent}
-                <span className="text-2xl text-ink-2">/{monthTotal}</span>
-              </p>
-              <p className="text-sm text-ink-2">classes attended</p>
-            </>
-          ) : (
-            <p className="text-sm text-ink-2 mt-2">Nothing marked this month yet.</p>
-          )}
-        </Card>
-
-        <Card>
-          <p className="text-sm text-ink-2 mb-4 uppercase tracking-widest font-semibold">Stats</p>
-          <div className="flex gap-8">
-            <div>
-              <p className="text-3xl font-bold">{total}</p>
-              <p className="text-sm text-ink-2">Total Classes</p>
-            </div>
-            <div>
-              <p className="text-3xl font-bold text-green">{present}</p>
-              <p className="text-sm text-ink-2">Present</p>
-            </div>
-            <div>
-              <p className="text-3xl font-bold text-danger">{absent}</p>
-              <p className="text-sm text-ink-2">Absent</p>
-            </div>
-            <div>
-              <p className="text-3xl font-bold text-gold">{leave}</p>
-              <p className="text-sm text-ink-2">On Leave</p>
-            </div>
-          </div>
-        </Card>
-      </div>
-
-      <div>
-        <h2 className="font-display text-2xl tracking-[2px] mb-4">Calendar View</h2>
-        <AttendanceCalendar records={(attendance || []) as any} />
-      </div>
+      <AttendanceCalendar records={(attendance || []) as any} />
     </div>
   );
 }

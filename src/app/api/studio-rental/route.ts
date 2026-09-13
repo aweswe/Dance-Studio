@@ -6,7 +6,7 @@ import { rateLimit, clientIp } from '@/lib/rate-limit';
 export async function POST(req: Request) {
   try {
     // Anonymous endpoint — throttle spam before any parsing/DB work
-    if (!rateLimit(`rental:${clientIp(req.headers)}`, { limit: 5, windowMs: 10 * 60 * 1000 })) {
+    if (!(await rateLimit(`rental:${clientIp(req.headers)}`, { limit: 5, windowMs: 10 * 60 * 1000 }))) {
       return NextResponse.json({ error: 'Too many requests. Please try again later.' }, { status: 429 });
     }
 

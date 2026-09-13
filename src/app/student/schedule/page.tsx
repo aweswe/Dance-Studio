@@ -1,17 +1,16 @@
-import { createServerSupabase } from "@/lib/supabase/server";
 import { getCurrentStudent } from "@/lib/auth/student";
 import { redirect } from "next/navigation";
 import { ROUTES } from "@/lib/utils/constants";
 import { Card } from "@/components/ui/card";
 import { formatTime } from "@/lib/utils/format";
-import { StudentClassesView } from "@/components/student/student-classes-view";
+import Link from "next/link";
 
 export const metadata = {
   title: "My Schedule | Student Dashboard",
 };
 
 export default async function SchedulePage() {
-  const { student, user } = await getCurrentStudent();
+  const { student } = await getCurrentStudent();
 
   if (!student) redirect(ROUTES.login);
 
@@ -20,36 +19,37 @@ export default async function SchedulePage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="font-display text-4xl tracking-[2px] mb-2">Class Schedule</h1>
-        <p className="text-ink-2">Your current batch timings and days.</p>
-      </div>
+      <p className="text-sm text-ink-2">Your batch days and times.</p>
 
       {!batch ? (
         <div className="space-y-4">
-          <Card className="p-6 border-bl/30 bg-bl/5">
-            <h3 className="font-display text-xl text-ink mb-1">No Batch Assigned Yet</h3>
-            <p className="text-sm text-ink-2">
-              Select or join any class below to activate your weekly timetable.
+          <Card>
+            <h3 className="font-anton text-xl text-ink tracking-tight mb-1">No batch yet</h3>
+            <p className="text-sm text-ink-2 mb-4">
+              Choose a class to see your weekly timetable.
             </p>
+            <Link href={`${ROUTES.student}/classes`} className="text-sm font-medium text-bl-ink hover:text-bl">
+              Browse batches
+            </Link>
           </Card>
-          <StudentClassesView currentStudent={student} />
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-6">
           <Card>
-            <h2 className="font-display text-2xl mb-4">
-              {batch.name || `My Batch · ${batch.days?.join(", ")}`}
+            <h2 className="font-anton text-2xl text-ink tracking-tight mb-4">
+              {batch.name || `My batch · ${batch.days?.join(", ")}`}
             </h2>
             <div className="flex flex-col md:flex-row gap-8">
               <div className="flex-1">
-                <p className="text-sm text-ink-2 uppercase tracking-widest font-semibold mb-2">Timings</p>
+                <p className="text-[11px] text-ink-3 mb-1">Time</p>
                 <p className="text-lg font-medium">
-                  {formatTime(batch.time_start)} - {formatTime(batch.time_end)}
+                  {batch.time_start && batch.time_end
+                    ? `${formatTime(batch.time_start)} - ${formatTime(batch.time_end)}`
+                    : "Time not set"}
                 </p>
               </div>
               <div className="flex-2">
-                <p className="text-sm text-ink-2 uppercase tracking-widest font-semibold mb-3">Weekly Routine</p>
+                <p className="text-[11px] text-ink-3 mb-3">Days</p>
                 {!batch.days || batch.days.length === 0 ? (
                   <p className="text-sm text-ink-2">Class days not set yet — contact the academy for timings.</p>
                 ) : (

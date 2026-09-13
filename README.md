@@ -14,7 +14,7 @@ Full-stack website, student portal, and admin dashboard for Rhythmzz Academy of 
 
 ```bash
 npm install
-cp .env.example .env.local   # fill in the values below
+cp .env.local.example .env.local   # fill in the values below
 npm run dev                  # http://localhost:3000
 ```
 
@@ -30,6 +30,8 @@ npm run dev                  # http://localhost:3000
 | `RAZORPAY_KEY_ID` / `RAZORPAY_KEY_SECRET` / `RAZORPAY_WEBHOOK_SECRET` | for payments | Server-side orders + webhook verification |
 | `WHATSAPP_API_KEY` | for live WhatsApp | Absent → mock mode (messages logged, admin banner shown) |
 | `WHATSAPP_PROVIDER` / `WHATSAPP_API_URL` | for live WhatsApp | `interakt` (default) or `wati` |
+| `NEXT_PUBLIC_UPI_ID` | for offline UPI | Shown on student fees when Razorpay is off |
+| `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` | optional | Durable rate limits; otherwise in-memory per instance |
 | `CRON_SECRET` | ✅ | Guards `/api/cron/*` (set on Vercel for the crons to work) |
 
 ## Scripts
@@ -44,7 +46,7 @@ npm test        # Vitest unit tests (validators, rate limit, CSV, ledger)
 
 ## Database & migrations
 
-Canonical migrations live in `supabase/migrations/0001…0014`. To change the schema:
+Canonical migrations live in `supabase/migrations/0001…0015`. To change the schema:
 
 ```bash
 node scripts/build-setup-sql.js                                   # 1. regenerate supabase/setup.sql (bootstrap)
@@ -61,8 +63,9 @@ npm run build                                                     # 4. build + l
 |---|---|---|---|
 | Broadcast drain | every 5 min | `/api/cron/broadcast` | Sends queued WhatsApp messages, 3 attempts each |
 | Fee reminders | 03:30 UTC daily | `/api/cron/fee-reminders` | Queues `fee_reminder` for students with an uncovered current month |
+| Class reminders | 14:30 UTC daily | `/api/cron/class-reminders` | Night-before class WhatsApp for tomorrow's batches |
 
-Both are authenticated with `Authorization: Bearer $CRON_SECRET` and skip gracefully when `WHATSAPP_API_KEY` is missing.
+All three are authenticated with `Authorization: Bearer $CRON_SECRET`. Missing `WHATSAPP_API_KEY` logs messages as mock — they are not reported as sent.
 
 ## Architecture notes
 

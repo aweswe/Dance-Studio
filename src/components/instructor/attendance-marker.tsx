@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { markAttendance } from "@/actions/attendance";
+import { getAttendanceReport, markAttendance } from "@/actions/attendance";
 import { Check, X, Minus } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 
@@ -14,7 +14,8 @@ interface Student {
 
 interface Batch {
   id: string;
-  name: string;
+  name?: string | null;
+  days?: string[] | null;
   students: Student[];
 }
 
@@ -23,43 +24,65 @@ interface AttendanceMarkerProps {
   initialBatchId?: string;
 }
 
+function batchLabel(batch: Batch) {
+  return batch.name || (Array.isArray(batch.days) ? batch.days.join(", ") : "Batch");
+}
+
 export function AttendanceMarker({ batches, initialBatchId }: AttendanceMarkerProps) {
   const [selectedBatchId, setSelectedBatchId] = useState<string>(initialBatchId || batches[0]?.id || "");
-  const [date, setDate] = useState<string>(new Date().toISOString().split('T')[0]);
-  
-  const selectedBatch = batches.find(b => b.id === selectedBatchId);
+  const [date, setDate] = useState<string>(new Date().toISOString().split("T")[0]);
+
+  const selectedBatch = batches.find((b) => b.id === selectedBatchId);
   const students = selectedBatch?.students || [];
+  const studentKey = useMemo(() => students.map((s) => s.id).join("|"), [students]);
 
-  const [attendance, setAttendance] = useState<Record<string, "present" | "absent" | "leave">>(
-    students.reduce((acc, s) => ({ ...acc, [s.id]: "present" }), {})
-  );
-
+  const [attendance, setAttendance] = useState<Record<string, "present" | "absent" | "leave">>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [message, setMessage] = useState<{ type: "success" | "error", text: string } | null>(null);
+  const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
+
+  useEffect(() => {
+    if (initialBatchId && batches.some((b) => b.id === initialBatchId)) {
+      setSelectedBatchId(initialBatchId);
+    }
+  }, [initialBatchId, batches]);
+
+  useEffect(() => {
+    let cancelled = false;
+    const roster = studentKey ? studentKey.split("|").filter(Boolean) : [];
+    const defaults = Object.fromEntries(
+      roster.map((id) => [id, "present" as const]),
+    ) as Record<string, "present" | "absent" | "leave">;
+    setAttendance(defaults);
+    if (!selectedBatchId) return;
+
+    (async () => {
+      const res = await getAttendanceReport(selectedBatchId, date);
+      if (cancelled || !res.success) return;
+      const next = { ...defaults };
+      for (const m of res.marked ?? []) {
+        if (m.student_id && m.status) next[m.student_id] = m.status;
+      }
+      setAttendance(next);
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedBatchId, date, studentKey]);
 
   const handleStatusChange = (studentId: string, status: "present" | "absent" | "leave") => {
-    setAttendance(prev => ({ ...prev, [studentId]: status }));
-  };
-
-  const handleBatchChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newBatchId = e.target.value;
-    setSelectedBatchId(newBatchId);
-    
-    const newBatch = batches.find(b => b.id === newBatchId);
-    if (newBatch) {
-      setAttendance(newBatch.students.reduce((acc, s) => ({ ...acc, [s.id]: "present" }), {}));
-    }
+    setAttendance((prev) => ({ ...prev, [studentId]: status }));
   };
 
   const handleSubmit = async () => {
     if (!selectedBatchId) return;
-    
+
     setIsSubmitting(true);
     setMessage(null);
 
     const records = Object.entries(attendance).map(([studentId, status]) => ({
       studentId,
-      status
+      status,
     }));
 
     try {
@@ -77,7 +100,7 @@ export function AttendanceMarker({ batches, initialBatchId }: AttendanceMarkerPr
   };
 
   if (batches.length === 0) {
-    return <Card><p className="text-ink-2">You have no assigned classes.</p></Card>;
+    return <Card><p className="text-ink-2">No batches found. Create a class first.</p></Card>;
   }
 
   return (
@@ -88,10 +111,10 @@ export function AttendanceMarker({ batches, initialBatchId }: AttendanceMarkerPr
           <select
             className="w-full p-3 rounded-lg border border-line bg-surface focus-visible:focus-ring"
             value={selectedBatchId}
-            onChange={handleBatchChange}
+            onChange={(e) => setSelectedBatchId(e.target.value)}
           >
-            {batches.map(b => (
-              <option key={b.id} value={b.id}>{b.name}</option>
+            {batches.map((b) => (
+              <option key={b.id} value={b.id}>{batchLabel(b)}</option>
             ))}
           </select>
         </div>
@@ -114,12 +137,13 @@ export function AttendanceMarker({ batches, initialBatchId }: AttendanceMarkerPr
 
       <div className="space-y-3 mb-8">
         {students.length > 0 ? (
-          students.map(student => (
+          students.map((student) => (
             <div key={student.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-canvas-muted-2 rounded-lg gap-4">
               <span className="font-medium">{student.name}</span>
 
               <div className="flex bg-surface rounded-lg border border-line overflow-hidden">
                 <button
+                  type="button"
                   className={cn("flex-1 flex items-center justify-center gap-1.5 px-4 py-2 text-sm font-semibold transition-colors focus-visible:focus-ring active:scale-[0.98]",
                     attendance[student.id] === "present" ? "bg-green text-white" : "hover:bg-canvas-muted-2"
                   )}
@@ -128,6 +152,7 @@ export function AttendanceMarker({ batches, initialBatchId }: AttendanceMarkerPr
                   <Check size={16} /> Present
                 </button>
                 <button
+                  type="button"
                   className={cn("flex-1 flex items-center justify-center gap-1.5 px-4 py-2 text-sm font-semibold transition-colors border-l border-r border-line focus-visible:focus-ring active:scale-[0.98]",
                     attendance[student.id] === "absent" ? "bg-danger text-white" : "hover:bg-canvas-muted-2"
                   )}
@@ -136,6 +161,7 @@ export function AttendanceMarker({ batches, initialBatchId }: AttendanceMarkerPr
                   <X size={16} /> Absent
                 </button>
                 <button
+                  type="button"
                   className={cn("flex-1 flex items-center justify-center gap-1.5 px-4 py-2 text-sm font-semibold transition-colors focus-visible:focus-ring active:scale-[0.98]",
                     attendance[student.id] === "leave" ? "bg-gold text-black" : "hover:bg-canvas-muted-2"
                   )}

@@ -7,38 +7,40 @@ describe('rateLimit', () => {
   beforeEach(() => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date('2026-08-25T10:00:00Z'));
+    delete process.env.UPSTASH_REDIS_REST_URL;
+    delete process.env.UPSTASH_REDIS_REST_TOKEN;
   });
   afterEach(() => {
     vi.useRealTimers();
   });
 
-  it('allows up to the limit and denies the next request', () => {
+  it('allows up to the limit and denies the next request', async () => {
     const key = `t:${Math.random()}`;
-    for (let i = 0; i < 5; i++) expect(rateLimit(key, { limit: 5, windowMs: WINDOW })).toBe(true);
-    expect(rateLimit(key, { limit: 5, windowMs: WINDOW })).toBe(false);
+    for (let i = 0; i < 5; i++) expect(await rateLimit(key, { limit: 5, windowMs: WINDOW })).toBe(true);
+    expect(await rateLimit(key, { limit: 5, windowMs: WINDOW })).toBe(false);
   });
 
-  it('allows again once the window slides past', () => {
+  it('allows again once the window slides past', async () => {
     const key = `t:${Math.random()}`;
-    expect(rateLimit(key, { limit: 1, windowMs: WINDOW })).toBe(true);
-    expect(rateLimit(key, { limit: 1, windowMs: WINDOW })).toBe(false);
+    expect(await rateLimit(key, { limit: 1, windowMs: WINDOW })).toBe(true);
+    expect(await rateLimit(key, { limit: 1, windowMs: WINDOW })).toBe(false);
     vi.advanceTimersByTime(WINDOW + 1);
-    expect(rateLimit(key, { limit: 1, windowMs: WINDOW })).toBe(true);
+    expect(await rateLimit(key, { limit: 1, windowMs: WINDOW })).toBe(true);
   });
 
-  it('expires a request sitting exactly on the window edge (boundary exclusive)', () => {
+  it('expires a request sitting exactly on the window edge (boundary exclusive)', async () => {
     const key = `t:${Math.random()}`;
-    expect(rateLimit(key, { limit: 1, windowMs: WINDOW })).toBe(true);
-    vi.advanceTimersByTime(WINDOW); // t == cutoff → pruned (t > cutoff is false)
-    expect(rateLimit(key, { limit: 1, windowMs: WINDOW })).toBe(true);
+    expect(await rateLimit(key, { limit: 1, windowMs: WINDOW })).toBe(true);
+    vi.advanceTimersByTime(WINDOW);
+    expect(await rateLimit(key, { limit: 1, windowMs: WINDOW })).toBe(true);
   });
 
-  it('keeps keys isolated', () => {
+  it('keeps keys isolated', async () => {
     const a = `t:${Math.random()}:a`;
     const b = `t:${Math.random()}:b`;
-    expect(rateLimit(a, { limit: 1, windowMs: WINDOW })).toBe(true);
-    expect(rateLimit(a, { limit: 1, windowMs: WINDOW })).toBe(false);
-    expect(rateLimit(b, { limit: 1, windowMs: WINDOW })).toBe(true);
+    expect(await rateLimit(a, { limit: 1, windowMs: WINDOW })).toBe(true);
+    expect(await rateLimit(a, { limit: 1, windowMs: WINDOW })).toBe(false);
+    expect(await rateLimit(b, { limit: 1, windowMs: WINDOW })).toBe(true);
   });
 });
 

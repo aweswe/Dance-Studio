@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 
 export async function GET(req: Request) {
   try {
-    if (!rateLimit(`export:${clientIp(req.headers)}`, { limit: 10, windowMs: 60 * 1000 })) {
+    if (!(await rateLimit(`export:${clientIp(req.headers)}`, { limit: 10, windowMs: 60 * 1000 }))) {
       return NextResponse.json({ error: 'Too many requests. Please try again later.' }, { status: 429 });
     }
 

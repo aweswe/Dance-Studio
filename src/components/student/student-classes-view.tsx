@@ -4,135 +4,69 @@ import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { assignStudentBatch } from "@/actions/profile";
+import { joinWaitlist } from "@/actions/studio";
 import { loadRazorpayScript, openRazorpayCheckout } from "@/lib/razorpay/checkout";
+import { formatTime } from "@/lib/utils/format";
 import {
   Calendar,
   Clock,
   CheckCircle2,
   CreditCard,
-  ArrowRight,
   Loader2,
   AlertCircle,
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
-export interface BatchSlot {
+export interface LiveBatch {
   id: string;
-  name: string;
-  days: string[];
-  time: string;
-  spots: string;
+  name?: string | null;
+  days: string[] | null;
+  time_start: string | null;
+  time_end: string | null;
+  capacity: number;
+  enrolled_count: number | null;
+  status: string | null;
+  programme_id: string;
 }
 
-export interface ProgrammeCard {
+export interface LiveProgramme {
   id: string;
   name: string;
   slug: string;
-  fee: number;
-  image: string;
-  description: string;
-  batches: BatchSlot[];
+  description?: string | null;
+  fees_monthly: number | null;
+  image?: string;
+  batches: LiveBatch[];
 }
 
-const PROGRAMMES: ProgrammeCard[] = [
-  {
-    id: "a1b2c3d4-4004-4000-8000-000000000004",
-    name: "Kuchipudi Classical Dance",
-    slug: "kuchipudi",
-    fee: 2000,
-    image: "/images/kuchipudi/kuchipudi-natyarambham-posture.jpg",
-    description: "Traditional Aharya, Adavus, Tala rhythm and Certified Mudra training.",
-    batches: [
-      {
-        id: "a1b2c3d4-4106-4000-8000-000000000006",
-        name: "Weekend Master Batch (Fri & Sat)",
-        days: ["Friday", "Saturday"],
-        time: "6:30 PM - 7:30 PM",
-        spots: "3 spots open",
-      },
-    ],
-  },
-  {
-    id: "a1b2c3d4-4001-4000-8000-000000000001",
-    name: "Kids Dance Foundation",
-    slug: "kids-dance",
-    fee: 2000,
-    image: "/images/studio-training/group-circle-drill.jpg",
-    description: "Hip Hop, Bollywood foundation, rhythm drills, coordination & stage confidence.",
-    batches: [
-      {
-        id: "a1b2c3d4-4101-4000-8000-000000000001",
-        name: "Batch A · Mon–Wed · 5:00 PM – 6:00 PM",
-        days: ["Monday", "Tuesday", "Wednesday"],
-        time: "5:00 PM - 6:00 PM",
-        spots: "Filling fast",
-      },
-      {
-        id: "a1b2c3d4-4102-4000-8000-000000000002",
-        name: "Batch B · Mon–Wed · 6:00 PM – 7:00 PM",
-        days: ["Monday", "Tuesday", "Wednesday"],
-        time: "6:00 PM - 7:00 PM",
-        spots: "Open",
-      },
-    ],
-  },
-  {
-    id: "a1b2c3d4-4002-4000-8000-000000000002",
-    name: "Adults Contemporary & Street",
-    slug: "adults-dance",
-    fee: 2500,
-    image: "/images/studio-training/contemporary-conditioning.jpg",
-    description: "Contemporary movement, lyrical hip hop, grooves, alignment & expressive choreography.",
-    batches: [
-      {
-        id: "a1b2c3d4-4103-4000-8000-000000000003",
-        name: "Evening Batch A · Mon–Wed · 7:00 PM – 8:00 PM",
-        days: ["Monday", "Tuesday", "Wednesday"],
-        time: "7:00 PM - 8:00 PM",
-        spots: "Fast filling",
-      },
-      {
-        id: "a1b2c3d4-4104-4000-8000-000000000004",
-        name: "Evening Batch B · Mon–Wed · 8:00 PM – 9:00 PM",
-        days: ["Monday", "Tuesday", "Wednesday"],
-        time: "8:00 PM - 9:00 PM",
-        spots: "Open",
-      },
-    ],
-  },
-  {
-    id: "a1b2c3d4-4003-4000-8000-000000000003",
-    name: "Mind & Body Fitness / Zumba",
-    slug: "mind-body-fitness",
-    fee: 2500,
-    image: "/images/studio-training/floorwork-stretch.jpg",
-    description: "High energy daily morning Zumba, cardio endurance, body conditioning & flexibility.",
-    batches: [
-      {
-        id: "a1b2c3d4-4105-4000-8000-000000000005",
-        name: "Morning Fitness Routine · Mon–Fri · 9:30 AM – 10:30 AM",
-        days: ["Mon", "Tue", "Wed", "Thu", "Fri"],
-        time: "9:30 AM - 10:30 AM",
-        spots: "Open daily",
-      },
-    ],
-  },
-];
+const IMAGE_BY_SLUG: Record<string, string> = {
+  kuchipudi: "/images/kuchipudi/kuchipudi-natyarambham-posture.jpg",
+  "kids-dance": "/images/studio-training/group-circle-drill.jpg",
+  "adults-dance": "/images/studio-training/contemporary-conditioning.jpg",
+  "mind-body-fitness": "/images/studio-training/floorwork-stretch.jpg",
+};
+
+function spotsLabel(b: LiveBatch): string {
+  const left = Math.max(0, (b.capacity || 0) - (b.enrolled_count || 0));
+  if (b.status === "full" || left <= 0) return "Waitlist";
+  if (left <= 3) return `${left} spots left`;
+  return `${left} open`;
+}
 
 interface StudentClassesViewProps {
   currentStudent: any;
   feePaid?: boolean;
+  programmes: LiveProgramme[];
 }
 
-export function StudentClassesView({ currentStudent, feePaid }: StudentClassesViewProps) {
+export function StudentClassesView({ currentStudent, feePaid, programmes }: StudentClassesViewProps) {
   const router = useRouter();
   const currentBatchId = currentStudent?.batch_id || currentStudent?.batch?.id;
 
-  // Selected batch for each programme (defaults to currently enrolled batch or first batch)
   const [selectedBatches, setSelectedBatches] = useState<Record<string, string>>(() => {
     const initial: Record<string, string> = {};
-    PROGRAMMES.forEach((p) => {
+    programmes.forEach((p) => {
       const match = p.batches.find((b) => b.id === currentBatchId);
       initial[p.id] = match ? match.id : p.batches[0]?.id;
     });
@@ -142,34 +76,38 @@ export function StudentClassesView({ currentStudent, feePaid }: StudentClassesVi
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [statusMessage, setStatusMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
-  // Find currently active batch & programme
-  const activeProgramme = PROGRAMMES.find((p) => p.batches.some((b) => b.id === currentBatchId));
+  const activeProgramme = programmes.find((p) => p.batches.some((b) => b.id === currentBatchId));
   const activeBatch = activeProgramme?.batches.find((b) => b.id === currentBatchId);
 
-  // Handle batch assignment (for students whose fees are paid)
   async function handleAssignBatch(programmeId: string) {
     const batchId = selectedBatches[programmeId];
     if (!batchId) return;
-
     setActionLoading(`assign-${programmeId}`);
     setStatusMessage(null);
     try {
       const res = await assignStudentBatch(batchId);
       if (!res.success) throw new Error(res.error || "Failed to update batch");
-      setStatusMessage({ type: "success", text: "Schedule updated! Your live timetable is active." });
+      setStatusMessage({ type: "success", text: "Schedule updated." });
       router.refresh();
     } catch (err) {
-      setStatusMessage({
-        type: "error",
-        text: err instanceof Error ? err.message : "Error selecting batch",
-      });
+      setStatusMessage({ type: "error", text: err instanceof Error ? err.message : "Error selecting batch" });
     } finally {
       setActionLoading(null);
     }
   }
 
-  // Handle Online Razorpay Payment & Enrolment
-  async function handlePayAndEnrol(programme: ProgrammeCard) {
+  async function handleWaitlist(batchId: string) {
+    setActionLoading(`wait-${batchId}`);
+    const res = await joinWaitlist(batchId);
+    setStatusMessage(
+      res.success
+        ? { type: "success", text: "You're on the waitlist. We'll WhatsApp you when a seat opens." }
+        : { type: "error", text: res.error || "Could not join waitlist" },
+    );
+    setActionLoading(null);
+  }
+
+  async function handlePayAndEnrol(programme: LiveProgramme) {
     const batchId = selectedBatches[programme.id] || programme.batches[0]?.id;
     setActionLoading(`pay-${programme.id}`);
     setStatusMessage(null);
@@ -179,55 +117,34 @@ export function StudentClassesView({ currentStudent, feePaid }: StudentClassesVi
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           programmeId: programme.id,
-          batchId: batchId,
-          amount: programme.fee,
+          batchId,
           name: currentStudent.name,
           phone: currentStudent.phone,
           email: currentStudent.email,
         }),
       });
-
       const data = await res.json().catch(() => ({}));
-      if (!res.ok) {
-        throw new Error(data.message || data.error || "Could not initialize payment.");
-      }
-
+      if (!res.ok) throw new Error(data.message || data.error || "Could not initialize payment.");
       const scriptLoaded = await loadRazorpayScript();
-      if (!scriptLoaded) {
-        throw new Error("Could not load Razorpay window. Please try again.");
-      }
-
+      if (!scriptLoaded) throw new Error("Could not load Razorpay window.");
       openRazorpayCheckout({
         orderId: data.order_id,
         amount: data.amount,
-        description: `${programme.name} — Monthly Tuition`,
+        description: `${programme.name} — Monthly tuition`,
         prefill: {
           name: currentStudent.name,
           email: currentStudent.email || undefined,
           contact: currentStudent.phone || undefined,
         },
-        onSuccess: async () => {
-          if (batchId) {
-            await assignStudentBatch(batchId);
-          }
-          setStatusMessage({
-            type: "success",
-            text: `Payment of ₹${programme.fee} successful! You are enrolled in ${programme.name}.`,
-          });
+        onSuccess: () => {
+          setStatusMessage({ type: "success", text: `Payment successful. You're in ${programme.name}.` });
           router.refresh();
         },
-        onFailure: (msg) => {
-          setStatusMessage({ type: "error", text: msg || "Payment was not completed." });
-        },
-        onDismiss: () => {
-          setActionLoading(null);
-        },
+        onFailure: (msg) => setStatusMessage({ type: "error", text: msg || "Payment was not completed." }),
+        onDismiss: () => setActionLoading(null),
       });
     } catch (err) {
-      setStatusMessage({
-        type: "error",
-        text: err instanceof Error ? err.message : "Error processing payment",
-      });
+      setStatusMessage({ type: "error", text: err instanceof Error ? err.message : "Error processing payment" });
     } finally {
       setActionLoading(null);
     }
@@ -235,199 +152,142 @@ export function StudentClassesView({ currentStudent, feePaid }: StudentClassesVi
 
   return (
     <div className="space-y-6">
-      {/* Alert Banner */}
       {statusMessage && (
         <div
-          className={`p-4 rounded-xl flex items-center gap-3 text-sm font-medium transition-all ${
+          className={`p-4 rounded-xl flex items-center gap-3 text-sm font-medium ${
             statusMessage.type === "success"
               ? "bg-green/15 text-green border border-green/30"
               : "bg-danger/15 text-danger border border-danger/30"
           }`}
         >
-          {statusMessage.type === "success" ? (
-            <CheckCircle2 className="w-5 h-5 shrink-0" />
-          ) : (
-            <AlertCircle className="w-5 h-5 shrink-0" />
-          )}
+          {statusMessage.type === "success" ? <CheckCircle2 className="w-5 h-5 shrink-0" /> : <AlertCircle className="w-5 h-5 shrink-0" />}
           <span>{statusMessage.text}</span>
         </div>
       )}
 
-      {/* Currently Enrolled Active Banner */}
       {activeProgramme && activeBatch && (
-        <Card className="p-6 md:p-8 border-bl/40 bg-gradient-to-br from-surface via-surface/95 to-bl/5 shadow-md">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <Card>
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-5">
             <div className="space-y-2">
-              <div className="flex items-center gap-2">
-                <Badge variant="blue" className="px-3 py-1 font-bold">
-                  Enrolled Class
-                </Badge>
+              <div className="flex flex-wrap items-center gap-2">
+                <Badge variant="blue">Your class</Badge>
                 <Badge variant={feePaid ? "green" : "outline"} className={feePaid ? "" : "border-danger text-danger"}>
-                  Fee: {feePaid ? "Paid ✓" : "Due"}
+                  {feePaid ? "Fees paid" : "Fees due"}
                 </Badge>
               </div>
-              <h2 className="font-display text-2xl md:text-3xl text-ink">
-                {activeProgramme.name}
-              </h2>
-              <div className="flex flex-wrap items-center gap-4 text-xs text-ink-2 pt-1">
-                <span className="flex items-center gap-1.5 font-medium text-ink">
-                  <Calendar className="w-3.5 h-3.5 text-bl" />
-                  {activeBatch.days.join(", ")}
+              <h2 className="font-anton text-2xl md:text-3xl text-ink tracking-tight">{activeProgramme.name}</h2>
+              <div className="flex flex-wrap items-center gap-4 text-sm text-ink-2 pt-1">
+                <span className="flex items-center gap-1.5 text-ink">
+                  <Calendar className="w-3.5 h-3.5 text-bl" strokeWidth={1.5} />
+                  {(activeBatch.days || []).join(", ")}
                 </span>
-                <span className="flex items-center gap-1.5 font-medium text-ink">
-                  <Clock className="w-3.5 h-3.5 text-bl" />
-                  {activeBatch.time}
+                <span className="flex items-center gap-1.5 text-ink">
+                  <Clock className="w-3.5 h-3.5 text-bl" strokeWidth={1.5} />
+                  {formatTime(activeBatch.time_start || "")} – {formatTime(activeBatch.time_end || "")}
                 </span>
               </div>
             </div>
-
             {!feePaid && (
               <button
                 type="button"
                 onClick={() => handlePayAndEnrol(activeProgramme)}
                 disabled={actionLoading !== null}
-                className="bg-bl hover:bg-bl-deep text-white font-semibold text-xs tracking-[1.5px] uppercase px-6 py-3.5 rounded-lg transition-all shadow-md active:scale-[0.98] flex items-center gap-2"
+                className="inline-flex items-center justify-center gap-2 min-h-11 bg-bl hover:bg-bl-deep text-white font-semibold text-sm px-4 rounded-xl focus-visible:focus-ring active:scale-[0.96]"
               >
-                <CreditCard className="w-4 h-4" /> Pay Monthly Fee (₹{activeProgramme.fee})
+                <CreditCard className="w-4 h-4" strokeWidth={1.5} /> Pay ₹{activeProgramme.fees_monthly}
               </button>
             )}
           </div>
         </Card>
       )}
 
-      {/* Section Header */}
       <div>
-        <h3 className="font-display text-2xl text-ink tracking-wide">Dance Programmes & Class Schedules</h3>
-        <p className="text-xs text-ink-2">Select your preferred timing from the dropdown on any class.</p>
+        <h3 className="font-anton text-xl text-ink tracking-tight">Programmes</h3>
+        <p className="text-[12px] text-ink-3 mt-1">Seats from the studio timetable.</p>
       </div>
 
-      {/* 4 Clean Discipline Cards with Timing Dropdowns */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {PROGRAMMES.map((prog) => {
+        {programmes.map((prog) => {
           const selectedBatchId = selectedBatches[prog.id] || prog.batches[0]?.id;
           const selectedBatch = prog.batches.find((b) => b.id === selectedBatchId) || prog.batches[0];
           const isCurrentBatch = selectedBatchId === currentBatchId;
-          const isAssigning = actionLoading === `assign-${prog.id}`;
-          const isPaying = actionLoading === `pay-${prog.id}`;
+          const isFull = selectedBatch && (selectedBatch.status === "full" || spotsLabel(selectedBatch) === "Waitlist");
 
           return (
             <div
               key={prog.id}
-              className={`rounded-2xl overflow-hidden border bg-surface flex flex-col justify-between transition-all duration-300 ${
-                isCurrentBatch
-                  ? "border-bl ring-2 ring-bl/30 shadow-[0_10px_30px_rgba(43,180,216,0.15)]"
-                  : "border-line hover:border-line-strong hover:shadow-lg"
+              className={`rounded-[20px] overflow-hidden border bg-surface-card shadow-lift flex flex-col ${
+                isCurrentBatch ? "border-bl" : "border-line"
               }`}
             >
-              {/* Photo Banner */}
-              <div className="relative h-48 w-full overflow-hidden">
+              <div className="relative h-44 w-full overflow-hidden outline outline-1 outline-black/10 dark:outline-white/10">
                 <Image
-                  src={prog.image}
+                  src={prog.image || IMAGE_BY_SLUG[prog.slug] || "/images/studio-training/group-circle-drill.jpg"}
                   alt={prog.name}
                   fill
-                  className="object-cover transition-transform duration-500 hover:scale-105"
+                  className="object-cover"
                   sizes="(max-width: 768px) 100vw, 50vw"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-blk/90 via-blk/40 to-transparent" />
-
-                <div className="absolute top-3 left-3">
-                  <span className="text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded-md bg-blk/80 text-white backdrop-blur-sm border border-white/10">
-                    {prog.slug === "kuchipudi" ? "Classical" : prog.slug === "mind-body-fitness" ? "Fitness" : "Western / Contemporary"}
-                  </span>
-                </div>
-
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent" />
                 <div className="absolute top-3 right-3">
-                  <span className="text-xs font-bold px-3 py-1 rounded-md bg-bl text-white shadow-md">
-                    ₹{prog.fee}/mo
-                  </span>
+                  <span className="text-xs font-semibold px-2.5 py-1 rounded-md bg-surface-card/90 text-ink border border-line">₹{prog.fees_monthly}/mo</span>
                 </div>
-
                 <div className="absolute bottom-3 left-3 right-3">
-                  <p className="text-lg font-bold text-white leading-tight drop-shadow">
-                    {prog.name}
-                  </p>
+                  <p className="font-anton text-xl text-white tracking-tight">{prog.name}</p>
                 </div>
               </div>
 
-              {/* Card Body */}
-              <div className="p-6 space-y-4 flex-1 flex flex-col justify-between">
+              <div className="p-5 space-y-4 flex-1 flex flex-col justify-between">
                 <div className="space-y-4">
-                  <p className="text-xs text-ink-2 leading-relaxed">
-                    {prog.description}
-                  </p>
-
-                  {/* Timing Dropdown Menu */}
-                  <div className="space-y-1.5">
-                    <label className="text-[11px] font-semibold uppercase tracking-wider text-ink flex items-center gap-1.5">
-                      <Clock className="w-3.5 h-3.5 text-bl" /> Select Class Timings
-                    </label>
+                  {prog.description && <p className="text-sm text-ink-2 leading-relaxed line-clamp-3">{prog.description}</p>}
+                  {prog.batches.length > 0 ? (
                     <select
                       value={selectedBatchId}
-                      onChange={(e) => {
-                        setSelectedBatches((prev) => ({
-                          ...prev,
-                          [prog.id]: e.target.value,
-                        }));
-                      }}
-                      className="w-full bg-canvas-muted-2 border border-line rounded-xl p-3 text-xs font-semibold text-ink focus:outline-none focus:ring-2 focus:ring-bl transition-all cursor-pointer"
+                      onChange={(e) => setSelectedBatches((prev) => ({ ...prev, [prog.id]: e.target.value }))}
+                      className="w-full min-h-11 bg-canvas-muted border border-line rounded-xl px-3 text-sm text-ink"
                     >
                       {prog.batches.map((b) => (
                         <option key={b.id} value={b.id}>
-                          {b.name} ({b.spots})
+                          {b.name || `${(b.days || []).join(" · ")} ${formatTime(b.time_start || "")}`} ({spotsLabel(b)})
                         </option>
                       ))}
                     </select>
-                  </div>
-
-                  {/* Selected Slot Information Pill */}
-                  {selectedBatch && (
-                    <div className="p-3 rounded-xl bg-canvas-muted border border-line-subtle text-xs text-ink space-y-1">
-                      <p className="font-semibold text-bl-ink flex items-center gap-1.5">
-                        <Calendar className="w-3.5 h-3.5 text-bl" />
-                        {selectedBatch.days.join(", ")}
-                      </p>
-                      <p className="text-ink-2">
-                        Timings: {selectedBatch.time}
-                      </p>
-                    </div>
+                  ) : (
+                    <p className="text-sm text-ink-2">No batches published yet.</p>
                   )}
                 </div>
 
-                {/* Single Contextual Action Button */}
                 <div className="pt-4 border-t border-line">
                   {isCurrentBatch ? (
-                    <div className="w-full py-3.5 rounded-xl bg-green/15 text-green border border-green/30 text-xs font-bold uppercase tracking-wider text-center flex items-center justify-center gap-2">
-                      <CheckCircle2 className="w-4 h-4" /> Active Class Batch
-                    </div>
+                    <p className="w-full min-h-11 rounded-xl bg-canvas-muted text-ink-2 text-sm text-center inline-flex items-center justify-center">
+                      This is your class
+                    </p>
+                  ) : isFull ? (
+                    <button
+                      type="button"
+                      onClick={() => selectedBatch && handleWaitlist(selectedBatch.id)}
+                      disabled={actionLoading !== null}
+                      className="w-full min-h-11 border border-line-strong text-ink font-medium text-sm rounded-xl focus-visible:focus-ring active:scale-[0.96]"
+                    >
+                      {actionLoading === `wait-${selectedBatch?.id}` ? <Loader2 className="w-4 h-4 animate-spin mx-auto" /> : "Join waitlist"}
+                    </button>
                   ) : feePaid ? (
                     <button
                       type="button"
                       onClick={() => handleAssignBatch(prog.id)}
                       disabled={actionLoading !== null}
-                      className="w-full bg-bl hover:bg-bl-deep text-white font-semibold text-xs tracking-[1.5px] uppercase py-3.5 rounded-xl transition-all shadow-md active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-50"
+                      className="w-full min-h-11 bg-bl text-white font-semibold text-sm rounded-xl hover:bg-bl-deep focus-visible:focus-ring active:scale-[0.96]"
                     >
-                      {isAssigning ? (
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                      ) : (
-                        <>
-                          Confirm This Schedule Slot <ArrowRight className="w-4 h-4" />
-                        </>
-                      )}
+                      {actionLoading === `assign-${prog.id}` ? <Loader2 className="w-4 h-4 animate-spin mx-auto" /> : "Confirm this slot"}
                     </button>
                   ) : (
                     <button
                       type="button"
                       onClick={() => handlePayAndEnrol(prog)}
                       disabled={actionLoading !== null}
-                      className="w-full bg-bl hover:bg-bl-deep text-white font-semibold text-xs tracking-[1.5px] uppercase py-3.5 rounded-xl transition-all shadow-md active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-50"
+                      className="w-full min-h-11 bg-bl text-white font-semibold text-sm rounded-xl hover:bg-bl-deep focus-visible:focus-ring active:scale-[0.96]"
                     >
-                      {isPaying ? (
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                      ) : (
-                        <>
-                          <CreditCard className="w-4 h-4" /> Enrol & Pay Online (₹{prog.fee})
-                        </>
-                      )}
+                      {actionLoading === `pay-${prog.id}` ? <Loader2 className="w-4 h-4 animate-spin mx-auto" /> : `Enrol & pay · ₹${prog.fees_monthly}`}
                     </button>
                   )}
                 </div>

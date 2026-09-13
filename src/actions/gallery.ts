@@ -4,7 +4,7 @@ import { createServerSupabase, createAdminSupabase } from '@/lib/supabase/server
 import { isAdmin } from '@/lib/supabase/guards';
 import { revalidatePath } from 'next/cache';
 
-const MAX_FILE_SIZE = 25 * 1024 * 1024; // 25 MB max
+const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB — matches gallery bucket
 
 export async function uploadMedia(formData: FormData) {
   const supabase = await createServerSupabase();
@@ -16,7 +16,7 @@ export async function uploadMedia(formData: FormData) {
 
   if (!file) return { success: false, error: 'No file selected' };
   if (file.size > MAX_FILE_SIZE) {
-    return { success: false, error: 'File must be 25 MB or smaller' };
+    return { success: false, error: 'File must be 10 MB or smaller' };
   }
 
   const isVideo = file.type.startsWith('video/');

@@ -10,12 +10,12 @@ export function Card({ children, className, padding = "md" }: CardProps) {
   return (
     <div
       className={cn(
-        "bg-surface rounded-card border border-line overflow-hidden",
+        "bg-surface-card rounded-[20px] border border-line shadow-lift overflow-hidden",
         {
           "p-0": padding === "none",
           "p-4": padding === "sm",
-          "p-6": padding === "md",
-          "p-8": padding === "lg",
+          "p-5 sm:p-6": padding === "md",
+          "p-6 sm:p-8": padding === "lg",
         },
         className,
       )}
@@ -25,16 +25,17 @@ export function Card({ children, className, padding = "md" }: CardProps) {
   );
 }
 
+/** High-contrast ink block. Lifts off cream in light mode and off black in dark mode. */
 export function CardDark({ children, className, padding = "md" }: CardProps) {
   return (
     <div
       className={cn(
-        "bg-deep rounded-card border border-white/[.08] overflow-hidden",
+        "ink-panel rounded-[20px] overflow-hidden",
         {
           "p-0": padding === "none",
           "p-4": padding === "sm",
-          "p-6": padding === "md",
-          "p-8": padding === "lg",
+          "p-5 sm:p-6": padding === "md",
+          "p-6 sm:p-8": padding === "lg",
         },
         className,
       )}

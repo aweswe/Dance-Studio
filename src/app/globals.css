@@ -38,6 +38,8 @@
   --color-canvas-muted: var(--canvas-muted);
   --color-canvas-muted-2: var(--canvas-muted-2);
   --color-surface: var(--surface);
+  --color-surface-card: var(--surface-card);
+  --color-surface-raised: var(--surface-raised);
   --color-bl-pale-surface: var(--bl-pale-surface);
   --color-ink: var(--ink);
   --color-ink-2: var(--ink-2);
@@ -63,7 +65,7 @@
   --radius-tile: 12px;
   --radius-card: 16px;
 
-  /* ── Depth (border-first: shadows only for floating layers) ── */
+  /* ── Depth (light: layered shadow; dark: ring + inset highlight) ── */
   --shadow-pop: 0 8px 24px -12px rgb(15 15 15 / 0.18);
   --shadow-overlay: 0 24px 64px -16px rgb(15 15 15 / 0.35);
 
@@ -97,7 +99,11 @@
   --canvas-muted-2: #E9E4D6;
   --surface: #FFFFFF;
   --surface-card: #FFFFFF;
+  --surface-raised: #FFFFFF;
   --bl-pale-surface: #ECE7FF;
+  --shadow-lift: 0 0 0 1px rgba(20, 20, 24, 0.06), 0 1px 2px rgba(20, 20, 24, 0.04), 0 10px 28px -14px rgba(20, 20, 24, 0.12);
+  --shadow-pop: 0 8px 24px -12px rgb(15 15 15 / 0.18);
+  --shadow-overlay: 0 24px 64px -16px rgb(15 15 15 / 0.35);
 
   --ink: #141418;
   --ink-2: #525566;
@@ -126,12 +132,16 @@
   --background: #000000;
   --foreground: #FAF6EE;
 
-  --canvas: #000000;
-  --canvas-muted: #0A0A0A;
-  --canvas-muted-2: #141414;
-  --surface: #0A0A0A;
-  --surface-card: #111111;
-  --bl-pale-surface: rgba(124, 92, 252, 0.15);
+  --canvas: #090909;
+  --canvas-muted: #111111;
+  --canvas-muted-2: #1A1A1A;
+  --surface: #161616;
+  --surface-card: #1C1C1C;
+  --surface-raised: #262626;
+  --bl-pale-surface: rgba(124, 92, 252, 0.18);
+  --shadow-lift: inset 0 1px 0 rgba(255, 255, 255, 0.07), 0 0 0 1px rgba(255, 255, 255, 0.1), 0 16px 40px -20px rgba(0, 0, 0, 0.85);
+  --shadow-pop: 0 12px 32px -12px rgb(0 0 0 / 0.7);
+  --shadow-overlay: 0 24px 64px -16px rgb(0 0 0 / 0.8);
 
   --ink: #FAF6EE;
   --ink-2: #A2A5B8;
@@ -162,7 +172,6 @@ body {
   background: var(--canvas);
   color: var(--ink);
   overflow-x: hidden;
-  transition: background-color 300ms ease, color 300ms ease;
 }
 
 /* ── Theme transition (one-shot class added by ThemeToggle) ── */
@@ -182,7 +191,7 @@ html.theme-transition *::after {
   background: var(--canvas);
 }
 ::-webkit-scrollbar-thumb {
-  background: #2bb4d8;
+  background: var(--ink-3);
   border-radius: 3px;
 }
 
@@ -197,8 +206,12 @@ html.theme-transition *::after {
 
 /* ── Focus ring (standard for every interactive element) ── */
 @utility focus-ring {
-  outline: 2px solid color-mix(in oklch, #2bb4d8 60%, transparent);
+  outline: 2px solid color-mix(in oklch, #7C5CFC 55%, transparent);
   outline-offset: 2px;
+}
+
+@utility shadow-lift {
+  box-shadow: var(--shadow-lift);
 }
 
 /* ── Marquee Animation ── */
@@ -454,28 +467,81 @@ html.theme-transition *::after {
 
 /* ═══ BENTO & HYBRID AMBIENCE UTILITIES ═════════════════════════════ */
 .bento-card {
-  background-color: var(--surface);
+  background-color: var(--surface-card);
   border: 1px solid var(--line);
   border-radius: 24px;
   overflow: hidden;
   position: relative;
-  transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1), border-color 300ms ease, box-shadow 300ms ease;
-}
-
-.dark .bento-card {
-  background-color: #0A0A0A;
-  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: var(--shadow-lift);
+  transition: transform 200ms cubic-bezier(0.2, 0, 0, 1), border-color 200ms ease, box-shadow 200ms ease;
 }
 
 .bento-card:hover {
   transform: translateY(-2px);
-  border-color: rgba(43, 180, 216, 0.4);
-  box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.15);
+  border-color: var(--line-strong);
 }
 
-.dark .bento-card:hover {
-  border-color: rgba(255, 255, 255, 0.3);
-  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7);
+.ink-panel {
+  background: #141418;
+  color: #faf6ee;
+  box-shadow: 0 0 0 1px rgba(20, 20, 24, 0.2), 0 16px 40px -20px rgba(20, 20, 24, 0.4);
+}
+
+.dark .ink-panel {
+  background: var(--surface-raised);
+  color: var(--ink);
+  box-shadow: var(--shadow-lift);
+}
+
+/* Solid ink / sun / velvet tiles — must read on cream AND on black canvas */
+.fee-tile-ink {
+  background: #111111;
+  color: #f5fb38;
+  box-shadow: 0 0 0 1px rgba(245, 251, 56, 0.28), 0 12px 32px -16px rgba(20, 20, 24, 0.22);
+}
+.dark .fee-tile-ink {
+  background: #1c1c1c;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 0 0 1px rgba(245, 251, 56, 0.48),
+    0 18px 40px -18px rgba(0, 0, 0, 0.9);
+}
+
+.fee-tile-sun {
+  background: #f5fb38;
+  color: #000000;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1), 0 12px 32px -16px rgba(20, 20, 24, 0.18);
+}
+.dark .fee-tile-sun {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    0 0 0 1px rgba(245, 251, 56, 0.7),
+    0 18px 40px -18px rgba(0, 0, 0, 0.9);
+}
+
+.fee-tile-velvet {
+  background: #2a1654;
+  color: #c4b5fd;
+  box-shadow: 0 0 0 1px rgba(167, 139, 250, 0.28), 0 12px 32px -16px rgba(20, 20, 24, 0.22);
+}
+.dark .fee-tile-velvet {
+  background: #321c63;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 0 0 1px rgba(167, 139, 250, 0.55),
+    0 18px 40px -18px rgba(0, 0, 0, 0.9);
+}
+
+.ink-stage {
+  background: #000000;
+  box-shadow: 0 24px 64px -16px rgba(20, 20, 24, 0.35);
+}
+.dark .ink-stage {
+  background: #161616;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 0 0 1px rgba(250, 246, 238, 0.14),
+    0 24px 64px -16px rgba(0, 0, 0, 0.85);
 }
 
 /* Sun Butter Pill Button (Soft & Exciting Primary CTA) */

@@ -1,13 +1,15 @@
 /**
  * Fee-ledger helpers. A payment "covers" the calendar month in its
  * `for_month` column (backfilled to the paid_at month for history).
- * The current month is due when no payment covers it.
+ * The current month is due when no confirmed payment covers it.
  */
 
 export interface LedgerPayment {
   /** Month the payment covers ("YYYY-MM-DD"); falls back to paid_at. */
   for_month: string | null;
   paid_at: string;
+  status?: string | null;
+  amount?: number | null;
 }
 
 /** "YYYY-MM" key for a date or timestamp. */
@@ -16,10 +18,34 @@ export function monthKey(input: Date | string): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
 }
 
+/** First-of-month ISO date for a YYYY-MM key or Date. */
+export function monthStartIso(input: Date | string): string {
+  if (typeof input === 'string' && /^\d{4}-\d{2}$/.test(input)) {
+    return `${input}-01`;
+  }
+  const d = input instanceof Date ? input : new Date(input);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-01`;
+}
+
+/** Consecutive month starts for a monthly or quarterly plan. */
+export function coverageMonths(plan: 'monthly' | 'quarterly', from: Date = new Date()): string[] {
+  const count = plan === 'quarterly' ? 3 : 1;
+  const months: string[] = [];
+  for (let i = 0; i < count; i++) {
+    months.push(monthStartIso(new Date(from.getFullYear(), from.getMonth() + i, 1)));
+  }
+  return months;
+}
+
+function isConfirmed(p: LedgerPayment): boolean {
+  return !p.status || p.status === 'confirmed';
+}
+
 /** Month keys covered by the given payments. */
 export function coveredMonthKeys(payments: LedgerPayment[]): Set<string> {
   const covered = new Set<string>();
   for (const p of payments) {
+    if (!isConfirmed(p)) continue;
     if (p.for_month) covered.add(monthKey(p.for_month));
     else if (p.paid_at) covered.add(monthKey(p.paid_at));
   }
@@ -39,6 +65,19 @@ export function isDue(payments: LedgerPayment[], now: Date = new Date()): boolea
 /** Monthly fee with the app's fallback when a programme has none set. */
 export function monthlyAmount(feesMonthly: number | null | undefined): number {
   return feesMonthly && feesMonthly > 0 ? feesMonthly : 2500;
+}
+
+export function quarterlyAmount(
+  feesQuarterly: number | null | undefined,
+  feesMonthly: number | null | undefined,
+): number {
+  if (feesQuarterly && feesQuarterly > 0) return feesQuarterly;
+  return monthlyAmount(feesMonthly) * 3;
+}
+
+export function applySiblingDiscount(amount: number, siblingCount: number, percent = 10): number {
+  if (siblingCount < 2) return amount;
+  return Math.round(amount * (1 - percent / 100));
 }
 
 /** The last `count` month starts, oldest first (for the 12-month grid). */

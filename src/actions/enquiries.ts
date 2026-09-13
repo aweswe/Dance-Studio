@@ -24,7 +24,7 @@ export async function submitEnquiry(data: { name: string; phone: string; email?:
   // Per-IP throttle: 5 enquiries / 10 minutes.
   const h = await headers();
   const ip = h.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
-  if (!rateLimit(`enquiry:${ip}`, { limit: 5, windowMs: 10 * 60 * 1000 })) {
+  if (!(await rateLimit(`enquiry:${ip}`, { limit: 5, windowMs: 10 * 60 * 1000 }))) {
     return { success: false, error: 'Too many submissions. Please try again later or message us on WhatsApp.' };
   }
 
@@ -73,3 +73,58 @@ export async function updateEnquiryStatus(id: string, status: string) {
   revalidatePath('/admin/enquiries');
   return { success: true };
 }
+
+/** Enrol / trial lead — always written even when Razorpay is off. */
+export async function submitEnrolLead(data: {
+  childName: string;
+  parentName?: string;
+  age?: string;
+  phone: string;
+  email?: string;
+  programmeName?: string;
+  batchLabel?: string;
+  mode: 'trial' | 'pay';
+}) {
+  const h = await headers();
+  const ip = h.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
+  if (!(await rateLimit(`enrol-lead:${ip}`, { limit: 8, windowMs: 10 * 60 * 1000 }))) {
+    return { success: false, error: 'Too many submissions. Please try WhatsApp.' };
+  }
+
+  const message = [
+    data.mode === 'trial' ? 'Free trial request' : 'Enrolment / payment request',
+    data.parentName ? `Parent: ${data.parentName}` : null,
+    data.age ? `Age: ${data.age}` : null,
+    data.programmeName ? `Programme: ${data.programmeName}` : null,
+    data.batchLabel ? `Batch: ${data.batchLabel}` : null,
+  ].filter(Boolean).join(' · ');
+
+  const supabase = createAdminSupabase();
+  const { error } = await supabase.from('enquiries').insert({
+    name: data.childName,
+    phone: data.phone,
+    email: data.email || null,
+    message: message || 'Enrolment enquiry',
+    source: data.mode === 'trial' ? 'trial' : 'enrol',
+    status: 'new',
+  });
+  if (error) {
+    console.error('enrol lead insert failed:', error);
+    return { success: false, error: 'Could not save your request. Please try WhatsApp.' };
+  }
+
+  try {
+    await sendWhatsAppTemplate({
+      phone: ACADEMY.phone,
+      templateName: WHATSAPP_TEMPLATES.broadcast.name,
+      variables: WHATSAPP_TEMPLATES.broadcast.variables({
+        message: `New ${data.mode} from ${data.childName} (${data.phone}): ${message}`,
+      }),
+    });
+  } catch (err) {
+    console.error('enrol lead WhatsApp notify failed:', err);
+  }
+
+  return { success: true };
+}
+

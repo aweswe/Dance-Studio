@@ -8,6 +8,8 @@ export const sendBroadcastSchema = z
       .string()
       .min(1, "Message is required")
       .max(1000, "Message is too long (max 1000 characters)"),
+    messageTe: z.string().max(1000).optional().or(z.literal("")),
+    messageHi: z.string().max(1000).optional().or(z.literal("")),
   })
   .refine((d) => d.scope === "all" || !!d.scopeId, {
     message: "Pick the target for this scope",

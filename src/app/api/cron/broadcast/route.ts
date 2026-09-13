@@ -45,7 +45,13 @@ export async function GET(request: Request) {
     if (res.success) {
       await supabase
         .from('broadcast_queue')
-        .update({ status: 'sent', attempts, last_error: null })
+        .update({ status: 'sent', attempts, last_error: null, log_id: (row as any).log_id ?? null })
+        .eq('id', (row as any).id);
+      sent++;
+    } else if (res.mocked) {
+      await supabase
+        .from('broadcast_queue')
+        .update({ status: 'mocked', attempts, last_error: res.error })
         .eq('id', (row as any).id);
       sent++;
     } else if (attempts >= MAX_ATTEMPTS) {

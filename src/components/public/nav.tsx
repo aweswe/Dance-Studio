@@ -14,6 +14,7 @@ const LINKS = [
   { name: 'Programmes', href: ROUTES.programmes },
   { name: 'Schedule', href: ROUTES.schedule },
   { name: 'Gallery', href: ROUTES.gallery },
+  { name: 'Annual Day', href: ROUTES.annualDay },
   { name: 'Studio Rental', href: ROUTES.studioRental },
   { name: 'About', href: ROUTES.about },
   { name: 'Contact', href: ROUTES.contact },

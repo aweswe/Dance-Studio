@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge'
 import { Modal } from '@/components/ui/modal'
 import { Search, Plus } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { logOfflinePayment } from '@/actions/fees'
+import { logOfflinePayment, confirmPendingPayment } from '@/actions/fees'
 import { formatCurrency, formatDate } from '@/lib/utils/format'
 
 interface Payment {
@@ -18,6 +18,8 @@ interface Payment {
   notes: string | null
   paid_at: string
   for_month: string | null
+  status?: string | null
+  receipt_number?: string | null
   student: { name: string } | null
 }
 
@@ -139,13 +141,14 @@ export function FeeTable({
               <th scope="col" className="px-6 py-4 text-xs font-display tracking-[2px] text-ink-2 uppercase">Student</th>
               <th scope="col" className="px-6 py-4 text-xs font-display tracking-[2px] text-ink-2 uppercase">Amount</th>
               <th scope="col" className="px-6 py-4 text-xs font-display tracking-[2px] text-ink-2 uppercase">Method</th>
+              <th scope="col" className="px-6 py-4 text-xs font-display tracking-[2px] text-ink-2 uppercase">Status</th>
               <th scope="col" className="px-6 py-4 text-xs font-display tracking-[2px] text-ink-2 uppercase">Notes</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-line-subtle">
             {visible.length === 0 ? (
               <tr>
-                <td colSpan={6} className="px-6 py-12 text-center text-ink-2">
+                <td colSpan={7} className="px-6 py-12 text-center text-ink-2">
                   No payment records found.
                 </td>
               </tr>
@@ -160,6 +163,37 @@ export function FeeTable({
                     <Badge variant={p.source === 'razorpay' ? 'green' : p.source === 'upi_offline' ? 'blue' : 'default'}>
                       {p.source === 'upi_offline' ? 'UPI' : p.source.toUpperCase()}
                     </Badge>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex flex-col gap-2">
+                      <span className="text-xs uppercase tracking-wider text-ink-2">{p.status || 'confirmed'}</span>
+                      {p.receipt_number && <span className="text-[10px] text-ink-3">{p.receipt_number}</span>}
+                      {p.status === 'pending' && (
+                        <div className="flex gap-2">
+                          <Button
+                            size="sm"
+                            onClick={async () => {
+                              const res = await confirmPendingPayment(p.id, true)
+                              setFeedback(res.success ? { ok: true, text: 'Payment confirmed' } : { ok: false, text: res.error || 'Could not confirm' })
+                              if (res.success) router.refresh()
+                            }}
+                          >
+                            Confirm
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={async () => {
+                              const res = await confirmPendingPayment(p.id, false)
+                              setFeedback(res.success ? { ok: true, text: 'Payment rejected' } : { ok: false, text: res.error || 'Could not reject' })
+                              if (res.success) router.refresh()
+                            }}
+                          >
+                            Reject
+                          </Button>
+                        </div>
+                      )}
+                    </div>
                   </td>
                   <td className="px-6 py-4 text-sm text-ink-2">{p.notes || '—'}</td>
                 </tr>

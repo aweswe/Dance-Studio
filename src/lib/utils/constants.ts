@@ -25,8 +25,13 @@ export const ACADEMY = {
   },
   whatsapp: "https://wa.me/919052980859",
   mapLink: "https://maps.google.com/?q=Rhythmzz+Academy+of+Dance+Neredmet+Secunderabad",
-  foundingYear: 2013,
+  foundingYear: 2010,
   teachingSince: 2010,
+  registeredYear: 2013,
+  googleRating: 4.9,
+  googleReviewCount: 480,
+  upiId: process.env.NEXT_PUBLIC_UPI_ID || "",
+  siblingDiscountPercent: 10,
 } as const;
 
 /** Studio rental pricing */
@@ -42,6 +47,22 @@ export const HOURS = {
   closes: "21:00",
 } as const;
 
+/** How a visitor reached /enrol. Pricing surfaces force pay; everything else is a free trial. */
+export type EnrolIntent = "pay" | "trial";
+
+export function parseEnrolIntent(value?: string | null): EnrolIntent {
+  return value === "pay" ? "pay" : "trial";
+}
+
+/** Build /enrol with programme + intent. Omit intent to default to the WhatsApp trial path. */
+export function enrolHref(opts?: { programme?: string | null; intent?: EnrolIntent }) {
+  const params = new URLSearchParams();
+  if (opts?.intent) params.set("intent", opts.intent);
+  if (opts?.programme) params.set("programme", opts.programme);
+  const query = params.toString();
+  return query ? `/enrol?${query}` : "/enrol";
+}
+
 /** Route paths */
 export const ROUTES = {
   home: "/",
@@ -55,6 +76,8 @@ export const ROUTES = {
   blog: "/blog",
   blogPost: (slug: string) => `/blog/${slug}`,
   contact: "/contact",
+  events: "/events",
+  annualDay: "/events/annual-day",
   // Auth
   login: "/login",
   adminLogin: "/admin-login",

@@ -81,7 +81,19 @@ if (args.includes('--dry-run')) {
   process.exit(0);
 }
 
-const supabase = '/opt/homebrew/bin/supabase';
+function resolveSupabase() {
+  const candidates = [
+    process.env.SUPABASE_CLI,
+    '/opt/homebrew/bin/supabase',
+    '/usr/local/bin/supabase',
+  ].filter(Boolean);
+  for (const bin of candidates) {
+    if (fs.existsSync(bin)) return { cmd: bin, args: [] };
+  }
+  return { cmd: 'npx', args: ['--yes', 'supabase'] };
+}
+
+const supabase = resolveSupabase();
 let failed = 0;
 
 // The CLI's flag parser treats a positional arg starting with "--" as a flag,
@@ -99,9 +111,17 @@ const stripLeadingComments = (s) => {
 
 for (let i = 0; i < statements.length; i++) {
   const firstLine = statements[i].split('\n')[0].slice(0, 70);
+  const sql = stripLeadingComments(statements[i]);
   process.stdout.write(`[${i + 1}/${statements.length}] ${firstLine} ... `);
+  if (!sql) {
+    console.log('SKIP');
+    continue;
+  }
   try {
-    execFileSync(supabase, ['db', 'query', '--db-url', dbUrl, stripLeadingComments(statements[i])], {
+    execFileSync(
+      supabase.cmd,
+      [...supabase.args, 'db', 'query', '--db-url', dbUrl, sql],
+      {
       stdio: ['ignore', 'pipe', 'pipe'],
       timeout: 120000,
     });
@@ -109,7 +129,12 @@ for (let i = 0; i < statements.length; i++) {
   } catch (err) {
     failed++;
     console.log('FAILED');
-    console.error(String(err.stderr || err.message).trim().slice(0, 500));
+    const detail = [err.stderr, err.stdout, err.message]
+      .filter(Boolean)
+      .map((chunk) => String(chunk).trim())
+      .join('\n')
+      .slice(0, 800);
+    console.error(detail);
   }
 }
 

@@ -4,12 +4,8 @@ import { SITE_URL } from "@/lib/utils/constants";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = SITE_URL;
-  const supabase = getPublicSupabase();
-  // Static pages don't have a DB row to read a real lastModified from —
-  // deploy time is the honest value (previously a hardcoded Jan 2026 date).
   const buildDate = new Date();
 
-  // Static pages
   const staticPages: MetadataRoute.Sitemap = [
     { url: baseUrl, lastModified: buildDate, changeFrequency: "weekly", priority: 1.0 },
     { url: `${baseUrl}/programmes`, lastModified: buildDate, changeFrequency: "weekly", priority: 0.9 },
@@ -18,8 +14,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${baseUrl}/contact`, lastModified: buildDate, changeFrequency: "monthly", priority: 0.7 },
     { url: `${baseUrl}/enrol`, lastModified: buildDate, changeFrequency: "monthly", priority: 0.9 },
     { url: `${baseUrl}/studio-rental`, lastModified: buildDate, changeFrequency: "monthly", priority: 0.6 },
+    { url: `${baseUrl}/events`, lastModified: buildDate, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${baseUrl}/events/annual-day`, lastModified: buildDate, changeFrequency: "monthly", priority: 0.7 },
     { url: `${baseUrl}/blog`, lastModified: buildDate, changeFrequency: "weekly", priority: 0.6 },
   ];
+
+  const supabase = getPublicSupabase();
+  if (!supabase) {
+    return staticPages;
+  }
 
   // Programme pages
   const { data: programmes } = await supabase

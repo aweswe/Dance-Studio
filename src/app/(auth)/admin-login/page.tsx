@@ -1,10 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { ACADEMY } from "@/lib/utils/constants";
-import { Lock, ArrowRight, Loader2 } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import { AuthShell } from "@/components/auth/auth-shell";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState("");
@@ -14,25 +17,20 @@ export default function AdminLoginPage() {
   const router = useRouter();
   const supabase = createClient();
 
-  // If already authenticated as admin/instructor, redirect immediately
-  useState(() => {
+  useEffect(() => {
     supabase.auth.getUser().then(async ({ data: { user } }) => {
-      if (user) {
-        const { data: profile } = await supabase
-          .from("users")
-          .select("role")
-          .eq("id", user.id)
-          .maybeSingle();
+      if (!user) return;
+      const { data: profile } = await supabase
+        .from("users")
+        .select("role")
+        .eq("id", user.id)
+        .maybeSingle();
 
-        const role = (profile as any)?.role;
-        if (role === "admin") {
-          router.push("/admin");
-        } else if (role === "instructor") {
-          router.push("/instructor");
-        }
-      }
+      const role = (profile as { role?: string } | null)?.role;
+      if (role === "admin") router.push("/admin");
+      else if (role === "instructor") router.push("/instructor");
     });
-  });
+  }, [router, supabase]);
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
@@ -47,7 +45,6 @@ export default function AdminLoginPage() {
 
       if (authError) throw authError;
 
-      // Get role and redirect
       const {
         data: { user },
       } = await supabase.auth.getUser();
@@ -65,88 +62,52 @@ export default function AdminLoginPage() {
         } else if (role === "instructor") {
           window.location.href = "/instructor";
         } else {
-          setError("Access denied. Admin or Instructor accounts only.");
+          setError("This login is for staff only.");
           await supabase.auth.signOut();
         }
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Login failed");
+      setError(err instanceof Error ? err.message : "Could not sign in");
     } finally {
       setIsLoading(false);
     }
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-blk px-6">
-      <div className="w-full max-w-sm">
-        {/* Header */}
-        <div className="text-center mb-10">
-          <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-4">
-            <Lock className="w-5 h-5 text-white/40" />
-          </div>
-          <h1 className="font-display text-4xl tracking-wider text-white mb-2">
-            Staff Login
-          </h1>
-          <p className="text-xs tracking-[3px] uppercase text-white/30">
-            Admin & Instructors
-          </p>
-        </div>
-
-        <form onSubmit={handleLogin} className="space-y-4">
-          <div>
-            <label className="text-[10px] tracking-[2px] uppercase text-white/40 mb-2 block">
-              Email
-            </label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="admin@rhythmzz.in"
-              className="w-full bg-white/5 border border-white/10 rounded px-4 py-3 text-white text-sm placeholder-white/20 focus:outline-none focus:border-bl/50 transition-colors"
-              autoFocus
-              required
-            />
-          </div>
-
-          <div>
-            <label className="text-[10px] tracking-[2px] uppercase text-white/40 mb-2 block">
-              Password
-            </label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              className="w-full bg-white/5 border border-white/10 rounded px-4 py-3 text-white text-sm placeholder-white/20 focus:outline-none focus:border-bl/50 transition-colors"
-              required
-            />
-          </div>
-
-          {error && (
-            <p className="text-xs text-red-400">{error}</p>
-          )}
-
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="w-full bg-white text-blk text-[11px] font-semibold tracking-[2px] uppercase py-3.5 flex items-center justify-center gap-2 hover:bg-white/90 transition-colors disabled:opacity-50"
-          >
-            {isLoading ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
-            ) : (
-              <>
-                Sign In <ArrowRight className="w-3.5 h-3.5" />
-              </>
-            )}
-          </button>
-        </form>
-
-        <p className="text-[10px] text-white/20 text-center mt-8 leading-relaxed">
+    <AuthShell
+      eyebrow="Front desk"
+      title="Staff sign in"
+      footer={
+        <>
           {ACADEMY.name}
           <br />
-          Contact admin for account access.
-        </p>
-      </div>
-    </main>
+          Ask the academy if you need an account.
+        </>
+      }
+    >
+      <form onSubmit={handleLogin} className="space-y-4">
+        <Input
+          type="email"
+          label="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="you@rhythmzz.in"
+          autoFocus
+          required
+        />
+        <Input
+          type="password"
+          label="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="••••••••"
+          required
+        />
+        {error && <p className="text-xs text-danger">{error}</p>}
+        <Button type="submit" className="w-full" disabled={isLoading} isLoading={isLoading}>
+          Sign in <ArrowRight className="w-3.5 h-3.5" />
+        </Button>
+      </form>
+    </AuthShell>
   );
 }

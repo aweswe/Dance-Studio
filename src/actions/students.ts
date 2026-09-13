@@ -20,7 +20,7 @@ export async function enablePortalAccess(studentId: string) {
 
   const { data: studentData } = await supabase
     .from('students')
-    .select('id, name, phone, auth_id, programme:programmes(name)')
+    .select('id, name, phone, email, auth_id, programme:programmes(name)')
     .eq('id', studentId)
     .single();
   const student = studentData as any;
@@ -43,7 +43,9 @@ export async function enablePortalAccess(studentId: string) {
   let userId: string;
   const { data: created, error: createErr } = await admin.auth.admin.createUser({
     phone,
+    email: student.email || undefined,
     phone_confirm: true,
+    email_confirm: Boolean(student.email),
   });
   if (createErr) {
     if (createErr.message.includes('already')) {
@@ -125,17 +127,9 @@ export async function createStudent(data: CreateStudentData & { name: string; ph
     .single();
 
   if (error) {
-    if (error.code === '23505' || error.message.includes('duplicate')) {
-      return { success: false, error: 'A student with this phone number already exists' };
-    }
     return { success: false, error: error.message };
   }
 
-  if (d.batchId) {
-    await supabase.rpc('increment_batch_enrollment', { p_batch_id: d.batchId });
-  }
-
-  // Optional immediate portal access — reuses the idempotent provisioning flow.
   let portal = { ok: true };
   if (d.enablePortal && inserted) {
     const res = await enablePortalAccess(inserted.id);
@@ -163,9 +157,6 @@ export async function deactivateStudent(studentId: string) {
       .update({ status: 'inactive' })
       .eq('id', studentId);
     if (error) return { success: false, error: error.message };
-    if (student.batch_id && student.status === 'active') {
-      await supabase.rpc('decrement_batch_enrollment', { p_batch_id: student.batch_id });
-    }
   }
   revalidatePath('/admin/students');
   return { success: true };
@@ -188,9 +179,6 @@ export async function reactivateStudent(studentId: string) {
       .update({ status: 'active' })
       .eq('id', studentId);
     if (error) return { success: false, error: error.message };
-    if (student.batch_id && student.status !== 'active') {
-      await supabase.rpc('increment_batch_enrollment', { p_batch_id: student.batch_id });
-    }
   }
   revalidatePath('/admin/students');
   return { success: true };
@@ -239,21 +227,7 @@ export async function updateStudent(studentId: string, data: UpdateStudentData) 
     .from('students')
     .update(payload as any)
     .eq('id', studentId);
-  if (error) {
-    if (error.code === '23505' || error.message.includes('duplicate')) {
-      return { success: false, error: 'A student with this phone number already exists' };
-    }
-    return { success: false, error: error.message };
-  }
-
-  // Batch-move bookkeeping
-  const oldBatch = (current as { batch_id: string | null } | null)?.batch_id ?? null;
-  if (oldBatch && oldBatch !== (d.batchId ?? null)) {
-    await supabase.rpc('decrement_batch_enrollment', { p_batch_id: oldBatch });
-  }
-  if (d.batchId && d.batchId !== oldBatch) {
-    await supabase.rpc('increment_batch_enrollment', { p_batch_id: d.batchId });
-  }
+  if (error) return { success: false, error: error.message };
 
   revalidatePath('/admin/students');
   revalidatePath('/admin/students/' + studentId);

@@ -10,7 +10,7 @@ export function Badge({ children, variant = "default", className }: BadgeProps) 
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 text-[9px] tracking-[3px] uppercase font-bold px-3 py-1 rounded-full",
+        "inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-md",
         {
           "bg-bl/15 text-bl-ink": variant === "blue",
           "bg-gold/15 text-gold-ink": variant === "gold",

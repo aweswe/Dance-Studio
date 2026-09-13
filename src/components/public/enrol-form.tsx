@@ -1,7 +1,6 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import {
   AlertCircle,
@@ -10,12 +9,14 @@ import {
   CreditCard,
   ArrowRight,
   MessageSquare,
+  CheckCircle2,
 } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
-import { ROUTES } from '@/lib/utils/constants';
+import { ACADEMY, enrolHref, type EnrolIntent, ROUTES } from '@/lib/utils/constants';
 import { enrolFormSchema } from '@/lib/validators/enrol';
 import { formatCurrency, formatTime, whatsappLink, normalizeIndianPhone } from '@/lib/utils/format';
 import { loadRazorpayScript, openRazorpayCheckout } from '@/lib/razorpay/checkout';
+import { submitEnrolLead } from '@/actions/enquiries';
 import { Spinner } from '@/components/ui/skeleton';
 import { Input } from '@/components/ui/input';
 
@@ -24,11 +25,11 @@ const PAYMENTS_ENABLED = Boolean(process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID);
 interface EnrolFormProps {
   programmes?: any[];
   batches?: any[];
-  /** Programme slug to preselect (from ?programme= query param). */
   defaultProgramme?: string;
+  intent?: EnrolIntent;
 }
 
-type FormStatus = 'editing' | 'submitting' | 'success' | 'error' | 'degraded';
+type FormStatus = 'editing' | 'submitting' | 'success' | 'error' | 'lead';
 
 function batchLabel(batch: any): string {
   const days = Array.isArray(batch?.days) ? batch.days.join(' · ') : (batch?.days ?? '');
@@ -38,7 +39,13 @@ function batchLabel(batch: any): string {
   return [days, time].filter(Boolean).join(' · ');
 }
 
-export function EnrolForm({ programmes = [], batches = [], defaultProgramme }: EnrolFormProps) {
+export function EnrolForm({
+  programmes = [],
+  batches = [],
+  defaultProgramme,
+  intent = 'trial',
+}: EnrolFormProps) {
+  const bookingMode: EnrolIntent = intent;
   const preselected = programmes.find((p) => p.slug === defaultProgramme) || programmes[0];
 
   const [selectedProgrammeId, setSelectedProgrammeId] = useState<string>(preselected?.id ?? '');
@@ -51,10 +58,12 @@ export function EnrolForm({ programmes = [], batches = [], defaultProgramme }: E
   const [selectedBatchId, setSelectedBatchId] = useState<string>(() => filteredBatches[0]?.id ?? '');
   const selectedBatch = batches.find((b) => b.id === selectedBatchId) || filteredBatches[0];
 
-  const [name, setName] = useState('');
+  const [childName, setChildName] = useState('');
+  const [parentName, setParentName] = useState('');
+  const [age, setAge] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
-  const [bookingMode, setBookingMode] = useState<'pay' | 'trial'>('pay');
+  const [plan, setPlan] = useState<'monthly' | 'quarterly'>('monthly');
 
   const [status, setStatus] = useState<FormStatus>('editing');
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -62,16 +71,29 @@ export function EnrolForm({ programmes = [], batches = [], defaultProgramme }: E
   const settledRef = useRef(false);
 
   const normalizedPhone = normalizeIndianPhone(phone);
+  const isPay = bookingMode === 'pay';
+
+  const fee = plan === 'quarterly'
+    ? (selectedProgramme?.fees_quarterly || (selectedProgramme?.fees_monthly ?? 2000) * 3)
+    : (selectedProgramme?.fees_monthly ?? 2000);
 
   const waMessage = [
-    "Hi Rhythmzz! I'd like to book my free trial class.",
-    `Name: ${name}`,
+    isPay
+      ? "Hi Rhythmzz! I'd like to enrol and pay."
+      : "Hi Rhythmzz! I'd like to book a free trial class.",
+    `Student: ${childName}`,
+    parentName ? `Parent: ${parentName}` : null,
+    age ? `Age: ${age}` : null,
     `Programme: ${selectedProgramme?.name ?? ''}`,
     `Batch: ${batchLabel(selectedBatch)}`,
+    isPay ? `Plan: ${plan === 'quarterly' ? 'Quarterly' : 'Monthly'} (${formatCurrency(fee)})` : null,
     `Phone: ${normalizedPhone}`,
-  ].join('\n');
+  ].filter(Boolean).join('\n');
 
-  // When programme changes, auto-select first batch of that programme
+  const upiLink = isPay && ACADEMY.upiId
+    ? `upi://pay?pa=${encodeURIComponent(ACADEMY.upiId)}&pn=${encodeURIComponent(ACADEMY.name)}&am=${fee}&cu=INR`
+    : null;
+
   function handleSelectProgramme(progId: string) {
     setSelectedProgrammeId(progId);
     const newProgramme = programmes.find((p) => p.id === progId);
@@ -83,13 +105,28 @@ export function EnrolForm({ programmes = [], batches = [], defaultProgramme }: E
     }
   }
 
+  async function saveLead(mode: EnrolIntent) {
+    return submitEnrolLead({
+      childName: childName.trim(),
+      parentName: parentName.trim() || undefined,
+      age: age.trim() || undefined,
+      phone: normalizedPhone,
+      email: email.trim() || undefined,
+      programmeName: selectedProgramme?.name,
+      batchLabel: batchLabel(selectedBatch),
+      mode,
+    });
+  }
+
   async function handleEnrolSubmit(e: React.FormEvent) {
     e.preventDefault();
 
     const batchToUse = selectedBatchId || filteredBatches[0]?.id || '';
 
     const validation = enrolFormSchema.safeParse({
-      name: name.trim(),
+      childName: childName.trim(),
+      parentName: parentName.trim(),
+      age: age.trim(),
       phone: normalizedPhone,
       email: email.trim(),
       programmeId: selectedProgrammeId || selectedProgramme?.id,
@@ -108,26 +145,39 @@ export function EnrolForm({ programmes = [], batches = [], defaultProgramme }: E
 
     setErrors({});
     setErrorMsg('');
+    setStatus('submitting');
 
-    // If user selected Free Trial (Pay Later), redirect to WhatsApp with pre-filled message
-    if (bookingMode === 'trial') {
+    if (!isPay) {
+      const lead = await saveLead('trial');
+      if (!lead.success) {
+        setStatus('error');
+        setErrorMsg(lead.error || 'Could not save your request.');
+        return;
+      }
       window.open(whatsappLink(waMessage), '_blank');
+      setStatus('lead');
       return;
     }
 
-    // Direct Online Enrolment + Instant Razorpay Payment
-    setStatus('submitting');
-
     try {
+      await saveLead('pay');
+
+      if (!PAYMENTS_ENABLED) {
+        window.open(whatsappLink(waMessage), '_blank');
+        setStatus('lead');
+        return;
+      }
+
       const res = await fetch('/api/razorpay/create-order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           programmeId: selectedProgrammeId || selectedProgramme?.id,
           batchId: batchToUse,
-          name: name.trim(),
+          name: childName.trim(),
           phone: normalizedPhone,
           email: email.trim(),
+          plan,
         }),
       });
 
@@ -135,7 +185,8 @@ export function EnrolForm({ programmes = [], batches = [], defaultProgramme }: E
 
       if (!res.ok) {
         if (res.status === 503 || data.error === 'PAYMENTS_UNAVAILABLE') {
-          setStatus('degraded');
+          window.open(whatsappLink(waMessage), '_blank');
+          setStatus('lead');
           return;
         }
         setStatus('error');
@@ -145,7 +196,8 @@ export function EnrolForm({ programmes = [], batches = [], defaultProgramme }: E
 
       const scriptLoaded = await loadRazorpayScript();
       if (!scriptLoaded) {
-        setStatus('degraded');
+        window.open(whatsappLink(waMessage), '_blank');
+        setStatus('lead');
         return;
       }
 
@@ -153,9 +205,9 @@ export function EnrolForm({ programmes = [], batches = [], defaultProgramme }: E
       openRazorpayCheckout({
         orderId: data.order_id,
         amount: data.amount,
-        description: `${selectedProgramme?.name ?? 'Dance Class'} — First Month Fee`,
+        description: `${selectedProgramme?.name ?? 'Dance Class'} — ${plan === 'quarterly' ? 'Quarter' : 'First month'}`,
         prefill: {
-          name: validation.data.name,
+          name: validation.data.childName,
           email: validation.data.email || undefined,
           contact: normalizedPhone,
         },
@@ -178,129 +230,97 @@ export function EnrolForm({ programmes = [], batches = [], defaultProgramme }: E
     }
   }
 
-  // ---------- Success Screen ----------
-  if (status === 'success') {
+  if (status === 'success' || status === 'lead') {
+    const paid = status === 'success';
     return (
-      <div className="bg-surface p-8 md:p-10 rounded-2xl border border-line shadow-2xl max-w-lg mx-auto w-full text-center space-y-6 animate-in fade-in zoom-in duration-300">
-        <div className="w-16 h-16 rounded-full bg-green/15 text-green flex items-center justify-center mx-auto shadow-[0_0_30px_rgba(34,197,94,0.3)]">
-          
+      <div className="bg-surface p-8 md:p-10 rounded-2xl border border-line shadow-2xl max-w-lg mx-auto w-full text-center space-y-6">
+        <div className="w-16 h-16 rounded-full bg-green/15 text-green flex items-center justify-center mx-auto">
+          {paid ? <CheckCircle2 size={32} /> : <MessageSquare size={28} />}
         </div>
         <div className="space-y-1">
-          <span className="text-[10px] font-mono font-bold uppercase tracking-[2px] text-green">Payment Confirmed</span>
-          <h3 className="font-anton text-3xl sm:text-4xl text-ink tracking-wide">WELCOME TO RHYTHMZZ!</h3>
-          <p className="text-xs text-ink-2">
-            Your enrolment is complete and your student dashboard is ready.
+          <span className="text-[10px] font-mono font-bold uppercase tracking-[2px] text-green">
+            {paid ? 'Payment confirmed' : 'Request saved'}
+          </span>
+          <h3 className="font-anton text-3xl sm:text-4xl text-ink tracking-wide">
+            {paid ? 'WELCOME TO RHYTHMZZ' : 'WE HAVE YOUR DETAILS'}
+          </h3>
+          <p className="text-xs text-ink-2 leading-relaxed">
+            {paid
+              ? 'Your first month is paid. Sign in with this mobile number on the student portal. If login fails, WhatsApp us and we will enable portal access.'
+              : isPay
+                ? 'The academy has this enrolment. Finish payment on WhatsApp or UPI if checkout did not open, and we will confirm your batch.'
+                : 'The academy has this enquiry. Finish on WhatsApp if the chat did not open, and we will confirm your trial slot.'}
           </p>
         </div>
 
         <div className="bg-canvas-muted rounded-2xl p-4 text-xs text-ink space-y-2 text-left border border-line">
-          <div className="flex justify-between items-center py-1 border-b border-line">
-            <span className="text-ink-2">Dance Programme:</span>
-            <span className="font-bold text-ink">{selectedProgramme?.name}</span>
+          <div className="flex justify-between py-1 border-b border-line">
+            <span className="text-ink-2">Student</span>
+            <span className="font-medium">{childName}</span>
           </div>
-          <div className="flex justify-between items-center py-1 border-b border-line">
-            <span className="text-ink-2">Schedule:</span>
+          <div className="flex justify-between py-1 border-b border-line">
+            <span className="text-ink-2">Programme</span>
+            <span className="font-bold">{selectedProgramme?.name}</span>
+          </div>
+          <div className="flex justify-between py-1">
+            <span className="text-ink-2">Schedule</span>
             <span className="font-semibold text-[#7C5CFC]">{batchLabel(selectedBatch)}</span>
-          </div>
-          <div className="flex justify-between items-center py-1">
-            <span className="text-ink-2">Student Name:</span>
-            <span className="font-medium text-ink">{name}</span>
           </div>
         </div>
 
-        <div className="pt-2 flex flex-col gap-3">
-          <a
-            href={ROUTES.student}
-            className="btn-sun w-full text-center text-xs font-black tracking-[1.5px] uppercase px-6 py-4 rounded-xl shadow-md active:scale-[0.98] flex items-center justify-center gap-2"
-          >
-            Open Student Dashboard <ArrowRight size={16} />
-          </a>
-          <Link
-            href={ROUTES.home}
-            className="text-center text-xs font-semibold text-ink-2 hover:text-ink transition-colors py-2"
-          >
-            Return to Homepage
+        <div className="flex flex-col gap-3">
+          {paid ? (
+            <a
+              href={ROUTES.login}
+              className="btn-sun w-full text-center text-xs font-black tracking-[1.5px] uppercase px-6 py-4 rounded-xl shadow-md active:scale-[0.98] flex items-center justify-center gap-2"
+            >
+              Sign in to student portal <ArrowRight size={16} />
+            </a>
+          ) : (
+            <a
+              href={whatsappLink(waMessage)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full text-center text-xs font-black tracking-[1.5px] uppercase px-6 py-4 bg-[#22c55e] text-white rounded-xl shadow-md"
+            >
+              Continue on WhatsApp
+            </a>
+          )}
+          <Link href={ROUTES.home} className="text-center text-xs font-semibold text-ink-2 py-2">
+            Return to homepage
           </Link>
         </div>
       </div>
     );
   }
 
-  // ---------- WhatsApp Degraded Mode ----------
-  if (status === 'degraded' || !PAYMENTS_ENABLED) {
-    return (
-      <div className="bg-surface p-8 rounded-2xl border border-line max-w-lg mx-auto w-full space-y-6">
-        <div className="space-y-2 text-center">
-          <div className="w-12 h-12 rounded-full bg-green/15 text-green flex items-center justify-center mx-auto">
-            <MessageSquare size={24} />
-          </div>
-          <h3 className="heading-display text-2xl text-ink">BOOK ON WHATSAPP</h3>
-          <p className="text-xs text-ink-2 leading-relaxed">
-            Reserve your free trial spot instantly on WhatsApp — no registration fee required.
-          </p>
-        </div>
-
-        <div className="bg-canvas-muted rounded-xl p-4 text-xs text-ink-2 space-y-1.5 border border-line-subtle">
-          <p><span className="font-semibold text-ink">Student:</span> {name || '—'}</p>
-          <p><span className="font-semibold text-ink">Programme:</span> {selectedProgramme?.name ?? '—'}</p>
-          <p><span className="font-semibold text-ink">Schedule:</span> {batchLabel(selectedBatch) || '—'}</p>
-        </div>
-
-        <a
-          href={whatsappLink(waMessage)}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="block text-center text-xs font-semibold tracking-[1.5px] uppercase px-6 py-3.5 bg-green text-white hover:opacity-90 transition-all rounded-xl shadow-md active:scale-[0.98]"
-        >
-          Confirm Free Trial on WhatsApp
-        </a>
-      </div>
-    );
-  }
-
-  // ---------- Single-View Streamlined Form ----------
   return (
     <div className="bento-card rounded-[28px] sm:rounded-[36px] border border-line p-6 md:p-8 shadow-xl max-w-xl mx-auto w-full space-y-6">
-      {/* Mode Switcher: Enrol Now vs Free Trial */}
-      <div className="flex p-1 rounded-xl bg-canvas border border-line text-xs font-semibold">
-        <button
-          type="button"
-          onClick={() => setBookingMode('pay')}
-          className={cn(
-            "flex-1 py-2.5 rounded-lg transition-all flex items-center justify-center gap-2 font-mono text-xs cursor-pointer",
-            bookingMode === 'pay'
-              ? "bg-[#F5FB38] text-black font-black shadow-sm"
-              : "text-ink-2 hover:text-ink"
-          )}
-        >
-          <CreditCard size={14} /> Pay &amp; Enrol Online
-        </button>
-        <button
-          type="button"
-          onClick={() => setBookingMode('trial')}
-          className={cn(
-            "flex-1 py-2.5 rounded-lg transition-all flex items-center justify-center gap-2 font-mono text-xs cursor-pointer",
-            bookingMode === 'trial'
-              ? "bg-[#F5FB38] text-black font-black shadow-sm"
-              : "text-ink-2 hover:text-ink"
-          )}
-        >
-           Free Trial (Pay Later)
-        </button>
+      <div className="flex items-center justify-between gap-3">
+        <div className="inline-flex items-center gap-2 rounded-xl border border-line bg-canvas px-3 py-2 text-[11px] font-mono font-bold uppercase tracking-wider text-ink">
+          {isPay ? <CreditCard size={14} /> : <MessageSquare size={14} />}
+          {isPay ? 'Enrol & pay' : 'Free trial · WhatsApp'}
+        </div>
+        {isPay && (
+          <Link
+            href={enrolHref({ programme: selectedProgramme?.slug, intent: 'trial' })}
+            className="text-[11px] font-semibold text-ink-2 hover:text-ink underline-offset-4 hover:underline"
+          >
+            Prefer a free trial first?
+          </Link>
+        )}
       </div>
 
       <form onSubmit={handleEnrolSubmit} className="space-y-5" noValidate>
-        {/* 1. Select Dance Discipline */}
         <div className="space-y-2">
           <label className="text-xs font-mono font-bold uppercase tracking-wider text-ink flex items-center justify-between">
-            <span>1. Choose Programme</span>
-            {selectedProgramme && (
+            <span>1. Choose programme</span>
+            {isPay && selectedProgramme && (
               <span className="text-[#7C5CFC] font-semibold">
                 {formatCurrency(selectedProgramme.fees_monthly)}/month
               </span>
             )}
           </label>
-
           <div className="grid grid-cols-2 gap-2.5">
             {programmes.map((p) => {
               const isSelected = p.id === (selectedProgrammeId || selectedProgramme?.id);
@@ -310,107 +330,116 @@ export function EnrolForm({ programmes = [], batches = [], defaultProgramme }: E
                   type="button"
                   onClick={() => handleSelectProgramme(p.id)}
                   className={cn(
-                    "p-3 rounded-2xl border text-left transition-all relative flex flex-col justify-between cursor-pointer",
-                    isSelected
-                      ? "border-[#7C5CFC] bg-[#7C5CFC]/10 shadow-sm"
-                      : "border-line bg-canvas hover:border-line-strong hover:bg-canvas/80"
+                    "p-3 rounded-2xl border text-left transition-all flex flex-col justify-between cursor-pointer",
+                    isSelected ? "border-[#7C5CFC] bg-[#7C5CFC]/10 shadow-sm" : "border-line bg-canvas hover:border-line-strong"
                   )}
                 >
-                  <div>
-                    <p className={cn("text-xs font-bold leading-tight", isSelected ? "text-[#7C5CFC]" : "text-ink")}>
-                      {p.name}
-                    </p>
-                    <p className="text-[10px] text-ink-2 mt-0.5">{p.age_group || 'All Ages'}</p>
-                  </div>
-                  <p className="text-[11px] font-mono font-bold text-ink mt-2">
-                    {formatCurrency(p.fees_monthly)}
-                  </p>
+                  <p className={cn("text-xs font-bold leading-tight", isSelected ? "text-[#7C5CFC]" : "text-ink")}>{p.name}</p>
+                  <p className="text-[10px] text-ink-2 mt-0.5">{p.age_group || 'All ages'}</p>
+                  {isPay && (
+                    <p className="text-[11px] font-mono font-bold text-ink mt-2">{formatCurrency(p.fees_monthly)}</p>
+                  )}
                 </button>
               );
             })}
           </div>
         </div>
 
-        {/* 2. Select Batch / Timing Slot */}
         <div className="space-y-1.5">
           <label className="text-xs font-bold uppercase tracking-wider text-ink flex items-center gap-1.5">
             <Clock size={14} className="text-bl" />
-            <span>2. Select Class Timings</span>
+            <span>2. Class timings</span>
           </label>
-
           {filteredBatches.length > 0 ? (
             <select
               value={selectedBatchId || filteredBatches[0]?.id}
               onChange={(e) => setSelectedBatchId(e.target.value)}
-              className="w-full bg-canvas-muted border border-line rounded-xl p-3 text-xs font-semibold text-ink focus:outline-none focus:ring-2 focus:ring-bl transition-all cursor-pointer"
+              className="w-full bg-canvas-muted border border-line rounded-xl p-3 text-xs font-semibold text-ink focus:outline-none focus:ring-2 focus:ring-bl cursor-pointer"
             >
               {filteredBatches.map((b) => (
-                <option key={b.id} value={b.id}>
-                  {b.name || batchLabel(b)}
-                </option>
+                <option key={b.id} value={b.id}>{b.name || batchLabel(b)}</option>
               ))}
             </select>
           ) : (
             <p className="text-xs text-ink-2 bg-canvas-muted rounded-xl p-3 border border-line">
-              Batch timings confirmed upon registration.
+              Batch timings confirmed on registration.
             </p>
           )}
-
           {selectedBatch && (
             <div className="p-2.5 rounded-lg bg-canvas-muted/60 border border-line-subtle flex items-center justify-between text-[11px] text-ink-2">
               <span className="flex items-center gap-1.5">
                 <Calendar size={13} className="text-bl" /> {selectedBatch.days?.join(', ')}
               </span>
-              <span>
-                {formatTime(selectedBatch.time_start)} – {formatTime(selectedBatch.time_end)}
-              </span>
+              <span>{formatTime(selectedBatch.time_start)} – {formatTime(selectedBatch.time_end)}</span>
             </div>
           )}
         </div>
 
-        {/* 3. Student Details (Minimal 2-3 fields) */}
         <div className="space-y-3 pt-1">
-          <label className="text-xs font-bold uppercase tracking-wider text-ink">
-            3. Student Information
-          </label>
-
-          <div className="space-y-3">
-            <Input
-              type="text"
-              placeholder="Full Name of Student"
-              error={errors.name}
-              value={name}
-              onChange={(e) => {
-                setName(e.target.value);
-                if (errors.name) setErrors((prev) => ({ ...prev, name: '' }));
-              }}
-            />
-
-            <Input
-              type="tel"
-              placeholder="Mobile Number (e.g. 98888 12345 or +91)"
-              error={errors.phone}
-              value={phone}
-              onChange={(e) => {
-                setPhone(e.target.value);
-                if (errors.phone) setErrors((prev) => ({ ...prev, phone: '' }));
-              }}
-            />
-
-            <Input
-              type="email"
-              placeholder="Email Address (for official receipt, optional)"
-              error={errors.email}
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-                if (errors.email) setErrors((prev) => ({ ...prev, email: '' }));
-              }}
-            />
-          </div>
+          <label className="text-xs font-bold uppercase tracking-wider text-ink">3. Who is joining</label>
+          <Input
+            type="text"
+            placeholder="Student / child full name"
+            error={errors.childName}
+            value={childName}
+            onChange={(e) => {
+              setChildName(e.target.value);
+              if (errors.childName) setErrors((prev) => ({ ...prev, childName: '' }));
+            }}
+          />
+          <Input
+            type="text"
+            placeholder="Parent / guardian name (if booking for a child)"
+            error={errors.parentName}
+            value={parentName}
+            onChange={(e) => setParentName(e.target.value)}
+          />
+          <Input
+            type="text"
+            placeholder="Age (optional)"
+            value={age}
+            onChange={(e) => setAge(e.target.value)}
+          />
+          <Input
+            type="tel"
+            placeholder="Mobile number (WhatsApp)"
+            error={errors.phone}
+            value={phone}
+            onChange={(e) => {
+              setPhone(e.target.value);
+              if (errors.phone) setErrors((prev) => ({ ...prev, phone: '' }));
+            }}
+          />
+          <Input
+            type="email"
+            placeholder="Email (optional, for receipts)"
+            error={errors.email}
+            value={email}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              if (errors.email) setErrors((prev) => ({ ...prev, email: '' }));
+            }}
+          />
         </div>
 
-        {/* Error Notification */}
+        {isPay && (
+          <div className="flex gap-2">
+            {(['monthly', 'quarterly'] as const).map((p) => (
+              <button
+                key={p}
+                type="button"
+                onClick={() => setPlan(p)}
+                className={cn(
+                  'flex-1 py-2 rounded-lg text-[11px] font-bold uppercase tracking-wider border',
+                  plan === p ? 'border-[#7C5CFC] bg-[#7C5CFC]/10 text-[#7C5CFC]' : 'border-line text-ink-2'
+                )}
+              >
+                {p === 'monthly' ? 'Monthly' : 'Quarterly'}
+              </button>
+            ))}
+          </div>
+        )}
+
         {status === 'error' && (
           <div className="flex gap-2.5 items-start bg-danger/10 border border-danger/30 rounded-xl p-3.5 text-xs text-danger leading-relaxed">
             <AlertCircle size={16} className="shrink-0 mt-0.5" />
@@ -418,35 +447,58 @@ export function EnrolForm({ programmes = [], batches = [], defaultProgramme }: E
           </div>
         )}
 
-        {/* Action Button */}
-        <div className="pt-2">
-          {bookingMode === 'pay' ? (
+        <div className="pt-2 space-y-2">
+          {isPay && PAYMENTS_ENABLED ? (
             <button
               type="submit"
               disabled={status === 'submitting'}
-              className="btn-sun w-full py-4 text-xs font-black tracking-[2px] uppercase shadow-md cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2 transition-transform active:scale-[0.98]"
+              className="btn-sun w-full py-4 text-xs font-black tracking-[2px] uppercase shadow-md cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2 active:scale-[0.98]"
             >
               {status === 'submitting' ? (
-                <>
-                  <Spinner className="w-4 h-4" /> Processing...
-                </>
+                <><Spinner className="w-4 h-4" /> Processing...</>
               ) : (
-                <>
-                  <CreditCard size={16} /> Enrol &amp; Pay Online ({formatCurrency(selectedProgramme?.fees_monthly ?? 2000)})
-                </>
+                <><CreditCard size={16} /> Enrol &amp; pay ({formatCurrency(fee)})</>
+              )}
+            </button>
+          ) : isPay ? (
+            <button
+              type="submit"
+              disabled={status === 'submitting'}
+              className="btn-sun w-full py-4 text-xs font-black tracking-[2px] uppercase shadow-md cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2 active:scale-[0.98]"
+            >
+              {status === 'submitting' ? (
+                <><Spinner className="w-4 h-4" /> Saving...</>
+              ) : (
+                <><CreditCard size={16} /> Save &amp; pay via WhatsApp ({formatCurrency(fee)})</>
               )}
             </button>
           ) : (
             <button
               type="submit"
-              className="w-full text-xs font-black tracking-[2px] uppercase py-4 bg-[#22c55e] hover:bg-[#16a34a] text-white transition-all rounded-xl shadow-md active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer"
+              disabled={status === 'submitting'}
+              className="w-full text-xs font-black tracking-[2px] uppercase py-4 bg-[#22c55e] hover:bg-[#16a34a] text-white rounded-xl shadow-md active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
             >
-              <MessageSquare size={16} /> Confirm Free Trial on WhatsApp
+              {status === 'submitting' ? (
+                <><Spinner className="w-4 h-4" /> Saving...</>
+              ) : (
+                <><MessageSquare size={16} /> Book free trial on WhatsApp</>
+              )}
             </button>
           )}
-
+          {upiLink && (
+            <a
+              href={upiLink}
+              className="block w-full text-center text-[11px] font-bold uppercase tracking-wider py-3 rounded-xl border border-line text-ink hover:border-[#7C5CFC]"
+            >
+              Open UPI app ({formatCurrency(fee)})
+            </a>
+          )}
           <p className="text-[11px] font-mono text-center text-ink-3 mt-3">
-            100% Secure Checkout · Instant Student Portal Access
+            {isPay
+              ? PAYMENTS_ENABLED
+                ? 'Secure checkout · Portal login uses this mobile number'
+                : 'We save the enrolment and open WhatsApp so you can pay the academy'
+              : 'We save the trial request even if WhatsApp does not open'}
           </p>
         </div>
       </form>

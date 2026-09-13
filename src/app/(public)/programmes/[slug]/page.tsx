@@ -6,7 +6,7 @@ import { getProgrammes, getProgrammeBySlug } from '@/data/programmes';
 import { getBatches } from '@/data/batches';
 import { CheckCircle2, Clock, Calendar, IndianRupee, MapPin } from 'lucide-react';
 import { formatTime } from '@/lib/utils/format';
-import { SITE_URL } from '@/lib/utils/constants';
+import { enrolHref, SITE_URL } from '@/lib/utils/constants';
 import { KuchipudiCurriculum } from '@/components/public/kuchipudi-curriculum';
 import { ClassicalCurriculumMatrix } from '@/components/public/classical-curriculum-matrix';
 import { LevelCertificationSection } from '@/components/public/level-certification-section';
@@ -177,7 +177,7 @@ export default async function ProgrammeDetailPage({ params }: Props) {
 
               <div className="flex flex-wrap items-center gap-4 pt-2">
                 <Link
-                  href={`/enrol?programme=${programme.slug}`}
+                  href={enrolHref({ programme: programme.slug, intent: 'trial' })}
                   className="btn-sun px-8 py-3.5 text-xs font-black uppercase tracking-[0.16em] shadow-md flex items-center gap-2 active:scale-[0.96]"
                 >
                   <span>Book Free Trial</span>
@@ -351,10 +351,10 @@ export default async function ProgrammeDetailPage({ params }: Props) {
             </div>
 
             <Link
-              href={`/enrol?programme=${programme.slug}`}
+              href={enrolHref({ programme: programme.slug, intent: 'pay' })}
               className="btn-sun w-full py-4 text-xs font-black uppercase tracking-[0.16em] shadow-md flex items-center justify-center gap-2 active:scale-[0.96]"
             >
-              <span>Book Trial Class</span>
+              <span>Enrol &amp; pay</span>
             </Link>
           </div>
 

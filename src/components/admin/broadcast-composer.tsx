@@ -23,6 +23,8 @@ export function BroadcastComposer({
   const [scope, setScope] = useState('all')
   const [scopeId, setScopeId] = useState('')
   const [message, setMessage] = useState('')
+  const [messageTe, setMessageTe] = useState('')
+  const [messageHi, setMessageHi] = useState('')
   const [reach, setReach] = useState<number | null>(null)
   const [busy, setBusy] = useState(false)
   const [result, setResult] = useState<{ ok: boolean; text: string } | null>(null)
@@ -41,12 +43,12 @@ export function BroadcastComposer({
     setConfirmOpen(false)
     setBusy(true)
     setResult(null)
-    const res = await sendBroadcast(scope, scopeId, message)
+    const res = await sendBroadcast(scope, scopeId, message, messageTe, messageHi)
     setBusy(false)
     if (res.success) {
       setResult({
         ok: true,
-        text: `Queued for ${res.count} of ${res.total} active students — messages go out within 5 minutes.`,
+        text: `Queued for ${res.count} of ${res.total} active students — WhatsApp goes out within 5 minutes (or is logged as mock if the API key is missing).`,
       })
       router.refresh()
     } else {
@@ -105,6 +107,24 @@ export function BroadcastComposer({
                 maxLength={1000}
               />
               <p className="text-xs text-ink-2 mt-1 text-right">{message.length}/1000</p>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-ink mb-1">Telugu (optional)</label>
+              <textarea
+                className="w-full h-24 bg-surface border border-line-strong rounded-control px-4 py-3 text-sm text-ink placeholder:text-ink-3 focus:outline-none focus:border-bl/50 focus:ring-1 focus:ring-bl/20 transition-all resize-none"
+                value={messageTe}
+                onChange={(e) => setMessageTe(e.target.value)}
+                maxLength={1000}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-ink mb-1">Hindi (optional)</label>
+              <textarea
+                className="w-full h-24 bg-surface border border-line-strong rounded-control px-4 py-3 text-sm text-ink placeholder:text-ink-3 focus:outline-none focus:border-bl/50 focus:ring-1 focus:ring-bl/20 transition-all resize-none"
+                value={messageHi}
+                onChange={(e) => setMessageHi(e.target.value)}
+                maxLength={1000}
+              />
             </div>
 
             {result && (

@@ -15,20 +15,20 @@ export interface FeeMonth {
 export function FeeCalendar({ months }: { months: FeeMonth[] }) {
   return (
     <Card>
-      <h2 className="font-display text-2xl tracking-[2px] mb-1">Payment Calendar</h2>
-      <p className="text-sm text-ink-2 mb-5">Your fee coverage for the last 12 months.</p>
+      <h2 className="font-anton text-xl text-ink tracking-tight mb-1">Last 12 months</h2>
+      <p className="text-[12px] text-ink-3 mb-5">Paid months stay marked.</p>
       <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
         {months.map((m) => (
           <div
             key={m.key}
             className={cn(
-              "rounded-lg border p-3 text-center",
+              "rounded-xl border p-3 text-center",
               m.covered && "border-green/40 bg-green/5",
               !m.covered && m.isCurrent && "border-danger/40 bg-danger/10",
-              !m.covered && !m.isCurrent && "border-line bg-canvas-muted-2",
+              !m.covered && !m.isCurrent && "border-line bg-canvas-muted",
             )}
           >
-            <p className="text-[11px] font-semibold uppercase tracking-wider text-ink-2 mb-1.5">{m.label}</p>
+            <p className="text-[11px] text-ink-3 mb-1.5">{m.label}</p>
             {m.covered ? (
               <p className="text-xs font-semibold text-green-ink">Paid ✓</p>
             ) : m.isCurrent ? (

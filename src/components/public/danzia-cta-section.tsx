@@ -6,7 +6,7 @@ import { ROUTES } from '@/lib/utils/constants';
 export function DanziaCTASection() {
   return (
     <section className="w-full px-4 sm:px-8 md:px-14 py-24 sm:py-36 max-w-[1440px] mx-auto select-none">
-      <div className="relative rounded-[32px] sm:rounded-[48px] bg-[#000000] text-[#FAF6EE] p-10 sm:p-16 md:p-24 overflow-hidden shadow-2xl flex flex-col items-center text-center">
+      <div className="relative rounded-[32px] sm:rounded-[48px] ink-stage text-[#FAF6EE] p-10 sm:p-16 md:p-24 overflow-hidden flex flex-col items-center text-center">
         {/* Subtle radial ambient glow behind text */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#7C5CFC]/20 via-transparent to-transparent pointer-events-none" />
 

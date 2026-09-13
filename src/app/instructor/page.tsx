@@ -1,9 +1,11 @@
 import { createServerSupabase } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { ROUTES } from "@/lib/utils/constants";
+import { getLinkedInstructor } from "@/lib/auth/instructor";
 import { Card } from "@/components/ui/card";
 import { PageHeader } from "@/components/ui/page-header";
-import { KpiNumber } from "@/components/ui/kpi-number";
+import { MetricStrip } from "@/components/ui/metric-strip";
+import { formatTime } from "@/lib/utils/format";
 import Link from "next/link";
 
 export const metadata = {
@@ -16,107 +18,101 @@ export default async function InstructorDashboardPage() {
 
   if (!user) redirect(ROUTES.adminLogin);
 
-  const { data: instructorData } = await supabase
-    .from("instructors")
-    .select("id, name, batches(id, days, time_start, time_end)")
-    .or(`auth_id.eq.${user.id},email.ilike.${user.email || 'none'}`)
-    .maybeSingle();
-
-  let instructor = instructorData as any;
+  const instructor = await getLinkedInstructor(supabase, user);
   if (!instructor) {
-    const { data: fallback } = await supabase
-      .from("instructors")
-      .select("id, name, batches(id, days, time_start, time_end)")
-      .limit(1)
-      .maybeSingle();
-    instructor = fallback || { id: "none", name: user.email?.split("@")[0] || "Instructor", batches: [] };
+    return (
+      <div className="space-y-4">
+        <PageHeader
+          label="Instructor"
+          title="No profile yet"
+          description="Ask the front desk to link this login to an instructor."
+        />
+      </div>
+    );
   }
 
-  const batches: any[] = instructor.batches || [];
+  const { data: batchRows } = await supabase
+    .from("batches")
+    .select("id, name, days, time_start, time_end")
+    .eq("instructor_id", instructor.id);
 
-  // Calculate total students across all their batches
-  const batchIds = batches.map(b => b.id);
+  const batches = batchRows || [];
+  const batchIds = batches.map((b) => b.id);
   const { count: studentCount } = await supabase
     .from("students")
     .select("id", { count: "exact" })
     .in("batch_id", batchIds.length > 0 ? batchIds : ["00000000-0000-0000-0000-000000000000"]);
 
   const today = new Date().toLocaleDateString("en-IN", { weekday: "long" });
-  const todaysBatches = batches.filter((b: any) => b.days?.includes(today));
+  const dateLabel = new Date().toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "short" });
+  const todaysBatches = batches.filter((b) => (b.days as string[] | null)?.includes(today));
+  const firstName = instructor.name?.split(" ")[0] || "Instructor";
 
   return (
     <div className="space-y-8">
       <PageHeader
-        label="Instructor Portal"
-        title={`Welcome, Instructor ${instructor.name?.split(" ")[0] || ""}`}
-        description="Here is your overview for today."
+        label={dateLabel}
+        title={firstName}
+        description="Admin marks attendance. Open a class to see today’s roster."
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card>
-          <p className="text-sm text-ink-2 mb-1 uppercase tracking-widest font-semibold">Assigned Batches</p>
-          <KpiNumber value={String(batches.length)} className="text-5xl" />
-        </Card>
+      <MetricStrip
+        items={[
+          { label: "Batches", value: String(batches.length) },
+          { label: "Students", value: String(studentCount || 0) },
+          {
+            label: "Today",
+            value: String(todaysBatches.length),
+            hint: todaysBatches.length ? "On the floor" : "No class",
+          },
+        ]}
+      />
 
-        <Card>
-          <p className="text-sm text-ink-2 mb-1 uppercase tracking-widest font-semibold">Total Students</p>
-          <KpiNumber value={String(studentCount || 0)} className="text-5xl" />
-        </Card>
-
-        <Card>
-          <p className="text-sm text-ink-2 mb-1 uppercase tracking-widest font-semibold">Classes Today</p>
-          <KpiNumber value={String(todaysBatches.length)} className="text-5xl text-bl" />
-        </Card>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div>
-          <h2 className="font-display text-2xl tracking-[2px] mb-4 text-ink">Today&apos;s Schedule ({today})</h2>
-          {todaysBatches.length > 0 ? (
-            <div className="space-y-4">
-              {todaysBatches.map((batch: any) => (
-                <Card key={batch.id}>
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <h3 className="font-semibold text-ink">{batch.days?.join(", ")}</h3>
-                      <p className="text-sm text-ink-2">
-                        {batch.time_start?.slice(0, 5)} - {batch.time_end?.slice(0, 5)}
-                      </p>
-                    </div>
-                    <Link
-                      href={`${ROUTES.instructor}/attendance?batch=${batch.id}`}
-                      className="bg-bl text-white text-[10px] font-semibold tracking-[2px] uppercase px-4 py-2 hover:bg-bl-deep transition-colors focus-visible:focus-ring active:scale-[0.98]"
-                    >
-                      Mark Attendance
-                    </Link>
-                  </div>
-                </Card>
-              ))}
-            </div>
-          ) : (
-            <Card>
-              <p className="text-ink-2">You have no classes scheduled for today.</p>
-            </Card>
-          )}
-        </div>
-
-        <div>
-          <h2 className="font-display text-2xl tracking-[2px] mb-4 text-ink">Quick Links</h2>
-          <Card className="flex flex-col gap-3">
-            <Link
-              href={`${ROUTES.instructor}/classes`}
-              className="border border-line-strong text-ink hover:border-bl-ink hover:text-bl-ink text-[11px] font-semibold tracking-[2px] uppercase px-6 py-3 rounded text-center transition-all active:scale-[0.98] focus-visible:focus-ring"
-            >
-              View All Classes
-            </Link>
-            <Link
-              href={`${ROUTES.instructor}/students`}
-              className="border border-line-strong text-ink hover:border-bl-ink hover:text-bl-ink text-[11px] font-semibold tracking-[2px] uppercase px-6 py-3 rounded text-center transition-all active:scale-[0.98] focus-visible:focus-ring"
-            >
-              View Student Roster
-            </Link>
+      <section className="space-y-3">
+        <h2 className="text-[11px] text-ink-3">Today</h2>
+        {todaysBatches.length > 0 ? (
+          <ul className="bg-surface-card border border-line shadow-lift rounded-[20px] divide-y divide-line overflow-hidden">
+            {todaysBatches.map((batch) => (
+              <li key={batch.id} className="flex items-center justify-between gap-3 min-h-16 px-4 sm:px-5">
+                <div className="min-w-0">
+                  <p className="text-sm font-medium text-ink truncate">
+                    {batch.name || (batch.days as string[] | null)?.join(", ") || "Batch"}
+                  </p>
+                  <p className="text-[12px] text-ink-3">
+                    {batch.time_start && batch.time_end
+                      ? `${formatTime(batch.time_start)} – ${formatTime(batch.time_end)}`
+                      : "Time not set"}
+                  </p>
+                </div>
+                <Link
+                  href={`${ROUTES.instructor}/attendance?batch=${batch.id}`}
+                  className="shrink-0 text-sm font-medium text-bl-ink hover:text-bl focus-visible:focus-ring rounded-lg px-2 py-1"
+                >
+                  Roster
+                </Link>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <Card>
+            <p className="text-sm text-ink-2">No class today.</p>
           </Card>
-        </div>
+        )}
+      </section>
+
+      <div className="flex flex-wrap gap-2">
+        <Link
+          href={`${ROUTES.instructor}/classes`}
+          className="inline-flex items-center justify-center min-h-11 px-4 rounded-xl border border-line-strong text-sm font-medium text-ink hover:bg-canvas-muted focus-visible:focus-ring active:scale-[0.96]"
+        >
+          All classes
+        </Link>
+        <Link
+          href={`${ROUTES.instructor}/students`}
+          className="inline-flex items-center justify-center min-h-11 px-4 rounded-xl border border-line-strong text-sm font-medium text-ink hover:bg-canvas-muted focus-visible:focus-ring active:scale-[0.96]"
+        >
+          Student roster
+        </Link>
       </div>
     </div>
   );

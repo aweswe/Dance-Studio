@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { logOfflinePaymentSchema } from './fees';
 import { updateStudentSchema } from './student';
 import { enrolFormSchema } from './enrol';
+import { enrolHref, parseEnrolIntent } from '@/lib/utils/constants';
 
 const UUID = 'a1b2c3d4-4001-4000-8000-000000000001';
 
@@ -56,7 +57,9 @@ describe('updateStudentSchema', () => {
 
 describe('enrolFormSchema', () => {
   const base = {
-    name: 'Aarav',
+    childName: 'Aarav',
+    parentName: 'Suresh',
+    age: '7',
     phone: '9052980859',
     email: '',
     programmeId: UUID,
@@ -73,6 +76,25 @@ describe('enrolFormSchema', () => {
   });
 
   it('rejects names under 2 characters', () => {
-    expect(enrolFormSchema.safeParse({ ...base, name: 'A' }).success).toBe(false);
+    expect(enrolFormSchema.safeParse({ ...base, childName: 'A' }).success).toBe(false);
+  });
+});
+
+describe('enrolHref', () => {
+  it('defaults unknown intent to trial', () => {
+    expect(parseEnrolIntent(undefined)).toBe('trial');
+    expect(parseEnrolIntent('pay')).toBe('pay');
+    expect(parseEnrolIntent('trial')).toBe('trial');
+    expect(parseEnrolIntent('other')).toBe('trial');
+  });
+
+  it('sends pricing visitors to pay and other CTAs to a plain enrol URL', () => {
+    expect(enrolHref({ programme: 'kids-dance', intent: 'pay' })).toBe(
+      '/enrol?intent=pay&programme=kids-dance',
+    );
+    expect(enrolHref({ programme: 'kuchipudi', intent: 'trial' })).toBe(
+      '/enrol?intent=trial&programme=kuchipudi',
+    );
+    expect(enrolHref()).toBe('/enrol');
   });
 });

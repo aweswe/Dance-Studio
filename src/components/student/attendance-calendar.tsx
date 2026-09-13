@@ -65,8 +65,8 @@ export function AttendanceCalendar({ records }: AttendanceCalendarProps) {
       <div className="flex items-center justify-between mb-6">
         <h3 className="font-semibold text-lg">{monthNames[month]} {year}</h3>
         <div className="flex gap-2">
-          <button onClick={prevMonth} aria-label="Previous month" className="p-2 hover:bg-canvas-muted-2 rounded-full focus-visible:focus-ring active:scale-[0.98]"><ChevronLeft size={20} /></button>
-          <button onClick={nextMonth} aria-label="Next month" className="p-2 hover:bg-canvas-muted-2 rounded-full focus-visible:focus-ring active:scale-[0.98]"><ChevronRight size={20} /></button>
+          <button onClick={prevMonth} aria-label="Previous month" className="min-h-11 min-w-11 inline-flex items-center justify-center hover:bg-canvas-muted rounded-xl focus-visible:focus-ring active:scale-[0.96]"><ChevronLeft size={20} /></button>
+          <button onClick={nextMonth} aria-label="Next month" className="min-h-11 min-w-11 inline-flex items-center justify-center hover:bg-canvas-muted rounded-xl focus-visible:focus-ring active:scale-[0.96]"><ChevronRight size={20} /></button>
         </div>
       </div>
 

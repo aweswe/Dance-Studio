@@ -6,14 +6,17 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { completeStudentOnboarding } from "@/actions/profile";
 import { ACADEMY } from "@/lib/utils/constants";
-import { Mail, ArrowRight, Loader2, Phone, CheckCircle2, LayoutDashboard } from "lucide-react";
+import { ArrowRight, Loader2, LayoutDashboard } from "lucide-react";
+import { AuthShell } from "@/components/auth/auth-shell";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 function LoginForm() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const supabase = createClient();
 
-  const [step, setStep] = useState<"email" | "otp" | "phone_prompt">("email");
+  const [step, setStep] = useState<"phone" | "email" | "otp" | "phone_otp" | "phone_prompt">("phone");
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
   const [phone, setPhone] = useState("");
@@ -59,6 +62,61 @@ function LoginForm() {
     } catch (err) {
       setError(err instanceof Error ? err.message : "Google sign-in failed");
       setOauthLoading(false);
+    }
+  }
+
+  async function handleSendPhoneOtp(e: React.FormEvent) {
+    e.preventDefault();
+    setError("");
+    setIsLoading(true);
+    const { normalizeIndianPhone } = await import("@/lib/utils/format");
+    const cleaned = normalizeIndianPhone(phone);
+    if (!/^[6-9]\d{9}$/.test(cleaned)) {
+      setError("Enter a valid 10-digit Indian mobile number");
+      setIsLoading(false);
+      return;
+    }
+    try {
+      const { error: authError } = await supabase.auth.signInWithOtp({
+        phone: `+91${cleaned}`,
+        options: { shouldCreateUser: true },
+      });
+      if (authError) throw authError;
+      setStep("phone_otp");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not send SMS OTP. Try email below, or ask the academy to enable phone login.");
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  async function handleVerifyPhoneOtp(e: React.FormEvent) {
+    e.preventDefault();
+    setError("");
+    setIsLoading(true);
+    const { normalizeIndianPhone } = await import("@/lib/utils/format");
+    const cleaned = normalizeIndianPhone(phone);
+    try {
+      const { data, error: authError } = await supabase.auth.verifyOtp({
+        phone: `+91${cleaned}`,
+        token: otp.trim(),
+        type: "sms",
+      });
+      if (authError) throw authError;
+      if (data?.user) {
+        const { data: student } = await supabase
+          .from("students")
+          .select("id, phone")
+          .eq("auth_id", data.user.id)
+          .maybeSingle();
+        if (!student) {
+          await completeStudentOnboarding(cleaned, name.trim() || undefined);
+        }
+      }
+      router.push("/student");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Invalid or expired code");
+      setIsLoading(false);
     }
   }
 
@@ -155,286 +213,236 @@ function LoginForm() {
     }
   }
 
-  return (
-    <main className="min-h-screen flex items-center justify-center bg-blk px-6 py-12">
-      <div className="w-full max-w-sm">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <div className="w-12 h-12 rounded-full bg-bl/15 flex items-center justify-center mx-auto mb-4 border border-bl/30 shadow-[0_0_20px_rgba(43,180,216,0.2)]">
-            {step === "phone_prompt" ? (
-              <Phone className="w-5 h-5 text-bl" />
-            ) : (
-              <Mail className="w-5 h-5 text-bl" />
-            )}
-          </div>
-          <h1 className="font-display text-3xl md:text-4xl tracking-wider text-white mb-2">
-            {step === "phone_prompt" ? "Complete Profile" : "Student Login"}
-          </h1>
-          <p className="text-xs tracking-[2px] uppercase text-white/40">
-            {step === "phone_prompt"
-              ? "WhatsApp / Phone for Academy Updates"
-              : "Access your dashboard & fee receipts"}
-          </p>
-        </div>
+  const title =
+    step === "phone_prompt" ? "Add your number" : "Sign in";
+  const eyebrow = step === "phone_prompt" ? "WhatsApp for class updates" : "Student portal";
 
-        {/* Logged in state card */}
+  return (
+    <AuthShell
+      eyebrow={eyebrow}
+      title={title}
+      footer={
+        <>
+          {ACADEMY.name}
+          <br />
+          Need help?{" "}
+          <a href={`tel:${ACADEMY.phone}`} className="text-ink hover:text-bl">
+            {ACADEMY.phoneDisplay}
+          </a>
+        </>
+      }
+    >
         {currentUser && step !== "phone_prompt" ? (
-          <div className="p-6 rounded-2xl bg-white/5 border border-bl/30 shadow-[0_0_25px_rgba(43,180,216,0.15)] text-center space-y-4">
-            <div className="w-12 h-12 rounded-full bg-bl/20 text-bl flex items-center justify-center mx-auto border border-bl/40 font-display font-bold text-xl">
+          <div className="text-center space-y-4">
+            <div className="w-11 h-11 rounded-full bg-canvas-muted border border-line text-ink flex items-center justify-center mx-auto font-semibold">
               {currentUser.email?.charAt(0).toUpperCase() || "S"}
             </div>
             <div>
-              <p className="text-[10px] uppercase font-bold tracking-widest text-bl">Currently Signed In</p>
-              <p className="text-sm font-semibold text-white mt-1 truncate">{currentUser.email}</p>
+              <p className="text-xs text-ink-3">Signed in</p>
+              <p className="text-sm font-medium text-ink mt-0.5 truncate">{currentUser.email}</p>
             </div>
-            <div className="pt-2 flex flex-col gap-2.5">
-              <Link
-                href="/student"
-                className="w-full bg-bl hover:bg-bl-deep text-white font-semibold text-xs tracking-wider uppercase py-3.5 rounded flex items-center justify-center gap-2 transition-all shadow-md active:scale-[0.98]"
-              >
-                <LayoutDashboard size={14} /> Open Student Portal <ArrowRight size={14} />
+            <div className="pt-1 flex flex-col gap-2">
+              <Link href="/student">
+                <Button className="w-full" type="button">
+                  <LayoutDashboard size={14} /> Open portal <ArrowRight size={14} />
+                </Button>
               </Link>
               <button
                 type="button"
                 onClick={async () => {
                   await supabase.auth.signOut();
                   setCurrentUser(null);
-                  setStep("email");
+                  setStep("phone");
                 }}
-                className="text-xs text-white/50 hover:text-white transition-colors py-1.5"
+                className="text-xs text-ink-3 hover:text-ink py-2"
               >
-                Sign Out & Switch Account
+                Use a different account
               </button>
             </div>
           </div>
         ) : (
           <>
-            {/* Step 1: Email or Google Login */}
-            {step === "email" && (
+            {step === "phone" && (
               <div className="space-y-5">
-                {/* Google Sign-In Button */}
-                <button
-                  type="button"
-                  onClick={handleGoogleLogin}
-                  disabled={oauthLoading || isLoading}
-                  className="w-full bg-white/10 hover:bg-white/15 border border-white/20 hover:border-white/30 text-white font-medium text-xs tracking-wider uppercase py-3.5 px-4 rounded flex items-center justify-center gap-3 transition-all duration-200 shadow-sm"
-                >
-                  {oauthLoading ? (
-                    <Loader2 className="w-4 h-4 animate-spin text-bl" />
-                  ) : (
-                    <svg className="w-4 h-4" viewBox="0 0 24 24">
-                      <path
-                        fill="#4285F4"
-                        d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                      />
-                      <path
-                        fill="#34A853"
-                        d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                      />
-                      <path
-                        fill="#FBBC05"
-                        d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
-                      />
-                      <path
-                        fill="#EA4335"
-                        d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
-                      />
-                    </svg>
-                  )}
-                  <span>Continue with Google</span>
-                </button>
-
-                <div className="flex items-center gap-3 my-4">
-                  <div className="flex-1 h-px bg-white/10" />
-                  <span className="text-[10px] uppercase tracking-[2px] text-white/30">
-                    or with email OTP
-                  </span>
-                  <div className="flex-1 h-px bg-white/10" />
-                </div>
-
-                {/* Email OTP Form */}
-                <form onSubmit={handleSendEmailOtp} className="space-y-4">
+                <form onSubmit={handleSendPhoneOtp} className="space-y-4">
                   <div>
-                    <label className="text-[10px] tracking-[2px] uppercase text-white/50 mb-2 block font-medium">
-                      Student Email Address
-                    </label>
-                    <div className="flex items-center gap-2">
+                    <label className="text-xs font-medium text-ink-2 mb-1.5 block">Mobile / WhatsApp</label>
+                    <div className="flex items-stretch">
+                      <span className="text-sm text-ink-2 bg-canvas-muted px-3 inline-flex items-center border border-line border-r-0 rounded-l-xl">+91</span>
                       <input
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="student@gmail.com"
+                        type="tel"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        placeholder="90529 80859"
                         required
-                        className="w-full bg-white/5 border border-white/15 rounded px-4 py-3 text-white text-sm placeholder-white/25 focus:outline-none focus:border-bl/60 transition-colors"
+                        className="flex-1 min-h-11 bg-canvas-muted border border-line rounded-r-xl px-3.5 text-sm text-ink placeholder:text-ink-3 focus:outline-none focus:border-bl/50 focus:ring-2 focus:ring-bl/20"
                         autoFocus
                       />
                     </div>
                   </div>
-
-                  {error && <p className="text-xs text-red-400 leading-relaxed">{error}</p>}
-
-                  <button
-                    type="submit"
-                    disabled={isLoading || !email.trim()}
-                    className="w-full bg-bl hover:bg-bl-deep text-white text-[11px] font-semibold tracking-[2px] uppercase py-3.5 flex items-center justify-center gap-2 transition-all disabled:opacity-50 shadow-md"
-                  >
-                    {isLoading ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                    ) : (
-                      <>
-                        Send Email OTP <ArrowRight className="w-3.5 h-3.5" />
-                      </>
-                    )}
-                  </button>
+                  {error && <p className="text-xs text-danger leading-relaxed">{error}</p>}
+                  <Button type="submit" className="w-full" disabled={isLoading || !phone.trim()} isLoading={isLoading}>
+                    Send SMS code <ArrowRight className="w-3.5 h-3.5" />
+                  </Button>
                 </form>
-
-                {/* Quick Demo Bypass for Aarav Sharma */}
-                <div className="pt-4 border-t border-white/10 mt-6 text-center">
+                <button
+                  type="button"
+                  onClick={() => { setStep("email"); setError(""); }}
+                  className="w-full text-sm text-ink-2 hover:text-ink py-2"
+                >
+                  Use email or Google
+                </button>
+                {process.env.NODE_ENV !== "production" && (
                   <button
                     type="button"
                     onClick={() => {
                       document.cookie = "bypass_student=true; path=/; max-age=86400";
                       router.push("/student");
                     }}
-                    className="w-full py-3 px-4 rounded bg-white/5 border border-white/15 text-white/90 hover:border-bl-light hover:text-bl text-[11px] font-semibold tracking-[1px] uppercase transition-all flex items-center justify-center gap-2"
+                    className="w-full text-[11px] text-ink-3 hover:text-ink py-1"
                   >
-                    <span>⚡ Instant Demo: Enter as Aarav Sharma</span>
+                    Local preview as Aarav
                   </button>
-                  <p className="text-[10px] text-white/40 mt-1.5">
-                    Instant student portal preview with real fees and attendance
-                  </p>
-                </div>
+                )}
               </div>
             )}
 
-            {/* Step 2: Email OTP Input */}
-            {step === "otp" && (
-              <form onSubmit={handleVerifyOtp} className="space-y-4">
-                <div className="bg-white/5 border border-white/10 rounded p-3 text-center mb-2">
-                  <p className="text-xs text-white/50">
-                    Verification code sent to:
-                  </p>
-                  <p className="text-sm text-bl font-medium mt-0.5">{email}</p>
-                </div>
+            {step === "phone_otp" && (
+              <form onSubmit={handleVerifyPhoneOtp} className="space-y-4">
+                <p className="text-sm text-ink-2 text-center">Code sent to +91 {phone}</p>
+                <input
+                  type="text"
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                  placeholder="000000"
+                  maxLength={6}
+                  className="w-full min-h-12 bg-canvas-muted border border-line rounded-xl px-4 text-ink text-center text-xl tracking-[0.4em] font-mono focus:outline-none focus:border-bl/50 focus:ring-2 focus:ring-bl/20"
+                  autoFocus
+                />
+                {error && <p className="text-xs text-danger">{error}</p>}
+                <Button type="submit" className="w-full" disabled={isLoading || otp.length !== 6} isLoading={isLoading}>
+                  Verify
+                </Button>
+                <button type="button" onClick={() => { setStep("phone"); setOtp(""); setError(""); }} className="w-full text-sm text-ink-3 py-2">
+                  Use a different number
+                </button>
+              </form>
+            )}
 
-                <div>
-                  <label className="text-[10px] tracking-[2px] uppercase text-white/50 mb-2 block font-medium">
-                    Enter 6-digit Code from Email
-                  </label>
-                  <input
-                    type="text"
-                    value={otp}
-                    onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
-                    placeholder="• • • • • •"
-                    maxLength={6}
-                    className="w-full bg-white/5 border border-white/15 rounded px-4 py-3 text-white text-center text-xl tracking-[8px] font-mono placeholder-white/20 focus:outline-none focus:border-bl/60 transition-colors"
-                    autoFocus
-                  />
-                </div>
-
-                {error && <p className="text-xs text-red-400 leading-relaxed">{error}</p>}
-
+            {step === "email" && (
+              <div className="space-y-5">
                 <button
-                  type="submit"
-                  disabled={isLoading || otp.length !== 6}
-                  className="w-full bg-bl hover:bg-bl-deep text-white text-[11px] font-semibold tracking-[2px] uppercase py-3.5 flex items-center justify-center gap-2 transition-all disabled:opacity-50"
+                  type="button"
+                  onClick={handleGoogleLogin}
+                  disabled={oauthLoading || isLoading}
+                  className="w-full min-h-11 bg-canvas-muted hover:bg-canvas-muted-2 border border-line text-ink text-sm font-medium py-2.5 px-4 rounded-xl flex items-center justify-center gap-3 focus-visible:focus-ring active:scale-[0.96]"
                 >
-                  {isLoading ? (
+                  {oauthLoading ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
                   ) : (
-                    "Verify Code & Enter"
+                    <svg className="w-4 h-4" viewBox="0 0 24 24" aria-hidden>
+                      <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                      <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                      <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
+                      <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
+                    </svg>
                   )}
+                  Continue with Google
                 </button>
+
+                <p className="text-[11px] text-ink-3 text-center">or email code</p>
+
+                <form onSubmit={handleSendEmailOtp} className="space-y-4">
+                  <Input
+                    type="email"
+                    label="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="you@gmail.com"
+                    required
+                    autoFocus
+                  />
+                  {error && <p className="text-xs text-danger leading-relaxed">{error}</p>}
+                  <Button type="submit" className="w-full" disabled={isLoading || !email.trim()} isLoading={isLoading}>
+                    Send email code <ArrowRight className="w-3.5 h-3.5" />
+                  </Button>
+                </form>
 
                 <button
                   type="button"
-                  onClick={() => {
-                    setStep("email");
-                    setOtp("");
-                    setError("");
-                  }}
-                  className="w-full text-[10px] tracking-[2px] uppercase text-white/40 hover:text-bl transition-colors py-2 text-center"
+                  onClick={() => { setStep("phone"); setError(""); }}
+                  className="w-full text-sm text-ink-2 hover:text-ink py-2"
+                >
+                  Back to phone
+                </button>
+              </div>
+            )}
+
+            {step === "otp" && (
+              <form onSubmit={handleVerifyOtp} className="space-y-4">
+                <p className="text-sm text-ink-2 text-center">
+                  Code sent to <span className="text-ink font-medium">{email}</span>
+                </p>
+                <input
+                  type="text"
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                  placeholder="000000"
+                  maxLength={6}
+                  className="w-full min-h-12 bg-canvas-muted border border-line rounded-xl px-4 text-ink text-center text-xl tracking-[0.4em] font-mono focus:outline-none focus:border-bl/50 focus:ring-2 focus:ring-bl/20"
+                  autoFocus
+                />
+                {error && <p className="text-xs text-danger leading-relaxed">{error}</p>}
+                <Button type="submit" className="w-full" disabled={isLoading || otp.length !== 6} isLoading={isLoading}>
+                  Verify
+                </Button>
+                <button
+                  type="button"
+                  onClick={() => { setStep("email"); setOtp(""); setError(""); }}
+                  className="w-full text-sm text-ink-3 py-2"
                 >
                   Use a different email
                 </button>
               </form>
             )}
 
-            {/* Step 3: Mandatory Mobile Number */}
             {step === "phone_prompt" && (
               <form onSubmit={handleSavePhone} className="space-y-4">
-                <div className="bg-bl/10 border border-bl/30 rounded p-4 text-center mb-3">
-                  <div className="flex items-center justify-center gap-2 text-bl text-xs font-semibold uppercase tracking-wider mb-1">
-                    <CheckCircle2 className="w-4 h-4" /> Account Verified
-                  </div>
-                  <p className="text-xs text-white/70 leading-relaxed">
-                    Please provide your contact number. It is strictly used for studio updates, batch schedules, and fee receipts.
-                  </p>
-                </div>
-
+                <p className="text-sm text-ink-2">
+                  We use this number for batch times, receipts, and WhatsApp notices.
+                </p>
+                <Input
+                  type="text"
+                  label="Student name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Full name"
+                />
                 <div>
-                  <label className="text-[10px] tracking-[2px] uppercase text-white/50 mb-2 block font-medium">
-                    Student Full Name
-                  </label>
-                  <input
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="Student Name"
-                    className="w-full bg-white/5 border border-white/15 rounded px-4 py-3 text-white text-sm placeholder-white/25 focus:outline-none focus:border-bl/60 transition-colors mb-3"
-                  />
-
-                  <label className="text-[10px] tracking-[2px] uppercase text-white/50 mb-2 block font-medium">
-                    Registered Mobile / WhatsApp Number <span className="text-bl">*</span>
-                  </label>
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm text-white/60 bg-white/5 px-3 py-3 border border-white/15 rounded-l">
-                      +91
-                    </span>
+                  <label className="text-xs font-medium text-ink-2 mb-1.5 block">Mobile / WhatsApp</label>
+                  <div className="flex items-stretch">
+                    <span className="text-sm text-ink-2 bg-canvas-muted px-3 inline-flex items-center border border-line border-r-0 rounded-l-xl">+91</span>
                     <input
                       type="tel"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
-                      placeholder="90529 80859 (or 0 / +91)"
+                      placeholder="90529 80859"
                       maxLength={16}
                       required
-                      className="flex-1 bg-white/5 border border-white/15 border-l-0 rounded-r px-4 py-3 text-white text-sm placeholder-white/25 focus:outline-none focus:border-bl/60 transition-colors"
+                      className="flex-1 min-h-11 bg-canvas-muted border border-line rounded-r-xl px-3.5 text-sm text-ink placeholder:text-ink-3 focus:outline-none focus:border-bl/50 focus:ring-2 focus:ring-bl/20"
                       autoFocus
                     />
                   </div>
                 </div>
-
-                {error && <p className="text-xs text-red-400 leading-relaxed">{error}</p>}
-
-                <button
-                  type="submit"
-                  disabled={isLoading || !phone.trim()}
-                  className="w-full bg-bl hover:bg-bl-deep text-white text-[11px] font-semibold tracking-[2px] uppercase py-3.5 flex items-center justify-center gap-2 transition-all disabled:opacity-50 shadow-md"
-                >
-                  {isLoading ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                  ) : (
-                    <>
-                      Save & Go to Dashboard <ArrowRight className="w-3.5 h-3.5" />
-                    </>
-                  )}
-                </button>
+                {error && <p className="text-xs text-danger leading-relaxed">{error}</p>}
+                <Button type="submit" className="w-full" disabled={isLoading || !phone.trim()} isLoading={isLoading}>
+                  Save and continue <ArrowRight className="w-3.5 h-3.5" />
+                </Button>
               </form>
             )}
           </>
         )}
-
-        {/* Footer */}
-        <p className="text-[10px] text-white/25 text-center mt-8 leading-relaxed">
-          Rhythmzz Academy of Dance &bull; Secunderabad
-          <br />
-          Need assistance? Call{" "}
-          <a href={`tel:${ACADEMY.phone}`} className="text-bl/60 hover:text-bl">
-            {ACADEMY.phoneDisplay}
-          </a>
-        </p>
-      </div>
-    </main>
+    </AuthShell>
   );
 }
 
@@ -445,4 +453,3 @@ export default function LoginPage() {
     </Suspense>
   );
 }
-

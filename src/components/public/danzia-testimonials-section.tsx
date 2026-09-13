@@ -16,59 +16,66 @@ interface DanziaTestimonial {
 
 const TESTIMONIALS: DanziaTestimonial[] = [
   {
-    id: 'linda',
+    id: 'pooja',
     quote:
-      'My daughter started as a shy 6-year-old — now she’s confident, expressive, and can’t wait to dance every single week. The teachers are nurturing and deeply professional. We’re so grateful for this creative home.',
-    author: 'Linda M.',
-    role: 'Parent of Tara (Kids & Foundations)',
-    category: 'parent',
-    image: '/images/danzia/card-1.webp',
-    highlight: 'Confidence & Growth',
-  },
-  {
-    id: 'chloe',
-    quote:
-      'I started contemporary classes here and felt welcome instantly. The supportive atmosphere pushed me to try new floorwork moves, and my musicality and stage presence grew more than I could ever imagine.',
-    author: 'Chloe R.',
-    role: 'Contemporary & Lyrical Dancer',
-    category: 'student',
-    image: '/images/danzia/card-3.webp',
-    highlight: 'Musicality & Artistry',
-  },
-  {
-    id: 'alex',
-    quote:
-      'The choreographers here are inspiring and always challenge us to express ourselves fully. It’s about true artistry, not just memorizing steps. This studio completely elevated my passion for live performance.',
-    author: 'Alex K.',
-    role: 'Urban Choreography & Hip Hop',
+      "Rhythmzz is more than a dance studio — it's a family. Nitish Sir's energy is contagious and the technique training is unmatched in Secunderabad.",
+    author: 'Pooja Reddy',
+    role: 'Adults Dance · AS Rao Nagar',
     category: 'student',
     image: '/images/class-1.jpg',
-    highlight: 'Stage Expression',
+    highlight: 'Technique',
   },
   {
-    id: 'david',
+    id: 'suresh',
     quote:
-      'The studio provides top-notch technical training while genuinely prioritizing a warm, uplifting atmosphere. My son’s balance and form have improved rapidly, and he truly loves coming to dance.',
-    author: 'David S.',
-    role: 'Parent of Arjun (Acrobatics Batch)',
+      'Our 7-year-old daughter was shy before joining the kids batch. Now she leads performances with confidence. Grateful we found Neredmet.',
+    author: 'Suresh & Deepa',
+    role: 'Parents · Kids Dance · Sainikpuri',
     category: 'parent',
     image: '/images/class-2.jpg',
-    highlight: 'Form & Discipline',
+    highlight: 'Confidence',
+  },
+  {
+    id: 'ananya',
+    quote:
+      'The Kuchipudi training is rigorous and nurturing. Beautiful studio atmosphere and excellent discipline.',
+    author: 'Ananya Sharma',
+    role: 'Kuchipudi Classical · Malkajgiri',
+    category: 'student',
+    image: '/images/kuchipudi/kuchipudi-traditional-standing.jpg',
+    highlight: 'Classical',
   },
 ];
 
-export function DanziaTestimonialsSection() {
+export function DanziaTestimonialsSection({
+  quotes,
+}: {
+  quotes?: { name?: string; quote?: string; programme?: string }[];
+}) {
+  const mapped: DanziaTestimonial[] =
+    quotes && quotes.length > 0
+      ? quotes.map((q, i) => ({
+          id: `q-${i}`,
+          quote: q.quote || '',
+          author: q.name || 'Rhythmzz family',
+          role: q.programme || 'Secunderabad',
+          category: (q.programme || '').toLowerCase().includes('kid') ? 'parent' : 'student',
+          image: TESTIMONIALS[i % TESTIMONIALS.length].image,
+          highlight: q.programme || 'Studio',
+        }))
+      : TESTIMONIALS;
+
   const [filter, setFilter] = useState<'all' | 'parent' | 'student'>('all');
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const filteredList =
     filter === 'all'
-      ? TESTIMONIALS
-      : TESTIMONIALS.filter((item) => item.category === filter);
+      ? mapped
+      : mapped.filter((item) => item.category === filter);
 
-  // Keep index within bounds if filter changes
-  const activeIndex = currentIndex % filteredList.length;
+  const activeIndex = filteredList.length ? currentIndex % filteredList.length : 0;
   const current = filteredList[activeIndex];
+  if (!current) return null;
 
   const prev = () => {
     setCurrentIndex((p) => (p === 0 ? filteredList.length - 1 : p - 1));

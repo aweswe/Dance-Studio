@@ -1,7 +1,7 @@
 "use server";
 
-import { createServerSupabase } from "@/lib/supabase/server";
-import { isAdmin } from "@/lib/supabase/guards";
+import { createAdminSupabase, createServerSupabase } from "@/lib/supabase/server";
+import { getUserRole, isAdmin } from "@/lib/supabase/guards";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
@@ -35,36 +35,29 @@ export async function markAttendance(
   } = await supabase.auth.getUser();
   if (!user) return { success: false, error: "Not signed in" };
 
-  // marked_by FKs to instructors.id (not auth.users) — resolve it by auth_id
-  const { data: instructor } = await supabase
-    .from("instructors")
-    .select("id")
-    .eq("auth_id", user.id)
-    .single();
-  if (!instructor) return { success: false, error: "No instructor profile found" };
+  const role = await getUserRole(supabase);
+  if (role !== "admin") {
+    return { success: false, error: "Only academy admin can mark attendance" };
+  }
 
-  // Batch ownership check (RLS enforces this too; fail cleanly instead)
   const { data: batch } = await supabase
     .from("batches")
-    .select("instructor_id")
+    .select("id")
     .eq("id", parsed.data.batchId)
     .single();
   if (!batch) return { success: false, error: "Batch not found" };
-  if (batch.instructor_id !== instructor.id) {
-    return { success: false, error: "You do not teach this batch" };
-  }
 
   const inserts = parsed.data.records.map((r) => ({
     batch_id: parsed.data.batchId,
     date: parsed.data.date,
     student_id: r.studentId,
     status: r.status,
-    marked_by: instructor.id,
+    marked_by: null,
   }));
 
-  // Upsert attendance
-  const { error } = await supabase.from("attendance").upsert(inserts, {
-    onConflict: "student_id, date",
+  const admin = createAdminSupabase();
+  const { error } = await admin.from("attendance").upsert(inserts, {
+    onConflict: "student_id,batch_id,date",
     ignoreDuplicates: false,
   });
 
@@ -73,12 +66,45 @@ export async function markAttendance(
     return { success: false, error: error.message };
   }
 
+  try {
+    const { sendWhatsAppTemplate } = await import("@/lib/whatsapp/client");
+    const { WHATSAPP_TEMPLATES } = await import("@/lib/whatsapp/templates");
+    for (const r of parsed.data.records.filter((x) => x.status === "absent")) {
+      const { data: streak } = await admin.rpc("check_consecutive_absences", {
+        p_student_id: r.studentId,
+        p_threshold: 3,
+      });
+      if (!streak) continue;
+      const { data: st } = await admin
+        .from("students")
+        .select("name, phone, programme:programmes(name)")
+        .eq("id", r.studentId)
+        .maybeSingle();
+      const s = st as any;
+      if (s?.phone) {
+        await sendWhatsAppTemplate({
+          phone: s.phone,
+          templateName: WHATSAPP_TEMPLATES.absenceCheckIn.name,
+          variables: WHATSAPP_TEMPLATES.absenceCheckIn.variables({
+            studentName: s.name,
+            absenceCount: "3",
+            programmeName: s.programme?.name || "Rhythmzz",
+          }),
+        });
+      }
+    }
+  } catch (err) {
+    console.error("absence check-in failed", err);
+  }
+
+  revalidatePath("/admin/attendance");
   revalidatePath("/instructor/attendance");
+  revalidatePath("/student/attendance");
   return { success: true };
 }
 
 /**
- * Admin read-only attendance report for a batch on a given date:
+ * Admin attendance report for a batch on a given date:
  * the roster joined against what was marked, plus summary counts.
  */
 export async function getAttendanceReport(batchId: string, date: string) {
