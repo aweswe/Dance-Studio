@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Modal } from '@/components/ui/modal';
@@ -24,6 +24,7 @@ export function GalleryManager({ initialItems }: { initialItems: GalleryItem[] }
   const router = useRouter();
   const fileRef = useRef<HTMLInputElement>(null);
   const [items, setItems] = useState<GalleryItem[]>(initialItems || []);
+  const [itemSource, setItemSource] = useState(initialItems);
   const [busy, setBusy] = useState(false);
   const [uploadStatus, setUploadStatus] = useState<string>('');
   const [feedback, setFeedback] = useState<{ ok: boolean; text: string } | null>(null);
@@ -40,12 +41,10 @@ export function GalleryManager({ initialItems }: { initialItems: GalleryItem[] }
   const [pendingDelete, setPendingDelete] = useState<GalleryItem | null>(null);
   const [deleteBusy, setDeleteBusy] = useState(false);
 
-  // Synchronize when server initialItems change
-  useEffect(() => {
-    if (initialItems) {
-      setItems(initialItems);
-    }
-  }, [initialItems]);
+  if (initialItems !== itemSource) {
+    setItemSource(initialItems);
+    setItems(initialItems || []);
+  }
 
   const handleFilesSelected = (files: FileList | File[] | null) => {
     if (!files || files.length === 0) return;

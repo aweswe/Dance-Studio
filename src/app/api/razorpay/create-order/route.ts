@@ -33,7 +33,7 @@ export async function POST(req: Request) {
     const { getCurrentStudent } = await import('@/lib/auth/student');
     const { student, siblings } = await getCurrentStudent();
 
-    let studentId: string | null = student?.id ?? null;
+    const studentId: string | null = student?.id ?? null;
     let resolved = { programmeId, batchId, name, phone, email };
 
     if (student) {

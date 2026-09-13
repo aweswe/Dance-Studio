@@ -11,41 +11,39 @@ import { AuthShell } from "@/components/auth/auth-shell";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
+function authErrorFromSearch(params: URLSearchParams): string {
+  const err = params.get("error_description") || params.get("error");
+  if (!err) return "";
+  if (err.toLowerCase().includes("unsupported") || err.toLowerCase().includes("not enabled")) {
+    return "Google Sign-In is not enabled in your Supabase project dashboard (Auth → Providers → Google). Please use Email OTP below or enable Google provider.";
+  }
+  return err;
+}
+
 function LoginForm() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const supabase = createClient();
 
-  const [step, setStep] = useState<"phone" | "email" | "otp" | "phone_otp" | "phone_prompt">("phone");
+  const [step, setStep] = useState<"phone" | "email" | "otp" | "phone_otp" | "phone_prompt">(
+    () => (searchParams.get("step") === "phone" ? "phone_prompt" : "phone"),
+  );
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
   const [phone, setPhone] = useState("");
   const [name, setName] = useState("");
-  const [error, setError] = useState("");
+  const [error, setError] = useState(() => authErrorFromSearch(searchParams));
   const [isLoading, setIsLoading] = useState(false);
   const [oauthLoading, setOauthLoading] = useState(false);
   const [currentUser, setCurrentUser] = useState<any>(null);
 
-  // Check if directed to phone prompt via query param or if error returned, and check existing session
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
       if (data?.user) {
         setCurrentUser(data.user);
       }
     });
-
-    if (searchParams.get("step") === "phone") {
-      setStep("phone_prompt");
-    }
-    const err = searchParams.get("error_description") || searchParams.get("error");
-    if (err) {
-      if (err.toLowerCase().includes("unsupported") || err.toLowerCase().includes("not enabled")) {
-        setError("Google Sign-In is not enabled in your Supabase project dashboard (Auth → Providers → Google). Please use Email OTP below or enable Google provider.");
-      } else {
-        setError(err);
-      }
-    }
-  }, [searchParams, supabase]);
+  }, [supabase]);
 
   // Google OAuth Login
   async function handleGoogleLogin() {

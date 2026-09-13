@@ -225,7 +225,7 @@ export default async function ProgrammeDetailPage({ params }: Props) {
           <div className="bento-card p-6 sm:p-8 rounded-[28px] space-y-4">
             <div className="flex items-center gap-2">
               <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#7C5CFC] font-bold">
-                // Programme Scope
+                {"// Programme Scope"}
               </span>
             </div>
             <h2 className="font-anton text-3xl sm:text-4xl text-ink tracking-tight uppercase">ABOUT THIS DISCIPLINE</h2>
@@ -244,7 +244,7 @@ export default async function ProgrammeDetailPage({ params }: Props) {
             <div className="bento-card p-6 sm:p-8 rounded-[28px] space-y-6">
               <div className="flex items-center gap-2">
                 <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#7C5CFC] font-bold">
-                  // Curriculum Highlights
+                  {"// Curriculum Highlights"}
                 </span>
               </div>
               <h2 className="font-anton text-3xl sm:text-4xl text-ink tracking-tight uppercase">WHAT YOU&apos;LL MASTER</h2>
@@ -265,7 +265,7 @@ export default async function ProgrammeDetailPage({ params }: Props) {
           <div className="bento-card p-6 sm:p-8 rounded-[28px] space-y-6">
             <div className="flex items-center gap-2">
               <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#7C5CFC] font-bold">
-                // Timetable
+                {"// Timetable"}
               </span>
             </div>
             <h2 className="font-anton text-3xl sm:text-4xl text-ink tracking-tight uppercase">ACTIVE BATCH SCHEDULE</h2>

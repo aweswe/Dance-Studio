@@ -29,30 +29,36 @@ function batchLabel(batch: Batch) {
 }
 
 export function AttendanceMarker({ batches, initialBatchId }: AttendanceMarkerProps) {
-  const [selectedBatchId, setSelectedBatchId] = useState<string>(initialBatchId || batches[0]?.id || "");
+  const [selectedBatchId, setSelectedBatchId] = useState<string>(
+    () =>
+      initialBatchId && batches.some((b) => b.id === initialBatchId)
+        ? initialBatchId
+        : batches[0]?.id || "",
+  );
   const [date, setDate] = useState<string>(new Date().toISOString().split("T")[0]);
 
   const selectedBatch = batches.find((b) => b.id === selectedBatchId);
-  const students = selectedBatch?.students || [];
+  const students = useMemo(() => selectedBatch?.students ?? [], [selectedBatch]);
   const studentKey = useMemo(() => students.map((s) => s.id).join("|"), [students]);
+  const defaults = useMemo(
+    () =>
+      Object.fromEntries(
+        (studentKey ? studentKey.split("|").filter(Boolean) : []).map((id) => [id, "present" as const]),
+      ) as Record<string, "present" | "absent" | "leave">,
+    [studentKey],
+  );
+  const loadKey = `${selectedBatchId}|${date}|${studentKey}`;
 
-  const [attendance, setAttendance] = useState<Record<string, "present" | "absent" | "leave">>({});
+  const [savedMarks, setSavedMarks] = useState<{
+    key: string;
+    value: Record<string, "present" | "absent" | "leave">;
+  } | null>(null);
+  const attendance = savedMarks?.key === loadKey ? savedMarks.value : defaults;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
   useEffect(() => {
-    if (initialBatchId && batches.some((b) => b.id === initialBatchId)) {
-      setSelectedBatchId(initialBatchId);
-    }
-  }, [initialBatchId, batches]);
-
-  useEffect(() => {
     let cancelled = false;
-    const roster = studentKey ? studentKey.split("|").filter(Boolean) : [];
-    const defaults = Object.fromEntries(
-      roster.map((id) => [id, "present" as const]),
-    ) as Record<string, "present" | "absent" | "leave">;
-    setAttendance(defaults);
     if (!selectedBatchId) return;
 
     (async () => {
@@ -62,16 +68,19 @@ export function AttendanceMarker({ batches, initialBatchId }: AttendanceMarkerPr
       for (const m of res.marked ?? []) {
         if (m.student_id && m.status) next[m.student_id] = m.status;
       }
-      setAttendance(next);
+      setSavedMarks({ key: loadKey, value: next });
     })();
 
     return () => {
       cancelled = true;
     };
-  }, [selectedBatchId, date, studentKey]);
+  }, [selectedBatchId, date, studentKey, defaults, loadKey]);
 
   const handleStatusChange = (studentId: string, status: "present" | "absent" | "leave") => {
-    setAttendance((prev) => ({ ...prev, [studentId]: status }));
+    setSavedMarks({
+      key: loadKey,
+      value: { ...attendance, [studentId]: status },
+    });
   };
 
   const handleSubmit = async () => {

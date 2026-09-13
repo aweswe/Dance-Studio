@@ -46,7 +46,7 @@ export default function ContactPage() {
             <div>
               <div className="flex items-center gap-2 mb-1">
                 <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#7C5CFC] font-bold">
-                  // Studio Location
+                  {"// Studio Location"}
                 </span>
               </div>
               <h2 className="font-anton text-3xl sm:text-4xl text-ink uppercase tracking-wide">
@@ -122,7 +122,7 @@ export default function ContactPage() {
         <div className="lg:col-span-6 bento-card p-6 sm:p-10 rounded-[28px] shadow-lg">
           <div className="flex items-center gap-2 mb-1">
             <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#7C5CFC] font-bold">
-              // Send Message
+              {"// Send Message"}
             </span>
           </div>
           <h2 className="font-anton text-3xl sm:text-4xl text-ink uppercase tracking-wide mb-2">
