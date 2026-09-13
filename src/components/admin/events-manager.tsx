@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
@@ -39,6 +39,7 @@ function toLocalInput(iso: string): string {
 export function EventsManager({ initialEvents }: { initialEvents: EventRow[] }) {
   const router = useRouter();
   const [events, setEvents] = useState(initialEvents);
+  const [eventsSource, setEventsSource] = useState(initialEvents);
   const [form, setForm] = useState<EventFormData | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -111,9 +112,10 @@ export function EventsManager({ initialEvents }: { initialEvents: EventRow[] }) 
     }
   };
 
-  useEffect(() => {
+  if (initialEvents !== eventsSource) {
+    setEventsSource(initialEvents);
     setEvents(initialEvents);
-  }, [initialEvents]);
+  }
 
   return (
     <div className="space-y-6">

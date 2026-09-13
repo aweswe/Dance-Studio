@@ -39,7 +39,14 @@ export function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [authInfo, setAuthInfo] = useState<AuthInfo | null>(null);
   const pathname = usePathname();
+  const [lastPathname, setLastPathname] = useState(pathname);
   const syllabusRef = useRef<HTMLDivElement>(null);
+
+  if (lastPathname !== pathname) {
+    setLastPathname(pathname);
+    setIsOpen(false);
+    setSyllabusOpen(false);
+  }
 
   useEffect(() => {
     const supabase = createClient();
@@ -95,11 +102,6 @@ export function Nav() {
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
-
-  useEffect(() => {
-    setIsOpen(false);
-    setSyllabusOpen(false);
-  }, [pathname]);
 
   useEffect(() => {
     const onPointer = (event: MouseEvent) => {

@@ -10,23 +10,20 @@ const PROFILE_URL = ACADEMY.socials.instagram;
 function ReelCard({ reel, scrollRoot }: { reel: PublicReel; scrollRoot: RefObject<HTMLDivElement | null> }) {
   const cardRef = useRef<HTMLAnchorElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [inView, setInView] = useState(false);
-  const [hovered, setHovered] = useState(false);
+  const inViewRef = useRef(false);
+  const hoveredRef = useRef(false);
   const [playing, setPlaying] = useState(false);
 
-  const shouldPlay = inView || hovered;
-
-  const syncPlayback = useCallback(() => {
+  const updatePlayback = useCallback(() => {
     const video = videoRef.current;
     if (!video) return;
 
-    if (shouldPlay) {
-      video.play().then(() => setPlaying(true)).catch(() => setPlaying(false));
+    if (inViewRef.current || hoveredRef.current) {
+      video.play().catch(() => {});
     } else {
       video.pause();
-      setPlaying(false);
     }
-  }, [shouldPlay]);
+  }, []);
 
   useEffect(() => {
     const card = cardRef.current;
@@ -34,17 +31,16 @@ function ReelCard({ reel, scrollRoot }: { reel: PublicReel; scrollRoot: RefObjec
     if (!card) return;
 
     const observer = new IntersectionObserver(
-      ([entry]) => setInView(entry.isIntersecting && entry.intersectionRatio > 0.35),
+      ([entry]) => {
+        inViewRef.current = entry.isIntersecting && entry.intersectionRatio > 0.35;
+        updatePlayback();
+      },
       { root, threshold: [0, 0.35, 0.6, 1] },
     );
 
     observer.observe(card);
     return () => observer.disconnect();
-  }, [scrollRoot]);
-
-  useEffect(() => {
-    syncPlayback();
-  }, [syncPlayback]);
+  }, [scrollRoot, updatePlayback]);
 
   return (
     <a
@@ -53,10 +49,22 @@ function ReelCard({ reel, scrollRoot }: { reel: PublicReel; scrollRoot: RefObjec
       target="_blank"
       rel="noopener noreferrer"
       aria-label={`${reel.title} — watch on Instagram`}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      onFocus={() => setHovered(true)}
-      onBlur={() => setHovered(false)}
+      onMouseEnter={() => {
+        hoveredRef.current = true;
+        updatePlayback();
+      }}
+      onMouseLeave={() => {
+        hoveredRef.current = false;
+        updatePlayback();
+      }}
+      onFocus={() => {
+        hoveredRef.current = true;
+        updatePlayback();
+      }}
+      onBlur={() => {
+        hoveredRef.current = false;
+        updatePlayback();
+      }}
       className="group relative shrink-0 snap-start w-[180px] sm:w-[210px] aspect-[9/16] rounded-2xl overflow-hidden bg-black border border-line hover:border-[#F5FB38] transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-[#F5FB38]"
     >
       <video
@@ -69,7 +77,9 @@ function ReelCard({ reel, scrollRoot }: { reel: PublicReel; scrollRoot: RefObjec
         preload="auto"
         aria-hidden="true"
         tabIndex={-1}
-        onLoadedData={syncPlayback}
+        onLoadedData={updatePlayback}
+        onPlay={() => setPlaying(true)}
+        onPause={() => setPlaying(false)}
         className="absolute inset-0 w-full h-full object-cover"
       />
 
