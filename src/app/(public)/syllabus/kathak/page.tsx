@@ -30,13 +30,13 @@ export default function KathakSyllabusPage() {
             href={enrolHref({ programme: 'classical-dance', intent: 'trial' })}
             className="btn-sun px-6 py-3 text-xs font-black uppercase tracking-[0.16em]"
           >
-            Book a trial
+            Enrol — Kathak
           </Link>
           <Link
-            href="/syllabus"
+            href={enrolHref({ programme: 'kuchipudi', intent: 'trial' })}
             className="px-6 py-3 rounded-xl text-xs font-mono font-bold uppercase tracking-wider border border-line hover:border-ink"
           >
-            All syllabi
+            Enrol — Kuchipudi
           </Link>
         </div>
 

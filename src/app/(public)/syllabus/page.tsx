@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { SITE_URL } from '@/lib/utils/constants';
+import { enrolHref, SITE_URL } from '@/lib/utils/constants';
 
 export const metadata: Metadata = {
   title: 'Syllabus adoption',
@@ -33,9 +33,24 @@ export default function SyllabusIndexPage() {
         <h1 className="font-anton text-4xl sm:text-6xl md:text-7xl uppercase tracking-tight leading-[1.05] mb-4">
           What we teach, year by year
         </h1>
-        <p className="text-ink-2 text-sm sm:text-base max-w-lg leading-relaxed mb-12">
+        <p className="text-ink-2 text-sm sm:text-base max-w-lg leading-relaxed mb-8">
           Kuchipudi and Kathak — year by year, level by level.
         </p>
+
+        <div className="flex flex-wrap gap-3 mb-12">
+          <Link
+            href={enrolHref({ programme: 'kuchipudi', intent: 'trial' })}
+            className="btn-sun px-6 py-3 text-xs font-black uppercase tracking-[0.16em]"
+          >
+            Enrol — Kuchipudi
+          </Link>
+          <Link
+            href={enrolHref({ programme: 'classical-dance', intent: 'trial' })}
+            className="px-6 py-3 rounded-xl text-xs font-mono font-bold uppercase tracking-wider border border-line hover:border-ink"
+          >
+            Enrol — Kathak
+          </Link>
+        </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {STYLES.map((style) => (
