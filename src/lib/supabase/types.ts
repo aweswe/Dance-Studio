@@ -163,6 +163,64 @@ export type Database = {
           },
         ]
       }
+      batch_switch_requests: {
+        Row: {
+          admin_note: string | null
+          created_at: string | null
+          current_batch_id: string | null
+          id: string
+          note: string | null
+          requested_batch_id: string
+          resolved_at: string | null
+          status: string
+          student_id: string
+        }
+        Insert: {
+          admin_note?: string | null
+          created_at?: string | null
+          current_batch_id?: string | null
+          id?: string
+          note?: string | null
+          requested_batch_id: string
+          resolved_at?: string | null
+          status?: string
+          student_id: string
+        }
+        Update: {
+          admin_note?: string | null
+          created_at?: string | null
+          current_batch_id?: string | null
+          id?: string
+          note?: string | null
+          requested_batch_id?: string
+          resolved_at?: string | null
+          status?: string
+          student_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "batch_switch_requests_current_batch_id_fkey"
+            columns: ["current_batch_id"]
+            isOneToOne: false
+            referencedRelation: "batches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "batch_switch_requests_requested_batch_id_fkey"
+            columns: ["requested_batch_id"]
+            isOneToOne: false
+            referencedRelation: "batches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "batch_switch_requests_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       blog_posts: {
         Row: {
           author_id: string | null

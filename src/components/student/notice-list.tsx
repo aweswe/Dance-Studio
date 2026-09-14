@@ -64,7 +64,11 @@ export function NoticeList({
             key={l}
             type="button"
             onClick={() => setLang(l)}
-            className={`text-[11px] uppercase tracking-wider px-3 py-1 rounded-md border ${lang === l ? "border-ink bg-ink text-white" : "border-line text-ink-2"}`}
+            className={`text-[11px] uppercase tracking-wider px-3 py-1.5 rounded-md border transition-colors ${
+              lang === l
+                ? "border-bl bg-bl text-white font-semibold shadow-sm"
+                : "border-line text-ink-2 bg-surface hover:border-bl/40 hover:text-ink"
+            }`}
           >
             {l === "en" ? "English" : l === "te" ? "తెలుగు" : "हिन्दी"}
           </button>

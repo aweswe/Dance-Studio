@@ -47,8 +47,28 @@ export async function POST(req: Request) {
     }
 
     const targetProgId = resolved.programmeId;
+    const targetBatchId = resolved.batchId;
     if (!targetProgId) {
       return NextResponse.json({ error: 'Programme not found' }, { status: 404 });
+    }
+    if (!student?.batch_id && !targetBatchId) {
+      return NextResponse.json({ error: 'Pick a batch before paying.' }, { status: 400 });
+    }
+
+    if (targetBatchId) {
+      const admin = createAdminSupabase();
+      const { data: batchRow } = await admin
+        .from('batches')
+        .select('id, status, capacity, enrolled_count')
+        .eq('id', targetBatchId)
+        .maybeSingle();
+      const batch = batchRow as any;
+      if (!batch) {
+        return NextResponse.json({ error: 'Batch not found' }, { status: 404 });
+      }
+      if (batch.status === 'full' || (batch.capacity > 0 && batch.enrolled_count >= batch.capacity)) {
+        return NextResponse.json({ error: 'This batch is full.' }, { status: 409 });
+      }
     }
 
     const { data: programmeData, error: progError } = await supabase

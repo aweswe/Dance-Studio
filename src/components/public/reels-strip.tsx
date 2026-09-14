@@ -150,7 +150,7 @@ export function ReelsStrip({ reels }: { reels: PublicReel[] }) {
 
       <div
         ref={trackRef}
-        className="flex gap-4 overflow-x-auto py-2 snap-x snap-mandatory"
+        className="flex gap-4 overflow-x-auto py-2 snap-x snap-mandatory scroll-px-0 [scroll-padding-inline:0] overscroll-x-contain"
         style={{ scrollbarWidth: 'none' }}
       >
         {reels.map((reel) => (

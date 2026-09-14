@@ -36,14 +36,14 @@ export function DanziaInstructorsSection() {
 
       <SnapCarousel columns={3}>
         {INSTRUCTORS.map((instructor) => (
-          <article key={instructor.id} className={`${snapSlideClass} flex flex-col`}>
+          <article key={instructor.id} className={`${snapSlideClass} group flex flex-col`}>
             <div className="relative aspect-[3/4] w-full rounded-[28px] overflow-hidden bg-canvas-muted mb-5">
               <Image
                 src={instructor.image}
                 alt={instructor.name}
                 fill
                 sizes="(max-width: 768px) 80vw, 33vw"
-                className="object-cover object-center grayscale contrast-110 brightness-95"
+                className="object-cover object-center grayscale contrast-110 brightness-95 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out"
               />
             </div>
             <h3 className="font-anton text-2xl sm:text-3xl tracking-wide uppercase text-ink leading-[1.1] mb-1">

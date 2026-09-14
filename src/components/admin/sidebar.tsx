@@ -12,6 +12,7 @@ import {
   IndianRupee,
   MessageSquare,
   Inbox,
+  ArrowRightLeft,
   Calendar,
   Image as ImageIcon,
   Settings,
@@ -46,6 +47,7 @@ const navGroups = [
       { name: 'Fees', href: '/admin/fees', icon: IndianRupee },
       { name: 'Broadcast', href: '/admin/broadcast', icon: MessageSquare },
       { name: 'Enquiries', href: '/admin/enquiries', icon: Inbox },
+      { name: 'Switch requests', href: '/admin/switch-requests', icon: ArrowRightLeft },
     ],
   },
   {

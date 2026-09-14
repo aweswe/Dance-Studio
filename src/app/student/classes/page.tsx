@@ -17,11 +17,22 @@ export default async function StudentClassesPage() {
   const { student } = await getCurrentStudent();
   if (!student) redirect(ROUTES.login);
 
-  const [{ data: progRows }, { data: batchRows }, { data: payments }] = await Promise.all([
+  const [progRes, batchRes, payRes, switchRes] = await Promise.all([
     supabase.from("programmes").select("id, name, slug, description, fees_monthly, is_active").eq("is_active", true).order("sort_order"),
     supabase.from("batches").select("id, name, days, time_start, time_end, capacity, enrolled_count, status, programme_id"),
     supabase.from("fee_payments").select("for_month, paid_at, status").eq("student_id", student.id),
+    supabase
+      .from("batch_switch_requests")
+      .select("id, requested_batch_id, note, status, created_at")
+      .eq("student_id", student.id)
+      .eq("status", "pending")
+      .maybeSingle(),
   ]);
+
+  const progRows = progRes.data;
+  const batchRows = batchRes.data;
+  const payments = payRes.data;
+  const pendingSwitch = switchRes.error ? null : switchRes.data;
 
   let programmes: LiveProgramme[] = [];
   if (progRows && progRows.length > 0) {
@@ -46,7 +57,12 @@ export default async function StudentClassesPage() {
   return (
     <div className="space-y-6">
       <p className="text-sm text-ink-2">Your assigned class and the studio timetable.</p>
-      <StudentClassesView currentStudent={student} feePaid={feePaid} programmes={programmes} />
+      <StudentClassesView
+        currentStudent={student}
+        feePaid={feePaid}
+        programmes={programmes}
+        pendingSwitch={pendingSwitch as any}
+      />
     </div>
   );
 }
