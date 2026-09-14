@@ -7,9 +7,17 @@ import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Select } from '@/components/ui/select'
 import { Modal } from '@/components/ui/modal'
-import { Users, Clock, UserCircle, Plus } from 'lucide-react'
+import { Users, Clock, UserCircle, Plus, Pencil, Trash2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { createProgramme, createBatch, updateBatchStatus } from '@/actions/classes'
+import {
+  createProgramme,
+  createBatch,
+  updateProgramme,
+  updateBatch,
+  deleteProgramme,
+  deleteBatch,
+  updateBatchStatus,
+} from '@/actions/classes'
 import { formatTime } from '@/lib/utils/format'
 
 type Programme = any
@@ -17,6 +25,27 @@ type Batch = any
 type Instructor = any
 
 const ALL_DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+
+const emptyBatchForm = {
+  programmeId: '',
+  instructorId: '',
+  name: '',
+  days: [] as string[],
+  timeStart: '17:00',
+  timeEnd: '18:00',
+  capacity: '25',
+  status: 'active' as 'active' | 'paused' | 'full',
+}
+
+const emptyProgForm = {
+  name: '',
+  description: '',
+  includes: '',
+  feesMonthly: '2000',
+  feesQuarterly: '5000',
+  ageGroup: '',
+  isActive: true,
+}
 
 export function BatchManager({
   initialProgrammes,
@@ -31,29 +60,14 @@ export function BatchManager({
   const [activeTab, setActiveTab] = useState<'batches' | 'programmes'>('batches')
   const [isBatchModalOpen, setIsBatchModalOpen] = useState(false)
   const [isProgrammeModalOpen, setIsProgrammeModalOpen] = useState(false)
+  const [editingBatchId, setEditingBatchId] = useState<string | null>(null)
+  const [editingProgId, setEditingProgId] = useState<string | null>(null)
+  const [pendingDelete, setPendingDelete] = useState<{ type: 'batch' | 'programme'; id: string; label: string; force?: boolean } | null>(null)
   const [busy, setBusy] = useState(false)
   const [feedback, setFeedback] = useState<{ ok: boolean; text: string } | null>(null)
 
-  // New batch form
-  const [batchForm, setBatchForm] = useState({
-    programmeId: '',
-    instructorId: '',
-    name: '',
-    days: [] as string[],
-    timeStart: '17:00',
-    timeEnd: '18:00',
-    capacity: '25',
-  })
-
-  // New programme form
-  const [progForm, setProgForm] = useState({
-    name: '',
-    description: '',
-    includes: '',
-    feesMonthly: '2000',
-    feesQuarterly: '5000',
-    ageGroup: '',
-  })
+  const [batchForm, setBatchForm] = useState(emptyBatchForm)
+  const [progForm, setProgForm] = useState(emptyProgForm)
 
   const toggleDay = (day: string) => {
     setBatchForm((f) => ({
@@ -62,10 +76,51 @@ export function BatchManager({
     }))
   }
 
+  const openCreateBatch = () => {
+    setEditingBatchId(null)
+    setBatchForm(emptyBatchForm)
+    setIsBatchModalOpen(true)
+  }
+
+  const openEditBatch = (batch: Batch) => {
+    setEditingBatchId(batch.id)
+    setBatchForm({
+      programmeId: batch.programme_id,
+      instructorId: batch.instructor_id,
+      name: batch.name || '',
+      days: batch.days || [],
+      timeStart: (batch.time_start || '17:00:00').slice(0, 5),
+      timeEnd: (batch.time_end || '18:00:00').slice(0, 5),
+      capacity: String(batch.capacity || 25),
+      status: batch.status || 'active',
+    })
+    setIsBatchModalOpen(true)
+  }
+
+  const openCreateProgramme = () => {
+    setEditingProgId(null)
+    setProgForm(emptyProgForm)
+    setIsProgrammeModalOpen(true)
+  }
+
+  const openEditProgramme = (prog: Programme) => {
+    setEditingProgId(prog.id)
+    setProgForm({
+      name: prog.name,
+      description: prog.description || '',
+      includes: Array.isArray(prog.includes) ? prog.includes.join('\n') : '',
+      feesMonthly: String(prog.fees_monthly ?? 0),
+      feesQuarterly: String(prog.fees_quarterly ?? 0),
+      ageGroup: prog.age_group || '',
+      isActive: prog.is_active ?? true,
+    })
+    setIsProgrammeModalOpen(true)
+  }
+
   const submitBatch = async () => {
     setBusy(true)
     setFeedback(null)
-    const res = await createBatch({
+    const payload = {
       programmeId: batchForm.programmeId,
       instructorId: batchForm.instructorId,
       name: batchForm.name,
@@ -73,39 +128,71 @@ export function BatchManager({
       timeStart: batchForm.timeStart,
       timeEnd: batchForm.timeEnd,
       capacity: Number(batchForm.capacity),
-      status: 'active',
-    })
+      status: batchForm.status,
+    }
+    const res = editingBatchId
+      ? await updateBatch(editingBatchId, payload)
+      : await createBatch({ ...payload, status: 'active' })
     setBusy(false)
     if (res.success) {
-      setFeedback({ ok: true, text: 'Batch created' })
+      setFeedback({ ok: true, text: editingBatchId ? 'Batch updated' : 'Batch created' })
       setIsBatchModalOpen(false)
-      setBatchForm({ programmeId: '', instructorId: '', name: '', days: [], timeStart: '17:00', timeEnd: '18:00', capacity: '25' })
+      setBatchForm(emptyBatchForm)
+      setEditingBatchId(null)
       router.refresh()
     } else {
-      setFeedback({ ok: false, text: res.error ?? 'Could not create batch' })
+      setFeedback({ ok: false, text: res.error ?? 'Could not save batch' })
     }
   }
 
   const submitProgramme = async () => {
     setBusy(true)
     setFeedback(null)
-    const res = await createProgramme({
+    const payload = {
       name: progForm.name,
       description: progForm.description,
       includes: progForm.includes.split(/[\n,]/).map((s) => s.trim()).filter(Boolean),
       feesMonthly: Number(progForm.feesMonthly),
       feesQuarterly: Number(progForm.feesQuarterly),
       ageGroup: progForm.ageGroup,
-      isActive: true,
-    })
+      isActive: progForm.isActive,
+    }
+    const res = editingProgId
+      ? await updateProgramme(editingProgId, payload)
+      : await createProgramme(payload)
     setBusy(false)
     if (res.success) {
-      setFeedback({ ok: true, text: 'Programme created' })
+      setFeedback({ ok: true, text: editingProgId ? 'Programme updated' : 'Programme created' })
       setIsProgrammeModalOpen(false)
-      setProgForm({ name: '', description: '', includes: '', feesMonthly: '2000', feesQuarterly: '5000', ageGroup: '' })
+      setProgForm(emptyProgForm)
+      setEditingProgId(null)
       router.refresh()
     } else {
-      setFeedback({ ok: false, text: res.error ?? 'Could not create programme' })
+      setFeedback({ ok: false, text: res.error ?? 'Could not save programme' })
+    }
+  }
+
+  const confirmDelete = async () => {
+    if (!pendingDelete) return
+    setBusy(true)
+    setFeedback(null)
+    let res
+    if (pendingDelete.type === 'batch') {
+      res = await deleteBatch(pendingDelete.id)
+    } else {
+      res = await deleteProgramme(pendingDelete.id, pendingDelete.force)
+    }
+    setBusy(false)
+    if (res.success) {
+      setPendingDelete(null)
+      setFeedback({ ok: true, text: pendingDelete.type === 'batch' ? 'Batch deleted' : 'Programme deleted' })
+      router.refresh()
+    } else if (pendingDelete.type === 'programme' && 'batchCount' in res && res.batchCount) {
+      setPendingDelete({ ...pendingDelete, force: true, label: `${pendingDelete.label} (${res.batchCount} batches will also be deleted)` })
+      setFeedback({ ok: false, text: res.error ?? 'Confirm cascade delete' })
+    } else {
+      setFeedback({ ok: false, text: res.error ?? 'Delete failed' })
+      setPendingDelete(null)
     }
   }
 
@@ -136,7 +223,7 @@ export function BatchManager({
         </h3>
         <Button
           className="flex items-center gap-2"
-          onClick={() => (activeTab === 'batches' ? setIsBatchModalOpen(true) : setIsProgrammeModalOpen(true))}
+          onClick={() => (activeTab === 'batches' ? openCreateBatch() : openCreateProgramme())}
         >
           <Plus size={16} />
           {activeTab === 'batches' ? 'New Batch' : 'New Programme'}
@@ -158,6 +245,20 @@ export function BatchManager({
                     {batch.name || `${batch.programme?.name} · ${batch.days?.join(', ')}`}
                   </h4>
                 </div>
+                <div className="flex gap-1">
+                  <Button type="button" size="sm" variant="ghost" aria-label="Edit batch" onClick={() => openEditBatch(batch)}>
+                    <Pencil size={14} />
+                  </Button>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="ghost"
+                    aria-label="Delete batch"
+                    onClick={() => setPendingDelete({ type: 'batch', id: batch.id, label: batch.name || 'this batch' })}
+                  >
+                    <Trash2 size={14} className="text-danger" />
+                  </Button>
+                </div>
               </div>
 
               <div className="space-y-3 mt-6">
@@ -177,7 +278,7 @@ export function BatchManager({
                     <span>{batch.instructor.name}</span>
                   </div>
                 )}
-                <div className="pt-3 flex gap-2">
+                <div className="pt-3 flex gap-2 flex-wrap">
                   <Badge variant={batch.status === 'active' ? 'green' : 'default'}>{batch.status ?? 'active'}</Badge>
                   {batch.status === 'active' ? (
                     <Button
@@ -187,9 +288,10 @@ export function BatchManager({
                       disabled={busy}
                       onClick={async () => {
                         setBusy(true)
-                        await updateBatchStatus(batch.id, 'paused')
+                        const res = await updateBatchStatus(batch.id, 'paused')
                         setBusy(false)
-                        router.refresh()
+                        if (!res.success) setFeedback({ ok: false, text: res.error ?? 'Could not pause batch' })
+                        else router.refresh()
                       }}
                     >
                       Pause
@@ -202,9 +304,10 @@ export function BatchManager({
                       disabled={busy}
                       onClick={async () => {
                         setBusy(true)
-                        await updateBatchStatus(batch.id, 'active')
+                        const res = await updateBatchStatus(batch.id, 'active')
                         setBusy(false)
-                        router.refresh()
+                        if (!res.success) setFeedback({ ok: false, text: res.error ?? 'Could not activate batch' })
+                        else router.refresh()
                       }}
                     >
                       Activate
@@ -226,9 +329,23 @@ export function BatchManager({
             <Card key={prog.id} className="p-6">
               <div className="flex justify-between items-start mb-2">
                 <h4 className="font-display text-xl text-ink">{prog.name}</h4>
-                <Badge variant={prog.is_active ? 'green' : 'default'}>
-                  {prog.is_active ? 'ACTIVE' : 'INACTIVE'}
-                </Badge>
+                <div className="flex items-center gap-1">
+                  <Badge variant={prog.is_active ? 'green' : 'default'}>
+                    {prog.is_active ? 'ACTIVE' : 'INACTIVE'}
+                  </Badge>
+                  <Button type="button" size="sm" variant="ghost" aria-label="Edit programme" onClick={() => openEditProgramme(prog)}>
+                    <Pencil size={14} />
+                  </Button>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="ghost"
+                    aria-label="Delete programme"
+                    onClick={() => setPendingDelete({ type: 'programme', id: prog.id, label: prog.name })}
+                  >
+                    <Trash2 size={14} className="text-danger" />
+                  </Button>
+                </div>
               </div>
               <p className="text-sm text-ink-2 line-clamp-2">{prog.description}</p>
               <div className="mt-4 text-xs text-ink-2 space-y-1">
@@ -245,8 +362,7 @@ export function BatchManager({
         </div>
       )}
 
-      {/* New Batch modal */}
-      <Modal isOpen={isBatchModalOpen} onClose={() => setIsBatchModalOpen(false)} title="New Batch" size="lg">
+      <Modal isOpen={isBatchModalOpen} onClose={() => setIsBatchModalOpen(false)} title={editingBatchId ? 'Edit Batch' : 'New Batch'} size="lg">
         <div className="space-y-4">
           <div>
             <label className="block text-sm text-ink-2 mb-1">Programme</label>
@@ -296,49 +412,45 @@ export function BatchManager({
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm text-ink-2 mb-1">Start Time</label>
-              <Input
-                type="time"
-                value={batchForm.timeStart}
-                onChange={(e) => setBatchForm({ ...batchForm, timeStart: e.target.value })}
-              />
+              <Input type="time" value={batchForm.timeStart} onChange={(e) => setBatchForm({ ...batchForm, timeStart: e.target.value })} />
             </div>
             <div>
               <label className="block text-sm text-ink-2 mb-1">End Time</label>
-              <Input
-                type="time"
-                value={batchForm.timeEnd}
-                onChange={(e) => setBatchForm({ ...batchForm, timeEnd: e.target.value })}
-              />
+              <Input type="time" value={batchForm.timeEnd} onChange={(e) => setBatchForm({ ...batchForm, timeEnd: e.target.value })} />
             </div>
           </div>
           <div>
             <label className="block text-sm text-ink-2 mb-1">Capacity</label>
-            <Input
-              type="number"
-              min={1}
-              value={batchForm.capacity}
-              onChange={(e) => setBatchForm({ ...batchForm, capacity: e.target.value })}
-            />
+            <Input type="number" min={1} value={batchForm.capacity} onChange={(e) => setBatchForm({ ...batchForm, capacity: e.target.value })} />
           </div>
+          {editingBatchId && (
+            <div>
+              <label className="block text-sm text-ink-2 mb-1">Status</label>
+              <Select
+                value={batchForm.status}
+                onChange={(e) => setBatchForm({ ...batchForm, status: e.target.value as typeof batchForm.status })}
+                options={[
+                  { value: 'active', label: 'Active' },
+                  { value: 'paused', label: 'Paused' },
+                  { value: 'full', label: 'Full' },
+                ]}
+              />
+            </div>
+          )}
           <div className="flex gap-3 pt-2">
             <Button onClick={submitBatch} disabled={busy}>
-              {busy ? 'Creating...' : 'Create Batch'}
+              {busy ? 'Saving...' : editingBatchId ? 'Save Changes' : 'Create Batch'}
             </Button>
             <Button variant="outline" onClick={() => setIsBatchModalOpen(false)}>Cancel</Button>
           </div>
         </div>
       </Modal>
 
-      {/* New Programme modal */}
-      <Modal isOpen={isProgrammeModalOpen} onClose={() => setIsProgrammeModalOpen(false)} title="New Programme" size="lg">
+      <Modal isOpen={isProgrammeModalOpen} onClose={() => setIsProgrammeModalOpen(false)} title={editingProgId ? 'Edit Programme' : 'New Programme'} size="lg">
         <div className="space-y-4">
           <div>
             <label className="block text-sm text-ink-2 mb-1">Name</label>
-            <Input
-              placeholder="e.g., Bollywood Basics"
-              value={progForm.name}
-              onChange={(e) => setProgForm({ ...progForm, name: e.target.value })}
-            />
+            <Input placeholder="e.g., Bollywood Basics" value={progForm.name} onChange={(e) => setProgForm({ ...progForm, name: e.target.value })} />
           </div>
           <div>
             <label className="block text-sm text-ink-2 mb-1">Description</label>
@@ -359,37 +471,53 @@ export function BatchManager({
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm text-ink-2 mb-1">Monthly Fee (₹)</label>
-              <Input
-                type="number"
-                min={0}
-                value={progForm.feesMonthly}
-                onChange={(e) => setProgForm({ ...progForm, feesMonthly: e.target.value })}
-              />
+              <Input type="number" min={0} value={progForm.feesMonthly} onChange={(e) => setProgForm({ ...progForm, feesMonthly: e.target.value })} />
             </div>
             <div>
               <label className="block text-sm text-ink-2 mb-1">Quarterly Fee (₹)</label>
-              <Input
-                type="number"
-                min={0}
-                value={progForm.feesQuarterly}
-                onChange={(e) => setProgForm({ ...progForm, feesQuarterly: e.target.value })}
-              />
+              <Input type="number" min={0} value={progForm.feesQuarterly} onChange={(e) => setProgForm({ ...progForm, feesQuarterly: e.target.value })} />
             </div>
           </div>
           <div>
             <label className="block text-sm text-ink-2 mb-1">Age Group</label>
-            <Input
-              placeholder="e.g., 5+ Years"
-              value={progForm.ageGroup}
-              onChange={(e) => setProgForm({ ...progForm, ageGroup: e.target.value })}
-            />
+            <Input placeholder="e.g., 5+ Years" value={progForm.ageGroup} onChange={(e) => setProgForm({ ...progForm, ageGroup: e.target.value })} />
           </div>
+          {editingProgId && (
+            <label className="flex items-center gap-2 text-sm text-ink-2">
+              <input
+                type="checkbox"
+                checked={progForm.isActive}
+                onChange={(e) => setProgForm({ ...progForm, isActive: e.target.checked })}
+                className="rounded border-line"
+              />
+              Active on public site
+            </label>
+          )}
           <div className="flex gap-3 pt-2">
             <Button onClick={submitProgramme} disabled={busy}>
-              {busy ? 'Creating...' : 'Create Programme'}
+              {busy ? 'Saving...' : editingProgId ? 'Save Changes' : 'Create Programme'}
             </Button>
             <Button variant="outline" onClick={() => setIsProgrammeModalOpen(false)}>Cancel</Button>
           </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={!!pendingDelete}
+        onClose={() => setPendingDelete(null)}
+        title="Confirm delete"
+        size="sm"
+      >
+        <p className="text-sm text-ink-2 mb-4">
+          {pendingDelete?.force
+            ? `Permanently delete ${pendingDelete.label}? This cannot be undone.`
+            : `Delete ${pendingDelete?.label}?`}
+        </p>
+        <div className="flex gap-3">
+          <Button variant="danger" onClick={confirmDelete} disabled={busy}>
+            {busy ? 'Deleting...' : pendingDelete?.force ? 'Yes, delete all' : 'Delete'}
+          </Button>
+          <Button variant="outline" onClick={() => setPendingDelete(null)}>Cancel</Button>
         </div>
       </Modal>
     </div>

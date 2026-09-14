@@ -33,7 +33,7 @@ export default async function AttendancePage({
       <div>
         <h2 className="font-display text-3xl text-ink tracking-wide">Attendance</h2>
         <p className="text-ink-2 font-body text-sm mt-1">
-          Only academy admin can mark attendance. Instructors see a read-only roster in their portal.
+          Mark attendance for any batch. Instructors can mark attendance for their assigned batches in their portal.
         </p>
       </div>
 

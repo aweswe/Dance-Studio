@@ -5,7 +5,7 @@ import { TableSkeleton } from '@/components/ui/skeleton';
 
 export default async function SwitchRequestsPage() {
   const supabase = await createServerSupabase();
-  const { data: requests } = await supabase
+  const { data: requests, error } = await supabase
     .from('batch_switch_requests')
     .select(
       `
@@ -30,6 +30,12 @@ export default async function SwitchRequestsPage() {
           Students request batch changes after enrolment — approve to move them on the roster.
         </p>
       </div>
+
+      {error && (
+        <div className="rounded-xl border border-danger/30 bg-danger/10 p-4 text-sm text-danger">
+          Could not load switch requests: {error.message}. Ensure migration 0018 is applied on Supabase.
+        </div>
+      )}
 
       <Suspense fallback={<TableSkeleton rows={6} columns={4} />}>
         <SwitchRequestList initialRequests={(requests ?? []) as any[]} />

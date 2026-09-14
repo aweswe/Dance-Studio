@@ -6,45 +6,95 @@ import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Modal } from '@/components/ui/modal'
-import { Plus, Mail, Phone } from 'lucide-react'
+import { Plus, Mail, Phone, Pencil, Trash2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { createInstructor, linkInstructorAuth } from '@/actions/instructors'
+import { createInstructor, updateInstructor, deleteInstructor, linkInstructorAuth } from '@/actions/instructors'
+
+const emptyForm = {
+  name: '',
+  role: '',
+  bio: '',
+  certifications: '',
+  email: '',
+  phone: '',
+  isActive: true,
+}
 
 export function InstructorManager({ initialInstructors }: { initialInstructors: any[] }) {
   const router = useRouter()
   const [isOpen, setIsOpen] = useState(false)
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [pendingDelete, setPendingDelete] = useState<{ id: string; name: string; hard?: boolean } | null>(null)
   const [busy, setBusy] = useState(false)
   const [feedback, setFeedback] = useState<{ ok: boolean; text: string } | null>(null)
+  const [form, setForm] = useState(emptyForm)
 
-  const [form, setForm] = useState({
-    name: '',
-    role: '',
-    bio: '',
-    certifications: '',
-    email: '',
-    phone: '',
-  })
+  const openCreate = () => {
+    setEditingId(null)
+    setForm(emptyForm)
+    setIsOpen(true)
+  }
+
+  const openEdit = (instructor: any) => {
+    setEditingId(instructor.id)
+    setForm({
+      name: instructor.name,
+      role: instructor.role || '',
+      bio: instructor.bio || '',
+      certifications: Array.isArray(instructor.certifications) ? instructor.certifications.join('\n') : '',
+      email: instructor.email || '',
+      phone: instructor.phone || '',
+      isActive: instructor.is_active ?? true,
+    })
+    setIsOpen(true)
+  }
 
   const submit = async () => {
     setBusy(true)
     setFeedback(null)
-    const res = await createInstructor({
+    const payload = {
       name: form.name,
       role: form.role,
       bio: form.bio,
       certifications: form.certifications.split(/[\n,]/).map((s) => s.trim()).filter(Boolean),
       email: form.email,
       phone: form.phone,
-      isActive: true,
-    })
+      isActive: form.isActive,
+    }
+    const res = editingId
+      ? await updateInstructor(editingId, payload)
+      : await createInstructor(payload)
     setBusy(false)
     if (res.success) {
-      setFeedback({ ok: true, text: 'Instructor added' })
+      setFeedback({ ok: true, text: editingId ? 'Instructor updated' : 'Instructor added' })
       setIsOpen(false)
-      setForm({ name: '', role: '', bio: '', certifications: '', email: '', phone: '' })
+      setForm(emptyForm)
+      setEditingId(null)
       router.refresh()
     } else {
-      setFeedback({ ok: false, text: res.error ?? 'Could not add instructor' })
+      setFeedback({ ok: false, text: res.error ?? 'Could not save instructor' })
+    }
+  }
+
+  const confirmDelete = async () => {
+    if (!pendingDelete) return
+    setBusy(true)
+    setFeedback(null)
+    const res = await deleteInstructor(pendingDelete.id, pendingDelete.hard)
+    setBusy(false)
+    if (res.success) {
+      setPendingDelete(null)
+      setFeedback({
+        ok: true,
+        text: res.deactivated ? 'Instructor deactivated' : 'Instructor deleted',
+      })
+      router.refresh()
+    } else if ('batchCount' in res && res.batchCount && !pendingDelete.hard) {
+      setPendingDelete({ ...pendingDelete, hard: true })
+      setFeedback({ ok: false, text: res.error ?? 'Has assigned batches — confirm permanent delete or deactivate instead' })
+    } else {
+      setFeedback({ ok: false, text: res.error ?? 'Delete failed' })
+      setPendingDelete(null)
     }
   }
 
@@ -54,7 +104,7 @@ export function InstructorManager({ initialInstructors }: { initialInstructors: 
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h3 className="font-display text-xl text-ink">All Instructors</h3>
-        <Button className="flex items-center gap-2" onClick={() => setIsOpen(true)}>
+        <Button className="flex items-center gap-2" onClick={openCreate}>
           <Plus size={16} /> Add Instructor
         </Button>
       </div>
@@ -77,6 +127,20 @@ export function InstructorManager({ initialInstructors }: { initialInstructors: 
                     {instructor.is_active ? 'ACTIVE' : 'INACTIVE'}
                   </Badge>
                 </div>
+              </div>
+              <div className="flex gap-1">
+                <Button type="button" size="sm" variant="ghost" aria-label="Edit instructor" onClick={() => openEdit(instructor)}>
+                  <Pencil size={14} />
+                </Button>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="ghost"
+                  aria-label="Delete instructor"
+                  onClick={() => setPendingDelete({ id: instructor.id, name: instructor.name })}
+                >
+                  <Trash2 size={14} className="text-danger" />
+                </Button>
               </div>
             </div>
 
@@ -114,7 +178,7 @@ export function InstructorManager({ initialInstructors }: { initialInstructors: 
         )}
       </div>
 
-      <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} title="Add Instructor" size="lg">
+      <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} title={editingId ? 'Edit Instructor' : 'Add Instructor'} size="lg">
         <div className="space-y-4">
           <div>
             <label className="block text-sm text-ink-2 mb-1">Name</label>
@@ -122,11 +186,7 @@ export function InstructorManager({ initialInstructors }: { initialInstructors: 
           </div>
           <div>
             <label className="block text-sm text-ink-2 mb-1">Role / Title</label>
-            <Input
-              placeholder="e.g., Kids Dance Instructor"
-              value={form.role}
-              onChange={(e) => setForm({ ...form, role: e.target.value })}
-            />
+            <Input placeholder="e.g., Kids Dance Instructor" value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })} />
           </div>
           <div>
             <label className="block text-sm text-ink-2 mb-1">Bio</label>
@@ -147,26 +207,49 @@ export function InstructorManager({ initialInstructors }: { initialInstructors: 
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm text-ink-2 mb-1">Email</label>
-              <Input
-                type="email"
-                value={form.email}
-                onChange={(e) => setForm({ ...form, email: e.target.value })}
-              />
+              <Input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
             </div>
             <div>
               <label className="block text-sm text-ink-2 mb-1">Phone</label>
-              <Input
-                value={form.phone}
-                onChange={(e) => setForm({ ...form, phone: e.target.value })}
-              />
+              <Input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
             </div>
           </div>
+          {editingId && (
+            <label className="flex items-center gap-2 text-sm text-ink-2">
+              <input
+                type="checkbox"
+                checked={form.isActive}
+                onChange={(e) => setForm({ ...form, isActive: e.target.checked })}
+                className="rounded border-line"
+              />
+              Active on public site
+            </label>
+          )}
           <div className="flex gap-3 pt-2">
             <Button onClick={submit} disabled={busy}>
-              {busy ? 'Adding...' : 'Add Instructor'}
+              {busy ? 'Saving...' : editingId ? 'Save Changes' : 'Add Instructor'}
             </Button>
             <Button variant="outline" onClick={() => setIsOpen(false)}>Cancel</Button>
           </div>
+        </div>
+      </Modal>
+
+      <Modal isOpen={!!pendingDelete} onClose={() => setPendingDelete(null)} title="Remove instructor" size="sm">
+        <p className="text-sm text-ink-2 mb-4">
+          {pendingDelete?.hard
+            ? `Permanently delete ${pendingDelete.name}? Assigned batches will lose this instructor.`
+            : `Deactivate ${pendingDelete?.name}? They will be hidden from the public site but records are kept.`}
+        </p>
+        <div className="flex flex-wrap gap-3">
+          <Button variant="danger" onClick={confirmDelete} disabled={busy}>
+            {busy ? 'Working...' : pendingDelete?.hard ? 'Permanently delete' : 'Deactivate'}
+          </Button>
+          {pendingDelete && !pendingDelete.hard && (
+            <Button variant="outline" onClick={() => setPendingDelete({ ...pendingDelete, hard: true })}>
+              Delete permanently
+            </Button>
+          )}
+          <Button variant="outline" onClick={() => setPendingDelete(null)}>Cancel</Button>
         </div>
       </Modal>
     </div>
@@ -191,13 +274,7 @@ function InstructorLinkForm({ instructorId, email }: { instructorId: string; ema
         if (res.success) router.refresh()
       }}
     >
-      <Input
-        type="email"
-        required
-        placeholder="Instructor email"
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-      />
+      <Input type="email" required placeholder="Instructor email" value={value} onChange={(e) => setValue(e.target.value)} />
       <Button type="submit" size="sm" disabled={busy}>
         {busy ? 'Linking…' : 'Link portal login'}
       </Button>

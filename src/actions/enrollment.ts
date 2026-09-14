@@ -142,6 +142,9 @@ export async function resolveBatchSwitchRequest(
   if (decision === 'approved') {
     const target = row.requested;
     if (!target) return { success: false, error: 'Target batch not found.' };
+    if (target.status === 'paused') {
+      return { success: false, error: 'Target batch is paused. Decline or ask the student to pick an active batch.' };
+    }
     if (target.status === 'full' || (target.capacity > 0 && target.enrolled_count >= target.capacity)) {
       return { success: false, error: 'Target batch is full. Decline or pick another batch manually.' };
     }

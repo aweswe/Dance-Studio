@@ -20,3 +20,9 @@ export const createProgrammeSchema = z.object({
 });
 
 export type CreateProgrammeData = z.infer<typeof createProgrammeSchema>;
+
+export const updateProgrammeSchema = createProgrammeSchema.extend({
+  isActive: z.boolean(),
+});
+
+export type UpdateProgrammeData = z.infer<typeof updateProgrammeSchema>;
