@@ -152,22 +152,22 @@ export function UpcomingClasses() {
               </div>
 
               {/* Card Footer: Instructor Pill + Book Trial Button */}
-              <div className="pt-4 border-t border-white/10 flex items-center justify-between gap-3">
-                <div className="flex items-center gap-2.5">
-                  <div className="relative w-8 h-8 rounded-full overflow-hidden border border-white/20 shrink-0">
+              <div className="pt-5 border-t border-white/10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="relative w-9 h-9 rounded-full overflow-hidden border border-white/20 shrink-0">
                     <Image
                       src={item.instructorImg}
                       alt={item.instructor}
                       fill
-                      sizes="32px"
+                      sizes="36px"
                       className="object-cover"
                     />
                   </div>
-                  <div className="flex flex-col">
-                    <span className="text-[11px] font-bold text-white leading-none">
+                  <div className="flex flex-col min-w-0">
+                    <span className="text-[11px] font-bold text-white leading-none truncate">
                       {item.instructor}
                     </span>
-                    <span className="text-[9px] font-mono text-white/50 tracking-wider">
+                    <span className="text-[9px] font-mono text-white/50 tracking-wider mt-1">
                       Mentor
                     </span>
                   </div>
@@ -175,7 +175,7 @@ export function UpcomingClasses() {
 
                 <Link
                   href={item.href}
-                  className="px-4 py-2 rounded-xl bg-[#F5FB38] text-[#000000] text-[10px] font-mono font-black uppercase tracking-wider hover:bg-white transition-all active:scale-95 flex items-center gap-1 shadow-sm"
+                  className="inline-flex items-center justify-center gap-1.5 min-h-11 px-5 rounded-xl bg-[#F5FB38] text-[#000000] text-[10px] font-mono font-black uppercase tracking-wider hover:bg-white transition-all active:scale-[0.98] shadow-sm w-full sm:w-auto shrink-0"
                 >
                   <span>Book Trial</span>
                   <ArrowUpRight size={12} className="stroke-[2.5]" />

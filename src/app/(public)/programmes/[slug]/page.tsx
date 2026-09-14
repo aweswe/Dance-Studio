@@ -164,17 +164,17 @@ export default async function ProgrammeDetailPage({ params }: Props) {
                 {programme.description}
               </p>
 
-              <div className="flex flex-wrap items-center gap-4 pt-2">
+              <div className="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-3 sm:gap-4 pt-2">
                 <Link
                   href={enrolHref({ programme: programme.slug, intent: 'trial' })}
-                  className="btn-sun px-8 py-3.5 text-xs font-black uppercase tracking-[0.16em] shadow-md flex items-center gap-2 active:scale-[0.96]"
+                  className="btn-sun inline-flex items-center justify-center min-h-11 px-8 py-3.5 text-xs font-black uppercase tracking-[0.16em] shadow-md gap-2 active:scale-[0.96]"
                 >
                   <span>Book Free Trial</span>
                 </Link>
                 {slug === 'kuchipudi' && (
                   <a
                     href="#curriculum"
-                    className="px-6 py-3.5 rounded-xl bg-surface border border-line text-xs font-mono font-bold uppercase tracking-wider text-ink hover:border-[#7C5CFC] transition-colors inline-flex items-center gap-2"
+                    className="inline-flex items-center justify-center min-h-11 px-6 py-3.5 rounded-xl bg-surface border border-line text-xs font-mono font-bold uppercase tracking-wider text-ink hover:border-[#7C5CFC] transition-colors gap-2"
                   >
                     <span>View Syllabus</span>
                     <span className="text-[#7C5CFC]">↓</span>

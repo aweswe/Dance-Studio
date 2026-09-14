@@ -1,9 +1,10 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ChevronDown, Menu, X, User, LayoutDashboard } from 'lucide-react';
+import { ArrowRight, ChevronDown, Menu, X, User, LayoutDashboard } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import { ROUTES } from '@/lib/utils/constants';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
@@ -29,6 +30,8 @@ const SYLLABUS_LINKS: NavLink[] = [
   { name: 'Kuchipudi', href: ROUTES.syllabusKuchipudi },
   { name: 'Kathak', href: ROUTES.syllabusKathak },
 ];
+
+const MOBILE_MENU_LINKS: NavLink[] = [...PRIMARY_LINKS, ...MORE_LINKS, ...SYLLABUS_LINKS];
 
 interface AuthInfo {
   isLoggedIn: boolean;
@@ -65,6 +68,28 @@ function NavLinkItem({
       {active && (
         <span className="absolute left-0 right-0 -bottom-0.5 h-[2px] bg-[#7C5CFC] rounded-full" aria-hidden />
       )}
+    </Link>
+  );
+}
+
+function MobileMenuRow({
+  link,
+  active,
+  onClick,
+}: {
+  link: NavLink;
+  active: boolean;
+  onClick?: () => void;
+}) {
+  return (
+    <Link
+      href={link.href}
+      prefetch
+      onClick={onClick}
+      className="flex items-center justify-between gap-4 px-6 sm:px-8 py-5 border-b border-[#333333] text-white hover:bg-[#141414] active:bg-[#1a1a1a] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#7C5CFC]"
+    >
+      <span className="text-sm font-bold uppercase tracking-[0.14em]">{link.name}</span>
+      {active && <ArrowRight size={18} strokeWidth={1.5} className="shrink-0" aria-hidden />}
     </Link>
   );
 }
@@ -110,6 +135,7 @@ export function Nav() {
   const [moreOpen, setMoreOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [authInfo, setAuthInfo] = useState<AuthInfo | null>(null);
+  const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
   const [lastPathname, setLastPathname] = useState(pathname);
   const syllabusRef = useRef<HTMLDivElement>(null);
@@ -200,6 +226,10 @@ export function Nav() {
   }, []);
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
     document.body.style.overflow = isOpen ? 'hidden' : '';
     return () => {
       document.body.style.overflow = '';
@@ -210,8 +240,6 @@ export function Nav() {
   const syllabusActive = pathname.startsWith('/syllabus');
   const moreActive = MORE_LINKS.some((link) => isActive(link.href));
   const closeMobile = () => setIsOpen(false);
-
-  const accountInitial = authInfo?.name?.charAt(0).toUpperCase() || 'S';
 
   return (
     <header
@@ -387,130 +415,92 @@ export function Nav() {
         </div>
       </div>
 
-      {/* Mobile backdrop */}
-      <div
-        className={cn(
-          'fixed inset-0 z-40 bg-black/40 backdrop-blur-[2px] lg:hidden transition-opacity duration-300',
-          isOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none',
-        )}
-        onClick={closeMobile}
-        aria-hidden
-      />
-
-      {/* Mobile drawer */}
-      <div
-        id="mobile-nav-drawer"
-        className={cn(
-          'fixed top-[var(--public-header-h,72px)] bottom-0 right-0 z-50 w-full max-w-sm lg:hidden bg-canvas border-l border-line shadow-2xl flex flex-col transition-transform duration-300 ease-out',
-          isOpen ? 'translate-x-0' : 'translate-x-full pointer-events-none',
-        )}
-        role="dialog"
-        aria-modal="true"
-        aria-label="Site navigation"
-      >
-        <div className="flex items-center justify-between px-5 py-4 border-b border-line shrink-0">
-          <div>
-            <p className="font-anton text-lg text-ink tracking-wide">Menu</p>
-            <p className="text-[10px] font-mono uppercase tracking-widest text-ink-3">Rhythmzz Academy</p>
-          </div>
-          <button
-            type="button"
-            onClick={closeMobile}
-            className="p-2 rounded-xl border border-line text-ink-2 hover:text-ink"
-            aria-label="Close menu"
-          >
-            <X size={18} />
-          </button>
-        </div>
-
-        {authInfo?.isLoggedIn && (
-          <div className="px-5 py-4 border-b border-line bg-surface/50 shrink-0">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-[#7C5CFC]/15 border border-[#7C5CFC]/30 flex items-center justify-center text-sm font-bold text-[#7C5CFC]">
-                {accountInitial}
-              </div>
-              <div className="min-w-0 flex-1">
-                <p className="text-sm font-semibold text-ink truncate">{authInfo.name}</p>
-                <p className="text-[10px] uppercase tracking-wider text-ink-3">{authInfo.label}</p>
-              </div>
-            </div>
-            <Link
-              href={authInfo.href}
+      {mounted &&
+        createPortal(
+          <>
+            <div
+              className={cn(
+                'fixed inset-0 z-[700] bg-[#0a0a0a] lg:hidden transition-opacity duration-300',
+                isOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none',
+              )}
               onClick={closeMobile}
-              className="mt-3 flex items-center justify-center gap-2 w-full min-h-11 rounded-xl bg-[#7C5CFC] text-white text-xs font-bold uppercase tracking-wider active:scale-[0.98]"
-            >
-              <LayoutDashboard size={14} />
-              Open {authInfo.shortLabel}
-            </Link>
-          </div>
-        )}
+              aria-hidden
+            />
 
-        <div className="flex-1 overflow-y-auto px-5 py-5 space-y-6">
-          <section>
-            <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-ink-3 mb-3">Pages</p>
-            <nav className="grid grid-cols-2 gap-2">
-              {[...PRIMARY_LINKS, ...MORE_LINKS].map((link) => (
+            <div
+              id="mobile-nav-drawer"
+              className={cn(
+                'fixed inset-y-0 right-0 z-[710] w-full lg:hidden bg-black flex flex-col shadow-2xl transition-transform duration-300 ease-out',
+                isOpen ? 'translate-x-0 visible' : 'translate-x-full invisible pointer-events-none',
+              )}
+              role="dialog"
+              aria-modal="true"
+              aria-label="Site navigation"
+            >
+              <div className="flex items-center justify-between px-6 sm:px-8 pt-[max(1rem,env(safe-area-inset-top))] pb-4 border-b border-[#333333] shrink-0">
+                <Link href={ROUTES.home} onClick={closeMobile} className="flex flex-col leading-none">
+                  <span className="font-anton text-xl tracking-wide text-white">RHYTHMZZ</span>
+                  <span className="text-[10px] font-bold tracking-[0.25em] uppercase text-[#7C5CFC]">
+                    Dance Academy
+                  </span>
+                </Link>
+                <button
+                  type="button"
+                  onClick={closeMobile}
+                  className="p-2 min-h-10 min-w-10 flex items-center justify-center text-white hover:text-[#7C5CFC] transition-colors"
+                  aria-label="Close menu"
+                >
+                  <X size={22} strokeWidth={1.5} />
+                </button>
+              </div>
+
+              <nav className="flex-1 min-h-0 overflow-y-auto overscroll-contain" aria-label="Mobile navigation">
+                {MOBILE_MENU_LINKS.map((link) => (
+                  <MobileMenuRow key={link.href} link={link} active={isActive(link.href)} onClick={closeMobile} />
+                ))}
+
+                {authInfo?.isLoggedIn ? (
+                  <Link
+                    href={authInfo.href}
+                    onClick={closeMobile}
+                    className="flex items-center justify-between gap-4 px-6 sm:px-8 py-5 border-b border-[#333333] text-white hover:bg-[#141414] active:bg-[#1a1a1a] transition-colors"
+                  >
+                    <span className="text-sm font-bold uppercase tracking-[0.14em]">{authInfo.label}</span>
+                    <ArrowRight size={18} strokeWidth={1.5} className="shrink-0" aria-hidden />
+                  </Link>
+                ) : (
+                  <Link
+                    href="/login"
+                    onClick={closeMobile}
+                    className="flex items-center justify-between gap-4 px-6 sm:px-8 py-5 border-b border-[#333333] text-white hover:bg-[#141414] active:bg-[#1a1a1a] transition-colors"
+                  >
+                    <span className="text-sm font-bold uppercase tracking-[0.14em]">Student Login</span>
+                    <User size={18} strokeWidth={1.5} className="shrink-0" aria-hidden />
+                  </Link>
+                )}
+
                 <Link
-                  key={link.name}
-                  href={link.href}
+                  href={ROUTES.enrol}
                   prefetch
                   onClick={closeMobile}
-                  className={cn(
-                    'px-3 py-3 rounded-xl border text-xs font-bold uppercase tracking-wider transition-all active:scale-[0.98]',
-                    isActive(link.href)
-                      ? 'border-[#7C5CFC] bg-[#7C5CFC]/10 text-ink'
-                      : 'border-line bg-surface/70 text-ink-2 hover:border-[#7C5CFC]/40 hover:text-ink',
-                  )}
+                  className="flex items-center justify-between gap-4 px-6 sm:px-8 py-5 border-b border-[#333333] text-[#FFE566] hover:bg-[#141414] active:bg-[#1a1a1a] transition-colors"
                 >
-                  {link.name}
+                  <span className="text-sm font-bold uppercase tracking-[0.14em]">Book Free Trial</span>
+                  <ArrowRight size={18} strokeWidth={1.5} className="shrink-0" aria-hidden />
                 </Link>
-              ))}
-            </nav>
-          </section>
+              </nav>
 
-          <section>
-            <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-ink-3 mb-3">Syllabus</p>
-            <div className="space-y-2">
-              {SYLLABUS_LINKS.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={closeMobile}
-                  className={cn(
-                    'block px-4 py-3 rounded-xl border text-xs font-bold uppercase tracking-wider',
-                    isActive(item.href)
-                      ? 'border-[#7C5CFC] bg-[#7C5CFC]/10 text-ink'
-                      : 'border-line text-ink-2 hover:border-[#7C5CFC]/40',
-                  )}
-                >
-                  {item.name}
-                </Link>
-              ))}
+              {authInfo?.isLoggedIn && (
+                <div className="px-6 sm:px-8 py-4 border-t border-[#333333] shrink-0 pb-[max(1rem,env(safe-area-inset-bottom))]">
+                  <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#888888]">
+                    Signed in as {authInfo.name}
+                  </p>
+                </div>
+              )}
             </div>
-          </section>
-        </div>
-
-        <div className="px-5 py-4 border-t border-line space-y-2 shrink-0 pb-[max(1rem,env(safe-area-inset-bottom))]">
-          <Link
-            href={ROUTES.enrol}
-            prefetch
-            onClick={closeMobile}
-            className="btn-sun w-full min-h-11 flex items-center justify-center text-xs font-black uppercase tracking-wider shadow-sm active:scale-[0.98]"
-          >
-            Book Free Trial Class
-          </Link>
-          {!authInfo?.isLoggedIn && (
-            <Link
-              href="/login"
-              onClick={closeMobile}
-              className="w-full min-h-11 flex items-center justify-center gap-2 rounded-xl border border-line text-xs font-bold uppercase tracking-wider text-ink-2 hover:text-ink"
-            >
-              <User size={14} />
-              Student Login
-            </Link>
-          )}
-        </div>
-      </div>
+          </>,
+          document.body,
+        )}
     </header>
   );
 }

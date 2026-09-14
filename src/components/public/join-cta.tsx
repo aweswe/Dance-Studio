@@ -60,10 +60,10 @@ export function JoinCTA() {
           </div>
 
           {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-5 w-full sm:w-auto">
             <Link
               href={ROUTES.enrol}
-              className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-[#000000] text-[#F5FB38] font-anton text-base sm:text-lg uppercase tracking-wider hover:bg-white hover:text-[#000000] transition-all shadow-xl active:scale-95 flex items-center justify-center gap-2 group"
+              className="w-full sm:w-auto min-h-12 px-8 py-4 rounded-2xl bg-[#000000] text-[#F5FB38] font-anton text-base sm:text-lg uppercase tracking-wider hover:bg-white hover:text-[#000000] transition-all shadow-xl active:scale-[0.98] flex items-center justify-center gap-2 group"
             >
               <span>Book Your Free Trial Today</span>
               <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
@@ -73,7 +73,7 @@ export function JoinCTA() {
               href={ACADEMY.whatsapp}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full sm:w-auto px-6 py-4 rounded-2xl bg-white/40 hover:bg-white text-[#000000] font-mono text-xs font-black uppercase tracking-wider transition-all shadow-sm active:scale-95 flex items-center justify-center gap-2 border border-[#000000]/15"
+              className="w-full sm:w-auto min-h-12 px-6 py-4 rounded-2xl bg-white hover:bg-white text-[#000000] font-mono text-xs font-black uppercase tracking-wider transition-all shadow-sm active:scale-[0.98] flex items-center justify-center gap-2 border border-[#000000]/15"
             >
               <MessageCircle size={16} />
               <span>WhatsApp Us: {ACADEMY.phoneDisplay}</span>

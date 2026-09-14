@@ -52,7 +52,7 @@ export default async function ProgrammesPage() {
 
       {/* Programme Cards */}
       <section className="py-20 sm:py-28 px-4 sm:px-8 md:px-14 max-w-[1440px] mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-7">
           {programmes.map((prog: any) => (
             <ProgrammeCard
               key={prog.id ?? prog.slug}
@@ -119,18 +119,18 @@ export default async function ProgrammesPage() {
 
       {/* CTA */}
       <section className="px-4 sm:px-8 md:px-14 pb-20 sm:pb-28 max-w-[1440px] mx-auto">
-        <div className="border border-line rounded-[24px] p-8 sm:p-12 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
-          <div>
+        <div className="border border-line rounded-[24px] p-8 sm:p-12 flex flex-col sm:flex-row sm:items-center justify-between gap-6 sm:gap-8">
+          <div className="space-y-2">
             <h2 className="font-anton text-2xl sm:text-3xl text-ink uppercase tracking-tight">
               NOT SURE WHERE TO START?
             </h2>
-            <p className="text-sm text-ink-2 mt-1">
+            <p className="text-sm text-ink-2">
               Your first class is free. Our coaches will guide you to the right batch.
             </p>
           </div>
           <Link
             href={ROUTES.enrol}
-            className="btn-sun py-3.5 px-8 text-xs font-black uppercase tracking-[0.18em] shrink-0"
+            className="btn-sun inline-flex items-center justify-center min-h-11 py-3.5 px-8 text-xs font-black uppercase tracking-[0.18em] shrink-0 w-full sm:w-auto"
           >
             Book Free Trial
           </Link>
