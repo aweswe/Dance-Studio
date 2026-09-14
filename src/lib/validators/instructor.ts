@@ -18,3 +18,9 @@ export const createInstructorSchema = z.object({
 });
 
 export type CreateInstructorData = z.infer<typeof createInstructorSchema>;
+
+export const updateInstructorSchema = createInstructorSchema.extend({
+  isActive: z.boolean(),
+});
+
+export type UpdateInstructorData = z.infer<typeof updateInstructorSchema>;

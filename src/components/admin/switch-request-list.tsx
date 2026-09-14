@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { resolveBatchSwitchRequest } from '@/actions/enrollment';
 import { formatDate, telLink } from '@/lib/utils/format';
-import { ArrowRightLeft, Phone } from 'lucide-react';
+import { ArrowRightLeft, Phone, AlertCircle, CheckCircle2 } from 'lucide-react';
 
 export interface SwitchRequestRow {
   id: string;
@@ -28,23 +28,55 @@ function batchSummary(b: SwitchRequestRow['current_batch'], progName?: string | 
   return progName ? `${progName} · ${label}` : label;
 }
 
+function statusLabel(status: string, adminNote?: string | null) {
+  if (status === 'declined' && adminNote === 'Cancelled by student') return 'CANCELLED';
+  return status.toUpperCase();
+}
+
 export function SwitchRequestList({ initialRequests }: { initialRequests: SwitchRequestRow[] }) {
   const router = useRouter();
   const [filter, setFilter] = useState<'pending' | 'all'>('pending');
   const [busy, setBusy] = useState<Record<string, boolean>>({});
   const [notes, setNotes] = useState<Record<string, string>>({});
+  const [message, setMessage] = useState<{ type: 'ok' | 'err'; text: string } | null>(null);
 
   const requests = (initialRequests || []).filter((r) => filter === 'all' || r.status === 'pending');
 
   async function resolve(id: string, decision: 'approved' | 'declined') {
     setBusy((b) => ({ ...b, [id]: true }));
-    await resolveBatchSwitchRequest(id, decision, notes[id]);
+    setMessage(null);
+    const res = await resolveBatchSwitchRequest(id, decision, notes[id]);
     setBusy((b) => ({ ...b, [id]: false }));
-    router.refresh();
+    if (res.success) {
+      setMessage({
+        type: 'ok',
+        text: decision === 'approved' ? 'Switch approved — student moved to the new batch.' : 'Request declined.',
+      });
+      router.refresh();
+    } else {
+      setMessage({ type: 'err', text: res.error || 'Could not resolve request.' });
+    }
   }
 
   return (
     <div className="space-y-4">
+      {message && (
+        <div
+          className={`flex gap-2 items-start rounded-xl border p-3 text-sm ${
+            message.type === 'ok'
+              ? 'border-success/30 bg-success/10 text-ink'
+              : 'border-danger/30 bg-danger/10 text-danger'
+          }`}
+        >
+          {message.type === 'ok' ? (
+            <CheckCircle2 size={16} className="shrink-0 mt-0.5" />
+          ) : (
+            <AlertCircle size={16} className="shrink-0 mt-0.5" />
+          )}
+          <span>{message.text}</span>
+        </div>
+      )}
+
       <div className="flex gap-2">
         {(['pending', 'all'] as const).map((f) => (
           <button
@@ -71,7 +103,7 @@ export function SwitchRequestList({ initialRequests }: { initialRequests: Switch
                   <div className="flex items-center gap-2 flex-wrap">
                     <p className="font-semibold text-ink">{r.student?.name || 'Student'}</p>
                     <Badge variant={r.status === 'pending' ? 'gold' : r.status === 'approved' ? 'green' : 'default'}>
-                      {r.status.toUpperCase()}
+                      {statusLabel(r.status, r.admin_note)}
                     </Badge>
                   </div>
                   {r.student?.phone && (

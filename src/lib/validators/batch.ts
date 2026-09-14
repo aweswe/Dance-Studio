@@ -26,3 +26,7 @@ export const createBatchSchema = z
   });
 
 export type CreateBatchData = z.infer<typeof createBatchSchema>;
+
+export const updateBatchSchema = createBatchSchema;
+
+export type UpdateBatchData = z.infer<typeof updateBatchSchema>;

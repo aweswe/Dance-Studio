@@ -1,9 +1,15 @@
 'use server'
 
-import { createServerSupabase } from '@/lib/supabase/server'
+import { createAdminSupabase, createServerSupabase } from '@/lib/supabase/server'
 import { isAdmin } from '@/lib/supabase/guards'
-import { createInstructorSchema, type CreateInstructorData } from '@/lib/validators/instructor'
+import { createInstructorSchema, updateInstructorSchema, type CreateInstructorData, type UpdateInstructorData } from '@/lib/validators/instructor'
 import { revalidatePath } from 'next/cache'
+
+function revalidateInstructorPaths() {
+  revalidatePath('/')
+  revalidatePath('/about')
+  revalidatePath('/admin/instructors')
+}
 
 export async function getInstructorsAction() {
   const supabase = await createServerSupabase()
@@ -24,7 +30,6 @@ export async function createInstructor(data: CreateInstructorData) {
 
   let authId: string | null = null
   if (d.email) {
-    const { createAdminSupabase } = await import('@/lib/supabase/server')
     const admin = createAdminSupabase()
     const { data: created, error: authErr } = await admin.auth.admin.createUser({
       email: d.email,
@@ -55,16 +60,73 @@ export async function createInstructor(data: CreateInstructorData) {
   })
   if (error) return { success: false, error: error.message }
 
-  revalidatePath('/')
-  revalidatePath('/about')
-  revalidatePath('/admin/instructors')
+  revalidateInstructorPaths()
   return { success: true }
+}
+
+export async function updateInstructor(id: string, data: UpdateInstructorData) {
+  const supabase = await createServerSupabase()
+  if (!(await isAdmin(supabase))) return { success: false, error: 'Not authorized' }
+
+  const parsed = updateInstructorSchema.safeParse(data)
+  if (!parsed.success) {
+    return { success: false, error: parsed.error.issues[0]?.message ?? 'Invalid instructor' }
+  }
+  const d = parsed.data
+
+  const { data: existing } = await supabase.from('instructors').select('id').eq('id', id).maybeSingle()
+  if (!existing) return { success: false, error: 'Instructor not found' }
+
+  const { error } = await supabase
+    .from('instructors')
+    .update({
+      name: d.name,
+      role: d.role ?? null,
+      bio: d.bio ?? null,
+      certifications: d.certifications,
+      email: d.email || null,
+      phone: d.phone || null,
+      is_active: d.isActive,
+    })
+    .eq('id', id)
+  if (error) return { success: false, error: error.message }
+
+  revalidateInstructorPaths()
+  return { success: true }
+}
+
+export async function deleteInstructor(id: string, hard = false) {
+  const supabase = await createServerSupabase()
+  if (!(await isAdmin(supabase))) return { success: false, error: 'Not authorized' }
+
+  const admin = createAdminSupabase()
+  const { count } = await admin.from('batches').select('id', { count: 'exact', head: true }).eq('instructor_id', id)
+
+  if (!hard) {
+    const { error } = await admin.from('instructors').update({ is_active: false }).eq('id', id)
+    if (error) return { success: false, error: error.message }
+    revalidateInstructorPaths()
+    return { success: true, deactivated: true }
+  }
+
+  if ((count ?? 0) > 0) {
+    return {
+      success: false,
+      error: `Cannot permanently delete — assigned to ${count} batch(es). Deactivate instead or reassign batches first.`,
+      batchCount: count,
+    }
+  }
+
+  const { error } = await admin.from('instructors').delete().eq('id', id)
+  if (error) return { success: false, error: error.message }
+
+  revalidateInstructorPaths()
+  return { success: true, deactivated: false }
 }
 
 export async function linkInstructorAuth(instructorId: string, email: string) {
   const supabase = await createServerSupabase()
   if (!(await isAdmin(supabase))) return { success: false, error: 'Not authorized' }
-  const { createAdminSupabase } = await import('@/lib/supabase/server')
   const admin = createAdminSupabase()
   const { data: created, error: authErr } = await admin.auth.admin.createUser({
     email,
@@ -79,6 +141,6 @@ export async function linkInstructorAuth(instructorId: string, email: string) {
   await (admin as any).from('users').upsert({ id: authId, role: 'instructor' })
   const { error } = await supabase.from('instructors').update({ auth_id: authId, email }).eq('id', instructorId)
   if (error) return { success: false, error: error.message }
-  revalidatePath('/admin/instructors')
+  revalidateInstructorPaths()
   return { success: true }
 }
