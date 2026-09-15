@@ -3,6 +3,7 @@ import { SITE_URL } from '@/lib/utils/constants';
 
 // Signature Danzia & Top Skills Pro Hybrid Showcase Components
 import { Hero } from '@/components/public/hero';
+import { HeroSpotlightVideos } from '@/components/public/hero-spotlight-videos';
 import { CreativeFamilySection } from '@/components/public/creative-family-section';
 import { BentoHighlights } from '@/components/public/bento-highlights';
 import { PricingSection } from '@/components/public/pricing-section';
@@ -38,6 +39,7 @@ export default async function HomePage() {
     <div className="relative bg-canvas text-ink font-body overflow-x-hidden min-h-screen transition-colors duration-300">
       <StructuredData />
       <Hero stats={stats} />
+      <HeroSpotlightVideos />
       <GoogleProofStrip />
       <CreativeFamilySection />
       <BentoHighlights />
