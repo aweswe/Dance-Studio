@@ -1,6 +1,5 @@
 import Link from 'next/link';
-import { MapPin } from 'lucide-react';
-import { ACADEMY, ROUTES } from '@/lib/utils/constants';
+import { ROUTES } from '@/lib/utils/constants';
 import { HeroVideo } from '@/components/public/hero-video';
 import { HeroStats } from '@/components/public/hero-stats';
 
