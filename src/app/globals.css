@@ -186,6 +186,13 @@ body {
   letter-spacing: 0.012em;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (max-width: 1023px) {
+  html {
+    scroll-padding-top: calc(var(--public-header-h, 72px) + 0.5rem);
+  }
 }
 
 /* ── Base typography rhythm (Archivo everywhere) ── */

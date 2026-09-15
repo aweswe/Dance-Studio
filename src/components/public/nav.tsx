@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type ComponentType } from 'react';
 import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -31,7 +31,6 @@ const PRIMARY_LINKS: NavLink[] = [
   { name: 'About', href: ROUTES.about },
 ];
 
-/** Everything else — one curated menu, zero clutter on the bar */
 const DISCOVER_GROUPS: { label: string; links: NavLink[] }[] = [
   {
     label: 'Academy',
@@ -71,6 +70,8 @@ interface AuthInfo {
   href: string;
   name?: string;
 }
+
+type LucideIcon = ComponentType<{ size?: number; className?: string; strokeWidth?: number }>;
 
 function NavLinkItem({
   link,
@@ -118,7 +119,7 @@ function DiscoverPanel({
         <Compass size={14} className="text-[#7C5CFC] shrink-0" strokeWidth={2} />
         <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-ink-3">Discover Rhythmzz</p>
       </div>
-      <div className="grid grid-cols-1 gap-0.5">
+      <div className="grid grid-cols-1 gap-0.5 max-h-[min(70vh,24rem)] overflow-y-auto overscroll-contain">
         {DISCOVER_GROUPS.map((group) => (
           <div key={group.label} className="px-1 py-1">
             <p className="px-2 py-1 text-[9px] font-semibold uppercase tracking-[0.18em] text-ink-3">{group.label}</p>
@@ -129,14 +130,16 @@ function DiscoverPanel({
                 href={item.href}
                 onClick={onNavigate}
                 className={cn(
-                  'flex flex-col gap-0.5 rounded-xl px-3 py-2 transition-colors',
+                  'flex flex-col gap-0.5 rounded-xl px-3 py-2.5 min-h-11 transition-colors touch-manipulation',
                   isActive(item.href)
                     ? 'bg-[#7C5CFC]/10 text-ink'
-                    : 'text-ink-2 hover:bg-surface hover:text-ink',
+                    : 'text-ink-2 hover:bg-surface hover:text-ink active:bg-surface',
                 )}
               >
                 <span className="text-[11px] font-bold uppercase tracking-wide">{item.name}</span>
-                {item.hint && <span className="text-[10px] font-normal normal-case tracking-normal text-ink-3">{item.hint}</span>}
+                {item.hint && (
+                  <span className="text-[10px] font-normal normal-case tracking-normal text-ink-3">{item.hint}</span>
+                )}
               </Link>
             ))}
           </div>
@@ -149,40 +152,44 @@ function DiscoverPanel({
 function MobileSection({
   title,
   links,
-  defaultOpen,
+  pathname,
   isActive,
   onNavigate,
   icon: Icon,
 }: {
   title: string;
   links: NavLink[];
-  defaultOpen?: boolean;
+  pathname: string;
   isActive: (href: string) => boolean;
   onNavigate: () => void;
-  icon?: React.ComponentType<{ size?: number; className?: string; strokeWidth?: number }>;
+  icon?: LucideIcon;
 }) {
-  const [open, setOpen] = useState(defaultOpen ?? false);
   const sectionActive = links.some((l) => isActive(l.href));
+  const [open, setOpen] = useState(() => sectionActive || title === 'Explore');
+
+  useEffect(() => {
+    if (sectionActive) setOpen(true);
+  }, [pathname, sectionActive]);
 
   return (
     <div className="border-b border-[#333333]">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="flex w-full items-center justify-between gap-3 px-6 sm:px-8 py-4 text-left text-white hover:bg-[#141414] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#7C5CFC]"
+        className="flex w-full items-center justify-between gap-3 px-5 py-4 min-h-[52px] text-left text-white hover:bg-[#141414] active:bg-[#1a1a1a] transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#7C5CFC]"
         aria-expanded={open}
       >
         <span className="flex items-center gap-2.5 min-w-0">
-          {Icon && <Icon size={16} className="shrink-0 text-[#7C5CFC]" strokeWidth={1.75} />}
-          <span className="text-xs font-bold uppercase tracking-[0.14em] truncate">{title}</span>
+          {Icon && <Icon size={18} className="shrink-0 text-[#7C5CFC]" strokeWidth={1.75} />}
+          <span className="text-sm font-bold uppercase tracking-[0.12em] truncate">{title}</span>
           {sectionActive && !open && (
-            <span className="h-1.5 w-1.5 rounded-full bg-[#7C5CFC] shrink-0" aria-label="Current section" />
+            <span className="h-2 w-2 rounded-full bg-[#7C5CFC] shrink-0" aria-label="Current section" />
           )}
         </span>
-        <ChevronDown size={16} className={cn('shrink-0 text-[#888888] transition-transform', open && 'rotate-180')} />
+        <ChevronDown size={18} className={cn('shrink-0 text-[#888888] transition-transform', open && 'rotate-180')} />
       </button>
       {open && (
-        <div className="bg-[#0d0d0d] pb-1">
+        <div className="bg-[#0d0d0d] pb-2">
           {links.map((link) => (
             <Link
               key={link.href}
@@ -190,15 +197,68 @@ function MobileSection({
               prefetch
               onClick={onNavigate}
               className={cn(
-                'flex items-center justify-between gap-4 pl-12 sm:pl-14 pr-6 sm:pr-8 py-3.5 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#7C5CFC]',
-                isActive(link.href) ? 'text-[#F5FB38] bg-[#141414]' : 'text-[#cccccc] hover:text-white hover:bg-[#141414]',
+                'flex items-center justify-between gap-4 pl-12 pr-5 py-4 min-h-[52px] transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#7C5CFC]',
+                isActive(link.href) ? 'text-[#F5FB38] bg-[#141414]' : 'text-[#cccccc] hover:text-white hover:bg-[#141414] active:bg-[#1a1a1a]',
               )}
             >
-              <span className="font-semibold tracking-wide">{link.name}</span>
-              {isActive(link.href) && <ArrowRight size={16} strokeWidth={1.5} className="shrink-0" />}
+              <span className="min-w-0">
+                <span className="block font-semibold tracking-wide text-[15px]">{link.name}</span>
+                {link.hint && (
+                  <span className="block text-xs font-normal text-[#888888] mt-0.5 normal-case tracking-normal">
+                    {link.hint}
+                  </span>
+                )}
+              </span>
+              {isActive(link.href) && <ArrowRight size={18} strokeWidth={1.5} className="shrink-0" />}
             </Link>
           ))}
         </div>
+      )}
+    </div>
+  );
+}
+
+function MobileDrawerFooter({
+  authInfo,
+  onNavigate,
+}: {
+  authInfo: AuthInfo | null;
+  onNavigate: () => void;
+}) {
+  return (
+    <div className="shrink-0 border-t border-[#333333] bg-black px-5 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] space-y-2.5">
+      {authInfo?.isLoggedIn ? (
+        <Link
+          href={authInfo.href}
+          onClick={onNavigate}
+          className="flex items-center justify-center gap-2 w-full min-h-[52px] rounded-xl border border-[#7C5CFC]/40 text-white text-sm font-bold uppercase tracking-[0.1em] hover:bg-[#7C5CFC]/10 active:scale-[0.98] transition-all touch-manipulation"
+        >
+          <LayoutDashboard size={18} strokeWidth={1.75} />
+          {authInfo.label}
+        </Link>
+      ) : (
+        <Link
+          href="/login"
+          onClick={onNavigate}
+          className="flex items-center justify-center gap-2 w-full min-h-[52px] rounded-xl border border-[#444444] text-white text-sm font-bold uppercase tracking-[0.1em] hover:bg-[#141414] active:scale-[0.98] transition-all touch-manipulation"
+        >
+          <User size={18} strokeWidth={1.75} />
+          Student Login
+        </Link>
+      )}
+      <Link
+        href={ROUTES.enrol}
+        prefetch
+        onClick={onNavigate}
+        className="btn-sun flex items-center justify-center gap-2 w-full min-h-[52px] text-sm font-black uppercase tracking-[0.1em] touch-manipulation"
+      >
+        Book Free Trial
+        <ArrowRight size={18} strokeWidth={2} />
+      </Link>
+      {authInfo?.isLoggedIn && (
+        <p className="text-center text-[10px] font-semibold uppercase tracking-[0.14em] text-[#666666] pt-1">
+          Signed in as {authInfo.name}
+        </p>
       )}
     </div>
   );
@@ -213,6 +273,8 @@ export function Nav() {
   const pathname = usePathname();
   const [lastPathname, setLastPathname] = useState(pathname);
   const discoverRef = useRef<HTMLDivElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const scrollLockRef = useRef(0);
 
   if (lastPathname !== pathname) {
     setLastPathname(pathname);
@@ -284,7 +346,10 @@ export function Nav() {
     const onKey = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         setDiscoverOpen(false);
-        setIsOpen(false);
+        if (isOpen) {
+          setIsOpen(false);
+          menuButtonRef.current?.focus();
+        }
       }
     };
     document.addEventListener('mousedown', onPointer);
@@ -293,16 +358,29 @@ export function Nav() {
       document.removeEventListener('mousedown', onPointer);
       document.removeEventListener('keydown', onKey);
     };
-  }, []);
+  }, [isOpen]);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
   useEffect(() => {
-    document.body.style.overflow = isOpen ? 'hidden' : '';
+    if (!isOpen) return;
+
+    scrollLockRef.current = window.scrollY;
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${scrollLockRef.current}px`;
+    document.body.style.left = '0';
+    document.body.style.right = '0';
+    document.body.style.overflow = 'hidden';
+
     return () => {
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
       document.body.style.overflow = '';
+      window.scrollTo(0, scrollLockRef.current);
     };
   }, [isOpen]);
 
@@ -324,13 +402,15 @@ export function Nav() {
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-10 flex items-center justify-between lg:grid lg:grid-cols-[auto_minmax(0,1fr)_auto] lg:items-center lg:gap-x-3 xl:gap-x-5">
         <Link
           href={ROUTES.home}
-          className="group flex items-center gap-2.5 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7C5CFC] shrink-0 lg:col-start-1"
+          className="group flex items-center min-w-0 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7C5CFC] shrink-0 lg:col-start-1 touch-manipulation"
         >
-          <div className="flex flex-col leading-none gap-0.5">
-            <span className="font-anton text-lg sm:text-xl tracking-wide text-ink group-hover:text-[#7C5CFC] transition-colors">
+          <div className="flex flex-col leading-none gap-0.5 min-w-0">
+            <span className="font-anton text-base sm:text-lg md:text-xl tracking-wide text-ink group-hover:text-[#7C5CFC] transition-colors truncate">
               RHYTHMZZ
             </span>
-            <span className="text-[9px] font-semibold tracking-[0.22em] uppercase text-[#7C5CFC]">Dance Academy</span>
+            <span className="text-[8px] sm:text-[9px] font-semibold tracking-[0.18em] sm:tracking-[0.22em] uppercase text-[#7C5CFC] truncate">
+              Dance Academy
+            </span>
           </div>
         </Link>
 
@@ -353,12 +433,10 @@ export function Nav() {
               Discover
               <ChevronDown size={12} className={cn('transition-transform duration-200', discoverOpen && 'rotate-180')} />
             </button>
-            {(discoverActive || discoverOpen) && !discoverOpen && (
+            {discoverActive && !discoverOpen && (
               <span className="absolute left-0 right-0 -bottom-0.5 h-[2px] bg-[#7C5CFC] rounded-full" aria-hidden />
             )}
-            {discoverOpen && (
-              <DiscoverPanel isActive={isActive} onNavigate={() => setDiscoverOpen(false)} />
-            )}
+            {discoverOpen && <DiscoverPanel isActive={isActive} onNavigate={() => setDiscoverOpen(false)} />}
           </div>
         </nav>
 
@@ -395,23 +473,19 @@ export function Nav() {
           <ThemeToggle />
         </div>
 
-        <div className="flex lg:hidden items-center gap-1.5 shrink-0">
-          <ThemeToggle className="w-8 h-8" />
-          <Link
-            href={ROUTES.enrol}
-            className="btn-sun px-3 py-1.5 text-[10px] font-black uppercase tracking-wider shadow-sm active:scale-[0.96]"
-          >
-            Book
-          </Link>
+        {/* Mobile / tablet: logo + theme + menu only — Book lives in drawer footer */}
+        <div className="flex lg:hidden items-center gap-2 shrink-0">
+          <ThemeToggle />
           <button
+            ref={menuButtonRef}
             type="button"
             onClick={() => setIsOpen(!isOpen)}
             aria-expanded={isOpen}
             aria-controls="mobile-nav-drawer"
             aria-label={isOpen ? 'Close menu' : 'Open menu'}
-            className="p-2 min-h-9 min-w-9 flex items-center justify-center text-ink hover:text-[#7C5CFC] transition-colors cursor-pointer rounded-xl border border-line bg-surface/80"
+            className="inline-flex items-center justify-center min-h-11 min-w-11 text-ink hover:text-[#7C5CFC] transition-colors cursor-pointer rounded-xl border border-line bg-surface/80 touch-manipulation active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7C5CFC]"
           >
-            {isOpen ? <X size={20} /> : <Menu size={20} />}
+            {isOpen ? <X size={22} strokeWidth={1.75} /> : <Menu size={22} strokeWidth={1.75} />}
           </button>
         </div>
       </div>
@@ -421,7 +495,7 @@ export function Nav() {
           <>
             <div
               className={cn(
-                'fixed inset-0 z-[700] bg-[#0a0a0a]/80 backdrop-blur-sm lg:hidden transition-opacity duration-300',
+                'fixed inset-0 z-[700] bg-[#0a0a0a]/80 backdrop-blur-sm lg:hidden transition-opacity duration-300 touch-manipulation',
                 isOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none',
               )}
               onClick={closeMobile}
@@ -431,80 +505,48 @@ export function Nav() {
             <div
               id="mobile-nav-drawer"
               className={cn(
-                'fixed inset-y-0 right-0 z-[710] w-full max-w-sm lg:hidden bg-black flex flex-col shadow-2xl transition-transform duration-300 ease-out',
+                'fixed inset-y-0 right-0 z-[710] w-[min(100vw,24rem)] lg:hidden bg-black flex flex-col shadow-2xl transition-transform duration-300 ease-out h-[100dvh] max-h-[100dvh]',
                 isOpen ? 'translate-x-0 visible' : 'translate-x-full invisible pointer-events-none',
               )}
               role="dialog"
               aria-modal="true"
               aria-label="Site navigation"
             >
-              <div className="flex items-center justify-between px-6 pt-[max(1rem,env(safe-area-inset-top))] pb-3 border-b border-[#333333] shrink-0">
-                <Link href={ROUTES.home} onClick={closeMobile} className="flex flex-col leading-none gap-0.5">
-                  <span className="font-anton text-lg tracking-wide text-white">RHYTHMZZ</span>
-                  <span className="text-[9px] font-semibold tracking-[0.22em] uppercase text-[#7C5CFC]">Dance Academy</span>
+              <div className="flex items-center justify-between px-5 pt-[max(0.75rem,env(safe-area-inset-top))] pb-3 border-b border-[#333333] shrink-0">
+                <Link href={ROUTES.home} onClick={closeMobile} className="flex flex-col leading-none gap-0.5 min-w-0 touch-manipulation">
+                  <span className="font-anton text-lg tracking-wide text-white truncate">RHYTHMZZ</span>
+                  <span className="text-[9px] font-semibold tracking-[0.2em] uppercase text-[#7C5CFC] truncate">
+                    Dance Academy
+                  </span>
                 </Link>
                 <button
                   type="button"
                   onClick={closeMobile}
-                  className="p-2 min-h-10 min-w-10 flex items-center justify-center text-white hover:text-[#7C5CFC] transition-colors rounded-lg"
+                  className="inline-flex items-center justify-center min-h-11 min-w-11 text-white hover:text-[#7C5CFC] active:bg-[#141414] transition-colors rounded-xl touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7C5CFC]"
                   aria-label="Close menu"
                 >
-                  <X size={20} strokeWidth={1.5} />
+                  <X size={22} strokeWidth={1.75} />
                 </button>
               </div>
 
-              <nav className="flex-1 min-h-0 overflow-y-auto overscroll-contain" aria-label="Mobile navigation">
+              <nav
+                className="flex-1 min-h-0 overflow-y-auto overscroll-contain [-webkit-overflow-scrolling:touch]"
+                aria-label="Mobile navigation"
+              >
                 {MOBILE_SECTIONS.map((section, i) => (
                   <MobileSection
                     key={section.id}
                     title={section.title}
                     links={section.links}
-                    defaultOpen={i === 0}
+                    pathname={pathname}
                     isActive={isActive}
                     onNavigate={closeMobile}
                     icon={i === 0 ? BookOpen : mobileSectionIcons[i - 1]}
                   />
                 ))}
-
-                <div className="px-6 sm:px-8 py-4 border-b border-[#333333] space-y-2">
-                  {authInfo?.isLoggedIn ? (
-                    <Link
-                      href={authInfo.href}
-                      onClick={closeMobile}
-                      className="flex items-center justify-center gap-2 w-full min-h-11 rounded-xl border border-[#7C5CFC]/40 text-white text-xs font-bold uppercase tracking-[0.12em] hover:bg-[#7C5CFC]/10 transition-colors"
-                    >
-                      <LayoutDashboard size={16} strokeWidth={1.75} />
-                      {authInfo.label}
-                    </Link>
-                  ) : (
-                    <Link
-                      href="/login"
-                      onClick={closeMobile}
-                      className="flex items-center justify-center gap-2 w-full min-h-11 rounded-xl border border-[#444444] text-white text-xs font-bold uppercase tracking-[0.12em] hover:bg-[#141414] transition-colors"
-                    >
-                      <User size={16} strokeWidth={1.75} />
-                      Student Login
-                    </Link>
-                  )}
-                  <Link
-                    href={ROUTES.enrol}
-                    prefetch
-                    onClick={closeMobile}
-                    className="btn-sun flex items-center justify-center gap-2 w-full min-h-11 text-xs font-black uppercase tracking-[0.12em]"
-                  >
-                    Book Free Trial
-                    <ArrowRight size={16} strokeWidth={2} />
-                  </Link>
-                </div>
               </nav>
 
-              {authInfo?.isLoggedIn && (
-                <div className="px-6 py-3 border-t border-[#333333] shrink-0 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#888888]">
-                    Signed in as {authInfo.name}
-                  </p>
-                </div>
-              )}
+              <MobileDrawerFooter authInfo={authInfo} onNavigate={closeMobile} />
             </div>
           </>,
           document.body,
