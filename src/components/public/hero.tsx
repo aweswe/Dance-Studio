@@ -35,9 +35,8 @@ export function Hero({ stats }: HeroProps) {
             </div>
 
             <h1 className="font-anton uppercase leading-[0.95] tracking-[-0.02em] text-white max-w-[12ch]">
-              <span className="block text-[clamp(2.25rem,7.5vw,4.25rem)]">Find</span>
-              <span className="block text-[clamp(2.25rem,7.5vw,4.25rem)]">your</span>
-              <span className="block text-[clamp(2.25rem,7.5vw,4.25rem)] text-[#F5FB38]">rhythm.</span>
+              <span className="block text-[clamp(2.25rem,7.5vw,4.25rem)]">Move</span>
+              <span className="block text-[clamp(2.25rem,7.5vw,4.25rem)] text-[#F5FB38]">Different.</span>
             </h1>
 
             <p className="mt-5 sm:mt-6 max-w-[38ch] text-[15px] sm:text-base leading-[1.72] text-white/55 font-normal normal-case tracking-normal">
