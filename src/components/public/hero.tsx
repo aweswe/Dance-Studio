@@ -8,23 +8,22 @@ interface HeroProps {
   stats: { key: string; value: string }[];
 }
 
+/**
+ * DLX-style hero: isolated text column + fixed-width media column.
+ * No shared overlap — each column is min-w-0 with overflow hidden on media.
+ */
 export function Hero({ stats }: HeroProps) {
   return (
     <section className="relative w-full px-4 sm:px-6 md:px-10 pt-4 sm:pt-6 pb-6 sm:pb-8 max-w-[1440px] mx-auto">
-      <div className="relative overflow-hidden rounded-[20px] sm:rounded-[28px] lg:rounded-[36px] bg-[#050505] border border-white/[0.07] shadow-[0_32px_80px_-24px_rgba(0,0,0,0.55)]">
+      <div className="relative overflow-hidden rounded-[20px] sm:rounded-[28px] lg:rounded-[32px] bg-[#050505] border border-white/[0.07]">
         <div
-          className="pointer-events-none absolute -top-32 -left-24 h-80 w-80 rounded-full bg-[#7C5CFC]/15 blur-[100px]"
-          aria-hidden
-        />
-        <div
-          className="pointer-events-none absolute bottom-0 right-0 h-72 w-72 rounded-full bg-[#F5FB38]/8 blur-[90px]"
+          className="pointer-events-none absolute -top-24 -left-20 h-64 w-64 rounded-full bg-[#7C5CFC]/12 blur-[90px]"
           aria-hidden
         />
 
-        {/* Mobile + desktop: explicit regions so copy and media never collapse together */}
-        <div className="relative flex flex-col lg:grid lg:grid-cols-[minmax(0,1.05fr)_minmax(280px,0.95fr)] lg:items-stretch">
-          {/* ── Copy block ── */}
-          <div className="flex flex-col px-6 sm:px-10 lg:px-12 xl:px-14 pt-10 sm:pt-12 lg:pt-14 lg:pb-14">
+        <div className="relative grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(260px,400px)] xl:grid-cols-[minmax(0,1fr)_440px] gap-10 lg:gap-12 xl:gap-16 items-center px-6 sm:px-10 lg:px-12 xl:px-14 py-10 sm:py-12 lg:py-14 xl:py-16">
+          {/* ── Left: copy + CTAs + stats (DLX pattern) ── */}
+          <div className="relative z-10 min-w-0 flex flex-col">
             <div className="inline-flex flex-wrap items-center gap-2 w-fit mb-6 sm:mb-8">
               <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-white/70">
                 <MapPin size={11} className="shrink-0 text-[#F5FB38]" strokeWidth={2} />
@@ -35,40 +34,40 @@ export function Hero({ stats }: HeroProps) {
               </span>
             </div>
 
-            <h1 className="font-anton text-[clamp(2.5rem,10vw,5.25rem)] leading-[0.93] tracking-[-0.03em] text-white uppercase max-w-[14ch]">
-              <span className="block">Secunderabad</span>
-              <span className="block">Moves</span>
-              <span className="block text-[#F5FB38]">Here.</span>
+            <h1 className="font-anton uppercase leading-[0.95] tracking-[-0.02em] text-white max-w-[12ch]">
+              <span className="block text-[clamp(2.25rem,7.5vw,4.25rem)]">Find</span>
+              <span className="block text-[clamp(2.25rem,7.5vw,4.25rem)]">your</span>
+              <span className="block text-[clamp(2.25rem,7.5vw,4.25rem)] text-[#F5FB38]">rhythm.</span>
             </h1>
 
-            <p className="mt-5 sm:mt-7 max-w-[36ch] text-[15px] sm:text-base leading-[1.72] text-white/55 font-normal normal-case tracking-normal">
-              Kuchipudi, Bollywood, hip-hop, and fitness — one studio at Neredmet Cross Roads. First class is free.
+            <p className="mt-5 sm:mt-6 max-w-[38ch] text-[15px] sm:text-base leading-[1.72] text-white/55 font-normal normal-case tracking-normal">
+              Kuchipudi, Bollywood, hip-hop, and fitness — one studio at Neredmet Cross Roads.
+              First class is free.
             </p>
 
-            <div className="mt-7 sm:mt-9 flex flex-col sm:flex-row gap-3 sm:gap-4">
+            <div className="mt-7 sm:mt-8 flex flex-col sm:flex-row flex-wrap gap-3">
               <Link
                 href={ROUTES.enrol}
-                className="inline-flex items-center justify-center min-h-[48px] sm:min-h-[52px] px-6 sm:px-7 bg-[#F5FB38] text-[#0a0a0a] text-xs font-black uppercase tracking-[0.12em] hover:bg-white transition-colors active:scale-[0.98] touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F5FB38] focus-visible:ring-offset-2 focus-visible:ring-offset-[#050505]"
+                className="inline-flex items-center justify-center min-h-[48px] px-6 sm:px-7 bg-[#F5FB38] text-[#0a0a0a] text-xs font-black uppercase tracking-[0.12em] hover:bg-white transition-colors active:scale-[0.98] touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F5FB38] focus-visible:ring-offset-2 focus-visible:ring-offset-[#050505]"
               >
                 Book free trial
               </Link>
               <Link
                 href={ROUTES.programmes}
-                className="inline-flex items-center justify-center min-h-[48px] sm:min-h-[52px] px-6 sm:px-7 bg-white text-[#0a0a0a] text-xs font-black uppercase tracking-[0.12em] hover:bg-white/90 transition-colors active:scale-[0.98] touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#050505]"
+                className="inline-flex items-center justify-center min-h-[48px] px-6 sm:px-7 bg-white text-[#0a0a0a] text-xs font-black uppercase tracking-[0.12em] hover:bg-white/90 transition-colors active:scale-[0.98] touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#050505]"
               >
                 I&apos;m new — start here
               </Link>
             </div>
+
+            <div className="mt-10 sm:mt-12 pt-8 sm:pt-10 border-t border-white/[0.08]">
+              <HeroStats stats={stats} />
+            </div>
           </div>
 
-          {/* ── Media block — isolated row on mobile ── */}
-          <div className="px-6 sm:px-10 py-8 sm:py-10 lg:py-0 lg:px-8 xl:px-10 border-t border-white/[0.08] lg:border-t-0 lg:border-l lg:border-white/[0.08] flex flex-col justify-center min-h-0">
-            <HeroVideo className="mx-auto lg:mx-0 lg:ml-auto w-full max-w-[540px] lg:max-w-none lg:h-full lg:min-h-[420px] lg:max-h-[min(72vh,560px)]" />
-          </div>
-
-          {/* ── Stats — full-width footer strip inside hero ── */}
-          <div className="col-span-full px-6 sm:px-10 lg:px-12 xl:px-14 py-8 sm:py-10 border-t border-white/[0.08] bg-white/[0.02]">
-            <HeroStats stats={stats} />
+          {/* ── Right: media only, hard-contained ── */}
+          <div className="relative z-0 min-w-0 w-full max-w-[420px] mx-auto lg:max-w-none lg:mx-0 lg:justify-self-end overflow-hidden">
+            <HeroVideo />
           </div>
         </div>
       </div>

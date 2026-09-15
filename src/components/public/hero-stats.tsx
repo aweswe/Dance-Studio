@@ -16,13 +16,13 @@ export function HeroStats({ stats }: { stats: { key: string; value: string }[] }
   }, {});
 
   return (
-    <dl className="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-8 sm:gap-x-8">
+    <dl className="grid grid-cols-2 sm:grid-cols-4 gap-x-4 gap-y-6 sm:gap-x-6">
       {STAT_META.map((stat) => (
         <div key={stat.key} className="min-w-0">
-          <dt className="font-anton text-[clamp(1.75rem,5vw,2.75rem)] leading-none tracking-tight text-white">
+          <dt className="font-anton text-[clamp(1.5rem,4vw,2.25rem)] leading-none tracking-tight text-white">
             <CountUp value={valueByKey[stat.key] || stat.fallback} />
           </dt>
-          <dd className="mt-2 text-[9px] sm:text-[10px] font-semibold uppercase tracking-[0.14em] text-white/45 leading-snug">
+          <dd className="mt-1.5 text-[9px] sm:text-[10px] font-semibold uppercase tracking-[0.12em] text-white/40 leading-snug">
             {stat.label}
           </dd>
         </div>
