@@ -33,22 +33,22 @@ function Tier({
       className={[
         'flex flex-col items-center justify-center rounded-xl px-2 py-3 text-center min-h-[68px]',
         featured
-          ? 'bg-[#F5FB38] text-[#0a0a0a] shadow-[0_6px_28px_-8px_rgba(245,251,56,0.55)]'
+          ? 'bg-bl text-blk shadow-[0_6px_28px_-8px_rgba(43,180,216,0.55)]'
           : 'bg-white/[0.03] border border-white/[0.07]',
       ].join(' ')}
     >
       <span
-        className={`font-anton text-lg leading-none tracking-tight ${featured ? 'text-[#0a0a0a]' : 'text-white'}`}
+        className={`font-anton text-lg leading-none tracking-tight ${featured ? 'text-blk' : 'text-white'}`}
       >
         {amount}
       </span>
       <span
-        className={`mt-1 text-[9px] font-semibold uppercase tracking-[0.11em] ${featured ? 'text-[#0a0a0a]/65' : 'text-white/40'}`}
+        className={`mt-1 text-[9px] font-semibold uppercase tracking-[0.11em] ${featured ? 'text-blk/65' : 'text-white/40'}`}
       >
         {label}
       </span>
       {save && (
-        <span className={`mt-0.5 text-[8px] font-semibold ${featured ? 'text-[#0a0a0a]/55' : 'text-[#F5FB38]/80'}`}>
+        <span className={`mt-0.5 text-[8px] font-semibold ${featured ? 'text-blk/55' : 'text-bl/80'}`}>
           {save}
         </span>
       )}
@@ -93,7 +93,7 @@ function ProgrammePricingCard({ programme }: { programme: ProgrammeItem }) {
       <div className="mt-auto flex w-full flex-col gap-2 pt-1">
         <Link
           href={enrolHref({ programme: programme.slug, intent: 'pay' })}
-          className="flex w-full items-center justify-center gap-1.5 min-h-[44px] rounded-full bg-white px-4 text-[#0a0a0a] text-[10px] font-bold uppercase tracking-[0.1em] hover:bg-[#F5FB38] transition-colors"
+          className="flex w-full items-center justify-center gap-1.5 min-h-[44px] rounded-full bg-white px-4 text-blk text-[10px] font-bold uppercase tracking-[0.1em] hover:bg-bl transition-colors"
         >
           Book &amp; pay
           <ArrowUpRight size={13} strokeWidth={2.5} />
@@ -117,11 +117,11 @@ export async function ProgrammePricingBoard() {
 
   return (
     <section className="px-4 sm:px-6 md:px-10 pb-8 sm:pb-10 max-w-[1440px] mx-auto">
-      <div className="rounded-[20px] sm:rounded-[28px] bg-[#050505] border border-white/[0.07] px-5 sm:px-8 lg:px-10 py-7 sm:py-9">
+      <div className="rounded-[20px] sm:rounded-[28px] bg-blk border border-white/[0.07] px-5 sm:px-8 lg:px-10 py-7 sm:py-9">
         <header className="mb-7 sm:mb-8 max-w-md">
           <h2 className="font-anton text-2xl sm:text-3xl md:text-[2.25rem] uppercase leading-[0.95] tracking-tight text-white">
             Pick a class.{' '}
-            <span className="text-[#F5FB38]">Pay your way.</span>
+            <span className="text-bl">Pay your way.</span>
           </h2>
           <p className="mt-2.5 text-sm text-white/40">
             Quarterly saves most · First class free

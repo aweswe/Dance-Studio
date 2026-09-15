@@ -23,13 +23,13 @@ export default async function SchedulePage() {
       <section className="relative overflow-hidden pt-12 pb-14 sm:pt-16 sm:pb-20 px-4 sm:px-6 md:px-16 border-b border-line bg-canvas">
         <div className="max-w-7xl mx-auto">
           <div className="max-w-4xl mx-auto text-center">
-            <div className="text-[10px] sm:text-xs font-mono tracking-[0.22em] text-[#7C5CFC] uppercase font-bold mb-4">
+            <div className="text-[10px] sm:text-xs font-mono tracking-[0.22em] text-bl uppercase font-bold mb-4">
               ALL DISCIPLINES · WEEKLY TIMETABLE
             </div>
 
             <h1 className="font-anton text-5xl sm:text-7xl md:text-8xl text-ink mb-6 leading-[0.92] tracking-tight uppercase">
               WEEKLY BATCH <br className="hidden sm:inline" />
-              <span className="text-[#7C5CFC]">SCHEDULE.</span>
+              <span className="text-bl">SCHEDULE.</span>
             </h1>
 
             <p className="text-ink-2 text-base sm:text-lg md:text-xl leading-relaxed max-w-2xl mx-auto">

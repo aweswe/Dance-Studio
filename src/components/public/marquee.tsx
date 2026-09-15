@@ -13,7 +13,7 @@ const TICKER_ITEMS = [
 
 export function Marquee() {
   return (
-    <div className="relative w-full bg-[#000000] border-y border-white/15 py-4 sm:py-5 overflow-hidden select-none">
+    <div className="relative w-full bg-blk border-y border-white/15 py-4 sm:py-5 overflow-hidden select-none">
       <div className="flex w-max animate-marquee">
         {/* Render 3 repetitions for seamless loop */}
         {[...Array(3)].map((_, repIdx) => (
@@ -22,12 +22,12 @@ export function Marquee() {
               <div key={idx} className="flex items-center gap-8 sm:gap-12">
                 <span
                   className={`font-anton text-lg sm:text-2xl md:text-3xl tracking-wider uppercase ${
-                    item.highlight ? 'text-[#F5FB38]' : 'text-[#FAF6EE]'
+                    item.highlight ? 'text-bl' : 'text-wh'
                   }`}
                 >
                   {item.text}
                 </span>
-                <span className="text-[#7C5CFC] text-sm sm:text-base select-none">
+                <span className="text-bl text-sm sm:text-base select-none">
                   ★
                 </span>
               </div>

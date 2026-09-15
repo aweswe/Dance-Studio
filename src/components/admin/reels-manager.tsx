@@ -268,7 +268,7 @@ function ReelRow({
 
   return (
     <div className="rounded-2xl border border-line bg-surface p-4 flex flex-col sm:flex-row gap-4">
-      <div className="relative w-[100px] shrink-0 aspect-[9/16] rounded-xl overflow-hidden bg-black">
+      <div className="relative w-[100px] shrink-0 aspect-[9/16] rounded-xl overflow-hidden bg-blk">
         <video src={item.video_url} muted playsInline className="w-full h-full object-cover" />
         <span className="absolute top-1 left-1 bg-black/60 text-white text-[10px] px-1.5 py-0.5 rounded flex items-center gap-1">
           <Video size={10} /> {item.width && item.height ? `${item.width}×${item.height}` : '9:16'}

@@ -65,7 +65,7 @@ function ReelCard({ reel, scrollRoot }: { reel: PublicReel; scrollRoot: RefObjec
         hoveredRef.current = false;
         updatePlayback();
       }}
-      className="group relative shrink-0 snap-start w-[180px] sm:w-[210px] aspect-[9/16] rounded-2xl overflow-hidden bg-black border border-line hover:border-[#F5FB38] transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-[#F5FB38]"
+      className="group relative shrink-0 snap-start w-[180px] sm:w-[210px] aspect-[9/16] rounded-2xl overflow-hidden bg-blk border border-line hover:border-bl transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-bl"
     >
       <video
         ref={videoRef}
@@ -87,7 +87,7 @@ function ReelCard({ reel, scrollRoot }: { reel: PublicReel; scrollRoot: RefObjec
 
       {!playing && (
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <span className="w-12 h-12 rounded-full bg-[#F5FB38]/90 text-black flex items-center justify-center shadow-lg">
+          <span className="w-12 h-12 rounded-full bg-bl/90 text-blk flex items-center justify-center shadow-lg">
             <Play size={20} className="fill-black ml-0.5" />
           </span>
         </div>
@@ -113,7 +113,7 @@ export function ReelsStrip({ reels }: { reels: PublicReel[] }) {
     <section aria-label="Instagram reels" className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 md:px-14 pb-20 sm:pb-28 select-none">
       <div className="flex items-end justify-between gap-6 mb-6 sm:mb-8">
         <div>
-          <p className="text-[11px] font-mono uppercase tracking-[0.25em] text-[#7C5CFC] font-bold mb-2">
+          <p className="text-[11px] font-mono uppercase tracking-[0.25em] text-bl font-bold mb-2">
             Stage Reels
           </p>
           <h2 className="font-anton text-3xl sm:text-5xl text-ink tracking-wide uppercase leading-none">

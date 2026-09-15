@@ -18,14 +18,14 @@ export async function PricingSection() {
           <p className="text-[11px] font-mono uppercase tracking-[0.22em] text-ink-2 mb-1">03 · Classes &amp; Fees</p>
           <h2 className="font-anton text-3xl sm:text-4xl md:text-5xl text-ink uppercase tracking-tight leading-none">
             PICK YOUR<br />
-            <span className="text-[#7C5CFC]">CLASS.</span>
+            <span className="text-bl">CLASS.</span>
           </h2>
         </div>
         <Link
           href={ROUTES.enrol}
-          className="hidden sm:inline-flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-widest text-ink-3 hover:text-ink border border-line px-4 py-2.5 rounded-xl hover:border-ink"
+          className="hidden sm:inline-flex items-center gap-1.5 text-sm font-medium text-ink-3 hover:text-ink border border-line px-4 py-2.5 rounded-xl hover:border-ink"
         >
-          Book a Free Trial <ArrowUpRight size={12} />
+          Book a free trial <ArrowUpRight size={12} />
         </Link>
       </div>
 
@@ -34,10 +34,10 @@ export async function PricingSection() {
           const tile = TILES[i % TILES.length];
           const arrowOn =
             tile === 'sun'
-              ? 'bg-black text-[#F5FB38]'
+              ? 'bg-blk text-bl'
               : tile === 'velvet'
-                ? 'bg-[#c4b5fd] text-[#1a0a2e]'
-                : 'bg-[#F5FB38] text-black';
+                ? 'bg-purp/25 text-blk'
+                : 'bg-bl text-blk';
 
           return (
             <Link
@@ -91,9 +91,9 @@ export async function PricingSection() {
       <div className="sm:hidden text-center mt-6">
         <Link
           href={ROUTES.enrol}
-          className="inline-flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-widest text-ink-3 hover:text-ink"
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-ink-3 hover:text-ink"
         >
-          Book a Free Trial <ArrowUpRight size={12} />
+          Book a free trial <ArrowUpRight size={12} />
         </Link>
       </div>
     </section>

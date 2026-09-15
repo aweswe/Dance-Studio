@@ -45,13 +45,12 @@ export function HeroVideo({
   };
 
   return (
-    <div className={cn('flex flex-col gap-2.5 w-full', className)}>
+    <div className={cn('flex flex-col gap-2.5 w-full max-w-full', className)}>
       <div
         className={cn(
-          'relative w-full overflow-hidden rounded-[16px] sm:rounded-[20px] lg:rounded-[22px]',
-          'border border-white/10 bg-[#0c0c0c]',
-          'aspect-[9/16]',
-          'shadow-[0_16px_48px_-12px_rgba(0,0,0,0.85)]',
+          'relative w-full overflow-hidden rounded-[6px] sm:rounded-[8px] lg:rounded-[10px]',
+          'border border-transparent bg-transparent',
+          'aspect-square',
         )}
       >
         {hasVideo ? (
@@ -71,10 +70,20 @@ export function HeroVideo({
             >
               <source src={src} type="video/mp4" />
             </video>
-            <div className="absolute bottom-0 inset-x-0 z-[2] pointer-events-none bg-gradient-to-t from-black/95 via-black/50 to-transparent pt-12 pb-3 px-3 sm:px-4">
-              <p className="text-[10px] sm:text-[11px] font-medium normal-case tracking-normal text-white/80 leading-snug line-clamp-3">
+            <div className="absolute bottom-0 inset-x-0 z-[2] flex items-end justify-between gap-2 pb-3 px-3 sm:px-4">
+              <p className="min-w-0 max-w-[75%] rounded-md bg-black/55 backdrop-blur-sm px-2.5 py-1 font-body text-[12px] sm:text-[13px] font-medium normal-case tracking-normal text-white/90 leading-snug line-clamp-3 pointer-events-none">
                 {caption}
               </p>
+              <button
+                type="button"
+                onClick={toggleSound}
+                className="shrink-0 inline-flex items-center justify-center min-h-9 min-w-9 rounded-full border border-white/20 bg-black/50 backdrop-blur-sm text-white/90 hover:text-white hover:bg-black/70 transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl"
+                aria-pressed={!muted}
+                aria-label={muted ? 'Turn sound on' : 'Turn sound off'}
+                title={muted ? 'Sound off' : 'Sound on'}
+              >
+                {muted ? <VolumeX size={16} strokeWidth={2} /> : <Volume2 size={16} strokeWidth={2} />}
+              </button>
             </div>
           </>
         ) : (
@@ -84,26 +93,12 @@ export function HeroVideo({
               alt="Rhythmzz dancers on stage"
               fill
               priority
-              sizes="(max-width: 1024px) 85vw, 360px"
+              sizes="(max-width: 1024px) 90vw, 50vw"
               className="object-cover object-[center_25%]"
             />
-            <div className="absolute inset-0 z-[1] bg-gradient-to-t from-black/70 via-black/5 to-black/25 pointer-events-none" />
           </>
         )}
       </div>
-
-      {hasVideo && (
-        <button
-          type="button"
-          onClick={toggleSound}
-          className="inline-flex items-center justify-center gap-2 self-center min-h-[40px] px-4 rounded-full border border-white/10 bg-white/[0.04] text-[10px] font-semibold uppercase tracking-[0.12em] text-white/70 hover:text-white hover:bg-white/[0.08] transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F5FB38] focus-visible:ring-offset-2 focus-visible:ring-offset-[#050505]"
-          aria-pressed={!muted}
-          aria-label={muted ? 'Turn sound on' : 'Turn sound off'}
-        >
-          {muted ? <VolumeX size={14} strokeWidth={2} /> : <Volume2 size={14} strokeWidth={2} />}
-          {muted ? 'Sound off' : 'Sound on'}
-        </button>
-      )}
     </div>
   );
 }

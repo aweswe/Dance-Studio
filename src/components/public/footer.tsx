@@ -5,23 +5,23 @@ export function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="w-full bg-[#000000] text-[#FAF6EE] pt-16 sm:pt-20 pb-12 px-6 sm:px-10 md:px-14 border-t border-white/10 mt-12 transition-colors duration-300">
+    <footer className="w-full bg-blk text-wh pt-16 sm:pt-20 pb-12 px-6 sm:px-10 md:px-14 border-t border-white/10 mt-12 transition-colors duration-300">
       <div className="max-w-[1440px] mx-auto overflow-hidden">
-        <div aria-hidden="true" className="font-anton whitespace-nowrap leading-none tracking-wide select-none text-[#FAF6EE] text-[clamp(1.6rem,8vw,9rem)] mb-12">
+        <div aria-hidden="true" className="font-anton whitespace-nowrap leading-none tracking-wide select-none text-wh text-[clamp(1.6rem,8vw,9rem)] mb-12">
           RHYTHMZZ DANCE ACADEMY
         </div>
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-8 mb-16">
           {/* Column 1: Studio Identity (approx 5 cols) */}
           <div className="md:col-span-5 flex flex-col justify-between">
             <div>
-              <div className="text-xs sm:text-sm font-medium opacity-85 leading-relaxed space-y-1 text-[#FAF6EE]/80">
-                <p className="font-bold text-[#FAF6EE]">Secunderabad</p>
+              <div className="text-xs sm:text-sm font-medium opacity-85 leading-relaxed space-y-1 text-wh/80">
+                <p className="font-bold text-wh">Secunderabad</p>
                 <p>Plot 597, 3rd Floor, Above ICICI ATM,</p>
                 <p>Neredmet X Road, Secunderabad 500094</p>
                 <p className="pt-3">
                   <a
                     href={`tel:${ACADEMY.phone}`}
-                    className="font-bold text-[#F5FB38] hover:text-[#7C5CFC] transition-colors"
+                    className="font-bold text-bl hover:text-bl transition-colors"
                   >
                     +91 90529 80859
                   </a>
@@ -35,37 +35,37 @@ export function Footer() {
 
           {/* Column 2: SERVICES (2-3 cols) */}
           <div className="md:col-span-2">
-            <h4 className="font-anton text-xl tracking-wider mb-4 select-none text-[#F5FB38]">
+            <h4 className="font-anton text-xl tracking-wider mb-4 select-none text-bl">
               SERVICES
             </h4>
             <ul className="flex flex-col gap-2 list-none p-0 m-0 text-xs sm:text-sm font-bold uppercase tracking-wider">
               <li>
-                <Link href={ROUTES.schedule} className="text-[#FAF6EE]/75 hover:text-[#7C5CFC] transition-colors">
+                <Link href={ROUTES.schedule} className="text-wh/75 hover:text-bl transition-colors">
                   Schedule
                 </Link>
               </li>
               <li>
-                <Link href={ROUTES.about} className="text-[#FAF6EE]/75 hover:text-[#7C5CFC] transition-colors">
+                <Link href={ROUTES.about} className="text-wh/75 hover:text-bl transition-colors">
                   Coaches
                 </Link>
               </li>
               <li>
-                <Link href={ROUTES.programmes} className="text-[#FAF6EE]/75 hover:text-[#7C5CFC] transition-colors">
+                <Link href={ROUTES.programmes} className="text-wh/75 hover:text-bl transition-colors">
                   Styles
                 </Link>
               </li>
               <li>
-                <Link href={ROUTES.syllabus} className="text-[#FAF6EE]/75 hover:text-[#7C5CFC] transition-colors">
+                <Link href={ROUTES.syllabus} className="text-wh/75 hover:text-bl transition-colors">
                   Syllabus
                 </Link>
               </li>
               <li>
-                <Link href={ROUTES.gallery} className="text-[#FAF6EE]/75 hover:text-[#7C5CFC] transition-colors">
+                <Link href={ROUTES.gallery} className="text-wh/75 hover:text-bl transition-colors">
                   Gallery
                 </Link>
               </li>
               <li>
-                <Link href={ROUTES.blog} className="text-[#FAF6EE]/75 hover:text-[#7C5CFC] transition-colors">
+                <Link href={ROUTES.blog} className="text-wh/75 hover:text-bl transition-colors">
                   Blog
                 </Link>
               </li>
@@ -74,22 +74,22 @@ export function Footer() {
 
           {/* Column 3: INFO (2-3 cols) */}
           <div className="md:col-span-3">
-            <h4 className="font-anton text-xl tracking-wider mb-4 select-none text-[#F5FB38]">
+            <h4 className="font-anton text-xl tracking-wider mb-4 select-none text-bl">
               INFO
             </h4>
             <ul className="flex flex-col gap-2 list-none p-0 m-0 text-xs sm:text-sm font-bold uppercase tracking-wider">
               <li>
-                <Link href={ROUTES.about} className="text-[#FAF6EE]/75 hover:text-[#7C5CFC] transition-colors">
+                <Link href={ROUTES.about} className="text-wh/75 hover:text-bl transition-colors">
                   Who We Are
                 </Link>
               </li>
               <li>
-                <Link href={ROUTES.contact} className="text-[#FAF6EE]/75 hover:text-[#7C5CFC] transition-colors">
+                <Link href={ROUTES.contact} className="text-wh/75 hover:text-bl transition-colors">
                   Contacts
                 </Link>
               </li>
               <li>
-                <Link href={ROUTES.annualDay} className="text-[#FAF6EE]/75 hover:text-[#7C5CFC] transition-colors">
+                <Link href={ROUTES.annualDay} className="text-wh/75 hover:text-bl transition-colors">
                   Annual Day
                 </Link>
               </li>

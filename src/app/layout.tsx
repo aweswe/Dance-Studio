@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Archivo } from "next/font/google";
+import { Anton, DM_Sans } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SITE_URL } from "@/lib/utils/constants";
 import "./globals.css";
@@ -8,15 +8,22 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
-  themeColor: "#090909",
+  themeColor: "#0F0F0F",
   colorScheme: "dark light",
 };
 
-const archivo = Archivo({
+const dmSans = DM_Sans({
   subsets: ["latin"],
-  variable: "--font-archivo",
+  variable: "--font-dm-sans",
   display: "swap",
-  weight: ["400", "500", "600", "700", "800", "900"],
+  weight: ["300", "400", "500", "600", "700"],
+});
+
+const anton = Anton({
+  subsets: ["latin"],
+  variable: "--font-anton",
+  display: "swap",
+  weight: "400",
 });
 
 export const metadata: Metadata = {
@@ -103,7 +110,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html
       lang="en-IN"
       suppressHydrationWarning
-      className={`dark ${archivo.variable} h-full antialiased`}
+      className={`dark ${dmSans.variable} ${anton.variable} h-full antialiased`}
     >
       <head>
         <script

@@ -14,7 +14,7 @@ import { DanziaTestimonialsSection } from '@/components/public/danzia-testimonia
 import { DanziaCTASection } from '@/components/public/danzia-cta-section';
 import { ReelsStrip } from '@/components/public/reels-strip';
 import { getHomepageReels } from '@/data/reels';
-import { GoogleProofStrip } from '@/components/public/google-proof-strip';
+// import { GoogleProofStrip } from '@/components/public/google-proof-strip';
 import { FAQAccordion } from '@/components/public/faq-accordion';
 import { StructuredData } from '@/components/shared/structured-data';
 
@@ -39,7 +39,7 @@ export default async function HomePage() {
       <StructuredData />
       <Hero stats={stats} />
       <HeroSpotlightVideos />
-      <GoogleProofStrip />
+      {/* <GoogleProofStrip /> */}
       <ProgrammePricingBoard />
       <BentoHighlights />
       <DanziaClassesSection />

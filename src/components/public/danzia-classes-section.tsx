@@ -45,10 +45,10 @@ export async function DanziaClassesSection() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
             </div>
-            <span className="text-[11px] font-mono uppercase tracking-[0.16em] text-[#7C5CFC] font-bold mb-1">
+            <span className="text-[11px] font-mono uppercase tracking-[0.16em] text-bl font-bold mb-1">
               {item.badge ?? item.age_group ?? 'Open batch'}
             </span>
-            <h3 className="font-anton text-2xl sm:text-3xl tracking-wide uppercase text-ink mb-1.5 group-hover:text-[#7C5CFC] transition-colors">
+            <h3 className="font-anton text-2xl sm:text-3xl tracking-wide uppercase text-ink mb-1.5 group-hover:text-bl transition-colors">
               {item.name.split(' ').slice(0, 2).join(' ')}
             </h3>
             <p className="text-sm text-ink-2 leading-relaxed line-clamp-2">{item.tagline}</p>

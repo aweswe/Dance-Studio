@@ -53,7 +53,7 @@ export function StudioRentalForm() {
   if (success) {
     return (
       <div className="bento-card rounded-[28px] p-8 sm:p-12 text-center border border-line">
-        <div className="w-16 h-16 bg-[#7C5CFC]/15 text-[#7C5CFC] rounded-full flex items-center justify-center mx-auto mb-4 border border-[#7C5CFC]/30">
+        <div className="w-16 h-16 bg-bl/15 text-bl rounded-full flex items-center justify-center mx-auto mb-4 border border-bl/30">
           <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
@@ -62,7 +62,7 @@ export function StudioRentalForm() {
         <p className="text-ink-2 text-sm max-w-sm mx-auto">We&apos;ll get back to you shortly to confirm your booking and slot availability.</p>
         <button
           onClick={() => setSuccess(false)}
-          className="mt-6 text-xs font-mono font-bold uppercase tracking-wider text-[#7C5CFC] hover:underline transition-colors"
+          className="mt-6 text-xs font-mono font-bold uppercase tracking-wider text-bl hover:underline transition-colors"
         >
           [ Book Another Slot ]
         </button>
@@ -73,7 +73,7 @@ export function StudioRentalForm() {
   return (
     <form onSubmit={handleSubmit} className="bento-card rounded-[28px] sm:rounded-[32px] p-8 md:p-10 shadow-lg flex flex-col gap-5 border border-line">
       <div>
-        <div className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#7C5CFC] font-bold block mb-1">
+        <div className="text-[10px] font-mono uppercase tracking-[0.25em] text-bl font-bold block mb-1">
           Instant Slot Request
         </div>
         <h3 className="font-anton text-2xl sm:text-3xl text-ink tracking-wide mb-1">REQUEST A BOOKING</h3>

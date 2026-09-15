@@ -45,7 +45,7 @@ export function GoogleProofStrip() {
                 <span className="font-anton text-3xl sm:text-[2rem] leading-none text-ink tracking-tight">
                   {ACADEMY.googleRating}
                 </span>
-                <span className="flex items-center gap-0.5 text-[#F5A623]" aria-label="5 out of 5 stars">
+                <span className="flex items-center gap-0.5 text-gold" aria-label="5 out of 5 stars">
                   {Array.from({ length: 5 }).map((_, i) => (
                     <Star key={i} size={14} fill="currentColor" strokeWidth={0} />
                   ))}
@@ -64,7 +64,7 @@ export function GoogleProofStrip() {
                 <span className="text-[9px] font-mono text-ink-3 w-3">{row.stars}</span>
                 <div className="flex-1 h-1 rounded-full bg-line overflow-hidden">
                   <div
-                    className="h-full rounded-full bg-[#F5A623]"
+                    className="h-full rounded-full bg-gold"
                     style={{ width: `${row.pct}%` }}
                   />
                 </div>
@@ -86,7 +86,7 @@ export function GoogleProofStrip() {
             </a>
             <Link
               href={ROUTES.schedule}
-              className="inline-flex items-center justify-center min-h-[36px] px-3.5 rounded-full text-[11px] font-semibold text-ink-2 hover:text-ink border border-line hover:border-line-strong bg-transparent hover:bg-canvas-muted/50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7C5CFC] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--surface)]"
+              className="inline-flex items-center justify-center min-h-[36px] px-3.5 rounded-full text-[11px] font-semibold text-ink-2 hover:text-ink border border-line hover:border-line-strong bg-transparent hover:bg-canvas-muted/50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--surface)]"
             >
               Timetable →
             </Link>

@@ -33,7 +33,7 @@ export function WeekScheduleGrid({ weekDays }: { weekDays: DaySchedule[] }) {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8 sm:mb-12">
         <div>
           <div className="flex items-center gap-2.5 mb-2.5">
-            <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-[#7C5CFC] font-bold">
+            <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-bl font-bold">
               06 · Weekly Batches &amp; Timings
             </span>
           </div>
@@ -51,7 +51,7 @@ export function WeekScheduleGrid({ weekDays }: { weekDays: DaySchedule[] }) {
               onClick={() => setActiveCategory(cat.id)}
               className={`px-3.5 py-1.5 rounded-xl text-xs font-mono uppercase tracking-wider transition-all whitespace-nowrap cursor-pointer active:scale-95 ${
                 activeCategory === cat.id
-                  ? 'bg-[#000000] text-[#F5FB38] font-bold shadow-sm'
+                  ? 'bg-blk text-bl font-bold shadow-sm'
                   : 'bg-surface text-ink-2 hover:text-ink border border-line hover:border-ink/30'
               }`}
             >
@@ -69,7 +69,7 @@ export function WeekScheduleGrid({ weekDays }: { weekDays: DaySchedule[] }) {
             onClick={() => setSelectedDayIndex(idx)}
             className={`px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider whitespace-nowrap transition-all cursor-pointer ${
               safeDayIndex === idx
-                ? 'bg-[#000000] text-[#F5FB38] shadow-md'
+                ? 'bg-blk text-bl shadow-md'
                 : 'bg-surface text-ink-2 border border-line'
             }`}
           >
@@ -86,8 +86,8 @@ export function WeekScheduleGrid({ weekDays }: { weekDays: DaySchedule[] }) {
           const visibleSlots = filterSlots(day.slots);
           return (
             <div key={day.dayFull} className="flex flex-col min-h-[380px] border-r border-line last:border-r-0">
-              <div className="py-4 px-4 border-b border-line bg-[#000000] text-center">
-                <span className="text-xs font-mono font-bold uppercase tracking-[0.2em] text-[#F5FB38]">
+              <div className="py-4 px-4 border-b border-line bg-blk text-center">
+                <span className="text-xs font-mono font-bold uppercase tracking-[0.2em] text-bl">
                   {day.day}
                 </span>
                 <span className="text-sm font-anton tracking-wider text-white mt-0.5 block">{day.dayFull}</span>
@@ -99,11 +99,11 @@ export function WeekScheduleGrid({ weekDays }: { weekDays: DaySchedule[] }) {
                     <Link
                       key={sIdx}
                       href={`/enrol?programme=${slot.programmeSlug}`}
-                      className="p-4 sm:p-5 flex flex-col justify-between min-h-[115px] hover:bg-[#7C5CFC]/5 transition-all group cursor-pointer"
+                      className="p-4 sm:p-5 flex flex-col justify-between min-h-[115px] hover:bg-bl/5 transition-all group cursor-pointer"
                     >
                       <div className="flex items-center justify-between gap-2 mb-2">
                         <div className="flex items-center gap-1.5 text-xs font-mono text-ink-2">
-                          <Clock size={11} className="text-[#7C5CFC]" />
+                          <Clock size={11} className="text-bl" />
                           <span>{slot.time}</span>
                         </div>
                         <span className="text-[9px] font-mono font-black tracking-widest px-2 py-0.5 rounded-md bg-black/5 dark:bg-white/10 text-ink-2">
@@ -111,7 +111,7 @@ export function WeekScheduleGrid({ weekDays }: { weekDays: DaySchedule[] }) {
                         </span>
                       </div>
                       <div>
-                        <p className="text-xs sm:text-sm font-bold text-ink group-hover:text-[#7C5CFC] transition-colors leading-snug">
+                        <p className="text-xs sm:text-sm font-bold text-ink group-hover:text-bl transition-colors leading-snug">
                           {slot.name}
                         </p>
                         <p className="text-[11px] font-mono text-ink-3 mt-1">
@@ -135,11 +135,11 @@ export function WeekScheduleGrid({ weekDays }: { weekDays: DaySchedule[] }) {
       <div className="md:hidden border border-line rounded-2xl overflow-hidden bg-surface divide-y divide-line shadow-lg">
         {displayDays[safeDayIndex] && (
           <>
-            <div className="p-4 bg-[#000000] flex items-center justify-between border-b border-line">
+            <div className="p-4 bg-blk flex items-center justify-between border-b border-line">
               <span className="text-sm font-anton tracking-wider text-white uppercase">
                 {displayDays[safeDayIndex].day} · {displayDays[safeDayIndex].dayFull}
               </span>
-              <span className="text-xs font-mono text-[#F5FB38] font-bold">
+              <span className="text-xs font-mono text-bl font-bold">
                 {filterSlots(displayDays[safeDayIndex].slots).length} batches
               </span>
             </div>
@@ -147,7 +147,7 @@ export function WeekScheduleGrid({ weekDays }: { weekDays: DaySchedule[] }) {
               <Link
                 key={idx}
                 href={`/enrol?programme=${slot.programmeSlug}`}
-                className="p-4 flex flex-col gap-2 hover:bg-[#7C5CFC]/5 transition-colors"
+                className="p-4 flex flex-col gap-2 hover:bg-bl/5 transition-colors"
               >
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-mono text-ink-2">{slot.time}</span>
@@ -169,7 +169,7 @@ export function WeekScheduleGrid({ weekDays }: { weekDays: DaySchedule[] }) {
         </span>
         <Link
           href={ROUTES.enrol}
-          className="group inline-flex items-center gap-2 text-xs sm:text-sm font-bold uppercase tracking-[0.2em] text-[#7C5CFC] hover:text-[#512BDB] transition-colors"
+          className="group inline-flex items-center gap-2 text-xs sm:text-sm font-bold uppercase tracking-[0.2em] text-bl hover:text-bl-deep transition-colors"
         >
           <span>Full Batches &amp; Fees</span>
         </Link>

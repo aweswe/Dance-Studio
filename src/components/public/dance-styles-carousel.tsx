@@ -79,7 +79,7 @@ export function DanceStylesCarousel() {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 sm:mb-14">
         <div>
           <div className="flex items-center gap-2.5 mb-2.5">
-            <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-[#7C5CFC] font-bold">
+            <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-bl font-bold">
               03 · Explore All Disciplines
             </span>
           </div>
@@ -102,7 +102,7 @@ export function DanceStylesCarousel() {
               href={`/programmes#${style.slug}`}
               onMouseEnter={() => setHoveredId(style.id)}
               onMouseLeave={() => setHoveredId(null)}
-              className="group relative rounded-[24px] sm:rounded-[28px] overflow-hidden min-h-[400px] sm:min-h-[440px] border border-line hover:border-[#F5FB38] transition-all duration-500 shadow-xl flex flex-col justify-between p-5 bg-[#000000] hover:-translate-y-1.5"
+              className="group relative rounded-[24px] sm:rounded-[28px] overflow-hidden min-h-[400px] sm:min-h-[440px] border border-line hover:border-bl transition-all duration-500 shadow-xl flex flex-col justify-between p-5 bg-blk hover:-translate-y-1.5"
             >
               {/* Background Media with Cinema Grading */}
               <div className="absolute inset-0 z-0">
@@ -113,14 +113,14 @@ export function DanceStylesCarousel() {
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 20vw"
                   className="object-cover object-center group-hover:scale-110 transition-transform duration-700 ease-out"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#000000] via-[#000000]/60 to-black/30 pointer-events-none" />
-                {/* Subtle Electric Periwinkle glow on hover */}
-                <div className="absolute inset-0 bg-[#7C5CFC]/15 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                <div className="absolute inset-0 bg-gradient-to-t from-blk via-blk/60 to-black/30 pointer-events-none" />
+                {/* Subtle accent glow on hover */}
+                <div className="absolute inset-0 bg-bl/15 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
               </div>
 
               {/* Top Meta Bar */}
               <div className="relative z-10 flex items-center justify-between gap-2">
-                <span className="text-[9px] font-mono uppercase tracking-widest text-[#F5FB38] bg-[#000000]/85 backdrop-blur-md px-2.5 py-1 rounded-md border border-white/10 font-bold">
+                <span className="text-[9px] font-mono uppercase tracking-widest text-bl bg-blk/85 backdrop-blur-md px-2.5 py-1 rounded-md border border-white/10 font-bold">
                   {style.category}
                 </span>
                 <span className="text-[9px] font-mono tracking-wider text-white/70 bg-white/10 backdrop-blur-md px-2 py-1 rounded-md">
@@ -130,11 +130,11 @@ export function DanceStylesCarousel() {
 
               {/* Bottom Card Content */}
               <div className="relative z-10 pt-6">
-                <div className="text-[10px] font-mono uppercase tracking-wider text-[#7C5CFC] font-bold mb-1.5">
+                <div className="text-[10px] font-mono uppercase tracking-wider text-bl font-bold mb-1.5">
                   <span>{style.level}</span>
                 </div>
 
-                <h3 className="font-anton text-2xl sm:text-3xl text-white tracking-wide uppercase leading-none group-hover:text-[#F5FB38] transition-colors mb-2">
+                <h3 className="font-anton text-2xl sm:text-3xl text-white tracking-wide uppercase leading-none group-hover:text-bl transition-colors mb-2">
                   {style.name}
                 </h3>
 
@@ -143,11 +143,11 @@ export function DanceStylesCarousel() {
                 </p>
 
                 {/* Explore Button */}
-                <div className="flex items-center justify-between pt-3 border-t border-white/15 text-white/80 group-hover:text-[#F5FB38] transition-colors">
+                <div className="flex items-center justify-between pt-3 border-t border-white/15 text-white/80 group-hover:text-bl transition-colors">
                   <span className="text-[11px] font-mono uppercase tracking-[0.18em] font-bold">
                     View Syllabus
                   </span>
-                  <div className="w-7 h-7 rounded-lg border border-white/25 group-hover:border-[#F5FB38] group-hover:bg-[#F5FB38] group-hover:text-[#000000] flex items-center justify-center transition-all">
+                  <div className="w-7 h-7 rounded-lg border border-white/25 group-hover:border-bl group-hover:bg-bl group-hover:text-blk flex items-center justify-center transition-all">
                     <ArrowUpRight size={14} className="stroke-[2.5]" />
                   </div>
                 </div>

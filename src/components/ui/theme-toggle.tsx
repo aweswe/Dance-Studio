@@ -35,7 +35,7 @@ export function ThemeToggle({ className }: { className?: string }) {
     }
 
     const meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
-    if (meta) meta.content = next ? "#090909" : "#FAF6EE";
+    if (meta) meta.content = next ? "#0F0F0F" : "#ffffff";
     document.documentElement.style.colorScheme = next ? "dark" : "light";
   };
 

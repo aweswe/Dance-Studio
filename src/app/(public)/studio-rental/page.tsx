@@ -17,7 +17,7 @@ export default function StudioRentalPage() {
       {/* Hero with Monumental Typography */}
       <section className="relative overflow-hidden py-14 sm:py-20 md:py-24 px-4 sm:px-6 md:px-10 text-center border-b border-line bg-canvas">
         <div className="max-w-4xl mx-auto space-y-4">
-          <div className="text-[10px] sm:text-xs font-mono tracking-[0.25em] text-[#7C5CFC] uppercase font-bold">
+          <div className="text-[10px] sm:text-xs font-mono tracking-[0.25em] text-bl uppercase font-bold">
             1,200 SQ. FT. REHEARSAL &amp; PRODUCTION SPACE
           </div>
 
@@ -90,7 +90,7 @@ export default function StudioRentalPage() {
           {/* Pricing Cards with Concentric Radii */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="bento-card rounded-[28px] p-6 text-center border border-line">
-              <span className="text-[10px] font-mono font-bold tracking-[2px] uppercase text-[#7C5CFC] block mb-1">
+              <span className="text-[10px] font-mono font-bold tracking-[2px] uppercase text-bl block mb-1">
                 Weekdays (Mon – Fri)
               </span>
               <div className="font-anton text-4xl sm:text-5xl text-ink mt-2 tracking-wide">
@@ -99,8 +99,8 @@ export default function StudioRentalPage() {
               <p className="text-[11px] text-ink-3 mt-2">Ideal for private rehearsals &amp; auditions</p>
             </div>
 
-            <div className="bento-card rounded-[28px] p-6 text-center border border-[#7C5CFC]/40 bg-surface">
-              <span className="text-[10px] font-mono font-bold tracking-[2px] uppercase text-[#7C5CFC] block mb-1">
+            <div className="bento-card rounded-[28px] p-6 text-center border border-bl/40 bg-surface">
+              <span className="text-[10px] font-mono font-bold tracking-[2px] uppercase text-bl block mb-1">
                 Weekends (Sat – Sun)
               </span>
               <div className="font-anton text-4xl sm:text-5xl text-ink mt-2 tracking-wide">
@@ -122,7 +122,7 @@ export default function StudioRentalPage() {
                 "Minimum booking duration is 1 hour; includes equipment setup and vacate time."
               ].map((rule, idx) => (
                 <li key={idx} className="flex gap-2.5 items-start text-xs text-ink-2">
-                  <CheckCircle2 className="text-[#7C5CFC] shrink-0 mt-0.5" size={14} />
+                  <CheckCircle2 className="text-bl shrink-0 mt-0.5" size={14} />
                   <span>{rule}</span>
                 </li>
               ))}

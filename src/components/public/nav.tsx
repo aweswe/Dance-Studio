@@ -20,6 +20,7 @@ import {
 import { cn } from '@/lib/utils/cn';
 import { ROUTES } from '@/lib/utils/constants';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
+import { BrandLogo } from '@/components/shared/brand-logo';
 import { createClient } from '@/lib/supabase/client';
 
 type NavLink = { name: string; href: string; hint?: string };
@@ -90,14 +91,14 @@ function NavLinkItem({
       prefetch
       onClick={onClick}
       className={cn(
-        'whitespace-nowrap text-[10px] font-semibold uppercase tracking-[0.1em] transition-colors relative py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7C5CFC] rounded-sm',
-        active ? 'text-ink font-bold' : 'text-ink-2 hover:text-[#7C5CFC]',
+        'whitespace-nowrap text-[10px] font-semibold uppercase tracking-[0.1em] transition-colors relative py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl rounded-sm',
+        active ? 'text-ink font-bold' : 'text-ink-2 hover:text-bl',
         className,
       )}
     >
       {link.name}
       {active && (
-        <span className="absolute left-0 right-0 -bottom-0.5 h-[2px] bg-[#7C5CFC] rounded-full" aria-hidden />
+        <span className="absolute left-0 right-0 -bottom-0.5 h-[2px] bg-bl rounded-full" aria-hidden />
       )}
     </Link>
   );
@@ -116,7 +117,7 @@ function DiscoverPanel({
       className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-[min(100vw-2rem,22rem)] rounded-2xl border border-line bg-canvas/95 backdrop-blur-xl shadow-overlay p-2 z-[70] animate-panel-in"
     >
       <div className="px-3 pt-2 pb-2 flex items-center gap-2 border-b border-line-subtle mb-1">
-        <Compass size={14} className="text-[#7C5CFC] shrink-0" strokeWidth={2} />
+        <Compass size={14} className="text-bl shrink-0" strokeWidth={2} />
         <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-ink-3">Discover Rhythmzz</p>
       </div>
       <div className="grid grid-cols-1 gap-0.5 max-h-[min(70vh,24rem)] overflow-y-auto overscroll-contain">
@@ -132,7 +133,7 @@ function DiscoverPanel({
                 className={cn(
                   'flex flex-col gap-0.5 rounded-xl px-3 py-2.5 min-h-11 transition-colors touch-manipulation',
                   isActive(item.href)
-                    ? 'bg-[#7C5CFC]/10 text-ink'
+                    ? 'bg-bl/10 text-ink'
                     : 'text-ink-2 hover:bg-surface hover:text-ink active:bg-surface',
                 )}
               >
@@ -172,24 +173,24 @@ function MobileSection({
   }, [pathname, sectionActive]);
 
   return (
-    <div className="border-b border-[#333333]">
+    <div className="border-b border-white/10">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="flex w-full items-center justify-between gap-3 px-5 py-4 min-h-[52px] text-left text-white hover:bg-[#141414] active:bg-[#1a1a1a] transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#7C5CFC]"
+        className="flex w-full items-center justify-between gap-3 px-5 py-4 min-h-[52px] text-left text-white hover:bg-deep active:bg-deep transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-bl"
         aria-expanded={open}
       >
         <span className="flex items-center gap-2.5 min-w-0">
-          {Icon && <Icon size={18} className="shrink-0 text-[#7C5CFC]" strokeWidth={1.75} />}
+          {Icon && <Icon size={18} className="shrink-0 text-bl" strokeWidth={1.75} />}
           <span className="text-sm font-bold uppercase tracking-[0.12em] truncate">{title}</span>
           {sectionActive && !open && (
-            <span className="h-2 w-2 rounded-full bg-[#7C5CFC] shrink-0" aria-label="Current section" />
+            <span className="h-2 w-2 rounded-full bg-bl shrink-0" aria-label="Current section" />
           )}
         </span>
-        <ChevronDown size={18} className={cn('shrink-0 text-[#888888] transition-transform', open && 'rotate-180')} />
+        <ChevronDown size={18} className={cn('shrink-0 text-white/50 transition-transform', open && 'rotate-180')} />
       </button>
       {open && (
-        <div className="bg-[#0d0d0d] pb-2">
+        <div className="bg-deep pb-2">
           {links.map((link) => (
             <Link
               key={link.href}
@@ -197,14 +198,14 @@ function MobileSection({
               prefetch
               onClick={onNavigate}
               className={cn(
-                'flex items-center justify-between gap-4 pl-12 pr-5 py-4 min-h-[52px] transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#7C5CFC]',
-                isActive(link.href) ? 'text-[#F5FB38] bg-[#141414]' : 'text-[#cccccc] hover:text-white hover:bg-[#141414] active:bg-[#1a1a1a]',
+                'flex items-center justify-between gap-4 pl-12 pr-5 py-4 min-h-[52px] transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-bl',
+                isActive(link.href) ? 'text-bl bg-deep' : 'text-white/70 hover:text-white hover:bg-deep active:bg-deep',
               )}
             >
               <span className="min-w-0">
                 <span className="block font-semibold tracking-wide text-[15px]">{link.name}</span>
                 {link.hint && (
-                  <span className="block text-xs font-normal text-[#888888] mt-0.5 normal-case tracking-normal">
+                  <span className="block text-xs font-normal text-white/50 mt-0.5 normal-case tracking-normal">
                     {link.hint}
                   </span>
                 )}
@@ -226,12 +227,12 @@ function MobileDrawerFooter({
   onNavigate: () => void;
 }) {
   return (
-    <div className="shrink-0 border-t border-[#333333] bg-black px-5 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] space-y-2.5">
+    <div className="shrink-0 border-t border-white/10 bg-blk px-5 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] space-y-2.5">
       {authInfo?.isLoggedIn ? (
         <Link
           href={authInfo.href}
           onClick={onNavigate}
-          className="flex items-center justify-center gap-2 w-full min-h-[52px] rounded-xl border border-[#7C5CFC]/40 text-white text-sm font-bold uppercase tracking-[0.1em] hover:bg-[#7C5CFC]/10 active:scale-[0.98] transition-all touch-manipulation"
+          className="flex items-center justify-center gap-2 w-full min-h-[52px] rounded-xl border border-bl/40 text-white text-sm font-bold uppercase tracking-[0.1em] hover:bg-bl/10 active:scale-[0.98] transition-all touch-manipulation"
         >
           <LayoutDashboard size={18} strokeWidth={1.75} />
           {authInfo.label}
@@ -240,7 +241,7 @@ function MobileDrawerFooter({
         <Link
           href="/login"
           onClick={onNavigate}
-          className="flex items-center justify-center gap-2 w-full min-h-[52px] rounded-xl border border-[#444444] text-white text-sm font-bold uppercase tracking-[0.1em] hover:bg-[#141414] active:scale-[0.98] transition-all touch-manipulation"
+          className="flex items-center justify-center gap-2 w-full min-h-[52px] rounded-xl border border-white/15 text-white text-sm font-bold uppercase tracking-[0.1em] hover:bg-deep active:scale-[0.98] transition-all touch-manipulation"
         >
           <User size={18} strokeWidth={1.75} />
           Student Login
@@ -250,13 +251,13 @@ function MobileDrawerFooter({
         href={ROUTES.enrol}
         prefetch
         onClick={onNavigate}
-        className="btn-sun flex items-center justify-center gap-2 w-full min-h-[52px] text-sm font-black uppercase tracking-[0.1em] touch-manipulation"
+        className="btn-sun flex items-center justify-center gap-2 w-full min-h-[52px] text-sm font-semibold touch-manipulation"
       >
-        Book Free Trial
+        Book free trial
         <ArrowRight size={18} strokeWidth={2} />
       </Link>
       {authInfo?.isLoggedIn && (
-        <p className="text-center text-[10px] font-semibold uppercase tracking-[0.14em] text-[#666666] pt-1">
+        <p className="text-center text-[10px] font-semibold uppercase tracking-[0.14em] text-white/40 pt-1">
           Signed in as {authInfo.name}
         </p>
       )}
@@ -402,16 +403,10 @@ export function Nav() {
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-10 flex items-center justify-between lg:grid lg:grid-cols-[auto_minmax(0,1fr)_auto] lg:items-center lg:gap-x-3 xl:gap-x-5">
         <Link
           href={ROUTES.home}
-          className="group flex items-center min-w-0 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7C5CFC] shrink-0 lg:col-start-1 touch-manipulation"
+          className="group flex items-center min-w-0 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl shrink-0 lg:col-start-1 touch-manipulation"
+          aria-label="Rhythmzz Academy of Dance — home"
         >
-          <div className="flex flex-col leading-none gap-0.5 min-w-0">
-            <span className="font-anton text-base sm:text-lg md:text-xl tracking-wide text-ink group-hover:text-[#7C5CFC] transition-colors truncate">
-              RHYTHMZZ
-            </span>
-            <span className="text-[8px] sm:text-[9px] font-semibold tracking-[0.18em] sm:tracking-[0.22em] uppercase text-[#7C5CFC] truncate">
-              Dance Academy
-            </span>
-          </div>
+          <BrandLogo priority className="group-hover:opacity-90 transition-opacity" />
         </Link>
 
         <nav className="hidden lg:flex items-center justify-center gap-4 xl:gap-5 min-w-0" aria-label="Main navigation">
@@ -426,15 +421,15 @@ export function Nav() {
               aria-haspopup="menu"
               onClick={() => setDiscoverOpen((open) => !open)}
               className={cn(
-                'inline-flex items-center gap-1 whitespace-nowrap text-[10px] font-semibold uppercase tracking-[0.1em] py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7C5CFC] rounded-sm transition-colors',
-                discoverActive || discoverOpen ? 'text-ink font-bold' : 'text-ink-2 hover:text-[#7C5CFC]',
+                'inline-flex items-center gap-1 whitespace-nowrap text-[10px] font-semibold uppercase tracking-[0.1em] py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl rounded-sm transition-colors',
+                discoverActive || discoverOpen ? 'text-ink font-bold' : 'text-ink-2 hover:text-bl',
               )}
             >
               Discover
               <ChevronDown size={12} className={cn('transition-transform duration-200', discoverOpen && 'rotate-180')} />
             </button>
             {discoverActive && !discoverOpen && (
-              <span className="absolute left-0 right-0 -bottom-0.5 h-[2px] bg-[#7C5CFC] rounded-full" aria-hidden />
+              <span className="absolute left-0 right-0 -bottom-0.5 h-[2px] bg-bl rounded-full" aria-hidden />
             )}
             {discoverOpen && <DiscoverPanel isActive={isActive} onNavigate={() => setDiscoverOpen(false)} />}
           </div>
@@ -445,7 +440,7 @@ export function Nav() {
             <Link
               href={authInfo.href}
               title={authInfo.label}
-              className="inline-flex items-center gap-1.5 min-h-8 px-2.5 rounded-lg border border-[#7C5CFC]/25 bg-[#7C5CFC]/5 text-[#7C5CFC] hover:bg-[#7C5CFC]/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7C5CFC]"
+              className="inline-flex items-center gap-1.5 min-h-8 px-2.5 rounded-lg border border-bl/25 bg-bl/5 text-bl hover:bg-bl/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl"
             >
               <LayoutDashboard size={14} className="shrink-0" />
               <span className="text-[10px] font-semibold uppercase tracking-[0.1em] max-w-[5.5rem] truncate xl:max-w-none">
@@ -456,7 +451,7 @@ export function Nav() {
             <Link
               href="/login"
               title="Student login"
-              className="inline-flex items-center gap-1.5 min-h-8 px-2.5 rounded-lg border border-line text-ink-2 hover:text-ink hover:border-line-strong transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7C5CFC]"
+              className="inline-flex items-center gap-1.5 min-h-8 px-2.5 rounded-lg border border-line text-ink-2 hover:text-ink hover:border-line-strong transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl"
             >
               <User size={14} className="shrink-0" />
               <span className="text-[10px] font-semibold uppercase tracking-[0.1em]">Login</span>
@@ -465,9 +460,9 @@ export function Nav() {
 
           <Link
             href={ROUTES.enrol}
-            className="btn-sun px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.12em] shadow-sm active:scale-95 whitespace-nowrap"
+            className="btn-sun px-4 py-1.5 text-xs font-semibold shadow-sm active:scale-95 whitespace-nowrap"
           >
-            Book a Class
+            Book a class
           </Link>
 
           <ThemeToggle />
@@ -483,7 +478,7 @@ export function Nav() {
             aria-expanded={isOpen}
             aria-controls="mobile-nav-drawer"
             aria-label={isOpen ? 'Close menu' : 'Open menu'}
-            className="inline-flex items-center justify-center min-h-11 min-w-11 text-ink hover:text-[#7C5CFC] transition-colors cursor-pointer rounded-xl border border-line bg-surface/80 touch-manipulation active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7C5CFC]"
+            className="inline-flex items-center justify-center min-h-11 min-w-11 text-ink hover:text-bl transition-colors cursor-pointer rounded-xl border border-line bg-surface/80 touch-manipulation active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl"
           >
             {isOpen ? <X size={22} strokeWidth={1.75} /> : <Menu size={22} strokeWidth={1.75} />}
           </button>
@@ -495,7 +490,7 @@ export function Nav() {
           <>
             <div
               className={cn(
-                'fixed inset-0 z-[700] bg-[#0a0a0a]/80 backdrop-blur-sm lg:hidden transition-opacity duration-300 touch-manipulation',
+                'fixed inset-0 z-[700] bg-blk/80 backdrop-blur-sm lg:hidden transition-opacity duration-300 touch-manipulation',
                 isOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none',
               )}
               onClick={closeMobile}
@@ -505,24 +500,26 @@ export function Nav() {
             <div
               id="mobile-nav-drawer"
               className={cn(
-                'fixed inset-y-0 right-0 z-[710] w-[min(100vw,24rem)] lg:hidden bg-black flex flex-col shadow-2xl transition-transform duration-300 ease-out h-[100dvh] max-h-[100dvh]',
+                'fixed inset-y-0 right-0 z-[710] w-[min(100vw,24rem)] lg:hidden bg-blk flex flex-col shadow-2xl transition-transform duration-300 ease-out h-[100dvh] max-h-[100dvh]',
                 isOpen ? 'translate-x-0 visible' : 'translate-x-full invisible pointer-events-none',
               )}
               role="dialog"
               aria-modal="true"
               aria-label="Site navigation"
             >
-              <div className="flex items-center justify-between px-5 pt-[max(0.75rem,env(safe-area-inset-top))] pb-3 border-b border-[#333333] shrink-0">
-                <Link href={ROUTES.home} onClick={closeMobile} className="flex flex-col leading-none gap-0.5 min-w-0 touch-manipulation">
-                  <span className="font-anton text-lg tracking-wide text-white truncate">RHYTHMZZ</span>
-                  <span className="text-[9px] font-semibold tracking-[0.2em] uppercase text-[#7C5CFC] truncate">
-                    Dance Academy
-                  </span>
+              <div className="flex items-center justify-between px-5 pt-[max(0.75rem,env(safe-area-inset-top))] pb-3 border-b border-white/10 shrink-0">
+                <Link
+                  href={ROUTES.home}
+                  onClick={closeMobile}
+                  className="flex items-center min-w-0 touch-manipulation"
+                  aria-label="Rhythmzz Academy of Dance — home"
+                >
+                  <BrandLogo />
                 </Link>
                 <button
                   type="button"
                   onClick={closeMobile}
-                  className="inline-flex items-center justify-center min-h-11 min-w-11 text-white hover:text-[#7C5CFC] active:bg-[#141414] transition-colors rounded-xl touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7C5CFC]"
+                  className="inline-flex items-center justify-center min-h-11 min-w-11 text-white hover:text-bl active:bg-deep transition-colors rounded-xl touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl"
                   aria-label="Close menu"
                 >
                   <X size={22} strokeWidth={1.75} />

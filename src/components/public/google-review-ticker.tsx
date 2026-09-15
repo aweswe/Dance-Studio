@@ -20,7 +20,7 @@ export function GoogleReviewTicker() {
               {review.author.charAt(0)}
             </span>
             <div className="flex items-center gap-2 min-w-0 max-w-[min(100vw-6rem,320px)] sm:max-w-[360px]">
-              <span className="flex shrink-0 text-[#F5A623]" aria-hidden>
+              <span className="flex shrink-0 text-gold" aria-hidden>
                 {Array.from({ length: 5 }).map((_, j) => (
                   <Star key={j} size={10} fill="currentColor" strokeWidth={0} />
                 ))}

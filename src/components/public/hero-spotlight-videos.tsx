@@ -40,7 +40,7 @@ function SpotlightCard({
   };
 
   return (
-    <div className="relative aspect-video overflow-hidden rounded-xl sm:rounded-2xl border border-white/10 bg-[#0a0a0a]">
+    <div className="relative aspect-video overflow-hidden rounded-xl sm:rounded-2xl border border-white/10 bg-blk">
       {hasVideo ? (
         <video
           ref={videoRef}
@@ -50,7 +50,9 @@ function SpotlightCard({
           loop
           playsInline
           autoPlay
-          preload="metadata"
+          preload="auto"
+          disablePictureInPicture
+          controls={false}
           onError={() => setFailed(true)}
         >
           <source src={src} type="video/mp4" />
@@ -75,20 +77,14 @@ function SpotlightCard({
           <button
             type="button"
             onClick={toggleMute}
-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/15 bg-black/50 text-white/90 backdrop-blur-sm hover:bg-black/70 transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F5FB38]"
+            className="shrink-0 inline-flex items-center justify-center min-h-9 min-w-9 rounded-full border border-white/20 bg-black/50 backdrop-blur-sm text-white/90 hover:text-white hover:bg-black/70 transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl"
             aria-pressed={!muted}
             aria-label={muted ? 'Turn sound on' : 'Turn sound off'}
+            title={muted ? 'Sound off' : 'Sound on'}
           >
-            {muted ? <VolumeX size={14} strokeWidth={2} /> : <Volume2 size={14} strokeWidth={2} />}
+            {muted ? <VolumeX size={16} strokeWidth={2} /> : <Volume2 size={16} strokeWidth={2} />}
           </button>
-        ) : (
-          <span
-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/10 bg-black/40 text-[8px] font-bold uppercase tracking-wider text-white/40"
-            aria-hidden
-          >
-            R
-          </span>
-        )}
+        ) : null}
       </div>
     </div>
   );
@@ -100,15 +96,18 @@ export function HeroSpotlightVideos() {
       className="w-full px-4 sm:px-6 md:px-10 pb-6 sm:pb-8 max-w-[1440px] mx-auto"
       aria-label="Studio video highlights"
     >
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
-        {HERO_SPOTLIGHT_VIDEOS.map((item) => (
-          <SpotlightCard
-            key={item.id}
-            label={item.label}
-            poster={item.poster}
-            src={item.src}
-          />
-        ))}
+      {/* Match hero card inner padding so first card lines up with “Different” and last with hero video */}
+      <div className="px-6 sm:px-10 lg:px-12 xl:px-14">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+          {HERO_SPOTLIGHT_VIDEOS.map((item) => (
+            <SpotlightCard
+              key={item.id}
+              label={item.label}
+              poster={item.poster}
+              src={item.src}
+            />
+          ))}
+        </div>
       </div>
     </section>
   );

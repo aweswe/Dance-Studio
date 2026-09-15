@@ -94,7 +94,7 @@ export function DanziaTestimonialsSection({
           <div>
             {/* Editorial Eyebrow */}
             <div className="flex items-center gap-2 mb-3">
-              <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-[#7C5CFC] font-bold">
+              <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-bl font-bold">
                05 / VOICES FROM THE FLOOR
               </span>
             </div>
@@ -103,7 +103,7 @@ export function DanziaTestimonialsSection({
             <h2 className="font-anton text-4xl sm:text-6xl md:text-7xl lg:text-[76px] tracking-tight uppercase leading-[0.92] text-ink mb-6">
               WHAT OUR
               <br />
-              <span className="text-[#7C5CFC]">STUDENTS &amp;</span>
+              <span className="text-bl">STUDENTS &amp;</span>
               <br />
               PARENTS SAY
             </h2>
@@ -123,7 +123,7 @@ export function DanziaTestimonialsSection({
                   }}
                   className={`px-4 py-1.5 rounded-lg text-xs font-mono uppercase tracking-wider transition-all cursor-pointer ${
                     filter === cat
-                      ? 'bg-[#000000] text-[#F5FB38] font-bold shadow-sm'
+                      ? 'bg-blk text-bl font-bold shadow-sm'
                       : 'bg-surface text-ink-2 border border-line hover:border-ink/40'
                   }`}
                 >
@@ -136,9 +136,9 @@ export function DanziaTestimonialsSection({
           {/* Community Trust Card */}
           <div className="rounded-[24px] bg-surface border border-line p-6 sm:p-7 shadow-sm mt-6 flex flex-col justify-between gap-4">
             <div className="flex items-center justify-between gap-2">
-              <div className="flex items-center gap-1 text-amber-400">
+              <div className="flex items-center gap-1 text-gold">
                 {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={15} className="fill-amber-400 text-amber-400" />
+                  <Star key={i} size={15} className="fill-gold text-gold" />
                 ))}
               </div>
               <span className="font-anton text-2xl text-ink tracking-tight">
@@ -149,7 +149,7 @@ export function DanziaTestimonialsSection({
               <span className="text-[11px] font-mono uppercase tracking-wider text-ink-3">
                 480+ Google Reviews
               </span>
-              <span className="text-[10px] font-mono uppercase tracking-widest text-[#7C5CFC] font-semibold">
+              <span className="text-[10px] font-mono uppercase tracking-widest text-bl font-semibold">
                 Secunderabad
               </span>
             </div>
@@ -158,14 +158,14 @@ export function DanziaTestimonialsSection({
 
         {/* ── RIGHT COLUMN: Magazine Pull-Quote Card with Photo Accent ── */}
         <div className="lg:col-span-7 flex flex-col">
-          <div className="relative rounded-[32px] sm:rounded-[44px] bg-[#FAF6EE] dark:bg-[#0A0A0A] border border-line p-8 sm:p-12 md:p-14 shadow-2xl flex-1 flex flex-col justify-between transition-all duration-300">
+          <div className="relative rounded-[32px] sm:rounded-[44px] bg-light dark:bg-blk border border-line p-8 sm:p-12 md:p-14 shadow-2xl flex-1 flex flex-col justify-between transition-all duration-300">
             
             {/* Top Bar: Highlight Pill & Quote Glyph */}
             <div className="flex items-center justify-between mb-8">
-              <span className="text-[10px] font-mono uppercase tracking-[0.22em] text-[#7C5CFC] font-bold bg-[#7C5CFC]/10 px-3.5 py-1.5 rounded-md border border-[#7C5CFC]/20">
+              <span className="text-[10px] font-mono uppercase tracking-[0.22em] text-bl font-bold bg-bl/10 px-3.5 py-1.5 rounded-md border border-bl/20">
                 {current.highlight}
               </span>
-              <Quote size={28} className="text-[#7C5CFC]/40 rotate-180" />
+              <Quote size={28} className="text-bl/40 rotate-180" />
             </div>
 
             {/* Massive Italic Quote */}
@@ -178,7 +178,7 @@ export function DanziaTestimonialsSection({
               
               {/* Author Info with Thumbnail Photo */}
               <div className="flex items-center gap-4">
-                <div className="relative w-14 h-14 rounded-2xl overflow-hidden bg-[#000000] border border-line shadow-md shrink-0">
+                <div className="relative w-14 h-14 rounded-2xl overflow-hidden bg-blk border border-line shadow-md shrink-0">
                   <Image
                     src={current.image}
                     alt={current.author}
@@ -205,14 +205,14 @@ export function DanziaTestimonialsSection({
                 <button
                   onClick={prev}
                   aria-label="Previous testimonial"
-                  className="w-12 h-12 rounded-full border border-line hover:border-ink bg-surface flex items-center justify-center text-ink hover:bg-[#000000] hover:text-[#F5FB38] transition-all cursor-pointer active:scale-95 shadow-sm"
+                  className="w-12 h-12 rounded-full border border-line hover:border-ink bg-surface flex items-center justify-center text-ink hover:bg-blk hover:text-bl transition-all cursor-pointer active:scale-95 shadow-sm"
                 >
                   <ArrowLeft size={18} />
                 </button>
                 <button
                   onClick={next}
                   aria-label="Next testimonial"
-                  className="w-12 h-12 rounded-full border border-line hover:border-ink bg-surface flex items-center justify-center text-ink hover:bg-[#000000] hover:text-[#F5FB38] transition-all cursor-pointer active:scale-95 shadow-sm"
+                  className="w-12 h-12 rounded-full border border-line hover:border-ink bg-surface flex items-center justify-center text-ink hover:bg-blk hover:text-bl transition-all cursor-pointer active:scale-95 shadow-sm"
                 >
                   <ArrowRight size={18} />
                 </button>

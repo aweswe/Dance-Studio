@@ -52,7 +52,7 @@ export function StudentStoriesSection() {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 sm:mb-14">
         <div>
           <div className="flex items-center gap-2.5 mb-2.5">
-            <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-[#7C5CFC] font-bold">
+            <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-bl font-bold">
               07 · Student Stories &amp; Growth
             </span>
           </div>
@@ -61,9 +61,9 @@ export function StudentStoriesSection() {
           </h2>
         </div>
         <div className="flex items-center gap-2 text-xs font-mono text-ink-2 bg-surface px-4 py-2 rounded-xl border border-line">
-          <div className="flex text-[#F5FB38]">
+          <div className="flex text-gold">
             {[...Array(5)].map((_, i) => (
-              <Star key={i} size={14} className="fill-[#F5FB38]" />
+              <Star key={i} size={14} className="fill-gold" />
             ))}
           </div>
           <span className="font-bold text-ink">4.9 / 5.0</span>
@@ -76,17 +76,17 @@ export function StudentStoriesSection() {
         {REVIEWS.map((review) => (
           <div
             key={review.id}
-            className="rounded-[26px] p-7 sm:p-8 bg-surface border border-line hover:border-[#F5FB38] transition-all duration-300 shadow-xl flex flex-col justify-between relative overflow-hidden group hover:-translate-y-1.5"
+            className="rounded-[26px] p-7 sm:p-8 bg-surface border border-line hover:border-bl transition-all duration-300 shadow-xl flex flex-col justify-between relative overflow-hidden group hover:-translate-y-1.5"
           >
             {/* Top Stars & Verified Badge */}
             <div>
               <div className="flex items-center justify-between gap-2 mb-4">
-                <div className="flex text-[#F5FB38]">
+                <div className="flex text-gold">
                   {[...Array(review.rating)].map((_, i) => (
-                    <Star key={i} size={15} className="fill-[#F5FB38]" />
+                    <Star key={i} size={15} className="fill-gold" />
                   ))}
                 </div>
-                <div className="flex items-center gap-1 text-[10px] font-mono uppercase tracking-wider text-[#7C5CFC] font-bold">
+                <div className="flex items-center gap-1 text-[10px] font-mono uppercase tracking-wider text-bl font-bold">
                   
                   <span>Verified Dancer</span>
                 </div>
