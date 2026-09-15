@@ -17,7 +17,6 @@ import { getHomepageReels } from '@/data/reels';
 import { GoogleProofStrip } from '@/components/public/google-proof-strip';
 import { FAQAccordion } from '@/components/public/faq-accordion';
 import { StructuredData } from '@/components/shared/structured-data';
-import { Stats } from '@/components/public/stats';
 
 export const metadata: Metadata = {
   alternates: { canonical: SITE_URL },
@@ -38,8 +37,7 @@ export default async function HomePage() {
   return (
     <div className="relative bg-canvas text-ink font-body overflow-x-hidden min-h-screen transition-colors duration-300">
       <StructuredData />
-      <Hero />
-      <Stats stats={stats} />
+      <Hero stats={stats} />
       <GoogleProofStrip />
       <CreativeFamilySection />
       <BentoHighlights />
