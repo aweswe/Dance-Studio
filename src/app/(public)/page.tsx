@@ -3,9 +3,9 @@ import { SITE_URL } from '@/lib/utils/constants';
 
 // Signature Danzia & Top Skills Pro Hybrid Showcase Components
 import { Hero } from '@/components/public/hero';
-import { CreativeFamilySection } from '@/components/public/creative-family-section';
+import { HeroSpotlightVideos } from '@/components/public/hero-spotlight-videos';
+import { ProgrammePricingBoard } from '@/components/public/programme-pricing-board';
 import { BentoHighlights } from '@/components/public/bento-highlights';
-import { PricingSection } from '@/components/public/pricing-section';
 import { DanziaClassesSection } from '@/components/public/danzia-classes-section';
 import { LevelCertificationSection } from '@/components/public/level-certification-section';
 import { DanziaInstructorsSection } from '@/components/public/danzia-instructors-section';
@@ -17,7 +17,6 @@ import { getHomepageReels } from '@/data/reels';
 import { GoogleProofStrip } from '@/components/public/google-proof-strip';
 import { FAQAccordion } from '@/components/public/faq-accordion';
 import { StructuredData } from '@/components/shared/structured-data';
-import { Stats } from '@/components/public/stats';
 
 export const metadata: Metadata = {
   alternates: { canonical: SITE_URL },
@@ -38,12 +37,11 @@ export default async function HomePage() {
   return (
     <div className="relative bg-canvas text-ink font-body overflow-x-hidden min-h-screen transition-colors duration-300">
       <StructuredData />
-      <Hero />
-      <Stats stats={stats} />
+      <Hero stats={stats} />
+      <HeroSpotlightVideos />
       <GoogleProofStrip />
-      <CreativeFamilySection />
+      <ProgrammePricingBoard />
       <BentoHighlights />
-      <PricingSection />
       <DanziaClassesSection />
       <LevelCertificationSection />
       <DanziaInstructorsSection />

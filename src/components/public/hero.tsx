@@ -1,60 +1,61 @@
-import Image from 'next/image';
 import Link from 'next/link';
-import { MapPin } from 'lucide-react';
 import { ROUTES } from '@/lib/utils/constants';
+import { HeroVideo } from '@/components/public/hero-video';
+import { HeroStats } from '@/components/public/hero-stats';
 
-export function Hero() {
+interface HeroProps {
+  stats: { key: string; value: string }[];
+}
+
+/**
+ * DLX-style hero: isolated text column + fixed-width media column.
+ * No shared overlap — each column is min-w-0 with overflow hidden on media.
+ */
+export function Hero({ stats }: HeroProps) {
   return (
-    <section className="relative w-full px-3 sm:px-6 md:px-10 pt-3 sm:pt-6 pb-6 max-w-[1440px] mx-auto">
-      <div className="relative overflow-hidden rounded-[28px] sm:rounded-[38px] md:rounded-[48px] border border-white/15 bg-[#07131F] md:min-h-[86vh] md:flex md:flex-col shadow-[0_25px_60px_rgba(0,0,0,0.5)] md:p-12">
-        {/* Photo is its own block on a phone so type never sits on top of it. */}
-        <div className="relative aspect-[4/5] sm:aspect-[5/4] md:absolute md:inset-0 md:aspect-auto">
-          <Image
-            src="/images/srilanka-tour/raasta-stage-3.jpg"
-            alt="Rhythmzz performers on stage"
-            fill
-            priority
-            sizes="(max-width: 1440px) 100vw, 1440px"
-            className="object-cover object-top"
-          />
-          <div className="absolute inset-x-0 top-0 h-24 md:h-40 bg-gradient-to-b from-black/55 to-transparent pointer-events-none" />
-          <div className="absolute inset-x-0 bottom-0 h-1/4 md:h-[55%] bg-gradient-to-t from-[#07131F] md:from-black/85 to-transparent pointer-events-none" />
+    <section className="relative w-full px-4 sm:px-6 md:px-10 pt-4 sm:pt-6 pb-6 sm:pb-8 max-w-[1440px] mx-auto">
+      <div className="relative overflow-hidden rounded-[20px] sm:rounded-[28px] lg:rounded-[32px] bg-[#050505] border border-white/[0.07]">
+        <div
+          className="pointer-events-none absolute -top-24 -left-20 h-64 w-64 rounded-full bg-[#7C5CFC]/12 blur-[90px]"
+          aria-hidden
+        />
 
-          <div className="absolute top-4 left-4 md:top-12 md:left-12 z-20">
-            <div className="inline-flex items-center gap-1.5 text-[10px] font-mono tracking-[0.12em] uppercase text-white/80 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-md border border-white/10">
-              <MapPin size={10} className="shrink-0" />
-              Neredmet · Secunderabad
+        <div className="relative grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(240px,380px)] xl:grid-cols-[minmax(0,1fr)_360px] gap-10 lg:gap-12 xl:gap-16 items-center px-6 sm:px-10 lg:px-12 xl:px-14 py-10 sm:py-12 lg:py-14 xl:py-16">
+          {/* ── Left: copy + CTAs + stats (DLX pattern) ── */}
+          <div className="relative z-10 min-w-0 flex flex-col">
+            <h1 className="font-anton uppercase leading-[0.95] tracking-[-0.02em] text-white max-w-[12ch]">
+              <span className="block text-[clamp(2.25rem,7.5vw,4.25rem)]">Move</span>
+              <span className="block text-[clamp(2.25rem,7.5vw,4.25rem)] text-[#F5FB38]">Different.</span>
+            </h1>
+
+            <p className="mt-5 sm:mt-6 max-w-[38ch] text-[15px] sm:text-base leading-[1.72] text-white/55 font-normal normal-case tracking-normal">
+              Kuchipudi, Bollywood, hip-hop, and fitness — one studio at Neredmet Cross Roads.
+              First class is free.
+            </p>
+
+            <div className="mt-7 sm:mt-8 flex flex-col sm:flex-row flex-wrap gap-3">
+              <Link
+                href={ROUTES.enrol}
+                className="inline-flex items-center justify-center min-h-[48px] px-6 sm:px-7 bg-[#F5FB38] text-[#0a0a0a] text-xs font-black uppercase tracking-[0.12em] hover:bg-white transition-colors active:scale-[0.98] touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F5FB38] focus-visible:ring-offset-2 focus-visible:ring-offset-[#050505]"
+              >
+                Book free trial
+              </Link>
+              <Link
+                href={ROUTES.programmes}
+                className="inline-flex items-center justify-center min-h-[48px] px-6 sm:px-7 bg-white text-[#0a0a0a] text-xs font-black uppercase tracking-[0.12em] hover:bg-white/90 transition-colors active:scale-[0.98] touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#050505]"
+              >
+                I&apos;m new — start here
+              </Link>
+            </div>
+
+            <div className="mt-10 sm:mt-12 pt-8 sm:pt-10 border-t border-white/[0.08]">
+              <HeroStats stats={stats} />
             </div>
           </div>
-        </div>
 
-        <div className="relative z-20 px-5 pt-6 pb-20 sm:px-8 sm:pb-10 md:px-0 md:pt-0 md:pb-0 md:mt-auto md:max-w-xl space-y-4">
-          <p className="text-[10px] font-mono tracking-[0.16em] uppercase text-[#F5FB38]/85">
-            Since 2010
-          </p>
-
-          <h1 className="font-anton text-[clamp(2.25rem,8vw,5.625rem)] leading-[1.1] text-white tracking-normal">
-            <span className="block">RHYTHMZZ</span>
-            <span className="block mt-1 text-[#F5FB38]">ACADEMY</span>
-          </h1>
-
-          <p className="text-sm sm:text-base text-white/75 leading-relaxed max-w-md">
-            Hip-hop, Bollywood, contemporary, Kuchipudi. First class is free.
-          </p>
-
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-1 max-w-xs sm:max-w-none pr-16 sm:pr-0">
-            <Link
-              href={ROUTES.enrol}
-              className="inline-flex items-center justify-center bg-[#F5FB38] text-black text-xs font-black uppercase tracking-[0.16em] px-6 py-3.5 rounded-xl hover:bg-white transition-colors active:scale-[0.96]"
-            >
-              Enrol Now
-            </Link>
-            <Link
-              href={ROUTES.schedule}
-              className="inline-flex items-center justify-center bg-white/10 border border-white/20 text-white text-xs font-bold uppercase tracking-[0.12em] px-6 py-3.5 rounded-xl hover:bg-white/20 transition-colors active:scale-[0.96]"
-            >
-              Timetable
-            </Link>
+          {/* ── Right: media only, hard-contained ── */}
+          <div className="relative z-0 min-w-0 w-full max-w-[340px] sm:max-w-[380px] mx-auto lg:max-w-none lg:mx-0 lg:justify-self-end overflow-hidden">
+            <HeroVideo />
           </div>
         </div>
       </div>

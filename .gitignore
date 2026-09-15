@@ -47,4 +47,6 @@ supabase/.branches/
 # archives & scratch asset dumps
 *.zip
 *.mp4
+!public/videos/
+!public/videos/**
 kuchipudi /
