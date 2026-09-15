@@ -29,7 +29,7 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
           </Suspense>
         }
       />
-      <main id="main" className="flex-grow flex flex-col pt-[var(--public-header-h,72px)]">
+      <main id="main" className="flex-grow flex flex-col pt-[var(--public-header-h,72px)] leading-relaxed">
         <GsapProvider>{children}</GsapProvider>
       </main>
       <Footer />

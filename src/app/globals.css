@@ -54,10 +54,18 @@
   --color-danger: var(--danger);
   --color-danger-deep: var(--danger-deep);
 
-  /* ── Fonts ── */
-  --font-anton: var(--font-anton);
-  --font-display: var(--font-display-face);
-  --font-body: var(--font-inter);
+  /* ── Fonts (Archivo — single family, weight-driven roles) ── */
+  --font-archivo: var(--font-archivo);
+  --font-anton: var(--font-archivo);
+  --font-display: var(--font-archivo);
+  --font-body: var(--font-archivo);
+
+  /* ── Spacing rhythm ── */
+  --space-section-y: clamp(4.5rem, 9vw, 7.5rem);
+  --space-section-x: clamp(1.25rem, 4.5vw, 3.75rem);
+  --space-stack: clamp(1rem, 2.2vw, 1.625rem);
+  --space-stack-lg: clamp(1.5rem, 3.5vw, 2.75rem);
+  --space-inline: clamp(0.75rem, 1.5vw, 1.25rem);
 
   /* ── Radius scale ── */
   --radius-control: 4px;
@@ -74,18 +82,18 @@
   --ease-scroll: cubic-bezier(0.33, 1, 0.68, 1);
 
   /* ── Type scale (fluid display + label/micro) ── */
-  --text-display-hero: clamp(2.25rem, 8vw, 6.5rem);
-  --text-display-hero--line-height: 1.05;
-  --text-display-1: clamp(1.85rem, 5vw, 4rem);
-  --text-display-1--line-height: 1.05;
-  --text-display-2: clamp(1.5rem, 3.5vw, 3rem);
-  --text-display-2--line-height: 1.1;
-  --text-display-3: clamp(1.2rem, 2.2vw, 1.75rem);
-  --text-display-3--line-height: 1.15;
-  --text-label: 0.625rem;
-  --text-label--letter-spacing: 0.25em;
-  --text-micro: 0.5625rem;
-  --text-micro--letter-spacing: 0.15em;
+  --text-display-hero: clamp(2.5rem, 8vw, 6.75rem);
+  --text-display-hero--line-height: 1.08;
+  --text-display-1: clamp(1.95rem, 5vw, 4.25rem);
+  --text-display-1--line-height: 1.1;
+  --text-display-2: clamp(1.625rem, 3.5vw, 3.125rem);
+  --text-display-2--line-height: 1.15;
+  --text-display-3: clamp(1.25rem, 2.2vw, 1.875rem);
+  --text-display-3--line-height: 1.2;
+  --text-label: 0.6875rem;
+  --text-label--letter-spacing: 0.18em;
+  --text-micro: 0.625rem;
+  --text-micro--letter-spacing: 0.14em;
 }
 
 /* ── Semantic values: Soft Warm Butter Cream Canvas ── */
@@ -168,10 +176,88 @@ html {
 }
 
 body {
-  font-family: var(--font-body), sans-serif;
+  font-family: var(--font-archivo), sans-serif;
+  font-weight: 400;
+  font-feature-settings: "kern" 1, "liga" 1;
   background: var(--canvas);
   color: var(--ink);
   overflow-x: hidden;
+  line-height: 1.65;
+  letter-spacing: 0.012em;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (max-width: 1023px) {
+  html {
+    scroll-padding-top: calc(var(--public-header-h, 72px) + 0.5rem);
+  }
+}
+
+/* ── Base typography rhythm (Archivo everywhere) ── */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-archivo), sans-serif;
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+}
+
+p {
+  line-height: 1.72;
+}
+
+p + p {
+  margin-top: 0.875em;
+}
+
+.font-body {
+  font-family: var(--font-archivo), sans-serif;
+  font-weight: 400;
+}
+
+.font-display {
+  font-family: var(--font-archivo), sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.font-anton {
+  font-family: var(--font-archivo), sans-serif;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.03em;
+}
+
+.font-mono {
+  font-family: var(--font-archivo), sans-serif;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+@utility section-y {
+  padding-top: var(--space-section-y);
+  padding-bottom: var(--space-section-y);
+}
+
+@utility section-x {
+  padding-left: var(--space-section-x);
+  padding-right: var(--space-section-x);
+}
+
+@utility stack-gap {
+  gap: var(--space-stack);
+}
+
+@utility stack-gap-lg {
+  gap: var(--space-stack-lg);
 }
 
 /* ── Theme transition (one-shot class added by ThemeToggle) ── */
@@ -330,15 +416,14 @@ html.theme-transition *::after {
 
 /* ── Section Labels ── */
 @utility section-label {
-  font-size: 10px;
-  letter-spacing: 2px;
+  font-family: var(--font-archivo), sans-serif;
+  font-size: var(--text-label);
+  font-weight: 600;
+  letter-spacing: var(--text-label--letter-spacing);
   text-transform: uppercase;
   color: var(--bl-ink);
-  margin-bottom: 12px;
+  margin-bottom: 1rem;
   word-break: break-word;
-  @media (min-width: 768px) {
-    letter-spacing: 4px;
-  }
 }
 
 .no-scrollbar::-webkit-scrollbar {
@@ -353,12 +438,12 @@ html.theme-transition *::after {
   color: #b8e4f0;
 }
 
-/* ── Heading Styles (display face) ── */
+/* ── Heading Styles ── */
 .heading-display {
-  font-family: var(--font-display), sans-serif;
-  letter-spacing: 1px;
-  line-height: 1;
-  font-weight: 500;
+  font-family: var(--font-archivo), sans-serif;
+  letter-spacing: -0.02em;
+  line-height: 1.08;
+  font-weight: 800;
 }
 
 /* ── Spotlight hover (the signature) ── */
@@ -436,29 +521,26 @@ html.theme-transition *::after {
 
 /* ═══ URBAN DANCE SIGNATURE AESTHETIC ═══════════════════════════════ */
 .heading-urban {
-  font-family: var(--font-display-face), sans-serif;
-  font-style: italic;
+  font-family: var(--font-archivo), sans-serif;
   font-weight: 900;
   text-transform: uppercase;
-  letter-spacing: -0.03em;
-  line-height: 0.92;
+  letter-spacing: -0.035em;
+  line-height: 1.02;
 }
 
 .heading-urban-section {
-  font-family: var(--font-display-face), sans-serif;
-  font-style: italic;
-  font-weight: 900;
+  font-family: var(--font-archivo), sans-serif;
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: -0.02em;
-  line-height: 1.1;
+  letter-spacing: -0.025em;
+  line-height: 1.12;
 }
 
 .text-urban-meta {
-  font-family: var(--font-display-face), sans-serif;
-  font-style: italic;
-  font-weight: 700;
+  font-family: var(--font-archivo), sans-serif;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
 }
 
 .hairline-border {
@@ -472,6 +554,7 @@ html.theme-transition *::after {
   border-radius: 24px;
   overflow: hidden;
   position: relative;
+  padding: clamp(1.25rem, 2.5vw, 1.75rem);
   box-shadow: var(--shadow-lift);
   transition: transform 200ms cubic-bezier(0.2, 0, 0, 1), border-color 200ms ease, box-shadow 200ms ease;
 }
@@ -596,11 +679,7 @@ html.theme-transition *::after {
   border-color: var(--line);
 }
 
-.font-anton {
-  font-family: var(--font-anton), var(--font-display-face), sans-serif;
-  font-weight: 400;
-  text-transform: uppercase;
-}
+/* .font-anton defined in base typography block above */
 
 /* Palette Utilities: Soft & Exciting */
 .bg-sun { background-color: #F5FB38; }

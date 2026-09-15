@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Anton, Big_Shoulders, Inter } from "next/font/google";
+import { Archivo } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SITE_URL } from "@/lib/utils/constants";
 import "./globals.css";
@@ -12,23 +12,11 @@ export const viewport: Viewport = {
   colorScheme: "dark light",
 };
 
-const anton = Anton({
-  weight: "400",
-  variable: "--font-anton",
+const archivo = Archivo({
   subsets: ["latin"],
+  variable: "--font-archivo",
   display: "swap",
-});
-
-const displayFace = Big_Shoulders({
-  variable: "--font-display-face",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-  display: "swap",
+  weight: ["400", "500", "600", "700", "800", "900"],
 });
 
 export const metadata: Metadata = {
@@ -115,7 +103,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html
       lang="en-IN"
       suppressHydrationWarning
-      className={`dark ${anton.variable} ${displayFace.variable} ${inter.variable} h-full antialiased`}
+      className={`dark ${archivo.variable} h-full antialiased`}
     >
       <head>
         <script
