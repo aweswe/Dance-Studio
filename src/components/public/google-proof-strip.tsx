@@ -73,22 +73,22 @@ export function GoogleProofStrip() {
             ))}
           </div>
 
-          {/* Actions */}
-          <div className="flex flex-wrap items-center gap-2 sm:gap-3 shrink-0">
+          {/* Actions — utility style (not hero CTAs) */}
+          <div className="flex flex-wrap items-center gap-2 shrink-0">
             <a
               href={ACADEMY.mapLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-1.5 min-h-[40px] px-4 text-[10px] font-black uppercase tracking-[0.12em] bg-ink text-white hover:bg-ink/90 transition-colors"
+              className="inline-flex items-center justify-center gap-1.5 min-h-[36px] px-3.5 rounded-full text-[11px] font-semibold text-white bg-[#4285F4] hover:bg-[#3367D6] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4285F4] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--surface)]"
             >
               Google Maps
-              <ExternalLink size={12} strokeWidth={2.5} />
+              <ExternalLink size={12} strokeWidth={2} className="opacity-90" />
             </a>
             <Link
               href={ROUTES.schedule}
-              className="inline-flex items-center justify-center min-h-[40px] px-4 text-[10px] font-black uppercase tracking-[0.12em] border border-line text-ink hover:border-ink/30 transition-colors"
+              className="inline-flex items-center justify-center min-h-[36px] px-3.5 rounded-full text-[11px] font-semibold text-ink-2 hover:text-ink border border-line hover:border-line-strong bg-transparent hover:bg-canvas-muted/50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7C5CFC] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--surface)]"
             >
-              Timetable
+              Timetable →
             </Link>
           </div>
         </div>
