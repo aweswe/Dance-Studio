@@ -4,9 +4,8 @@ import { SITE_URL } from '@/lib/utils/constants';
 // Signature Danzia & Top Skills Pro Hybrid Showcase Components
 import { Hero } from '@/components/public/hero';
 import { HeroSpotlightVideos } from '@/components/public/hero-spotlight-videos';
-import { CreativeFamilySection } from '@/components/public/creative-family-section';
+import { ProgrammePricingBoard } from '@/components/public/programme-pricing-board';
 import { BentoHighlights } from '@/components/public/bento-highlights';
-import { PricingSection } from '@/components/public/pricing-section';
 import { DanziaClassesSection } from '@/components/public/danzia-classes-section';
 import { LevelCertificationSection } from '@/components/public/level-certification-section';
 import { DanziaInstructorsSection } from '@/components/public/danzia-instructors-section';
@@ -41,9 +40,8 @@ export default async function HomePage() {
       <Hero stats={stats} />
       <HeroSpotlightVideos />
       <GoogleProofStrip />
-      <CreativeFamilySection />
+      <ProgrammePricingBoard />
       <BentoHighlights />
-      <PricingSection />
       <DanziaClassesSection />
       <LevelCertificationSection />
       <DanziaInstructorsSection />
