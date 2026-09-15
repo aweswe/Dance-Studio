@@ -90,7 +90,7 @@ function ProgrammePricingCard({ programme }: { programme: ProgrammeItem }) {
         />
       </div>
 
-      <div className="mt-auto flex flex-col gap-3 pt-1">
+      <div className="mt-auto flex flex-col items-center gap-2 pt-1">
         <Link
           href={enrolHref({ programme: programme.slug, intent: 'pay' })}
           className="inline-flex items-center justify-center gap-1.5 min-h-[44px] rounded-full bg-white text-[#0a0a0a] text-[10px] font-bold uppercase tracking-[0.1em] hover:bg-[#F5FB38] transition-colors"
@@ -103,15 +103,10 @@ function ProgrammePricingCard({ programme }: { programme: ProgrammeItem }) {
           href={waHref}
           target="_blank"
           rel="noopener noreferrer"
-          className="group flex flex-col items-center gap-1 min-h-[48px] justify-center rounded-full border border-[#25D366]/30 px-4 py-2.5 hover:border-[#25D366]/50 hover:bg-[#25D366]/[0.07] transition-colors"
+          className="inline-flex items-center justify-center gap-1.5 min-h-[36px] text-[10px] font-semibold text-white/45 hover:text-[#25D366] transition-colors"
         >
-          <span className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.1em] text-[#25D366]">
-            <MessageCircle size={15} strokeWidth={2} className="opacity-90" />
-            Enquire on WhatsApp
-          </span>
-          <span className="text-[9px] font-normal normal-case tracking-normal text-white/40 group-hover:text-white/55 transition-colors">
-            Programme &amp; fees pre-filled — just tap send
-          </span>
+          <MessageCircle size={13} strokeWidth={2} className="text-[#25D366]/80" />
+          WhatsApp to enquire
         </a>
       </div>
     </article>
