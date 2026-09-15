@@ -23,16 +23,6 @@ export function Hero({ stats }: HeroProps) {
         <div className="relative grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(240px,380px)] xl:grid-cols-[minmax(0,1fr)_360px] gap-10 lg:gap-12 xl:gap-16 items-center px-6 sm:px-10 lg:px-12 xl:px-14 py-10 sm:py-12 lg:py-14 xl:py-16">
           {/* ── Left: copy + CTAs + stats (DLX pattern) ── */}
           <div className="relative z-10 min-w-0 flex flex-col">
-            <div className="inline-flex flex-wrap items-center gap-2 w-fit mb-6 sm:mb-8">
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-white/70">
-                <MapPin size={11} className="shrink-0 text-[#F5FB38]" strokeWidth={2} />
-                Neredmet · Secunderabad
-              </span>
-              <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-white/35">
-                Since {ACADEMY.teachingSince}
-              </span>
-            </div>
-
             <h1 className="font-anton uppercase leading-[0.95] tracking-[-0.02em] text-white max-w-[12ch]">
               <span className="block text-[clamp(2.25rem,7.5vw,4.25rem)]">Move</span>
               <span className="block text-[clamp(2.25rem,7.5vw,4.25rem)] text-[#F5FB38]">Different.</span>

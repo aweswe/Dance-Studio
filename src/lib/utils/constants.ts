@@ -90,6 +90,13 @@ export const ROUTES = {
   admin: "/admin",
 } as const;
 
+/** Homepage hero reel — drop MP4 at public/videos/hyderabaddiaries-reel.mp4 or set env */
+export const HERO_REEL = {
+  src: process.env.NEXT_PUBLIC_HERO_VIDEO_URL ?? '/videos/hyderabaddiaries-reel.mp4',
+  caption:
+    'Lights, camera, naach! This is how we bol mitthi with swag! Vc- @pranithnair17 · #hyderabaddiaries',
+} as const;
+
 /** Areas served — for SEO and marketing copy */
 export const AREAS_SERVED = [
   "Neredmet",
