@@ -93,7 +93,7 @@ function SpotlightCard({
 export function HeroSpotlightVideos() {
   return (
     <section
-      className="w-full px-4 sm:px-6 md:px-10 pb-6 sm:pb-8 max-w-[1440px] mx-auto"
+      className="w-full px-4 sm:px-6 md:px-10 pb-12 sm:pb-14 max-w-[1440px] mx-auto"
       aria-label="Studio video highlights"
     >
       {/* Match hero card inner padding so first card lines up with “Different” and last with hero video */}
