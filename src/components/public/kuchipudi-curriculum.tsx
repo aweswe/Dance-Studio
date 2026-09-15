@@ -73,9 +73,9 @@ export function KuchipudiCurriculum() {
                 setExpandedYear(1);
                 setSelectedFilter('all');
               }}
-              className={`px-5 py-3 rounded-xl text-xs font-mono font-bold uppercase tracking-[0.15em] transition-all duration-200 flex items-center gap-2 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7C5CFC] cursor-pointer ${
+              className={`px-5 py-3 rounded-xl text-xs font-mono font-bold uppercase tracking-[0.15em] transition-all duration-200 flex items-center gap-2 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl cursor-pointer ${
                 activeTrack === '10-year'
-                  ? 'bg-[#F5FB38] text-black font-black shadow-md'
+                  ? 'bg-bl text-blk font-black shadow-md'
                   : 'text-ink-2 hover:text-ink hover:bg-surface/50'
               }`}
             >
@@ -91,9 +91,9 @@ export function KuchipudiCurriculum() {
                 setExpandedYear(1);
                 setSelectedFilter('all');
               }}
-              className={`px-5 py-3 rounded-xl text-xs font-mono font-bold uppercase tracking-[0.15em] transition-all duration-200 flex items-center gap-2 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7C5CFC] cursor-pointer ${
+              className={`px-5 py-3 rounded-xl text-xs font-mono font-bold uppercase tracking-[0.15em] transition-all duration-200 flex items-center gap-2 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl cursor-pointer ${
                 activeTrack === '6-year'
-                  ? 'bg-[#F5FB38] text-black font-black shadow-md'
+                  ? 'bg-bl text-blk font-black shadow-md'
                   : 'text-ink-2 hover:text-ink hover:bg-surface/50'
               }`}
             >
@@ -110,7 +110,7 @@ export function KuchipudiCurriculum() {
         <div className="mt-6 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-canvas p-5 rounded-2xl border border-line">
           <div>
             <h3 className="font-anton text-base sm:text-lg text-ink flex items-center gap-2 tracking-wide uppercase">
-              <Compass size={16} className="text-[#7C5CFC]" />
+              <Compass size={16} className="text-bl" />
               {currentTrackInfo.title}
             </h3>
             <p className="text-xs sm:text-sm text-ink-2 mt-1">
@@ -119,7 +119,7 @@ export function KuchipudiCurriculum() {
           </div>
           <div className="flex items-center gap-3 shrink-0">
             <span className="text-xs font-mono text-ink-3">Pacing:</span>
-            <span className="px-3 py-1 rounded-md bg-surface border border-line text-xs font-mono font-bold text-[#7C5CFC]">
+            <span className="px-3 py-1 rounded-md bg-surface border border-line text-xs font-mono font-bold text-bl">
               {currentTrackInfo.pacing}
             </span>
           </div>
@@ -141,10 +141,10 @@ export function KuchipudiCurriculum() {
             <button
               key={tab.id}
               onClick={() => setSelectedFilter(tab.id)}
-              className={`text-xs font-mono px-3.5 py-1.5 rounded-lg border transition-all duration-200 active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7C5CFC] cursor-pointer ${
+              className={`text-xs font-mono px-3.5 py-1.5 rounded-lg border transition-all duration-200 active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl cursor-pointer ${
                 selectedFilter === tab.id
-                  ? 'bg-[#F5FB38] text-black border-[#F5FB38] font-bold shadow-sm'
-                  : 'bg-canvas border-line text-ink-2 hover:text-ink hover:border-[#7C5CFC]/50'
+                  ? 'bg-bl text-blk border-bl font-bold shadow-sm'
+                  : 'bg-canvas border-line text-ink-2 hover:text-ink hover:border-bl/50'
               }`}
             >
               {tab.label}
@@ -162,20 +162,20 @@ export function KuchipudiCurriculum() {
               key={item.year}
               className={`bento-card rounded-[24px] transition-all duration-300 overflow-hidden p-0 ${
                 isExpanded
-                  ? 'border-[#7C5CFC] ring-1 ring-[#7C5CFC]/20 shadow-md'
-                  : 'border-line hover:border-[#7C5CFC]/40'
+                  ? 'border-bl ring-1 ring-bl/20 shadow-md'
+                  : 'border-line hover:border-bl/40'
               }`}
             >
               {/* Year Header / Summary Bar */}
               <button
                 onClick={() => toggleYear(item.year)}
-                className="w-full text-left p-5 sm:p-6 md:p-7 flex flex-col md:flex-row md:items-center justify-between gap-4 transition-colors hover:bg-canvas/40 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7C5CFC] cursor-pointer"
+                className="w-full text-left p-5 sm:p-6 md:p-7 flex flex-col md:flex-row md:items-center justify-between gap-4 transition-colors hover:bg-canvas/40 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl cursor-pointer"
                 aria-expanded={isExpanded}
               >
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 rounded-2xl bg-canvas border border-line flex flex-col items-center justify-center shrink-0">
                     <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-ink-3">Year</span>
-                    <span className="text-xl font-anton text-[#7C5CFC] leading-none">{item.year}</span>
+                    <span className="text-xl font-anton text-bl leading-none">{item.year}</span>
                   </div>
                   <div>
                     <div className="flex flex-wrap items-center gap-2">
@@ -201,7 +201,7 @@ export function KuchipudiCurriculum() {
                   <div
                     className={`w-8 h-8 rounded-full flex items-center justify-center border transition-transform duration-300 ease-out ${
                       isExpanded
-                        ? 'bg-[#F5FB38] text-black border-[#F5FB38] rotate-180'
+                        ? 'bg-bl text-blk border-bl rotate-180'
                         : 'bg-surface border-line text-ink-2'
                     }`}
                   >
@@ -216,14 +216,14 @@ export function KuchipudiCurriculum() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* Theory Column */}
                     <div className="bg-canvas p-5 rounded-2xl border border-line">
-                      <div className="flex items-center gap-2 text-ink font-bold text-xs font-mono uppercase tracking-wider mb-4 text-[#7C5CFC]">
+                      <div className="flex items-center gap-2 text-ink font-bold text-xs font-mono uppercase tracking-wider mb-4 text-bl">
                         <BookOpen size={16} />
                         Theory Syllabus
                       </div>
                       <ul className="space-y-2.5">
                         {item.theory.map((line: string, idx: number) => (
                           <li key={idx} className="flex items-start gap-2.5 text-xs md:text-sm text-ink-2 leading-relaxed">
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#7C5CFC] mt-2 shrink-0" />
+                            <span className="w-1.5 h-1.5 rounded-full bg-bl mt-2 shrink-0" />
                             <span>{line}</span>
                           </li>
                         ))}
@@ -232,14 +232,14 @@ export function KuchipudiCurriculum() {
 
                     {/* Practical Column */}
                     <div className="bg-canvas p-5 rounded-2xl border border-line">
-                      <div className="flex items-center gap-2 text-ink font-bold text-xs font-mono uppercase tracking-wider mb-4 text-[#7C5CFC]">
+                      <div className="flex items-center gap-2 text-ink font-bold text-xs font-mono uppercase tracking-wider mb-4 text-bl">
                         <Activity size={16} />
                         Practical &amp; Repertoire
                       </div>
                       <ul className="space-y-2.5">
                         {item.practical.map((line: string, idx: number) => (
                           <li key={idx} className="flex items-start gap-2.5 text-xs md:text-sm text-ink-2 leading-relaxed">
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#7C5CFC] mt-2 shrink-0" />
+                            <span className="w-1.5 h-1.5 rounded-full bg-bl mt-2 shrink-0" />
                             <span>{line}</span>
                           </li>
                         ))}
@@ -248,10 +248,10 @@ export function KuchipudiCurriculum() {
                   </div>
 
                   {/* Learning Outcome Banner with Concentric Radius */}
-                  <div className="p-5 rounded-2xl bg-canvas border border-[#7C5CFC]/30 flex items-start gap-3.5 shadow-sm">
-                    <Award className="text-[#7C5CFC] shrink-0 mt-0.5" size={20} />
+                  <div className="p-5 rounded-2xl bg-canvas border border-bl/30 flex items-start gap-3.5 shadow-sm">
+                    <Award className="text-bl shrink-0 mt-0.5" size={20} />
                     <div>
-                      <div className="text-xs font-mono font-bold uppercase tracking-wider text-[#7C5CFC] mb-1">
+                      <div className="text-xs font-mono font-bold uppercase tracking-wider text-bl mb-1">
                         Expected Learning Outcome
                       </div>
                       <p className="text-xs md:text-sm text-ink font-medium leading-relaxed">
@@ -270,10 +270,10 @@ export function KuchipudiCurriculum() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 pt-4">
         {/* Assessment Criteria Card */}
         <Reveal>
-          <div className="bento-card rounded-[28px] p-6 md:p-8 h-full flex flex-col justify-between hover:border-[#7C5CFC]/40 transition-colors border border-line">
+          <div className="bento-card rounded-[28px] p-6 md:p-8 h-full flex flex-col justify-between hover:border-bl/40 transition-colors border border-line">
             <div>
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 rounded-xl bg-[#7C5CFC]/10 text-[#7C5CFC] flex items-center justify-center border border-[#7C5CFC]/20">
+                <div className="w-10 h-10 rounded-xl bg-bl/10 text-bl flex items-center justify-center border border-bl/20">
                   
                 </div>
                 <div>
@@ -293,10 +293,10 @@ export function KuchipudiCurriculum() {
                 ).map((param: any, idx: number) => (
                   <div
                     key={idx}
-                    className="p-4 rounded-xl bg-canvas border border-line hover:border-[#7C5CFC]/30 transition-colors"
+                    className="p-4 rounded-xl bg-canvas border border-line hover:border-bl/30 transition-colors"
                   >
                     <div className="font-bold text-xs font-mono uppercase tracking-wider text-ink mb-1 flex items-center gap-2">
-                      <Award size={15} className="text-[#7C5CFC] shrink-0" />
+                      <Award size={15} className="text-bl shrink-0" />
                       {param.title}
                     </div>
                     <p className="text-xs md:text-sm text-ink-2 leading-relaxed">
@@ -315,10 +315,10 @@ export function KuchipudiCurriculum() {
 
         {/* Progression & Mastery Guidelines Card */}
         <Reveal delay={0.08}>
-          <div className="bento-card rounded-[28px] p-6 md:p-8 h-full flex flex-col justify-between hover:border-[#7C5CFC]/40 transition-colors border border-line">
+          <div className="bento-card rounded-[28px] p-6 md:p-8 h-full flex flex-col justify-between hover:border-bl/40 transition-colors border border-line">
             <div>
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 rounded-xl bg-[#7C5CFC]/10 text-[#7C5CFC] flex items-center justify-center border border-[#7C5CFC]/20">
+                <div className="w-10 h-10 rounded-xl bg-bl/10 text-bl flex items-center justify-center border border-bl/20">
                   <Calendar size={22} />
                 </div>
                 <div>
@@ -338,10 +338,10 @@ export function KuchipudiCurriculum() {
                 ).map((item: any, idx: number) => (
                   <div
                     key={idx}
-                    className="p-4 rounded-xl bg-canvas border border-line hover:border-[#7C5CFC]/30 transition-colors"
+                    className="p-4 rounded-xl bg-canvas border border-line hover:border-bl/30 transition-colors"
                   >
                     <div className="font-bold text-xs font-mono uppercase tracking-wider text-ink mb-1 flex items-center gap-2">
-                      <Award size={15} className="text-[#7C5CFC] shrink-0" />
+                      <Award size={15} className="text-bl shrink-0" />
                       {item.title}
                     </div>
                     <p className="text-xs md:text-sm text-ink-2 leading-relaxed">

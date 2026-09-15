@@ -107,7 +107,7 @@ export default async function AboutPage() {
                 className="object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent p-5 flex flex-col justify-end">
-                <span className="text-[10px] font-mono uppercase tracking-widest text-[#F5FB38]">Studio Drill</span>
+                <span className="text-[10px] font-mono uppercase tracking-widest text-bl">Studio Drill</span>
                 <span className="font-anton text-lg text-white uppercase">Technique</span>
               </div>
             </div>
@@ -121,7 +121,7 @@ export default async function AboutPage() {
                 className="object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent p-5 flex flex-col justify-end">
-                <span className="text-[10px] font-mono uppercase tracking-widest text-[#F5FB38]">International Tour</span>
+                <span className="text-[10px] font-mono uppercase tracking-widest text-bl">International Tour</span>
                 <span className="font-anton text-lg text-white uppercase">Live Stage</span>
               </div>
             </div>
@@ -188,7 +188,7 @@ export default async function AboutPage() {
                 <h3 className="font-anton text-lg text-ink uppercase tracking-tight">
                   {coach.name}
                 </h3>
-                <p className="text-[11px] font-mono text-[#7C5CFC] uppercase tracking-wider">
+                <p className="text-[11px] font-mono text-bl uppercase tracking-wider">
                   {coach.role?.split('—')[0] || coach.role}
                 </p>
               </div>
@@ -246,9 +246,9 @@ export default async function AboutPage() {
           </div>
           <Link
             href={ROUTES.enrol}
-            className="btn-sun py-3.5 px-8 text-xs font-black uppercase tracking-[0.18em] shrink-0 flex items-center gap-1.5"
+            className="btn-sun py-3.5 px-8 text-sm font-semibold shrink-0 flex items-center gap-1.5"
           >
-            Book Free Trial <ArrowUpRight size={13} />
+            Book free trial <ArrowUpRight size={13} />
           </Link>
         </div>
       </section>

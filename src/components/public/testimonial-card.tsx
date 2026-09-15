@@ -15,7 +15,7 @@ export function TestimonialCard({ testimonial }: TestimonialCardProps) {
       className="bg-surface p-7 rounded-2xl border border-line h-full flex flex-col justify-between hover:border-line-strong transition-all duration-200"
     >
       <div>
-        <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 text-[11px] font-mono font-medium mb-4">
+        <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-green/10 text-green-ink border border-green/20 text-[11px] font-mono font-medium mb-4">
           
           <span>Verified Academy Review</span>
         </div>

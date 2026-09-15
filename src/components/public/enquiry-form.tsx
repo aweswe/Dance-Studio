@@ -35,7 +35,7 @@ export function EnquiryForm() {
   if (status === 'sent') {
     return (
       <div className="text-center py-8">
-        <CheckCircle2 className="mx-auto mb-4 text-[#7C5CFC]" size={48} strokeWidth={1.5} />
+        <CheckCircle2 className="mx-auto mb-4 text-bl" size={48} strokeWidth={1.5} />
         <h3 className="font-anton text-2xl text-ink tracking-wide mb-2">MESSAGE RECEIVED</h3>
         <p className="text-sm text-ink-2">
           We&apos;ll get back to you within 24 hours. For anything urgent, WhatsApp us directly.
@@ -45,7 +45,7 @@ export function EnquiryForm() {
   }
 
   const textareaClass =
-    'w-full bg-canvas border border-line rounded-2xl px-4 py-3 text-sm text-ink placeholder:text-ink-3 h-32 resize-none focus:outline-none focus:border-[#7C5CFC] focus:ring-2 focus:ring-[#7C5CFC]/20 transition-all';
+    'w-full bg-canvas border border-line rounded-2xl px-4 py-3 text-sm text-ink placeholder:text-ink-3 h-32 resize-none focus:outline-none focus:border-bl focus:ring-2 focus:ring-bl/20 transition-all';
 
   return (
     <form onSubmit={submit} className="space-y-5" noValidate>

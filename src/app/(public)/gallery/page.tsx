@@ -32,7 +32,7 @@ export default async function GalleryPage() {
       {/* Hero with Monumental Typography */}
       <section className="relative overflow-hidden py-14 sm:py-20 md:py-24 px-4 sm:px-6 md:px-10 text-center border-b border-line bg-canvas">
         <div className="max-w-4xl mx-auto space-y-4">
-          <div className="text-[10px] sm:text-xs font-mono tracking-[0.25em] text-[#7C5CFC] uppercase font-bold">
+          <div className="text-[10px] sm:text-xs font-mono tracking-[0.25em] text-bl uppercase font-bold">
             STAGE PERFORMANCES · TOURS · STUDIO ARCHIVE
           </div>
           <h1 className="font-anton text-4xl sm:text-6xl md:text-7xl lg:text-8xl text-ink leading-[0.92] tracking-tight uppercase">

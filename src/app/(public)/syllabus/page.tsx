@@ -59,7 +59,7 @@ export default function SyllabusIndexPage() {
               href={style.href}
               className="rounded-[24px] border border-line bg-surface p-6 sm:p-8 hover:border-ink transition-colors active:scale-[0.98]"
             >
-              <span className="text-[10px] font-mono uppercase tracking-widest text-[#7C5CFC]">
+              <span className="text-[10px] font-mono uppercase tracking-widest text-bl">
                 {style.status}
               </span>
               <h2 className="font-anton text-3xl sm:text-4xl uppercase tracking-tight mt-2 mb-2">

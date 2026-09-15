@@ -19,7 +19,7 @@ export async function DanziaGallerySection() {
             Pulled from the admin gallery — newest uploads first.
           </p>
         </div>
-        <Link href={ROUTES.gallery} className="text-xs font-mono uppercase tracking-wider text-[#7C5CFC] hover:underline">
+        <Link href={ROUTES.gallery} className="text-xs font-mono uppercase tracking-wider text-bl hover:underline">
           Full gallery →
         </Link>
       </div>

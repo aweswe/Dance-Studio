@@ -20,14 +20,14 @@ export default function ContactPage() {
         <div className="max-w-7xl mx-auto">
           <div className="max-w-4xl mx-auto text-center">
             <div className="mb-5">
-              <span className="text-[10px] sm:text-xs font-mono tracking-[0.22em] text-[#7C5CFC] uppercase font-bold">
+              <span className="text-[10px] sm:text-xs font-mono tracking-[0.22em] text-bl uppercase font-bold">
                 DIRECT COMMUNICATIONS DESK
               </span>
             </div>
 
             <h1 className="font-anton text-5xl sm:text-7xl md:text-8xl text-ink mb-6 leading-[0.92] tracking-tight uppercase">
               CONNECT WITH <br className="hidden sm:inline" />
-              <span className="text-[#7C5CFC]">THE ACADEMY.</span>
+              <span className="text-bl">THE ACADEMY.</span>
             </h1>
 
             <p className="text-ink-2 text-base sm:text-lg md:text-xl leading-relaxed max-w-2xl mx-auto">
@@ -45,7 +45,7 @@ export default function ContactPage() {
           <div className="bento-card p-6 sm:p-8 rounded-[28px] space-y-6">
             <div>
               <div className="flex items-center gap-2 mb-1">
-                <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#7C5CFC] font-bold">
+                <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-bl font-bold">
                   {"// Studio Location"}
                 </span>
               </div>
@@ -56,7 +56,7 @@ export default function ContactPage() {
 
             <div className="space-y-5">
               <div className="flex gap-4 items-start p-3.5 rounded-2xl bg-canvas border border-line">
-                <div className="w-10 h-10 rounded-xl bg-[#7C5CFC]/10 flex items-center justify-center text-[#7C5CFC] shrink-0">
+                <div className="w-10 h-10 rounded-xl bg-bl/10 flex items-center justify-center text-bl shrink-0">
                   <MapPin size={20} />
                 </div>
                 <div>
@@ -69,7 +69,7 @@ export default function ContactPage() {
               </div>
 
               <div className="flex gap-4 items-start p-3.5 rounded-2xl bg-canvas border border-line">
-                <div className="w-10 h-10 rounded-xl bg-[#7C5CFC]/10 flex items-center justify-center text-[#7C5CFC] shrink-0">
+                <div className="w-10 h-10 rounded-xl bg-bl/10 flex items-center justify-center text-bl shrink-0">
                   <Phone size={20} />
                 </div>
                 <div>
@@ -79,7 +79,7 @@ export default function ContactPage() {
                     href={`https://wa.me/${ACADEMY.phone.replace(/[^0-9]/g, '')}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-[#7C5CFC] hover:text-[#7C5CFC]/80 text-xs font-mono font-bold inline-flex items-center gap-1.5 transition-colors"
+                    className="text-bl hover:text-bl/80 text-xs font-mono font-bold inline-flex items-center gap-1.5 transition-colors"
                   >
                     <span>[Message on WhatsApp]</span>
                     <ArrowRight size={13} />
@@ -88,7 +88,7 @@ export default function ContactPage() {
               </div>
 
               <div className="flex gap-4 items-start p-3.5 rounded-2xl bg-canvas border border-line">
-                <div className="w-10 h-10 rounded-xl bg-[#7C5CFC]/10 flex items-center justify-center text-[#7C5CFC] shrink-0">
+                <div className="w-10 h-10 rounded-xl bg-bl/10 flex items-center justify-center text-bl shrink-0">
                   <Clock size={20} />
                 </div>
                 <div>
@@ -108,7 +108,7 @@ export default function ContactPage() {
                 {AREAS_SERVED.map((area) => (
                   <span
                     key={area}
-                    className="px-3 py-1 rounded-md bg-canvas border border-line text-xs font-medium text-ink-2 hover:border-[#7C5CFC]/30 transition-colors"
+                    className="px-3 py-1 rounded-md bg-canvas border border-line text-xs font-medium text-ink-2 hover:border-bl/30 transition-colors"
                   >
                     {area}
                   </span>
@@ -121,7 +121,7 @@ export default function ContactPage() {
         {/* Right Column: Clean Enquiry Card */}
         <div className="lg:col-span-6 bento-card p-6 sm:p-10 rounded-[28px] shadow-lg">
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#7C5CFC] font-bold">
+            <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-bl font-bold">
               {"// Send Message"}
             </span>
           </div>

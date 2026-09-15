@@ -47,7 +47,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
       ) : (
         <a
           href={whatsappLink(`Hi Rhythmzz, RSVP for ${e.title} — ${when}`)}
-          className="inline-flex items-center justify-center bg-[#F5FB38] text-black font-black uppercase tracking-wider text-xs py-3 px-6 rounded-xl"
+          className="inline-flex items-center justify-center bg-bl text-blk font-black uppercase tracking-wider text-xs py-3 px-6 rounded-xl"
         >
           RSVP on WhatsApp · {ACADEMY.phoneDisplay}
         </a>

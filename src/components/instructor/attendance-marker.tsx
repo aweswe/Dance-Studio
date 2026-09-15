@@ -172,7 +172,7 @@ export function AttendanceMarker({ batches, initialBatchId }: AttendanceMarkerPr
                 <button
                   type="button"
                   className={cn("flex-1 flex items-center justify-center gap-1.5 px-4 py-2 text-sm font-semibold transition-colors focus-visible:focus-ring active:scale-[0.98]",
-                    attendance[student.id] === "leave" ? "bg-gold text-black" : "hover:bg-canvas-muted-2"
+                    attendance[student.id] === "leave" ? "bg-gold text-blk" : "hover:bg-canvas-muted-2"
                   )}
                   onClick={() => handleStatusChange(student.id, "leave")}
                 >

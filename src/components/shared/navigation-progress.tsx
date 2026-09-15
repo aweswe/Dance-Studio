@@ -82,8 +82,8 @@ export function NavigationProgress() {
     >
       <div className="flex flex-col items-center justify-center p-8 rounded-2xl bg-surface border border-line shadow-2xl max-w-sm w-full text-center space-y-4">
         <div className="relative">
-          <div className="w-16 h-16 rounded-full border-2 border-[#7C5CFC]/20 border-t-[#7C5CFC] animate-spin" />
-          <span className="absolute inset-0 flex items-center justify-center text-[#7C5CFC] font-anton text-xl">
+          <div className="w-16 h-16 rounded-full border-2 border-bl/20 border-t-bl animate-spin" />
+          <span className="absolute inset-0 flex items-center justify-center text-bl font-anton text-xl">
             R
           </span>
         </div>

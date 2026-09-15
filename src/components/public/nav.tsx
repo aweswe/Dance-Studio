@@ -1,37 +1,67 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type ComponentType } from 'react';
 import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ArrowRight, ChevronDown, Menu, X, User, LayoutDashboard } from 'lucide-react';
+import {
+  ArrowRight,
+  BookOpen,
+  CalendarDays,
+  ChevronDown,
+  Compass,
+  GraduationCap,
+  LayoutDashboard,
+  Menu,
+  Sparkles,
+  User,
+  X,
+} from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import { ROUTES } from '@/lib/utils/constants';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
+import { BrandLogo } from '@/components/shared/brand-logo';
 import { createClient } from '@/lib/supabase/client';
 
-type NavLink = { name: string; href: string };
+type NavLink = { name: string; href: string; hint?: string };
 
 const PRIMARY_LINKS: NavLink[] = [
   { name: 'Programmes', href: ROUTES.programmes },
   { name: 'Schedule', href: ROUTES.schedule },
   { name: 'Gallery', href: ROUTES.gallery },
   { name: 'About', href: ROUTES.about },
-  { name: 'Contact', href: ROUTES.contact },
 ];
 
-const MORE_LINKS: NavLink[] = [
-  { name: 'Blog', href: ROUTES.blog },
-  { name: 'Annual Day', href: ROUTES.annualDay },
-  { name: 'Studio Rental', href: ROUTES.studioRental },
+const DISCOVER_GROUPS: { label: string; links: NavLink[] }[] = [
+  {
+    label: 'Academy',
+    links: [
+      { name: 'Contact', href: ROUTES.contact, hint: 'Visit or call us' },
+      { name: 'Blog', href: ROUTES.blog, hint: 'News & stories' },
+    ],
+  },
+  {
+    label: 'Classical syllabus',
+    links: [
+      { name: 'Kuchipudi', href: ROUTES.syllabusKuchipudi, hint: 'Level-wise curriculum' },
+      { name: 'Kathak', href: ROUTES.syllabusKathak, hint: 'Level-wise curriculum' },
+    ],
+  },
+  {
+    label: 'Events & studio',
+    links: [
+      { name: 'Annual Day', href: ROUTES.annualDay, hint: 'Showcase & tickets' },
+      { name: 'Studio Rental', href: ROUTES.studioRental, hint: 'Book the space' },
+    ],
+  },
 ];
 
-const SYLLABUS_LINKS: NavLink[] = [
-  { name: 'Kuchipudi', href: ROUTES.syllabusKuchipudi },
-  { name: 'Kathak', href: ROUTES.syllabusKathak },
-];
+const ALL_DISCOVER_LINKS = DISCOVER_GROUPS.flatMap((g) => g.links);
 
-const MOBILE_MENU_LINKS: NavLink[] = [...PRIMARY_LINKS, ...MORE_LINKS, ...SYLLABUS_LINKS];
+const MOBILE_SECTIONS: { id: string; title: string; links: NavLink[] }[] = [
+  { id: 'explore', title: 'Explore', links: PRIMARY_LINKS },
+  ...DISCOVER_GROUPS.map((g) => ({ id: g.label, title: g.label, links: g.links })),
+];
 
 interface AuthInfo {
   isLoggedIn: boolean;
@@ -41,6 +71,8 @@ interface AuthInfo {
   href: string;
   name?: string;
 }
+
+type LucideIcon = ComponentType<{ size?: number; className?: string; strokeWidth?: number }>;
 
 function NavLinkItem({
   link,
@@ -59,93 +91,196 @@ function NavLinkItem({
       prefetch
       onClick={onClick}
       className={cn(
-        'whitespace-nowrap text-[10px] xl:text-[11px] font-bold uppercase tracking-[0.12em] xl:tracking-[0.14em] transition-colors relative py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7C5CFC] rounded-sm',
-        active ? 'text-ink font-extrabold' : 'text-ink-2 hover:text-[#7C5CFC]',
+        'whitespace-nowrap text-[10px] font-semibold uppercase tracking-[0.1em] transition-colors relative py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl rounded-sm',
+        active ? 'text-ink font-bold' : 'text-ink-2 hover:text-bl',
         className,
       )}
     >
       {link.name}
       {active && (
-        <span className="absolute left-0 right-0 -bottom-0.5 h-[2px] bg-[#7C5CFC] rounded-full" aria-hidden />
+        <span className="absolute left-0 right-0 -bottom-0.5 h-[2px] bg-bl rounded-full" aria-hidden />
       )}
     </Link>
   );
 }
 
-function MobileMenuRow({
-  link,
-  active,
-  onClick,
-}: {
-  link: NavLink;
-  active: boolean;
-  onClick?: () => void;
-}) {
-  return (
-    <Link
-      href={link.href}
-      prefetch
-      onClick={onClick}
-      className="flex items-center justify-between gap-4 px-6 sm:px-8 py-5 border-b border-[#333333] text-white hover:bg-[#141414] active:bg-[#1a1a1a] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#7C5CFC]"
-    >
-      <span className="text-sm font-bold uppercase tracking-[0.14em]">{link.name}</span>
-      {active && <ArrowRight size={18} strokeWidth={1.5} className="shrink-0" aria-hidden />}
-    </Link>
-  );
-}
-
-function DropdownPanel({
-  title,
-  links,
+function DiscoverPanel({
   isActive,
   onNavigate,
 }: {
-  title: string;
-  links: NavLink[];
   isActive: (href: string) => boolean;
   onNavigate?: () => void;
 }) {
   return (
     <div
       role="menu"
-      className="absolute left-0 top-full mt-2 min-w-[210px] rounded-2xl border border-line bg-canvas shadow-overlay p-2 z-[70]"
+      className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-[min(100vw-2rem,22rem)] rounded-2xl border border-line bg-canvas/95 backdrop-blur-xl shadow-overlay p-2 z-[70] animate-panel-in"
     >
-      <p className="px-3 pt-2 pb-1 text-[10px] font-mono uppercase tracking-widest text-ink-3">{title}</p>
-      {links.map((item) => (
-        <Link
-          key={item.href}
-          role="menuitem"
-          href={item.href}
-          onClick={onNavigate}
-          className={cn(
-            'block rounded-xl px-3 py-2.5 text-xs font-bold uppercase tracking-wider',
-            isActive(item.href) ? 'bg-surface text-ink' : 'text-ink-2 hover:bg-surface hover:text-ink',
+      <div className="px-3 pt-2 pb-2 flex items-center gap-2 border-b border-line-subtle mb-1">
+        <Compass size={14} className="text-bl shrink-0" strokeWidth={2} />
+        <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-ink-3">Discover Rhythmzz</p>
+      </div>
+      <div className="grid grid-cols-1 gap-0.5 max-h-[min(70vh,24rem)] overflow-y-auto overscroll-contain">
+        {DISCOVER_GROUPS.map((group) => (
+          <div key={group.label} className="px-1 py-1">
+            <p className="px-2 py-1 text-[9px] font-semibold uppercase tracking-[0.18em] text-ink-3">{group.label}</p>
+            {group.links.map((item) => (
+              <Link
+                key={item.href}
+                role="menuitem"
+                href={item.href}
+                onClick={onNavigate}
+                className={cn(
+                  'flex flex-col gap-0.5 rounded-xl px-3 py-2.5 min-h-11 transition-colors touch-manipulation',
+                  isActive(item.href)
+                    ? 'bg-bl/10 text-ink'
+                    : 'text-ink-2 hover:bg-surface hover:text-ink active:bg-surface',
+                )}
+              >
+                <span className="text-[11px] font-bold uppercase tracking-wide">{item.name}</span>
+                {item.hint && (
+                  <span className="text-[10px] font-normal normal-case tracking-normal text-ink-3">{item.hint}</span>
+                )}
+              </Link>
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function MobileSection({
+  title,
+  links,
+  pathname,
+  isActive,
+  onNavigate,
+  icon: Icon,
+}: {
+  title: string;
+  links: NavLink[];
+  pathname: string;
+  isActive: (href: string) => boolean;
+  onNavigate: () => void;
+  icon?: LucideIcon;
+}) {
+  const sectionActive = links.some((l) => isActive(l.href));
+  const [open, setOpen] = useState(() => sectionActive || title === 'Explore');
+
+  useEffect(() => {
+    if (sectionActive) setOpen(true);
+  }, [pathname, sectionActive]);
+
+  return (
+    <div className="border-b border-white/10">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="flex w-full items-center justify-between gap-3 px-5 py-4 min-h-[52px] text-left text-white hover:bg-deep active:bg-deep transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-bl"
+        aria-expanded={open}
+      >
+        <span className="flex items-center gap-2.5 min-w-0">
+          {Icon && <Icon size={18} className="shrink-0 text-bl" strokeWidth={1.75} />}
+          <span className="text-sm font-bold uppercase tracking-[0.12em] truncate">{title}</span>
+          {sectionActive && !open && (
+            <span className="h-2 w-2 rounded-full bg-bl shrink-0" aria-label="Current section" />
           )}
+        </span>
+        <ChevronDown size={18} className={cn('shrink-0 text-white/50 transition-transform', open && 'rotate-180')} />
+      </button>
+      {open && (
+        <div className="bg-deep pb-2">
+          {links.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              prefetch
+              onClick={onNavigate}
+              className={cn(
+                'flex items-center justify-between gap-4 pl-12 pr-5 py-4 min-h-[52px] transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-bl',
+                isActive(link.href) ? 'text-bl bg-deep' : 'text-white/70 hover:text-white hover:bg-deep active:bg-deep',
+              )}
+            >
+              <span className="min-w-0">
+                <span className="block font-semibold tracking-wide text-[15px]">{link.name}</span>
+                {link.hint && (
+                  <span className="block text-xs font-normal text-white/50 mt-0.5 normal-case tracking-normal">
+                    {link.hint}
+                  </span>
+                )}
+              </span>
+              {isActive(link.href) && <ArrowRight size={18} strokeWidth={1.5} className="shrink-0" />}
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function MobileDrawerFooter({
+  authInfo,
+  onNavigate,
+}: {
+  authInfo: AuthInfo | null;
+  onNavigate: () => void;
+}) {
+  return (
+    <div className="shrink-0 border-t border-white/10 bg-blk px-5 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] space-y-2.5">
+      {authInfo?.isLoggedIn ? (
+        <Link
+          href={authInfo.href}
+          onClick={onNavigate}
+          className="flex items-center justify-center gap-2 w-full min-h-[52px] rounded-xl border border-bl/40 text-white text-sm font-bold uppercase tracking-[0.1em] hover:bg-bl/10 active:scale-[0.98] transition-all touch-manipulation"
         >
-          {item.name}
+          <LayoutDashboard size={18} strokeWidth={1.75} />
+          {authInfo.label}
         </Link>
-      ))}
+      ) : (
+        <Link
+          href="/login"
+          onClick={onNavigate}
+          className="flex items-center justify-center gap-2 w-full min-h-[52px] rounded-xl border border-white/15 text-white text-sm font-bold uppercase tracking-[0.1em] hover:bg-deep active:scale-[0.98] transition-all touch-manipulation"
+        >
+          <User size={18} strokeWidth={1.75} />
+          Student Login
+        </Link>
+      )}
+      <Link
+        href={ROUTES.enrol}
+        prefetch
+        onClick={onNavigate}
+        className="btn-sun flex items-center justify-center gap-2 w-full min-h-[52px] text-sm font-semibold touch-manipulation"
+      >
+        Book free trial
+        <ArrowRight size={18} strokeWidth={2} />
+      </Link>
+      {authInfo?.isLoggedIn && (
+        <p className="text-center text-[10px] font-semibold uppercase tracking-[0.14em] text-white/40 pt-1">
+          Signed in as {authInfo.name}
+        </p>
+      )}
     </div>
   );
 }
 
 export function Nav() {
   const [isOpen, setIsOpen] = useState(false);
-  const [syllabusOpen, setSyllabusOpen] = useState(false);
-  const [moreOpen, setMoreOpen] = useState(false);
+  const [discoverOpen, setDiscoverOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [authInfo, setAuthInfo] = useState<AuthInfo | null>(null);
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
   const [lastPathname, setLastPathname] = useState(pathname);
-  const syllabusRef = useRef<HTMLDivElement>(null);
-  const moreRef = useRef<HTMLDivElement>(null);
+  const discoverRef = useRef<HTMLDivElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const scrollLockRef = useRef(0);
 
   if (lastPathname !== pathname) {
     setLastPathname(pathname);
     setIsOpen(false);
-    setSyllabusOpen(false);
-    setMoreOpen(false);
+    setDiscoverOpen(false);
   }
 
   useEffect(() => {
@@ -207,14 +342,15 @@ export function Nav() {
 
   useEffect(() => {
     const onPointer = (event: MouseEvent) => {
-      if (!syllabusRef.current?.contains(event.target as Node)) setSyllabusOpen(false);
-      if (!moreRef.current?.contains(event.target as Node)) setMoreOpen(false);
+      if (!discoverRef.current?.contains(event.target as Node)) setDiscoverOpen(false);
     };
     const onKey = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        setSyllabusOpen(false);
-        setMoreOpen(false);
-        setIsOpen(false);
+        setDiscoverOpen(false);
+        if (isOpen) {
+          setIsOpen(false);
+          menuButtonRef.current?.focus();
+        }
       }
     };
     document.addEventListener('mousedown', onPointer);
@@ -223,194 +359,128 @@ export function Nav() {
       document.removeEventListener('mousedown', onPointer);
       document.removeEventListener('keydown', onKey);
     };
-  }, []);
+  }, [isOpen]);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
   useEffect(() => {
-    document.body.style.overflow = isOpen ? 'hidden' : '';
+    if (!isOpen) return;
+
+    scrollLockRef.current = window.scrollY;
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${scrollLockRef.current}px`;
+    document.body.style.left = '0';
+    document.body.style.right = '0';
+    document.body.style.overflow = 'hidden';
+
     return () => {
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
       document.body.style.overflow = '';
+      window.scrollTo(0, scrollLockRef.current);
     };
   }, [isOpen]);
 
   const isActive = (href: string) => pathname === href;
-  const syllabusActive = pathname.startsWith('/syllabus');
-  const moreActive = MORE_LINKS.some((link) => isActive(link.href));
+  const discoverActive = ALL_DISCOVER_LINKS.some((link) => isActive(link.href));
   const closeMobile = () => setIsOpen(false);
+
+  const mobileSectionIcons = [CalendarDays, GraduationCap, Sparkles] as const;
 
   return (
     <header
       className={cn(
         'w-full z-50 transition-all duration-300',
         scrolled
-          ? 'bg-surface/90 dark:bg-black/90 backdrop-blur-md border-b border-line py-2 shadow-md'
-          : 'bg-canvas/80 dark:bg-black/60 backdrop-blur-md border-b border-line/40 py-3',
+          ? 'bg-surface/90 dark:bg-black/90 backdrop-blur-md border-b border-line py-1.5 shadow-md'
+          : 'bg-canvas/80 dark:bg-black/60 backdrop-blur-md border-b border-line/40 py-2',
       )}
     >
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-10 flex items-center justify-between lg:grid lg:grid-cols-[auto_minmax(0,1fr)_auto] lg:items-center lg:gap-x-4 xl:gap-x-6">
-        {/* Brand */}
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-10 flex items-center justify-between lg:grid lg:grid-cols-[auto_minmax(0,1fr)_auto] lg:items-center lg:gap-x-3 xl:gap-x-5">
         <Link
           href={ROUTES.home}
-          className="group flex items-center gap-3 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7C5CFC] shrink-0 lg:col-start-1"
+          className="group flex items-center min-w-0 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl shrink-0 lg:col-start-1 touch-manipulation"
+          aria-label="Rhythmzz Academy of Dance — home"
         >
-          <div className="flex flex-col leading-none">
-            <span className="font-anton text-xl sm:text-2xl tracking-wide text-ink group-hover:text-[#7C5CFC] transition-colors">
-              RHYTHMZZ
-            </span>
-            <span className="text-[10px] font-bold tracking-[0.25em] uppercase text-[#7C5CFC]">DANCE ACADEMY</span>
-          </div>
+          <BrandLogo priority className="group-hover:opacity-90 transition-opacity" />
         </Link>
 
-        {/* Desktop nav — centred column, never pushes actions off-screen */}
-        <nav
-          className="hidden lg:flex items-center justify-center gap-3 xl:gap-5 min-w-0"
-          aria-label="Main navigation"
-        >
+        <nav className="hidden lg:flex items-center justify-center gap-4 xl:gap-5 min-w-0" aria-label="Main navigation">
           {PRIMARY_LINKS.map((link) => (
             <NavLinkItem key={link.name} link={link} active={isActive(link.href)} />
           ))}
 
-          <div className="relative shrink-0" ref={syllabusRef}>
+          <div className="relative shrink-0" ref={discoverRef}>
             <button
               type="button"
-              aria-expanded={syllabusOpen}
+              aria-expanded={discoverOpen}
               aria-haspopup="menu"
-              onClick={() => {
-                setSyllabusOpen((open) => !open);
-                setMoreOpen(false);
-              }}
+              onClick={() => setDiscoverOpen((open) => !open)}
               className={cn(
-                'inline-flex items-center gap-1 whitespace-nowrap text-[10px] xl:text-[11px] font-bold uppercase tracking-[0.12em] xl:tracking-[0.14em] py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7C5CFC] rounded-sm',
-                syllabusActive ? 'text-ink' : 'text-ink-2 hover:text-[#7C5CFC]',
+                'inline-flex items-center gap-1 whitespace-nowrap text-[10px] font-semibold uppercase tracking-[0.1em] py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl rounded-sm transition-colors',
+                discoverActive || discoverOpen ? 'text-ink font-bold' : 'text-ink-2 hover:text-bl',
               )}
             >
-              Syllabus
-              <ChevronDown size={12} className={cn('transition-transform', syllabusOpen && 'rotate-180')} />
+              Discover
+              <ChevronDown size={12} className={cn('transition-transform duration-200', discoverOpen && 'rotate-180')} />
             </button>
-            {syllabusOpen && (
-              <DropdownPanel title="Syllabus adoption" links={SYLLABUS_LINKS} isActive={isActive} />
+            {discoverActive && !discoverOpen && (
+              <span className="absolute left-0 right-0 -bottom-0.5 h-[2px] bg-bl rounded-full" aria-hidden />
             )}
-          </div>
-
-          {/* Blog + Annual Day inline from xl */}
-          {MORE_LINKS.slice(0, 2).map((link) => (
-            <NavLinkItem
-              key={link.name}
-              link={link}
-              active={isActive(link.href)}
-              className="hidden xl:inline-flex"
-            />
-          ))}
-
-          {/* Studio Rental inline from 2xl only */}
-          <NavLinkItem
-            link={MORE_LINKS[2]}
-            active={isActive(MORE_LINKS[2].href)}
-            className="hidden 2xl:inline-flex"
-          />
-
-          {/* More dropdown on lg–xl (and lg-only for Blog/Annual/Studio) */}
-          <div className="relative shrink-0 xl:hidden" ref={moreRef}>
-            <button
-              type="button"
-              aria-expanded={moreOpen}
-              aria-haspopup="menu"
-              onClick={() => {
-                setMoreOpen((open) => !open);
-                setSyllabusOpen(false);
-              }}
-              className={cn(
-                'inline-flex items-center gap-1 whitespace-nowrap text-[10px] font-bold uppercase tracking-[0.12em] py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7C5CFC] rounded-sm',
-                moreActive ? 'text-ink' : 'text-ink-2 hover:text-[#7C5CFC]',
-              )}
-            >
-              More
-              <ChevronDown size={12} className={cn('transition-transform', moreOpen && 'rotate-180')} />
-            </button>
-            {moreOpen && <DropdownPanel title="Explore" links={MORE_LINKS} isActive={isActive} />}
-          </div>
-
-          {/* xl–2xl: Studio Rental stays in More */}
-          <div className="relative shrink-0 hidden xl:block 2xl:hidden" ref={moreRef}>
-            <button
-              type="button"
-              aria-expanded={moreOpen}
-              aria-haspopup="menu"
-              onClick={() => {
-                setMoreOpen((open) => !open);
-                setSyllabusOpen(false);
-              }}
-              className={cn(
-                'inline-flex items-center gap-1 whitespace-nowrap text-[10px] xl:text-[11px] font-bold uppercase tracking-[0.14em] py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7C5CFC] rounded-sm',
-                isActive(MORE_LINKS[2].href) ? 'text-ink' : 'text-ink-2 hover:text-[#7C5CFC]',
-              )}
-            >
-              More
-              <ChevronDown size={12} className={cn('transition-transform', moreOpen && 'rotate-180')} />
-            </button>
-            {moreOpen && (
-              <DropdownPanel title="Explore" links={[MORE_LINKS[2]]} isActive={isActive} />
-            )}
+            {discoverOpen && <DiscoverPanel isActive={isActive} onNavigate={() => setDiscoverOpen(false)} />}
           </div>
         </nav>
 
-        {/* Desktop actions — fixed width column, never wraps */}
-        <div className="hidden lg:flex items-center justify-end gap-2 xl:gap-3 shrink-0">
+        <div className="hidden lg:flex items-center justify-end gap-2 shrink-0">
           {authInfo?.isLoggedIn ? (
             <Link
               href={authInfo.href}
               title={authInfo.label}
-              className="inline-flex items-center gap-1.5 min-h-9 px-2.5 xl:px-3 rounded-xl border border-[#7C5CFC]/25 bg-[#7C5CFC]/5 text-[#7C5CFC] hover:bg-[#7C5CFC]/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7C5CFC]"
+              className="inline-flex items-center gap-1.5 min-h-8 px-2.5 rounded-lg border border-bl/25 bg-bl/5 text-bl hover:bg-bl/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl"
             >
               <LayoutDashboard size={14} className="shrink-0" />
-              <span className="text-[10px] xl:text-[11px] font-bold uppercase tracking-[0.12em] max-w-[8rem] truncate 2xl:max-w-none">
-                <span className="2xl:hidden">{authInfo.shortLabel}</span>
-                <span className="hidden 2xl:inline">{authInfo.label}</span>
+              <span className="text-[10px] font-semibold uppercase tracking-[0.1em] max-w-[5.5rem] truncate xl:max-w-none">
+                {authInfo.shortLabel}
               </span>
             </Link>
           ) : (
             <Link
               href="/login"
               title="Student login"
-              className="inline-flex items-center gap-1.5 min-h-9 px-2.5 xl:px-3 rounded-xl border border-line text-ink-2 hover:text-ink hover:border-line-strong transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7C5CFC]"
+              className="inline-flex items-center gap-1.5 min-h-8 px-2.5 rounded-lg border border-line text-ink-2 hover:text-ink hover:border-line-strong transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl"
             >
               <User size={14} className="shrink-0" />
-              <span className="text-[10px] xl:text-[11px] font-bold uppercase tracking-[0.12em]">Login</span>
+              <span className="text-[10px] font-semibold uppercase tracking-[0.1em]">Login</span>
             </Link>
           )}
 
           <Link
             href={ROUTES.enrol}
-            className="btn-sun px-3.5 xl:px-5 py-2 text-[10px] xl:text-[11px] font-black uppercase tracking-[0.14em] shadow-sm active:scale-95 whitespace-nowrap"
+            className="btn-sun px-4 py-1.5 text-xs font-semibold shadow-sm active:scale-95 whitespace-nowrap"
           >
-            <span className="xl:hidden">Book</span>
-            <span className="hidden xl:inline">Book a Class</span>
+            Book a class
           </Link>
 
           <ThemeToggle />
         </div>
 
-        {/* Mobile header controls */}
+        {/* Mobile / tablet: logo + theme + menu only — Book lives in drawer footer */}
         <div className="flex lg:hidden items-center gap-2 shrink-0">
-          <ThemeToggle className="w-8 h-8" />
-          <Link
-            href={ROUTES.enrol}
-            className="btn-sun px-3.5 py-1.5 text-[10px] font-black uppercase tracking-wider shadow-sm active:scale-[0.96]"
-          >
-            Book
-          </Link>
+          <ThemeToggle />
           <button
+            ref={menuButtonRef}
             type="button"
             onClick={() => setIsOpen(!isOpen)}
             aria-expanded={isOpen}
             aria-controls="mobile-nav-drawer"
             aria-label={isOpen ? 'Close menu' : 'Open menu'}
-            className="p-2 min-h-9 min-w-9 flex items-center justify-center text-ink hover:text-[#7C5CFC] transition-colors cursor-pointer rounded-xl border border-line bg-surface/80"
+            className="inline-flex items-center justify-center min-h-11 min-w-11 text-ink hover:text-bl transition-colors cursor-pointer rounded-xl border border-line bg-surface/80 touch-manipulation active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl"
           >
-            {isOpen ? <X size={20} /> : <Menu size={20} />}
+            {isOpen ? <X size={22} strokeWidth={1.75} /> : <Menu size={22} strokeWidth={1.75} />}
           </button>
         </div>
       </div>
@@ -420,7 +490,7 @@ export function Nav() {
           <>
             <div
               className={cn(
-                'fixed inset-0 z-[700] bg-[#0a0a0a] lg:hidden transition-opacity duration-300',
+                'fixed inset-0 z-[700] bg-blk/80 backdrop-blur-sm lg:hidden transition-opacity duration-300 touch-manipulation',
                 isOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none',
               )}
               onClick={closeMobile}
@@ -430,73 +500,50 @@ export function Nav() {
             <div
               id="mobile-nav-drawer"
               className={cn(
-                'fixed inset-y-0 right-0 z-[710] w-full lg:hidden bg-black flex flex-col shadow-2xl transition-transform duration-300 ease-out',
+                'fixed inset-y-0 right-0 z-[710] w-[min(100vw,24rem)] lg:hidden bg-blk flex flex-col shadow-2xl transition-transform duration-300 ease-out h-[100dvh] max-h-[100dvh]',
                 isOpen ? 'translate-x-0 visible' : 'translate-x-full invisible pointer-events-none',
               )}
               role="dialog"
               aria-modal="true"
               aria-label="Site navigation"
             >
-              <div className="flex items-center justify-between px-6 sm:px-8 pt-[max(1rem,env(safe-area-inset-top))] pb-4 border-b border-[#333333] shrink-0">
-                <Link href={ROUTES.home} onClick={closeMobile} className="flex flex-col leading-none">
-                  <span className="font-anton text-xl tracking-wide text-white">RHYTHMZZ</span>
-                  <span className="text-[10px] font-bold tracking-[0.25em] uppercase text-[#7C5CFC]">
-                    Dance Academy
-                  </span>
+              <div className="flex items-center justify-between px-5 pt-[max(0.75rem,env(safe-area-inset-top))] pb-3 border-b border-white/10 shrink-0">
+                <Link
+                  href={ROUTES.home}
+                  onClick={closeMobile}
+                  className="flex items-center min-w-0 touch-manipulation"
+                  aria-label="Rhythmzz Academy of Dance — home"
+                >
+                  <BrandLogo />
                 </Link>
                 <button
                   type="button"
                   onClick={closeMobile}
-                  className="p-2 min-h-10 min-w-10 flex items-center justify-center text-white hover:text-[#7C5CFC] transition-colors"
+                  className="inline-flex items-center justify-center min-h-11 min-w-11 text-white hover:text-bl active:bg-deep transition-colors rounded-xl touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl"
                   aria-label="Close menu"
                 >
-                  <X size={22} strokeWidth={1.5} />
+                  <X size={22} strokeWidth={1.75} />
                 </button>
               </div>
 
-              <nav className="flex-1 min-h-0 overflow-y-auto overscroll-contain" aria-label="Mobile navigation">
-                {MOBILE_MENU_LINKS.map((link) => (
-                  <MobileMenuRow key={link.href} link={link} active={isActive(link.href)} onClick={closeMobile} />
+              <nav
+                className="flex-1 min-h-0 overflow-y-auto overscroll-contain [-webkit-overflow-scrolling:touch]"
+                aria-label="Mobile navigation"
+              >
+                {MOBILE_SECTIONS.map((section, i) => (
+                  <MobileSection
+                    key={section.id}
+                    title={section.title}
+                    links={section.links}
+                    pathname={pathname}
+                    isActive={isActive}
+                    onNavigate={closeMobile}
+                    icon={i === 0 ? BookOpen : mobileSectionIcons[i - 1]}
+                  />
                 ))}
-
-                {authInfo?.isLoggedIn ? (
-                  <Link
-                    href={authInfo.href}
-                    onClick={closeMobile}
-                    className="flex items-center justify-between gap-4 px-6 sm:px-8 py-5 border-b border-[#333333] text-white hover:bg-[#141414] active:bg-[#1a1a1a] transition-colors"
-                  >
-                    <span className="text-sm font-bold uppercase tracking-[0.14em]">{authInfo.label}</span>
-                    <ArrowRight size={18} strokeWidth={1.5} className="shrink-0" aria-hidden />
-                  </Link>
-                ) : (
-                  <Link
-                    href="/login"
-                    onClick={closeMobile}
-                    className="flex items-center justify-between gap-4 px-6 sm:px-8 py-5 border-b border-[#333333] text-white hover:bg-[#141414] active:bg-[#1a1a1a] transition-colors"
-                  >
-                    <span className="text-sm font-bold uppercase tracking-[0.14em]">Student Login</span>
-                    <User size={18} strokeWidth={1.5} className="shrink-0" aria-hidden />
-                  </Link>
-                )}
-
-                <Link
-                  href={ROUTES.enrol}
-                  prefetch
-                  onClick={closeMobile}
-                  className="flex items-center justify-between gap-4 px-6 sm:px-8 py-5 border-b border-[#333333] text-[#FFE566] hover:bg-[#141414] active:bg-[#1a1a1a] transition-colors"
-                >
-                  <span className="text-sm font-bold uppercase tracking-[0.14em]">Book Free Trial</span>
-                  <ArrowRight size={18} strokeWidth={1.5} className="shrink-0" aria-hidden />
-                </Link>
               </nav>
 
-              {authInfo?.isLoggedIn && (
-                <div className="px-6 sm:px-8 py-4 border-t border-[#333333] shrink-0 pb-[max(1rem,env(safe-area-inset-bottom))]">
-                  <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#888888]">
-                    Signed in as {authInfo.name}
-                  </p>
-                </div>
-              )}
+              <MobileDrawerFooter authInfo={authInfo} onNavigate={closeMobile} />
             </div>
           </>,
           document.body,

@@ -20,14 +20,14 @@ export default async function BlogPage() {
         <div className="max-w-7xl mx-auto">
           <div className="max-w-4xl mx-auto text-center">
             <div className="mb-5">
-              <span className="text-[10px] sm:text-xs font-mono tracking-[0.22em] text-[#7C5CFC] uppercase font-bold">
+              <span className="text-[10px] sm:text-xs font-mono tracking-[0.22em] text-bl uppercase font-bold">
                 CHOREOGRAPHY · CONDITIONING · STUDIO JOURNAL
               </span>
             </div>
 
             <h1 className="font-anton text-5xl sm:text-7xl md:text-8xl text-ink mb-6 leading-[0.92] tracking-tight uppercase">
               THE RHYTHMZZ <br className="hidden sm:inline" />
-              <span className="text-[#7C5CFC]">JOURNAL.</span>
+              <span className="text-bl">JOURNAL.</span>
             </h1>
 
             <p className="text-ink-2 text-base sm:text-lg md:text-xl leading-relaxed max-w-2xl mx-auto">
@@ -66,7 +66,7 @@ export default async function BlogPage() {
                 <div className="p-6 flex flex-col flex-grow justify-between">
                   <div>
                     <div className="flex items-center justify-between mb-3">
-                      <span className="text-[10px] font-mono font-bold tracking-[2px] uppercase text-[#7C5CFC]">
+                      <span className="text-[10px] font-mono font-bold tracking-[2px] uppercase text-bl">
                         {post.author?.name || 'Academy'}
                       </span>
                       <span className="text-[10px] font-mono text-ink-3 uppercase tracking-wider">
@@ -74,7 +74,7 @@ export default async function BlogPage() {
                       </span>
                     </div>
 
-                    <h3 className="font-anton text-2xl mb-2 text-ink group-hover:text-[#7C5CFC] transition-colors line-clamp-2 uppercase tracking-wide leading-tight">
+                    <h3 className="font-anton text-2xl mb-2 text-ink group-hover:text-bl transition-colors line-clamp-2 uppercase tracking-wide leading-tight">
                       {post.title}
                     </h3>
 
@@ -83,7 +83,7 @@ export default async function BlogPage() {
                     </p>
                   </div>
 
-                  <div className="pt-3 border-t border-line flex items-center gap-1.5 text-xs font-mono font-bold tracking-[1.5px] uppercase text-[#7C5CFC] group-hover:translate-x-1 transition-transform">
+                  <div className="pt-3 border-t border-line flex items-center gap-1.5 text-xs font-mono font-bold tracking-[1.5px] uppercase text-bl group-hover:translate-x-1 transition-transform">
                     <span>Read Article</span>
                     <ArrowRight size={13} />
                   </div>

@@ -43,7 +43,7 @@ export function EventRsvpForm({ slug }: { slug: string }) {
       <button
         type="submit"
         disabled={busy}
-        className="w-full bg-[#F5FB38] text-black font-black uppercase tracking-wider text-xs py-3 rounded-xl"
+        className="w-full bg-bl text-blk font-black uppercase tracking-wider text-xs py-3 rounded-xl"
       >
         {busy ? "Saving…" : "RSVP"}
       </button>

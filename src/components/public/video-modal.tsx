@@ -48,12 +48,12 @@ export function VideoModal({
     >
       <div
         ref={modalRef}
-        className="relative w-full max-w-5xl bg-[#111111] border border-white/20 rounded-2xl overflow-hidden shadow-2xl flex flex-col"
+        className="relative w-full max-w-5xl bg-deep border border-white/20 rounded-2xl overflow-hidden shadow-2xl flex flex-col"
       >
         {/* Header bar */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-black/40">
           <div>
-            <span className="text-[10px] uppercase font-bold tracking-widest text-[#2BB4D8] block mb-0.5">
+            <span className="text-[10px] uppercase font-bold tracking-widest text-bl block mb-0.5">
               Live Session
             </span>
             <h3 className="text-white text-base sm:text-lg font-bold tracking-tight">
@@ -73,7 +73,7 @@ export function VideoModal({
         </div>
 
         {/* Video Canvas Container */}
-        <div className="relative w-full aspect-video bg-black flex items-center justify-center overflow-hidden">
+        <div className="relative w-full aspect-video bg-blk flex items-center justify-center overflow-hidden">
           {videoUrl ? (
             <video
               src={videoUrl}
@@ -84,10 +84,10 @@ export function VideoModal({
             />
           ) : (
             /* Cinematic Dance Studio Reel Embed with Ambient Lighting */
-            <div className="relative w-full h-full flex flex-col items-center justify-center bg-gradient-to-tr from-black via-[#141414] to-[#1c182a]">
+            <div className="relative w-full h-full flex flex-col items-center justify-center bg-gradient-to-tr from-black via-deep to-deep">
               {/* Studio Stage Spotlight Effect */}
-              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#2BB4D8]/20 via-transparent to-transparent pointer-events-none" />
-              <div className="absolute top-1/2 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#F5A623]/80 to-transparent blur-[1px]" />
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-bl/20 via-transparent to-transparent pointer-events-none" />
+              <div className="absolute top-1/2 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-gold/80 to-transparent blur-[1px]" />
               
               <div className="relative z-10 text-center px-6">
                 <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full border border-white/30 bg-white/10 backdrop-blur-md flex items-center justify-center mx-auto mb-4 text-white shadow-xl shadow-cyan-500/20">
@@ -104,7 +104,7 @@ export function VideoModal({
                     href="https://www.instagram.com/rhythmzzdance.live"
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white text-black text-xs font-bold uppercase tracking-wider hover:bg-[#2BB4D8] hover:text-white transition-all active:scale-[0.96]"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white text-blk text-xs font-bold uppercase tracking-wider hover:bg-bl hover:text-white transition-all active:scale-[0.96]"
                   >
                     Watch on Instagram Reels
                   </a>

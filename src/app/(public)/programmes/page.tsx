@@ -130,9 +130,9 @@ export default async function ProgrammesPage() {
           </div>
           <Link
             href={ROUTES.enrol}
-            className="btn-sun inline-flex items-center justify-center min-h-11 py-3.5 px-8 text-xs font-black uppercase tracking-[0.18em] shrink-0 w-full sm:w-auto"
+            className="btn-sun inline-flex items-center justify-center min-h-11 py-3.5 px-8 text-sm font-semibold shrink-0 w-full sm:w-auto"
           >
-            Book Free Trial
+            Book free trial
           </Link>
         </div>
       </section>

@@ -11,7 +11,7 @@ function BulletList({ items }: { items: string[] }) {
     <ul className="space-y-2 text-sm text-ink-2 leading-relaxed">
       {items.map((item) => (
         <li key={item} className="flex gap-2">
-          <span className="text-[#7C5CFC] shrink-0">·</span>
+          <span className="text-bl shrink-0">·</span>
           <span>{item}</span>
         </li>
       ))}
@@ -42,7 +42,7 @@ export function KathakSyllabusLevels() {
                   <span className="font-anton text-lg sm:text-xl uppercase tracking-tight text-ink block">
                     {item.title}
                   </span>
-                  <span className="text-[10px] font-mono uppercase tracking-widest text-[#7C5CFC] mt-1 block">
+                  <span className="text-[10px] font-mono uppercase tracking-widest text-bl mt-1 block">
                     {item.stage}
                   </span>
                   {!isOpen && (

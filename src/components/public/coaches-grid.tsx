@@ -76,7 +76,7 @@ export function CoachesGrid() {
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-10 sm:mb-14">
         <div>
           <div className="flex items-center gap-2.5 mb-2.5">
-            <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-[#7C5CFC] font-bold">
+            <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-bl font-bold">
               05 · Faculty &amp; Directors
             </span>
           </div>
@@ -86,7 +86,7 @@ export function CoachesGrid() {
         </div>
         <Link
           href={ROUTES.about}
-          className="group inline-flex items-center gap-2 text-xs sm:text-sm font-bold uppercase tracking-[0.2em] text-[#7C5CFC] hover:text-[#512BDB] transition-colors"
+          className="group inline-flex items-center gap-2 text-xs sm:text-sm font-bold uppercase tracking-[0.2em] text-bl hover:text-bl-deep transition-colors"
         >
           <span>All Faculty Profiles</span>
           <span className="font-mono text-base translate-x-0 group-hover:translate-x-1.5 transition-transform">
@@ -99,7 +99,7 @@ export function CoachesGrid() {
         {COACHES.map((coach) => (
           <div
             key={coach.id}
-            className="group relative rounded-[26px] overflow-hidden aspect-[3/4.6] border border-line hover:border-[#F5FB38] transition-all duration-500 shadow-xl flex flex-col justify-between p-6 sm:p-6 bg-[#000000] hover:-translate-y-2"
+            className="group relative rounded-[26px] overflow-hidden aspect-[3/4.6] border border-line hover:border-bl transition-all duration-500 shadow-xl flex flex-col justify-between p-6 sm:p-6 bg-blk hover:-translate-y-2"
           >
             {/* Background Media with Dark Dramatic Vignette */}
             <div className="absolute inset-0 z-0">
@@ -110,26 +110,26 @@ export function CoachesGrid() {
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 20vw"
                 className="object-cover object-center grayscale contrast-125 brightness-95 group-hover:grayscale-0 group-hover:scale-108 transition-all duration-700 ease-out"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#000000] via-[#000000]/60 to-black/30 pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-t from-blk via-blk/60 to-black/30 pointer-events-none" />
             </div>
 
             {/* Top Bar: Sequence Number & Role Badge */}
             <div className="relative z-10 flex items-center justify-between">
-              <span className="text-[10px] font-mono font-bold text-[#F5FB38] bg-[#000000]/80 backdrop-blur-md px-2.5 py-1 rounded-md border border-white/10">
+              <span className="text-[10px] font-mono font-bold text-bl bg-blk/80 backdrop-blur-md px-2.5 py-1 rounded-md border border-white/10">
                 {coach.number}
               </span>
-              <span className="text-[9px] font-mono uppercase tracking-widest text-white/90 bg-[#000000]/80 backdrop-blur-md px-2.5 py-1 rounded-md border border-white/10 font-bold">
+              <span className="text-[9px] font-mono uppercase tracking-widest text-white/90 bg-blk/80 backdrop-blur-md px-2.5 py-1 rounded-md border border-white/10 font-bold">
                 {coach.role}
               </span>
             </div>
 
             {/* Bottom Content: Coach Name, Specialty & Quote */}
             <div className="relative z-10 pt-6">
-              <h3 className="font-anton text-2xl sm:text-3xl text-white tracking-wide uppercase leading-none mb-1 group-hover:text-[#F5FB38] transition-colors">
+              <h3 className="font-anton text-2xl sm:text-3xl text-white tracking-wide uppercase leading-none mb-1 group-hover:text-bl transition-colors">
                 {coach.name}
               </h3>
 
-              <p className="text-xs font-bold text-[#FAF6EE]/90 leading-snug">
+              <p className="text-xs font-bold text-wh/90 leading-snug">
                 {coach.specialty}
               </p>
 
@@ -145,7 +145,7 @@ export function CoachesGrid() {
               </div>
 
               {/* Action Link */}
-              <div className="flex items-center justify-between pt-3 border-t border-white/10 mt-2 text-white/70 group-hover:text-[#F5FB38] transition-colors">
+              <div className="flex items-center justify-between pt-3 border-t border-white/10 mt-2 text-white/70 group-hover:text-bl transition-colors">
                 <span className="text-[9px] font-mono uppercase tracking-widest font-bold">
                   View Portfolio
                 </span>

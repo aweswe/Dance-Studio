@@ -264,7 +264,7 @@ export function EnrolForm({
           </div>
           <div className="flex justify-between py-1">
             <span className="text-ink-2">Schedule</span>
-            <span className="font-semibold text-[#7C5CFC]">{batchLabel(selectedBatch)}</span>
+            <span className="font-semibold text-bl">{batchLabel(selectedBatch)}</span>
           </div>
         </div>
 
@@ -281,7 +281,7 @@ export function EnrolForm({
               href={whatsappLink(waMessage)}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full text-center text-xs font-black tracking-[1.5px] uppercase px-6 py-4 bg-[#22c55e] text-white rounded-xl shadow-md"
+              className="w-full text-center text-xs font-black tracking-[1.5px] uppercase px-6 py-4 bg-green text-white rounded-xl shadow-md"
             >
               Continue on WhatsApp
             </a>
@@ -316,7 +316,7 @@ export function EnrolForm({
           <label className="text-xs font-mono font-bold uppercase tracking-wider text-ink flex items-center justify-between">
             <span>1. Choose programme</span>
             {isPay && selectedProgramme && (
-              <span className="text-[#7C5CFC] font-semibold">
+              <span className="text-bl font-semibold">
                 {formatCurrency(selectedProgramme.fees_monthly)}/month
               </span>
             )}
@@ -331,10 +331,10 @@ export function EnrolForm({
                   onClick={() => handleSelectProgramme(p.id)}
                   className={cn(
                     "p-3 rounded-2xl border text-left transition-all flex flex-col justify-between cursor-pointer",
-                    isSelected ? "border-[#7C5CFC] bg-[#7C5CFC]/10 shadow-sm" : "border-line bg-canvas hover:border-line-strong"
+                    isSelected ? "border-bl bg-bl/10 shadow-sm" : "border-line bg-canvas hover:border-line-strong"
                   )}
                 >
-                  <p className={cn("text-xs font-bold leading-tight", isSelected ? "text-[#7C5CFC]" : "text-ink")}>{p.name}</p>
+                  <p className={cn("text-xs font-bold leading-tight", isSelected ? "text-bl" : "text-ink")}>{p.name}</p>
                   <p className="text-[10px] text-ink-2 mt-0.5">{p.age_group || 'Ask the desk'}</p>
                   {isPay && (
                     <p className="text-[11px] font-mono font-bold text-ink mt-2">{formatCurrency(p.fees_monthly)}</p>
@@ -431,7 +431,7 @@ export function EnrolForm({
                 onClick={() => setPlan(p)}
                 className={cn(
                   'flex-1 py-2 rounded-lg text-[11px] font-bold uppercase tracking-wider border',
-                  plan === p ? 'border-[#7C5CFC] bg-[#7C5CFC]/10 text-[#7C5CFC]' : 'border-line text-ink-2'
+                  plan === p ? 'border-bl bg-bl/10 text-bl' : 'border-line text-ink-2'
                 )}
               >
                 {p === 'monthly' ? 'Monthly' : 'Quarterly'}
@@ -476,7 +476,7 @@ export function EnrolForm({
             <button
               type="submit"
               disabled={status === 'submitting'}
-              className="w-full text-xs font-black tracking-[2px] uppercase py-4 bg-[#22c55e] hover:bg-[#16a34a] text-white rounded-xl shadow-md active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
+              className="w-full text-xs font-black tracking-[2px] uppercase py-4 bg-green hover:bg-green-ink text-white rounded-xl shadow-md active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
             >
               {status === 'submitting' ? (
                 <><Spinner className="w-4 h-4" /> Saving...</>
@@ -488,7 +488,7 @@ export function EnrolForm({
           {upiLink && (
             <a
               href={upiLink}
-              className="block w-full text-center text-[11px] font-bold uppercase tracking-wider py-3 rounded-xl border border-line text-ink hover:border-[#7C5CFC]"
+              className="block w-full text-center text-[11px] font-bold uppercase tracking-wider py-3 rounded-xl border border-line text-ink hover:border-bl"
             >
               Open UPI app ({formatCurrency(fee)})
             </a>

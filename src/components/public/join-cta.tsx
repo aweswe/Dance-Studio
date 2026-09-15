@@ -13,29 +13,29 @@ const PERKS = [
 export function JoinCTA() {
   return (
     <section className="w-full px-4 sm:px-6 md:px-10 py-16 sm:py-24 max-w-[1440px] mx-auto select-none">
-      {/* Outer Luminous Sun Butter & Velvet Obsidian Banner */}
-      <div className="relative rounded-[32px] sm:rounded-[44px] bg-[#F5FB38] text-[#000000] p-8 sm:p-12 md:p-16 overflow-hidden shadow-2xl">
+      {/* Admissions CTA banner */}
+      <div className="relative rounded-[32px] sm:rounded-[44px] bg-bl text-blk p-8 sm:p-12 md:p-16 overflow-hidden shadow-2xl">
         {/* Subtle decorative background watermark */}
-        <div className="absolute right-[-20px] bottom-[-40px] font-anton text-[180px] sm:text-[240px] md:text-[300px] text-[#000000]/[0.04] leading-none pointer-events-none select-none">
+        <div className="absolute right-[-20px] bottom-[-40px] font-anton text-[180px] sm:text-[240px] md:text-[300px] text-blk/[0.04] leading-none pointer-events-none select-none">
           DANCE
         </div>
 
         <div className="relative z-10 max-w-5xl mx-auto flex flex-col items-center text-center">
           {/* Eyebrow Label */}
           <div className="flex items-center gap-2 mb-6">
-            <span className="text-[11px] font-mono font-bold tracking-[0.2em] uppercase text-[#000000]">
+            <span className="text-[11px] font-mono font-bold tracking-[0.2em] uppercase text-blk">
               ★ Admissions Open for New Batches
             </span>
           </div>
 
           {/* Monumental Headline */}
-          <h2 className="font-anton text-4xl sm:text-6xl md:text-7xl lg:text-8xl tracking-tight uppercase leading-[0.92] max-w-4xl text-[#000000]">
+          <h2 className="font-anton text-4xl sm:text-6xl md:text-7xl lg:text-8xl tracking-tight uppercase leading-[0.92] max-w-4xl text-blk">
             READY TO OWN THE STAGE?
             <br />
             <span>YOUR FIRST CLASS IS ON US.</span>
           </h2>
 
-          <p className="max-w-2xl text-sm sm:text-base text-[#000000]/80 mt-6 mb-10 leading-relaxed font-medium">
+          <p className="max-w-2xl text-sm sm:text-base text-blk/80 mt-6 mb-10 leading-relaxed font-medium">
             One free class. Sixty minutes. Wear what you can move in. If it fits, you join the next week.
           </p>
 
@@ -44,9 +44,9 @@ export function JoinCTA() {
             {PERKS.map((perk, idx) => (
               <div
                 key={idx}
-                className="bg-[#000000] text-white p-6 rounded-2xl border border-white/10 flex flex-col items-center justify-center text-center shadow-lg group hover:scale-[1.02] transition-transform"
+                className="bg-blk text-white p-6 rounded-2xl border border-white/10 flex flex-col items-center justify-center text-center shadow-lg group hover:scale-[1.02] transition-transform"
               >
-                <span className="font-anton text-3xl sm:text-4xl text-[#F5FB38] leading-none mb-1">
+                <span className="font-anton text-3xl sm:text-4xl text-bl leading-none mb-1">
                   {perk.value}
                 </span>
                 <span className="font-bold text-xs uppercase tracking-wider text-white">
@@ -63,7 +63,7 @@ export function JoinCTA() {
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-5 w-full sm:w-auto">
             <Link
               href={ROUTES.enrol}
-              className="w-full sm:w-auto min-h-12 px-8 py-4 rounded-2xl bg-[#000000] text-[#F5FB38] font-anton text-base sm:text-lg uppercase tracking-wider hover:bg-white hover:text-[#000000] transition-all shadow-xl active:scale-[0.98] flex items-center justify-center gap-2 group"
+              className="w-full sm:w-auto min-h-12 px-8 py-4 rounded-2xl bg-blk text-bl font-anton text-base sm:text-lg uppercase tracking-wider hover:bg-white hover:text-blk transition-all shadow-xl active:scale-[0.98] flex items-center justify-center gap-2 group"
             >
               <span>Book Your Free Trial Today</span>
               <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
@@ -73,7 +73,7 @@ export function JoinCTA() {
               href={ACADEMY.whatsapp}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full sm:w-auto min-h-12 px-6 py-4 rounded-2xl bg-white hover:bg-white text-[#000000] font-mono text-xs font-black uppercase tracking-wider transition-all shadow-sm active:scale-[0.98] flex items-center justify-center gap-2 border border-[#000000]/15"
+              className="w-full sm:w-auto min-h-12 px-6 py-4 rounded-2xl bg-white hover:bg-white text-blk font-mono text-xs font-black uppercase tracking-wider transition-all shadow-sm active:scale-[0.98] flex items-center justify-center gap-2 border border-blk/15"
             >
               <MessageCircle size={16} />
               <span>WhatsApp Us: {ACADEMY.phoneDisplay}</span>
@@ -81,7 +81,7 @@ export function JoinCTA() {
           </div>
 
           {/* Studio Info Footnote */}
-          <p className="text-[11px] font-mono uppercase tracking-wider text-[#000000]/65 mt-6">
+          <p className="text-[11px] font-mono uppercase tracking-wider text-blk/65 mt-6">
             Mon–Sat 6 AM–9 PM · Neredmet X Road · Secunderabad
           </p>
         </div>

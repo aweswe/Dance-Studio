@@ -15,9 +15,9 @@ const DAY_ORDER = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Satu
 
 const THEME_BORDER: Record<string, string> = {
   'mind-body-fitness': 'border-l-bl',
-  'kids-dance': 'border-l-emerald-500',
-  'adults-dance': 'border-l-amber-500',
-  'kuchipudi': 'border-l-purple-500',
+  'kids-dance': 'border-l-green',
+  'adults-dance': 'border-l-gold',
+  'kuchipudi': 'border-l-purp',
 };
 
 const PROGRAMME_ICONS: Record<string, string> = {
@@ -114,7 +114,7 @@ export function ScheduleFilter({ batches }: ScheduleFilterProps) {
                             {batch.programme?.name}
                           </span>
                           {batch.programme?.slug === 'kuchipudi' && (
-                            <span className="text-[9px] font-extrabold uppercase tracking-wider px-1.5 py-0.5 rounded bg-purple-500/10 text-purple-600 dark:text-purple-400">
+                            <span className="text-[9px] font-extrabold uppercase tracking-wider px-1.5 py-0.5 rounded bg-purp/10 text-purp">
                               Certified
                             </span>
                           )}

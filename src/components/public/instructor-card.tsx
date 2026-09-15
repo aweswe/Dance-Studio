@@ -23,13 +23,13 @@ export function InstructorCard({ instructor }: InstructorCardProps) {
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-surface via-transparent to-transparent opacity-80" />
           <div className="absolute bottom-3 left-3 right-3">
-            <span className="text-[10px] font-mono tracking-wider uppercase font-bold text-black bg-[#F5FB38] px-2.5 py-1 rounded-md shadow-sm inline-block">
+            <span className="text-[10px] font-mono tracking-wider uppercase font-bold text-blk bg-bl px-2.5 py-1 rounded-md shadow-sm inline-block">
               {instructor.role || 'Senior Coach'}
             </span>
           </div>
         </div>
 
-        <h4 className="font-anton text-2xl text-ink mb-1 group-hover:text-[#7C5CFC] transition-colors tracking-wide uppercase">
+        <h4 className="font-anton text-2xl text-ink mb-1 group-hover:text-bl transition-colors tracking-wide uppercase">
           {instructor.name}
         </h4>
         <p className="text-xs text-ink-2 leading-relaxed mt-2 line-clamp-3">
@@ -42,7 +42,7 @@ export function InstructorCard({ instructor }: InstructorCardProps) {
           {instructor.certifications.map((cert: string, i: number) => (
             <span
               key={i}
-              className="text-[9px] font-mono tracking-wider uppercase font-bold text-[#7C5CFC] bg-canvas border border-line rounded-md px-2.5 py-0.5"
+              className="text-[9px] font-mono tracking-wider uppercase font-bold text-bl bg-canvas border border-line rounded-md px-2.5 py-0.5"
             >
               [{cert}]
             </span>

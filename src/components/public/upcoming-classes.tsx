@@ -76,7 +76,7 @@ export function UpcomingClasses() {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 sm:mb-14">
         <div>
           <div className="flex items-center gap-2.5 mb-2.5">
-            <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-[#7C5CFC] font-bold">
+            <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-bl font-bold">
               04 · New Batches &amp; Routines
             </span>
           </div>
@@ -94,7 +94,7 @@ export function UpcomingClasses() {
         {UPCOMING_CLASSES.map((item) => (
           <div
             key={item.id}
-            className="group relative rounded-[26px] overflow-hidden border border-line hover:border-[#F5FB38] transition-all duration-300 bg-[#000000] shadow-xl flex flex-col justify-between hover:-translate-y-1.5"
+            className="group relative rounded-[26px] overflow-hidden border border-line hover:border-bl transition-all duration-300 bg-blk shadow-xl flex flex-col justify-between hover:-translate-y-1.5"
           >
             {/* Top Aspect Media Showcase */}
             <div className="relative aspect-[16/10] w-full overflow-hidden">
@@ -105,17 +105,17 @@ export function UpcomingClasses() {
                 sizes="(max-width: 768px) 100vw, 33vw"
                 className="object-cover object-center group-hover:scale-106 transition-transform duration-700 ease-out"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#000000] via-[#000000]/30 to-black/40 pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-t from-blk via-blk/30 to-black/40 pointer-events-none" />
 
               {/* Status Urgency Badge */}
               <div className="absolute top-4 left-4 z-10">
                 <span
                   className={`text-[9px] font-mono uppercase tracking-widest px-3 py-1 rounded-md font-bold shadow-md flex items-center gap-1.5 ${
                     item.statusType === 'urgent'
-                      ? 'bg-[#F5FB38] text-[#000000]'
+                      ? 'bg-bl text-blk'
                       : item.statusType === 'new'
-                      ? 'bg-[#7C5CFC] text-white'
-                      : 'bg-white/90 text-[#000000]'
+                      ? 'bg-bl text-white'
+                      : 'bg-white/90 text-blk'
                   }`}
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-current" />
@@ -127,7 +127,7 @@ export function UpcomingClasses() {
               <button
                 onClick={() => setActiveVideo(item)}
                 aria-label={`Play preview for ${item.title}`}
-                className="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white hover:bg-[#F5FB38] hover:text-[#000000] flex items-center justify-center transition-all cursor-pointer shadow-lg"
+                className="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white hover:bg-bl hover:text-blk flex items-center justify-center transition-all cursor-pointer shadow-lg"
               >
                 <Play size={13} className="fill-current translate-x-0.5" />
               </button>
@@ -136,17 +136,17 @@ export function UpcomingClasses() {
             {/* Bottom Content Body */}
             <div className="p-7 sm:p-7 flex flex-col justify-between flex-1">
               <div>
-                <div className="flex items-center gap-2 text-[10px] font-mono uppercase tracking-wider text-[#7C5CFC] font-bold mb-2">
+                <div className="flex items-center gap-2 text-[10px] font-mono uppercase tracking-wider text-bl font-bold mb-2">
                   <Users size={12} />
                   <span>{item.batchType}</span>
                 </div>
 
-                <h3 className="font-anton text-2xl sm:text-3xl text-white tracking-wide uppercase leading-tight mb-2.5 group-hover:text-[#F5FB38] transition-colors">
+                <h3 className="font-anton text-2xl sm:text-3xl text-white tracking-wide uppercase leading-tight mb-2.5 group-hover:text-bl transition-colors">
                   {item.title}
                 </h3>
 
                 <div className="flex items-center gap-2 text-xs text-white/70 font-mono mb-5">
-                  <Calendar size={13} className="text-[#F5FB38]" />
+                  <Calendar size={13} className="text-bl" />
                   <span>{item.timing}</span>
                 </div>
               </div>
@@ -175,7 +175,7 @@ export function UpcomingClasses() {
 
                 <Link
                   href={item.href}
-                  className="inline-flex items-center justify-center gap-1.5 min-h-11 px-5 rounded-xl bg-[#F5FB38] text-[#000000] text-[10px] font-mono font-black uppercase tracking-wider hover:bg-white transition-all active:scale-[0.98] shadow-sm w-full sm:w-auto shrink-0"
+                  className="inline-flex items-center justify-center gap-1.5 min-h-11 px-5 rounded-xl bg-bl text-blk text-[10px] font-mono font-black uppercase tracking-wider hover:bg-white transition-all active:scale-[0.98] shadow-sm w-full sm:w-auto shrink-0"
                 >
                   <span>Book Trial</span>
                   <ArrowUpRight size={12} className="stroke-[2.5]" />
@@ -190,7 +190,7 @@ export function UpcomingClasses() {
       <div className="flex justify-end mt-8 sm:mt-10">
         <Link
           href={ROUTES.programmes}
-          className="group inline-flex items-center gap-2 text-xs sm:text-sm font-bold uppercase tracking-[0.2em] text-[#7C5CFC] hover:text-[#512BDB] transition-colors"
+          className="group inline-flex items-center gap-2 text-xs sm:text-sm font-bold uppercase tracking-[0.2em] text-bl hover:text-bl-deep transition-colors"
         >
           <span>Explore All 12 Programmes</span>
           <span className="font-mono text-base translate-x-0 group-hover:translate-x-1.5 transition-transform">

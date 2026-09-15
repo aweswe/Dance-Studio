@@ -26,7 +26,7 @@ export function LevelCertificationSection({
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent pointer-events-none" />
           <div className="absolute bottom-5 left-5 text-white">
-            <p className="text-[10px] font-mono uppercase tracking-widest text-[#F5FB38] mb-0.5">IAO Accredited</p>
+            <p className="text-[10px] font-mono uppercase tracking-widest text-bl mb-0.5">IAO Accredited</p>
             <p className="font-anton text-lg uppercase tracking-wide">Aramandi · Mudras · Natyashastra</p>
           </div>
         </div>
@@ -60,9 +60,9 @@ export function LevelCertificationSection({
           <div className="flex flex-wrap gap-3">
             <Link
               href={ROUTES.enrol}
-              className="btn-sun py-3 px-6 text-xs font-black tracking-[0.16em] uppercase flex items-center gap-2 active:scale-[0.97]"
+              className="btn-sun py-3 px-6 text-sm font-semibold flex items-center gap-2 active:scale-[0.97]"
             >
-              Book Free Trial
+              Book free trial
             </Link>
             {showExploreCurriculum && (
               <Link

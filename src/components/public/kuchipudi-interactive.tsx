@@ -124,22 +124,22 @@ export function KuchipudiRoadmap() {
             <button
               key={s.step}
               onClick={() => setActiveStep(s.step)}
-              className={`p-4 rounded-2xl border text-left transition-all duration-300 min-h-[5.5rem] flex flex-col justify-between active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7C5CFC] focus-visible:ring-offset-2 focus-visible:ring-offset-canvas group ${
+              className={`p-4 rounded-2xl border text-left transition-all duration-300 min-h-[5.5rem] flex flex-col justify-between active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl focus-visible:ring-offset-2 focus-visible:ring-offset-canvas group ${
                 isActive
-                  ? 'bg-surface border-[#7C5CFC] shadow-lg shadow-[#7C5CFC]/10 ring-1 ring-[#7C5CFC]'
-                  : 'bg-surface/70 border-line hover:border-[#7C5CFC]/40 hover:bg-surface'
+                  ? 'bg-surface border-bl shadow-lg shadow-bl/10 ring-1 ring-bl'
+                  : 'bg-surface/70 border-line hover:border-bl/40 hover:bg-surface'
               }`}
               aria-selected={isActive}
               role="tab"
             >
               <div className="flex items-center justify-between w-full mb-1">
-                <span className="text-[10px] font-mono font-bold tracking-[0.2em] uppercase text-[#7C5CFC]">
+                <span className="text-[10px] font-mono font-bold tracking-[0.2em] uppercase text-bl">
                   {s.phase}
                 </span>
                 <span
                   className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-mono font-bold transition-colors ${
                     isActive
-                      ? 'bg-[#7C5CFC] text-white'
+                      ? 'bg-bl text-white'
                       : 'bg-canvas border border-line text-ink-2 group-hover:text-ink'
                   }`}
                 >
@@ -147,7 +147,7 @@ export function KuchipudiRoadmap() {
                 </span>
               </div>
               <div>
-                <h4 className="text-xs sm:text-sm font-bold text-ink line-clamp-1 group-hover:text-[#7C5CFC] transition-colors">
+                <h4 className="text-xs sm:text-sm font-bold text-ink line-clamp-1 group-hover:text-bl transition-colors">
                   {s.title}
                 </h4>
                 <span className="text-[11px] font-mono text-ink-3 block mt-0.5">
@@ -163,13 +163,13 @@ export function KuchipudiRoadmap() {
       {ROADMAP_STEPS.filter((s) => s.step === activeStep).map((s) => (
         <div
           key={s.step}
-          className="bento-card p-6 sm:p-8 md:p-10 border-l-4 border-l-[#7C5CFC] relative overflow-hidden transition-all duration-300"
+          className="bento-card p-6 sm:p-8 md:p-10 border-l-4 border-l-bl relative overflow-hidden transition-all duration-300"
           role="tabpanel"
         >
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b border-line">
             <div>
               <div className="flex flex-wrap items-center gap-2 mb-2">
-                <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#7C5CFC] font-bold">
+                <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-bl font-bold">
                   {s.phase} · {s.duration}
                 </span>
                 <span className="text-xs text-ink-3">({s.age})</span>
@@ -179,7 +179,7 @@ export function KuchipudiRoadmap() {
               </h3>
             </div>
             <div className="shrink-0">
-              <span className="text-[11px] font-mono font-bold tracking-[0.18em] uppercase text-[#7C5CFC]">
+              <span className="text-[11px] font-mono font-bold tracking-[0.18em] uppercase text-bl">
                 {s.badge}
               </span>
             </div>
@@ -194,9 +194,9 @@ export function KuchipudiRoadmap() {
                 {s.milestones.map((m, idx) => (
                   <li
                     key={idx}
-                    className="flex items-start gap-3 p-4 rounded-xl bg-canvas border border-line text-xs sm:text-sm text-ink-2 hover:border-[#7C5CFC]/40 transition-colors"
+                    className="flex items-start gap-3 p-4 rounded-xl bg-canvas border border-line text-xs sm:text-sm text-ink-2 hover:border-bl/40 transition-colors"
                   >
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#7C5CFC] shrink-0 mt-2" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-bl shrink-0 mt-2" />
                     <span className="leading-relaxed">{m}</span>
                   </li>
                 ))}
@@ -205,7 +205,7 @@ export function KuchipudiRoadmap() {
 
             <div className="p-6 rounded-xl bg-canvas border border-line flex flex-col justify-between">
               <div>
-                <span className="text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-[#7C5CFC] block mb-2">
+                <span className="text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-bl block mb-2">
                   Artistic Outcome
                 </span>
                 <p className="text-xs sm:text-sm text-ink font-medium leading-relaxed">
@@ -298,18 +298,18 @@ export function KuchipudiRepertoireFlow() {
         {REPERTOIRE_ITEMS.map((item) => (
           <div
             key={item.id}
-            className="bento-card p-6 flex flex-col justify-between hover:border-[#7C5CFC]/50 hover:-translate-y-1 transition-all duration-300 group"
+            className="bento-card p-6 flex flex-col justify-between hover:border-bl/50 hover:-translate-y-1 transition-all duration-300 group"
           >
             <div>
               <div className="flex items-center justify-between mb-3">
-                <span className="text-2xl font-black font-anton tracking-wide uppercase text-[#7C5CFC]">
+                <span className="text-2xl font-black font-anton tracking-wide uppercase text-bl">
                   {item.id}
                 </span>
                 <span className="text-[10px] font-mono px-2.5 py-1 rounded-md bg-canvas border border-line text-ink-2 uppercase tracking-wider">
                   {item.focus}
                 </span>
               </div>
-              <h4 className="font-anton tracking-wide uppercase text-lg sm:text-xl text-ink mb-1 group-hover:text-[#7C5CFC] transition-colors">
+              <h4 className="font-anton tracking-wide uppercase text-lg sm:text-xl text-ink mb-1 group-hover:text-bl transition-colors">
                 {item.name}
               </h4>
               <span className="text-[11px] font-mono uppercase tracking-wider text-ink-3 block mb-3">
@@ -321,7 +321,7 @@ export function KuchipudiRepertoireFlow() {
             </div>
             <div className="mt-5 pt-3 border-t border-line/60 flex items-center justify-between text-[10px] font-mono text-ink-3">
               <span>Margam Suite</span>
-              <span className="text-[#7C5CFC] font-semibold">Stage Classical</span>
+              <span className="text-bl font-semibold">Stage Classical</span>
             </div>
           </div>
         ))}
@@ -370,11 +370,11 @@ export function KuchipudiClassFlow() {
       {CLASS_FLOW_STEPS.map((s, idx) => (
         <div
           key={idx}
-          className="bento-card p-5 flex flex-col justify-between hover:border-[#7C5CFC]/40 hover:-translate-y-0.5 transition-all duration-300"
+          className="bento-card p-5 flex flex-col justify-between hover:border-bl/40 hover:-translate-y-0.5 transition-all duration-300"
         >
           <div>
             <div className="flex items-center justify-between mb-3">
-              <span className="text-[10px] font-mono font-bold tracking-[0.2em] uppercase text-[#7C5CFC]">
+              <span className="text-[10px] font-mono font-bold tracking-[0.2em] uppercase text-bl">
                 {s.phase}
               </span>
               <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-md bg-canvas border border-line text-ink font-semibold">
@@ -471,10 +471,10 @@ export function KuchipudiFaqAccordion() {
               setActiveFilter(cat);
               setOpenIndex(0);
             }}
-            className={`text-xs font-mono px-3.5 py-1.5 rounded-lg border transition-all duration-200 active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7C5CFC] ${
+            className={`text-xs font-mono px-3.5 py-1.5 rounded-lg border transition-all duration-200 active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl ${
               activeFilter === cat
-                ? 'bg-[#F5FB38] text-black border-[#F5FB38] font-bold shadow-sm'
-                : 'bg-surface border-line text-ink-2 hover:text-ink hover:border-[#7C5CFC]/50'
+                ? 'bg-bl text-blk border-bl font-bold shadow-sm'
+                : 'bg-surface border-line text-ink-2 hover:text-ink hover:border-bl/50'
             }`}
           >
             {cat === 'all' ? 'All Questions' : cat}
@@ -490,16 +490,16 @@ export function KuchipudiFaqAccordion() {
             <div
               key={idx}
               className={`bento-card transition-all duration-300 overflow-hidden p-0 ${
-                isOpen ? 'border-[#7C5CFC]/60 shadow-md shadow-[#7C5CFC]/5 ring-1 ring-[#7C5CFC]/20' : 'border-line'
+                isOpen ? 'border-bl/60 shadow-md shadow-bl/5 ring-1 ring-bl/20' : 'border-line'
               }`}
             >
               <button
                 onClick={() => toggle(idx)}
-                className="w-full text-left p-5 sm:p-6 flex items-center justify-between gap-4 hover:bg-canvas/50 transition-colors active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7C5CFC]"
+                className="w-full text-left p-5 sm:p-6 flex items-center justify-between gap-4 hover:bg-canvas/50 transition-colors active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl"
                 aria-expanded={isOpen}
               >
                 <div className="space-y-1">
-                  <span className="text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-[#7C5CFC] block">
+                  <span className="text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-bl block">
                     {faq.tag}
                   </span>
                   <h4 className="font-anton tracking-wide uppercase text-base sm:text-lg text-ink">

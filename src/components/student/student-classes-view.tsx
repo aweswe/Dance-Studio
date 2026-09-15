@@ -268,9 +268,9 @@ export function StudentClassesView({ currentStudent, feePaid, programmes, pendin
       )}
 
       {pendingSwitch && (
-        <Card className="border-[#7C5CFC]/30 bg-[#7C5CFC]/5 space-y-3">
+        <Card className="border-bl/30 bg-bl/5 space-y-3">
           <div className="flex items-start gap-2">
-            <ArrowRightLeft className="w-4 h-4 text-[#7C5CFC] shrink-0 mt-0.5" />
+            <ArrowRightLeft className="w-4 h-4 text-bl shrink-0 mt-0.5" />
             <div>
               <p className="text-sm font-semibold text-ink">Switch request pending</p>
               <p className="text-sm text-ink-2 mt-1">

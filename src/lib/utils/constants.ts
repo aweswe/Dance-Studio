@@ -90,6 +90,12 @@ export const ROUTES = {
   admin: "/admin",
 } as const;
 
+/** Homepage hero reel — drop MP4 at public/videos/hyderabaddiaries-reel.mp4 or set env */
+export const HERO_REEL = {
+  src: process.env.NEXT_PUBLIC_HERO_VIDEO_URL ?? '/videos/hero-section.mp4',
+  caption: 'Rhythmzz Academy of Dance · Neredmet, Secunderabad',
+} as const;
+
 /** Areas served — for SEO and marketing copy */
 export const AREAS_SERVED = [
   "Neredmet",
@@ -116,7 +122,7 @@ export const PROGRAMME_THEMES = {
     card: "card-dance",
     chip: "fee-chip-gold",
     accent: "bg-gold",
-    button: "bg-gold text-black hover:bg-gold/90",
+    button: "bg-gold text-blk hover:bg-gold/90",
     checkmark: "text-gold",
   },
   "mind-body-fitness": {

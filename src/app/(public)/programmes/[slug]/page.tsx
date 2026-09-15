@@ -151,7 +151,7 @@ export default async function ProgrammeDetailPage({ params }: Props) {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             <div className="lg:col-span-7 space-y-6">
               <div className="mb-2">
-                <span className="text-[10px] sm:text-xs font-mono tracking-[0.22em] text-[#7C5CFC] uppercase font-bold">
+                <span className="text-[10px] sm:text-xs font-mono tracking-[0.22em] text-bl uppercase font-bold">
                   {programme.age_group || 'Open batch'}
                 </span>
               </div>
@@ -167,17 +167,17 @@ export default async function ProgrammeDetailPage({ params }: Props) {
               <div className="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-3 sm:gap-4 pt-2">
                 <Link
                   href={enrolHref({ programme: programme.slug, intent: 'trial' })}
-                  className="btn-sun inline-flex items-center justify-center min-h-11 px-8 py-3.5 text-xs font-black uppercase tracking-[0.16em] shadow-md gap-2 active:scale-[0.96]"
+                  className="btn-sun inline-flex items-center justify-center min-h-11 px-8 py-3.5 text-sm font-semibold shadow-md gap-2 active:scale-[0.96]"
                 >
-                  <span>Book Free Trial</span>
+                  <span>Book free trial</span>
                 </Link>
                 {slug === 'kuchipudi' && (
                   <a
                     href="#curriculum"
-                    className="inline-flex items-center justify-center min-h-11 px-6 py-3.5 rounded-xl bg-surface border border-line text-xs font-mono font-bold uppercase tracking-wider text-ink hover:border-[#7C5CFC] transition-colors gap-2"
+                    className="inline-flex items-center justify-center min-h-11 px-6 py-3.5 rounded-xl bg-surface border border-line text-xs font-mono font-bold uppercase tracking-wider text-ink hover:border-bl transition-colors gap-2"
                   >
                     <span>View Syllabus</span>
-                    <span className="text-[#7C5CFC]">↓</span>
+                    <span className="text-bl">↓</span>
                   </a>
                 )}
               </div>
@@ -194,7 +194,7 @@ export default async function ProgrammeDetailPage({ params }: Props) {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-6">
                   <div className="space-y-1">
-                    <span className="text-[10px] font-mono tracking-widest text-[#F5FB38] uppercase font-bold">STUDIO ARCHIVE</span>
+                    <span className="text-[10px] font-mono tracking-widest text-bl uppercase font-bold">STUDIO ARCHIVE</span>
                     <h3 className="font-anton text-2xl text-white uppercase tracking-wide">{programme.name} Masterclass</h3>
                   </div>
                 </div>
@@ -213,7 +213,7 @@ export default async function ProgrammeDetailPage({ params }: Props) {
           {/* About */}
           <div className="bento-card p-6 sm:p-8 rounded-[28px] space-y-4">
             <div className="flex items-center gap-2">
-              <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#7C5CFC] font-bold">
+              <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-bl font-bold">
                 {"// Programme Scope"}
               </span>
             </div>
@@ -232,7 +232,7 @@ export default async function ProgrammeDetailPage({ params }: Props) {
           {includesList.length > 0 && (
             <div className="bento-card p-6 sm:p-8 rounded-[28px] space-y-6">
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#7C5CFC] font-bold">
+                <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-bl font-bold">
                   {"// Curriculum Highlights"}
                 </span>
               </div>
@@ -240,7 +240,7 @@ export default async function ProgrammeDetailPage({ params }: Props) {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {includesList.map((item: string, idx: number) => (
                   <div key={idx} className="flex gap-3.5 items-center bg-canvas p-4 rounded-2xl border border-line">
-                    <span className="w-6 h-6 rounded-lg bg-[#7C5CFC]/10 text-[#7C5CFC] flex items-center justify-center font-mono font-bold text-xs shrink-0">
+                    <span className="w-6 h-6 rounded-lg bg-bl/10 text-bl flex items-center justify-center font-mono font-bold text-xs shrink-0">
                       ✓
                     </span>
                     <span className="text-xs sm:text-sm font-medium text-ink">{item}</span>
@@ -253,7 +253,7 @@ export default async function ProgrammeDetailPage({ params }: Props) {
           {/* Batches / Schedule */}
           <div className="bento-card p-6 sm:p-8 rounded-[28px] space-y-6">
             <div className="flex items-center gap-2">
-              <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#7C5CFC] font-bold">
+              <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-bl font-bold">
                 {"// Timetable"}
               </span>
             </div>
@@ -270,7 +270,7 @@ export default async function ProgrammeDetailPage({ params }: Props) {
                   <div key={idx} className="flex flex-col sm:flex-row sm:items-center justify-between p-5 bg-canvas border border-line rounded-2xl gap-4">
                     <div className="flex flex-col gap-1.5">
                       <div className="flex items-center gap-2 text-ink font-semibold text-sm">
-                        <Calendar size={16} className="text-[#7C5CFC]" />
+                        <Calendar size={16} className="text-bl" />
                         {Array.isArray(batch.days) ? batch.days.join(', ') : batch.days}
                       </div>
                       <div className="flex items-center gap-2 text-ink-2 text-xs font-mono">
@@ -283,7 +283,7 @@ export default async function ProgrammeDetailPage({ params }: Props) {
                         {batch.instructor.photo_url ? (
                           <Image src={batch.instructor.photo_url} alt={batch.instructor.name} width={40} height={40} className="rounded-full object-cover border border-line" />
                         ) : (
-                          <div className="w-10 h-10 rounded-full bg-[#000000] text-[#F5FB38] flex items-center justify-center text-xs font-bold font-mono">
+                          <div className="w-10 h-10 rounded-full bg-blk text-bl flex items-center justify-center text-xs font-bold font-mono">
                             {batch.instructor.name?.charAt(0) || 'I'}
                           </div>
                         )}
@@ -307,10 +307,10 @@ export default async function ProgrammeDetailPage({ params }: Props) {
           {/* Pricing Card */}
           <div className="bento-card p-6 sm:p-8 rounded-[28px] space-y-6">
             <div className="flex items-center justify-between border-b border-line pb-4">
-              <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#7C5CFC] font-bold">
+              <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-bl font-bold">
                 Tuition Fee
               </span>
-              <span className="text-[9px] font-mono uppercase tracking-wider text-black font-bold bg-[#F5FB38] px-2 py-0.5 rounded-md">
+              <span className="text-[9px] font-mono uppercase tracking-wider text-blk font-bold bg-bl px-2 py-0.5 rounded-md">
                 Zero Admission Fee
               </span>
             </div>
@@ -329,9 +329,9 @@ export default async function ProgrammeDetailPage({ params }: Props) {
                 <div className="flex justify-between items-center p-3.5 bg-canvas rounded-2xl border border-line">
                   <div>
                     <span className="text-xs font-mono uppercase tracking-wider text-ink-2 font-semibold block">Quarterly Plan</span>
-                    <span className="text-[10px] font-mono text-[#7C5CFC]">Save 10%</span>
+                    <span className="text-[10px] font-mono text-bl">Save 10%</span>
                   </div>
-                  <div className="flex items-center font-anton text-2xl text-[#7C5CFC]">
+                  <div className="flex items-center font-anton text-2xl text-bl">
                     <IndianRupee size={18} className="mr-0.5" />
                     {programme.fees_quarterly}
                   </div>
@@ -350,7 +350,7 @@ export default async function ProgrammeDetailPage({ params }: Props) {
           {/* Location Info */}
           <div className="bento-card p-6 rounded-[28px] border border-line space-y-4">
             <div className="flex items-start gap-3.5">
-              <div className="w-10 h-10 rounded-xl bg-[#7C5CFC]/10 text-[#7C5CFC] flex items-center justify-center shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-bl/10 text-bl flex items-center justify-center shrink-0">
                 <MapPin size={20} />
               </div>
               <div>

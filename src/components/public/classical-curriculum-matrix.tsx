@@ -63,7 +63,7 @@ export function ClassicalCurriculumMatrix() {
               }}
               className={`px-4 py-2 rounded-xl text-xs font-mono font-bold tracking-wider uppercase transition-all ${
                 activeKuchipudiTrack === '6-year'
-                  ? 'bg-[#7C5CFC] text-white shadow-sm'
+                  ? 'bg-bl text-white shadow-sm'
                   : 'bg-canvas text-ink-2 hover:text-ink border border-line'
               }`}
             >
@@ -85,7 +85,7 @@ export function ClassicalCurriculumMatrix() {
               key={`kuchipudi-${activeKuchipudiTrack}-${item.year}`}
               className={`bento-card rounded-[24px] border transition-all duration-300 overflow-hidden ${
                 isExpanded
-                  ? 'border-[#7C5CFC]/50 shadow-md ring-1 ring-[#7C5CFC]/20 bg-surface'
+                  ? 'border-bl/50 shadow-md ring-1 ring-bl/20 bg-surface'
                   : 'border-line bg-surface/60 hover:border-line-strong'
               }`}
             >
@@ -98,7 +98,7 @@ export function ClassicalCurriculumMatrix() {
                   <div
                     className={`w-12 h-12 rounded-2xl flex items-center justify-center font-anton text-xl shrink-0 transition-colors ${
                       isExpanded
-                        ? 'bg-[#F5FB38] text-black shadow-sm'
+                        ? 'bg-bl text-blk shadow-sm'
                         : 'bg-canvas text-ink border border-line'
                     }`}
                   >
@@ -106,7 +106,7 @@ export function ClassicalCurriculumMatrix() {
                   </div>
                   <div className="min-w-0">
                     <div className="flex flex-wrap items-center gap-2 mb-1">
-                      <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#7C5CFC] font-bold">
+                      <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-bl font-bold">
                         {item.level}
                       </span>
                     </div>
@@ -129,14 +129,14 @@ export function ClassicalCurriculumMatrix() {
                 <div className="px-6 sm:px-8 pb-8 pt-2 border-t border-line space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
                     <div className="bg-canvas p-5 rounded-2xl border border-line space-y-3">
-                      <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-[#7C5CFC]">
+                      <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-bl">
                         <BookOpen size={16} />
                         <span>Theory</span>
                       </div>
                       <ul className="space-y-2">
                         {item.theory.map((t, idx) => (
                           <li key={idx} className="text-xs sm:text-sm text-ink-2 flex items-start gap-2 leading-relaxed">
-                            <span className="text-[#7C5CFC] font-bold mt-0.5">•</span>
+                            <span className="text-bl font-bold mt-0.5">•</span>
                             <span>{t}</span>
                           </li>
                         ))}
@@ -145,13 +145,13 @@ export function ClassicalCurriculumMatrix() {
 
                     <div className="bg-canvas p-5 rounded-2xl border border-line space-y-3">
                       <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-ink">
-                        <Zap size={16} className="text-[#F5FB38]" />
+                        <Zap size={16} className="text-bl" />
                         <span>On the floor</span>
                       </div>
                       <ul className="space-y-2">
                         {item.practical.map((p, idx) => (
                           <li key={idx} className="text-xs sm:text-sm text-ink-2 flex items-start gap-2.5 leading-relaxed">
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#7C5CFC] shrink-0 mt-2" />
+                            <span className="w-1.5 h-1.5 rounded-full bg-bl shrink-0 mt-2" />
                             <span>{p}</span>
                           </li>
                         ))}
@@ -160,7 +160,7 @@ export function ClassicalCurriculumMatrix() {
                   </div>
 
                   <div className="p-4 bg-canvas rounded-2xl border border-line flex items-start gap-3 text-xs sm:text-sm text-ink-2">
-                    <GraduationCap size={18} className="text-[#7C5CFC] shrink-0 mt-0.5" />
+                    <GraduationCap size={18} className="text-bl shrink-0 mt-0.5" />
                     <div>
                       <strong className="text-ink font-semibold block mb-0.5">By the end of this year</strong>
                       <span>{item.learningOutcome}</span>

@@ -51,7 +51,7 @@ export default async function EnrolPage({
           <div className="lg:col-span-5 order-1 lg:order-2 lg:sticky lg:top-24 space-y-6">
             <div>
               <div className="mb-3">
-                <span className="text-[10px] sm:text-xs font-mono tracking-[0.22em] text-[#7C5CFC] uppercase font-bold">
+                <span className="text-[10px] sm:text-xs font-mono tracking-[0.22em] text-bl uppercase font-bold">
                   {isPay ? 'ENROL · FIRST MONTH OR QUARTER' : 'FIRST LESSON IS FREE · ZERO ADMISSION FEE'}
                 </span>
               </div>
@@ -59,12 +59,12 @@ export default async function EnrolPage({
                 {isPay ? (
                   <>
                     ENROL AND <br />
-                    <span className="text-[#7C5CFC]">PAY.</span>
+                    <span className="text-bl">PAY.</span>
                   </>
                 ) : (
                   <>
                     BOOK YOUR <br />
-                    <span className="text-[#7C5CFC]">FIRST CLASS.</span>
+                    <span className="text-bl">FIRST CLASS.</span>
                   </>
                 )}
               </h1>
@@ -77,7 +77,7 @@ export default async function EnrolPage({
 
             <div className="space-y-3">
               <div className="bento-card p-4 rounded-[22px] flex gap-3.5 items-start">
-                <div className="w-8 h-8 rounded-xl bg-[#7C5CFC]/10 text-[#7C5CFC] flex items-center justify-center shrink-0 font-mono font-bold text-xs">
+                <div className="w-8 h-8 rounded-xl bg-bl/10 text-bl flex items-center justify-center shrink-0 font-mono font-bold text-xs">
                   01
                 </div>
                 <div>
@@ -93,7 +93,7 @@ export default async function EnrolPage({
               </div>
 
               <div className="bento-card p-4 rounded-[22px] flex gap-3.5 items-start">
-                <div className="w-8 h-8 rounded-xl bg-[#7C5CFC]/10 text-[#7C5CFC] flex items-center justify-center shrink-0 font-mono font-bold text-xs">
+                <div className="w-8 h-8 rounded-xl bg-bl/10 text-bl flex items-center justify-center shrink-0 font-mono font-bold text-xs">
                   02
                 </div>
                 <div>
@@ -105,7 +105,7 @@ export default async function EnrolPage({
               </div>
 
               <div className="bento-card p-4 rounded-[22px] flex gap-3.5 items-start">
-                <div className="w-8 h-8 rounded-xl bg-[#7C5CFC]/10 text-[#7C5CFC] flex items-center justify-center shrink-0 font-mono font-bold text-xs">
+                <div className="w-8 h-8 rounded-xl bg-bl/10 text-bl flex items-center justify-center shrink-0 font-mono font-bold text-xs">
                   03
                 </div>
                 <div>
@@ -117,7 +117,7 @@ export default async function EnrolPage({
               </div>
             </div>
 
-            <div className="bento-card p-6 rounded-[24px] border-[#7C5CFC]/30 bg-surface flex items-center justify-between">
+            <div className="bento-card p-6 rounded-[24px] border-bl/30 bg-surface flex items-center justify-between">
               <div>
                 <span className="text-[10px] font-mono uppercase tracking-wider text-ink-3 block mb-0.5">Need Guidance?</span>
                 <p className="text-xs font-bold text-ink">Call or WhatsApp us directly</p>
@@ -126,7 +126,7 @@ export default async function EnrolPage({
                 href={`https://wa.me/${ACADEMY.phone.replace(/[^0-9]/g, '')}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-4 py-2 rounded-xl bg-canvas border border-line text-xs font-mono font-bold text-[#7C5CFC] hover:border-[#7C5CFC] transition-colors inline-flex items-center gap-1.5"
+                className="px-4 py-2 rounded-xl bg-canvas border border-line text-xs font-mono font-bold text-bl hover:border-bl transition-colors inline-flex items-center gap-1.5"
               >
                 <span>Chat</span>
                 <ArrowRight size={13} />
