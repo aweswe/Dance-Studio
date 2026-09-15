@@ -33,8 +33,8 @@ export function HeroVideo({
       className={cn(
         'relative w-full overflow-hidden rounded-[16px] sm:rounded-[20px] lg:rounded-[22px]',
         'border border-white/10 bg-[#0c0c0c]',
-        /* Square-ish tile like DLX — stays inside its grid column */
-        'aspect-[4/5] sm:aspect-square',
+        /* Portrait reel — stays inside its grid column */
+        'aspect-[9/16]',
         'shadow-[0_16px_48px_-12px_rgba(0,0,0,0.85)]',
         className,
       )}
@@ -74,7 +74,7 @@ export function HeroVideo({
             alt="Rhythmzz dancers on stage"
             fill
             priority
-            sizes="(max-width: 1024px) 90vw, 400px"
+            sizes="(max-width: 1024px) 85vw, 360px"
             className="object-cover object-[center_25%]"
           />
           <div className="absolute inset-0 z-[1] bg-gradient-to-t from-black/70 via-black/5 to-black/25 pointer-events-none" />

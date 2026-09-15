@@ -21,7 +21,7 @@ export function Hero({ stats }: HeroProps) {
           aria-hidden
         />
 
-        <div className="relative grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(260px,400px)] xl:grid-cols-[minmax(0,1fr)_440px] gap-10 lg:gap-12 xl:gap-16 items-center px-6 sm:px-10 lg:px-12 xl:px-14 py-10 sm:py-12 lg:py-14 xl:py-16">
+        <div className="relative grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(240px,380px)] xl:grid-cols-[minmax(0,1fr)_360px] gap-10 lg:gap-12 xl:gap-16 items-center px-6 sm:px-10 lg:px-12 xl:px-14 py-10 sm:py-12 lg:py-14 xl:py-16">
           {/* ── Left: copy + CTAs + stats (DLX pattern) ── */}
           <div className="relative z-10 min-w-0 flex flex-col">
             <div className="inline-flex flex-wrap items-center gap-2 w-fit mb-6 sm:mb-8">
@@ -66,7 +66,7 @@ export function Hero({ stats }: HeroProps) {
           </div>
 
           {/* ── Right: media only, hard-contained ── */}
-          <div className="relative z-0 min-w-0 w-full max-w-[420px] mx-auto lg:max-w-none lg:mx-0 lg:justify-self-end overflow-hidden">
+          <div className="relative z-0 min-w-0 w-full max-w-[340px] sm:max-w-[380px] mx-auto lg:max-w-none lg:mx-0 lg:justify-self-end overflow-hidden">
             <HeroVideo />
           </div>
         </div>
