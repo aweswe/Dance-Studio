@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ArrowUpRight, MessageCircle } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import { getProgrammes, type ProgrammeItem } from '@/data/programmes';
 import { enrolHref } from '@/lib/utils/constants';
 import { whatsappLink } from '@/lib/utils/format';
@@ -90,10 +90,10 @@ function ProgrammePricingCard({ programme }: { programme: ProgrammeItem }) {
         />
       </div>
 
-      <div className="mt-auto flex flex-col items-center gap-2 pt-1">
+      <div className="mt-auto flex w-full flex-col gap-2 pt-1">
         <Link
           href={enrolHref({ programme: programme.slug, intent: 'pay' })}
-          className="inline-flex items-center justify-center gap-1.5 min-h-[44px] rounded-full bg-white text-[#0a0a0a] text-[10px] font-bold uppercase tracking-[0.1em] hover:bg-[#F5FB38] transition-colors"
+          className="flex w-full items-center justify-center gap-1.5 min-h-[44px] rounded-full bg-white px-4 text-[#0a0a0a] text-[10px] font-bold uppercase tracking-[0.1em] hover:bg-[#F5FB38] transition-colors"
         >
           Book &amp; pay
           <ArrowUpRight size={13} strokeWidth={2.5} />
@@ -103,10 +103,9 @@ function ProgrammePricingCard({ programme }: { programme: ProgrammeItem }) {
           href={waHref}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center justify-center gap-1.5 min-h-[36px] text-[10px] font-semibold text-white/45 hover:text-[#25D366] transition-colors"
+          className="flex w-full items-center justify-center min-h-[40px] rounded-full px-4 text-[10px] font-semibold text-[#25D366]/85 hover:text-[#25D366] ring-1 ring-white/[0.08] hover:ring-[#25D366]/35 transition-colors"
         >
-          <MessageCircle size={13} strokeWidth={2} className="text-[#25D366]/80" />
-          WhatsApp to enquire
+          WhatsApp enquire
         </a>
       </div>
     </article>
