@@ -31,20 +31,26 @@ function Tier({
   return (
     <div
       className={[
-        'flex flex-col items-center justify-center rounded-lg px-1.5 py-2.5 text-center min-h-[64px]',
+        'flex flex-col items-center justify-center rounded-xl px-2 py-3 text-center min-h-[68px]',
         featured
-          ? 'bg-[#F5FB38]/12 ring-1 ring-[#F5FB38]/50'
-          : 'bg-transparent ring-1 ring-white/[0.08]',
+          ? 'bg-[#F5FB38] text-[#0a0a0a] shadow-[0_6px_28px_-8px_rgba(245,251,56,0.55)]'
+          : 'bg-white/[0.03] border border-white/[0.07]',
       ].join(' ')}
     >
-      <span className="font-anton text-base sm:text-lg leading-none tracking-tight text-white">
+      <span
+        className={`font-anton text-lg leading-none tracking-tight ${featured ? 'text-[#0a0a0a]' : 'text-white'}`}
+      >
         {amount}
       </span>
-      <span className="mt-1 text-[9px] font-medium uppercase tracking-[0.1em] text-white/40">
+      <span
+        className={`mt-1 text-[9px] font-semibold uppercase tracking-[0.11em] ${featured ? 'text-[#0a0a0a]/65' : 'text-white/40'}`}
+      >
         {label}
       </span>
       {save && (
-        <span className="mt-0.5 text-[8px] font-semibold text-[#F5FB38]/90">{save}</span>
+        <span className={`mt-0.5 text-[8px] font-semibold ${featured ? 'text-[#0a0a0a]/55' : 'text-[#F5FB38]/80'}`}>
+          {save}
+        </span>
       )}
     </div>
   );
@@ -55,26 +61,26 @@ function ProgrammePricingCard({ programme }: { programme: ProgrammeItem }) {
   const showDropIn = meta.dropIn !== null && meta.dropIn !== undefined;
   const dropIn = meta.dropIn ?? undefined;
   const save = quarterlySavings(programme.fees_monthly, programme.fees_quarterly);
-  const waHref = whatsappLink(programmeWhatsAppMessage(programme.name, programme.fees_monthly, programme.fees_quarterly));
+  const waHref = whatsappLink(
+    programmeWhatsAppMessage(programme.name, programme.fees_monthly, programme.fees_quarterly),
+  );
 
   return (
-    <article className="flex flex-col rounded-xl ring-1 ring-white/[0.08] p-4 sm:p-5">
+    <article className="flex flex-col rounded-2xl border border-white/[0.06] bg-white/[0.015] p-4 sm:p-5">
       <div className="mb-5 min-w-0">
         <h3 className="font-anton text-lg uppercase leading-tight tracking-tight text-white">
           {programme.name}
         </h3>
-        <p className="mt-1 text-[11px] text-white/40 leading-snug line-clamp-1">
+        <p className="mt-1 text-[11px] text-white/45 leading-snug line-clamp-1">
           {programme.tagline || meta.tagline}
         </p>
         {meta.schedule && (
-          <p className="mt-2 text-[10px] text-white/30 tracking-wide">{meta.schedule}</p>
+          <p className="mt-2.5 text-[10px] text-white/30">{meta.schedule}</p>
         )}
       </div>
 
-      <div className={`grid gap-1.5 mb-6 ${showDropIn ? 'grid-cols-3' : 'grid-cols-2'}`}>
-        {showDropIn && dropIn != null && (
-          <Tier label="Drop-in" amount={formatInr(dropIn)} />
-        )}
+      <div className={`grid gap-2 mb-6 ${showDropIn ? 'grid-cols-3' : 'grid-cols-2'}`}>
+        {showDropIn && dropIn != null && <Tier label="Drop-in" amount={formatInr(dropIn)} />}
         <Tier label="Monthly" amount={formatInr(programme.fees_monthly)} />
         <Tier
           label="Quarterly"
@@ -84,10 +90,10 @@ function ProgrammePricingCard({ programme }: { programme: ProgrammeItem }) {
         />
       </div>
 
-      <div className="mt-auto flex flex-col gap-3">
+      <div className="mt-auto flex flex-col gap-3 pt-1">
         <Link
           href={enrolHref({ programme: programme.slug, intent: 'pay' })}
-          className="inline-flex items-center justify-center gap-1.5 min-h-[44px] rounded-lg bg-white text-[#0a0a0a] text-[10px] font-bold uppercase tracking-[0.1em] hover:bg-[#F5FB38] transition-colors"
+          className="inline-flex items-center justify-center gap-1.5 min-h-[44px] rounded-full bg-white text-[#0a0a0a] text-[10px] font-bold uppercase tracking-[0.1em] hover:bg-[#F5FB38] transition-colors"
         >
           Book &amp; pay
           <ArrowUpRight size={13} strokeWidth={2.5} />
@@ -97,14 +103,14 @@ function ProgrammePricingCard({ programme }: { programme: ProgrammeItem }) {
           href={waHref}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex flex-col items-center justify-center gap-0.5 min-h-[44px] px-3 rounded-lg border border-[#25D366]/35 bg-[#25D366]/[0.06] text-center hover:bg-[#25D366]/10 hover:border-[#25D366]/55 transition-colors"
+          className="group flex flex-col items-center gap-1 min-h-[48px] justify-center rounded-full border border-[#25D366]/30 px-4 py-2.5 hover:border-[#25D366]/50 hover:bg-[#25D366]/[0.07] transition-colors"
         >
-          <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.1em] text-[#25D366]">
-            <MessageCircle size={14} strokeWidth={2} />
+          <span className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.1em] text-[#25D366]">
+            <MessageCircle size={15} strokeWidth={2} className="opacity-90" />
             Enquire on WhatsApp
           </span>
-          <span className="text-[9px] font-normal normal-case tracking-normal text-white/45 leading-snug">
-            Opens with programme, fees &amp; batch ask ready to send
+          <span className="text-[9px] font-normal normal-case tracking-normal text-white/40 group-hover:text-white/55 transition-colors">
+            Programme &amp; fees pre-filled — just tap send
           </span>
         </a>
       </div>
@@ -117,17 +123,14 @@ export async function ProgrammePricingBoard() {
 
   return (
     <section className="px-4 sm:px-6 md:px-10 pb-8 sm:pb-10 max-w-[1440px] mx-auto">
-      <div className="rounded-[20px] sm:rounded-[28px] bg-[#050505] ring-1 ring-white/[0.07] px-5 sm:px-8 lg:px-10 py-7 sm:py-9">
-        <header className="mb-7 sm:mb-8 max-w-lg">
-          <p className="text-[10px] font-medium uppercase tracking-[0.16em] text-white/35 mb-2">
-            Pricing
-          </p>
-          <h2 className="font-anton text-2xl sm:text-3xl md:text-4xl uppercase leading-[0.95] tracking-tight text-white">
+      <div className="rounded-[20px] sm:rounded-[28px] bg-[#050505] border border-white/[0.07] px-5 sm:px-8 lg:px-10 py-7 sm:py-9">
+        <header className="mb-7 sm:mb-8 max-w-md">
+          <h2 className="font-anton text-2xl sm:text-3xl md:text-[2.25rem] uppercase leading-[0.95] tracking-tight text-white">
             Pick a class.{' '}
             <span className="text-[#F5FB38]">Pay your way.</span>
           </h2>
-          <p className="mt-2.5 text-sm text-white/40 leading-relaxed">
-            Quarterly saves most. First class free — no registration fee.
+          <p className="mt-2.5 text-sm text-white/40">
+            Quarterly saves most · First class free
           </p>
         </header>
 
