@@ -117,67 +117,69 @@ export function DashboardPanels({
 
   return (
     <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 sm:gap-6">
-      <Card className="p-5 sm:p-6 xl:col-span-2">
+      <Card className="p-4 sm:p-6 xl:col-span-2 overflow-hidden">
         <h3 className="font-anton text-xl text-ink tracking-tight">Fees, last six months</h3>
         <p className="text-[12px] text-ink-3 mt-1 mb-5">Online and desk collections</p>
 
-        <svg
-          viewBox={`0 0 ${SVG_W} ${SVG_H}`}
-          className="w-full overflow-visible"
-          role="img"
-          aria-label="Revenue by month bar chart"
-        >
-          {[0.25, 0.5, 0.75, 1].map((f) => {
-            const y = chartBase - f * CHART_H
-            return (
-              <g key={f}>
-                <line x1={PAD_LEFT} x2={SVG_W} y1={y} y2={y} stroke="var(--line)" strokeDasharray="4 4" />
-                <text x={0} y={y + 4} fontSize={10} fill="var(--ink-3)">
-                  {formatCurrency(Math.round(maxTotal * f))}
-                </text>
-              </g>
-            )
-          })}
-
-          {revenueSeries.map((p, i) => {
-            const h = Math.max((p.total / maxTotal) * CHART_H, p.total > 0 ? 4 : 2)
-            const x = PAD_LEFT + GAP + i * (BAR_W + GAP)
-            const label = barValueLabel(h)
-            const valueText = p.total > 0 ? `₹${p.total >= 1000 ? `${(p.total / 1000).toFixed(1)}k` : p.total}` : ''
-            return (
-              <g key={p.key}>
-                <rect
-                  x={x}
-                  y={chartBase - h}
-                  width={BAR_W}
-                  height={h}
-                  rx={4}
-                  fill={p.total > 0 ? 'var(--bl)' : 'var(--line)'}
-                >
-                  <title>{`${p.label}: ${formatCurrency(p.total)}`}</title>
-                </rect>
-                {valueText && (
-                  <text
-                    x={x + BAR_W / 2}
-                    y={label.y}
-                    fontSize={10}
-                    textAnchor="middle"
-                    fill={label.fill}
-                    fontWeight={600}
-                  >
-                    {valueText}
+        <div className="w-full overflow-x-auto overflow-y-hidden pb-1">
+          <svg
+            viewBox={`0 0 ${SVG_W} ${SVG_H}`}
+            className="w-full min-w-[280px] overflow-visible"
+            role="img"
+            aria-label="Revenue by month bar chart"
+          >
+            {[0.25, 0.5, 0.75, 1].map((f) => {
+              const y = chartBase - f * CHART_H
+              return (
+                <g key={f}>
+                  <line x1={PAD_LEFT} x2={SVG_W} y1={y} y2={y} stroke="var(--line)" strokeDasharray="4 4" />
+                  <text x={0} y={y + 4} fontSize={10} fill="var(--ink-3)">
+                    {formatCurrency(Math.round(maxTotal * f))}
                   </text>
-                )}
-                <text x={x + BAR_W / 2} y={chartBase + 18} fontSize={11} textAnchor="middle" fill="var(--ink-3)">
-                  {p.label}
-                </text>
-              </g>
-            )
-          })}
-        </svg>
+                </g>
+              )
+            })}
+
+            {revenueSeries.map((p, i) => {
+              const h = Math.max((p.total / maxTotal) * CHART_H, p.total > 0 ? 4 : 2)
+              const x = PAD_LEFT + GAP + i * (BAR_W + GAP)
+              const label = barValueLabel(h)
+              const valueText = p.total > 0 ? `₹${p.total >= 1000 ? `${(p.total / 1000).toFixed(1)}k` : p.total}` : ''
+              return (
+                <g key={p.key}>
+                  <rect
+                    x={x}
+                    y={chartBase - h}
+                    width={BAR_W}
+                    height={h}
+                    rx={4}
+                    fill={p.total > 0 ? 'var(--bl)' : 'var(--line)'}
+                  >
+                    <title>{`${p.label}: ${formatCurrency(p.total)}`}</title>
+                  </rect>
+                  {valueText && (
+                    <text
+                      x={x + BAR_W / 2}
+                      y={label.y}
+                      fontSize={10}
+                      textAnchor="middle"
+                      fill={label.fill}
+                      fontWeight={600}
+                    >
+                      {valueText}
+                    </text>
+                  )}
+                  <text x={x + BAR_W / 2} y={chartBase + 18} fontSize={11} textAnchor="middle" fill="var(--ink-3)">
+                    {p.label}
+                  </text>
+                </g>
+              )
+            })}
+          </svg>
+        </div>
       </Card>
 
-      <Card className="p-5 sm:p-6">
+      <Card className="p-4 sm:p-6">
         <h3 className="font-anton text-xl text-ink tracking-tight">Desk</h3>
         <p className="text-[12px] text-ink-3 mt-1 mb-5">Waiting on you</p>
 
@@ -232,7 +234,7 @@ export function DashboardPanels({
         </div>
       </Card>
 
-      <Card className="p-5 sm:p-6 xl:col-span-3">
+      <Card className="p-4 sm:p-6 xl:col-span-3">
         <h3 className="font-anton text-xl text-ink tracking-tight">Attendance this month</h3>
         <p className="text-[12px] text-ink-3 mt-1 mb-5">Present ÷ marks recorded</p>
 

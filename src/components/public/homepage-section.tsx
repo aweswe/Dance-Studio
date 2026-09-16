@@ -23,7 +23,7 @@ export function HomepageSection({
       aria-label={ariaLabel}
       className={cn('w-full px-4 sm:px-6 md:px-10 max-w-[1440px] mx-auto', className)}
     >
-      <div className={cn('px-6 sm:px-10 lg:px-12 xl:px-14', innerClassName)}>{children}</div>
+      <div className={cn('px-0 sm:px-10 lg:px-12 xl:px-14', innerClassName)}>{children}</div>
     </section>
   );
 }

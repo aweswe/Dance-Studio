@@ -192,11 +192,11 @@ export function AttendanceMarker({ batches, initialBatchId }: AttendanceMarkerPr
 
               <div className="flex flex-wrap items-center gap-3">
                 {/* Present / Absent toggle only */}
-                <div className="flex bg-surface rounded-md border border-line overflow-hidden">
+                <div className="flex bg-surface rounded-md border border-line overflow-hidden w-full sm:w-auto">
                   <button
                     type="button"
                     className={cn(
-                      "flex items-center justify-center gap-1.5 px-4 py-2 text-sm font-semibold transition-colors focus-visible:focus-ring active:scale-[0.98]",
+                      "flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-4 py-2 text-sm font-semibold transition-colors focus-visible:focus-ring active:scale-[0.98]",
                       attendance[student.id] === "present" ? "bg-green text-white" : "hover:bg-canvas-muted-2 text-ink-2"
                     )}
                     onClick={() => handleStatusChange(student.id, "present")}
@@ -206,7 +206,7 @@ export function AttendanceMarker({ batches, initialBatchId }: AttendanceMarkerPr
                   <button
                     type="button"
                     className={cn(
-                      "flex items-center justify-center gap-1.5 px-4 py-2 text-sm font-semibold transition-colors border-l border-line focus-visible:focus-ring active:scale-[0.98]",
+                      "flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-4 py-2 text-sm font-semibold transition-colors border-l border-line focus-visible:focus-ring active:scale-[0.98]",
                       attendance[student.id] === "absent" ? "bg-danger text-white" : "hover:bg-canvas-muted-2 text-ink-2"
                     )}
                     onClick={() => handleStatusChange(student.id, "absent")}
@@ -220,7 +220,7 @@ export function AttendanceMarker({ batches, initialBatchId }: AttendanceMarkerPr
                   type="button"
                   size="sm"
                   variant="ghost"
-                  className="text-xs text-red-600 hover:text-red-700 hover:bg-red-500/10 border border-red-500/30 flex items-center gap-1.5"
+                  className="text-xs text-red-600 hover:text-red-700 hover:bg-red-500/10 border border-red-500/30 flex items-center justify-center gap-1.5 w-full sm:w-auto"
                   title="Mark student as leave out (abandoning / left the platform)"
                   onClick={() => setPendingLeaveOut(student)}
                 >

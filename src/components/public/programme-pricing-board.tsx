@@ -125,7 +125,7 @@ export async function ProgrammePricingBoard() {
 
   return (
     <section className="w-full px-4 sm:px-6 md:px-10 pt-12 sm:pt-14 md:pt-16 pb-8 sm:pb-10 max-w-[1440px] mx-auto">
-      <div className="px-6 sm:px-10 lg:px-12 xl:px-14">
+      <div className="px-0 sm:px-10 lg:px-12 xl:px-14">
         <header className="mb-7 sm:mb-8 max-w-md">
           <h2 className="font-anton text-2xl sm:text-3xl md:text-[2.25rem] uppercase leading-[0.95] tracking-tight text-white">
             Pick a class.{' '}

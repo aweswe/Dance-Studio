@@ -26,7 +26,7 @@ export default function KathakSyllabusPage() {
         align="center"
       />
 
-      <HomepageSection className={sectionPadAfterTitle} innerClassName="px-6 sm:px-10 lg:px-12 xl:px-14">
+      <HomepageSection className={sectionPadAfterTitle}>
         <div className="mx-auto max-w-3xl">
           <div className="mb-10 flex flex-wrap justify-center gap-2.5">
             <Link href={enrolHref({ programme: 'classical-dance', intent: 'trial' })} className={homepageCtaBrand}>

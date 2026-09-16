@@ -51,7 +51,7 @@ export function ScheduleFilter({ batches }: ScheduleFilterProps) {
 
   return (
     <div>
-      <div className="flex gap-2 overflow-x-auto no-scrollbar pb-2 sm:pb-0 sm:flex-wrap mb-6 sm:mb-8 -mx-2 px-2 sm:mx-0 sm:px-0" role="group" aria-label="Filter classes by day">
+      <div className="flex gap-2 overflow-x-auto no-scrollbar pb-2 sm:pb-0 sm:flex-wrap mb-6 sm:mb-8" role="group" aria-label="Filter classes by day">
         {days.map((day) => (
           <button
             key={day}
@@ -68,8 +68,8 @@ export function ScheduleFilter({ batches }: ScheduleFilterProps) {
       {grouped.length > 0 ? (
         <div className="flex flex-col gap-8">
           {grouped.map(({ day, batches: dayBatches }) => (
-            <div key={day} className="bg-surface rounded-md p-5 md:p-6 border border-line shadow-sm">
-              <h3 className="heading-display text-2xl tracking-[1px] text-ink pb-3 border-b border-line mb-3 flex items-center justify-between">
+            <div key={day} className="bg-surface rounded-md p-4 sm:p-5 md:p-6 border border-line shadow-sm">
+              <h3 className="heading-display text-xl sm:text-2xl tracking-[1px] text-ink pb-3 border-b border-line mb-3 flex items-center justify-between">
                 <span>{day}</span>
                 <span className="text-xs font-semibold uppercase tracking-wider text-ink-2 font-body">
                   {dayBatches.length} {dayBatches.length === 1 ? 'Batch' : 'Batches'}
@@ -84,40 +84,43 @@ export function ScheduleFilter({ batches }: ScheduleFilterProps) {
                     <div
                       key={batch.id ?? i}
                       className={cn(
-                        "grid grid-cols-[70px_1fr] md:grid-cols-[80px_50px_1fr_140px_120px_110px] items-center gap-3 md:gap-4 py-3.5 px-2 hover:bg-canvas-muted/60 transition-colors rounded-md",
+                        "flex flex-col sm:grid sm:grid-cols-[80px_1fr_auto] md:grid-cols-[80px_50px_1fr_140px_120px_110px] items-start sm:items-center gap-3 md:gap-4 py-3.5 px-2.5 sm:px-2 hover:bg-canvas-muted/60 transition-colors rounded-md border-l-4",
                         THEME_BORDER[batch.programme?.slug]
                       )}
                     >
-                      {/* Time */}
-                      <span className="text-xs font-bold text-ink">
-                        {formatTime(batch.time_start)}
-                      </span>
+                      {/* Mobile header / desktop columns */}
+                      <div className="flex items-center justify-between w-full sm:w-auto gap-3 sm:contents">
+                        {/* Time */}
+                        <span className="text-xs font-bold text-ink shrink-0">
+                          {formatTime(batch.time_start)}
+                        </span>
 
-                      {/* Thumbnail badge */}
-                      <div className="hidden md:block relative w-10 h-10 rounded-full overflow-hidden border border-line shrink-0">
-                        <Image
-                          src={thumb}
-                          alt={batch.programme?.name || 'Class preview'}
-                          fill
-                          className="object-cover"
-                        />
-                      </div>
-
-                      {/* Discipline info */}
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <span className="heading-display text-[18px] text-ink leading-tight">
-                            {batch.programme?.name}
-                          </span>
-                          {batch.programme?.slug === 'kuchipudi' && (
-                            <span className="text-[9px] font-extrabold uppercase tracking-wider px-1.5 py-0.5 rounded bg-purp/10 text-purp">
-                              Certified
-                            </span>
-                          )}
+                        {/* Thumbnail badge */}
+                        <div className="hidden md:block relative w-10 h-10 rounded-full overflow-hidden border border-line shrink-0">
+                          <Image
+                            src={thumb}
+                            alt={batch.programme?.name || 'Class preview'}
+                            fill
+                            className="object-cover"
+                          />
                         </div>
-                        <p className="text-[10px] tracking-[1.5px] uppercase text-ink-2 mt-0.5">
-                          {Array.isArray(batch.days) ? batch.days.join(' · ') : batch.days}
-                        </p>
+
+                        {/* Discipline info */}
+                        <div className="min-w-0 flex-1 sm:flex-initial">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className="heading-display text-[18px] text-ink leading-tight">
+                              {batch.programme?.name}
+                            </span>
+                            {batch.programme?.slug === 'kuchipudi' && (
+                              <span className="text-[9px] font-extrabold uppercase tracking-wider px-1.5 py-0.5 rounded bg-purp/10 text-purp">
+                                Certified
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-[10px] tracking-[1.5px] uppercase text-ink-2 mt-0.5">
+                            {Array.isArray(batch.days) ? batch.days.join(' · ') : batch.days}
+                          </p>
+                        </div>
                       </div>
 
                       {/* Instructor */}
@@ -134,7 +137,7 @@ export function ScheduleFilter({ batches }: ScheduleFilterProps) {
                       </span>
 
                       {/* Actions */}
-                      <div className="flex md:flex-col items-center md:items-end gap-2 md:gap-1.5">
+                      <div className="flex w-full sm:w-auto items-center justify-between sm:justify-end md:flex-col md:items-end gap-2 md:gap-1.5 pt-2 sm:pt-0 border-t border-line/40 sm:border-t-0">
                         <span className="text-[10px] font-semibold tracking-[1px] uppercase text-bl-ink border border-bl/30 px-2 py-0.5 rounded-md whitespace-nowrap bg-bl/5">
                           {slotsLeft > 0 ? `${slotsLeft} slots left` : 'Filling fast'}
                         </span>

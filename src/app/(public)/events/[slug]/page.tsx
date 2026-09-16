@@ -53,7 +53,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
         align="center"
       />
 
-      <HomepageSection className={sectionPadAfterTitle} innerClassName="px-6 sm:px-10 lg:px-12 xl:px-14">
+      <HomepageSection className={sectionPadAfterTitle}>
         <div className="mx-auto max-w-2xl space-y-8">
           {/* Cover Poster if available */}
           {e.image_url ? (

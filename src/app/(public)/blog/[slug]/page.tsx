@@ -76,7 +76,7 @@ export default async function BlogPostPage({ params }: Props) {
 
       <PublicPageTitle eyebrow={meta} title={post.title} description={post.excerpt || undefined} />
 
-      <HomepageSection className={sectionPadAfterTitle} innerClassName="px-6 sm:px-10 lg:px-12 xl:px-14">
+      <HomepageSection className={sectionPadAfterTitle}>
         <article className="max-w-3xl">
           {coverImg && (
             <div className="relative aspect-video w-full rounded-md overflow-hidden mb-10 border border-line">

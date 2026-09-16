@@ -11,16 +11,17 @@ export interface MetricItem {
 export function MetricStrip({ items, className }: { items: MetricItem[]; className?: string }) {
   const n = items.length;
   const cols =
-    n <= 2
-      ? "grid-cols-2"
-      : n === 3
-        ? "grid-cols-1 sm:grid-cols-3"
-        : n === 4
-          ? "grid-cols-2 lg:grid-cols-4"
-          : n === 6
-            ? "grid-cols-2 sm:grid-cols-3 lg:grid-cols-6"
-            : "grid-cols-2 sm:grid-cols-3 lg:grid-cols-5";
-
+    n <= 1
+      ? "grid-cols-1"
+      : n === 2
+        ? "grid-cols-2"
+        : n === 3
+          ? "grid-cols-3"
+          : n === 4
+            ? "grid-cols-2 sm:grid-cols-4"
+            : n === 6
+              ? "grid-cols-2 sm:grid-cols-3 lg:grid-cols-6"
+              : "grid-cols-2 sm:grid-cols-3 lg:grid-cols-5";
 
   return (
     <dl
@@ -34,22 +35,24 @@ export function MetricStrip({ items, className }: { items: MetricItem[]; classNa
         <div
           key={item.label}
           className={cn(
-            "bg-surface-card px-3 py-4 sm:px-5 sm:py-5",
-            n > 3 && n % 2 === 1 && i === n - 1 && "max-sm:col-span-2",
+            "bg-surface-card px-2.5 py-3 sm:px-5 sm:py-5 min-w-0 flex flex-col justify-center",
+            n > 3 && n % 2 === 1 && i === n - 1 && "col-span-2 sm:col-span-1 lg:col-span-1",
           )}
         >
-          <dt className="text-[11px] text-ink-3">{item.label}</dt>
+          <dt className="text-[10px] sm:text-[11px] text-ink-3 uppercase tracking-wider truncate">{item.label}</dt>
           <dd
             className={cn(
-              "mt-1 text-ink tracking-tight",
+              "mt-1 text-ink tracking-tight truncate",
               item.variant === "text"
-                ? "text-sm sm:text-base font-medium leading-snug"
-                : "font-anton text-xl sm:text-3xl tabular-nums",
+                ? "text-xs sm:text-base font-medium leading-snug"
+                : n === 3
+                  ? "font-anton text-lg sm:text-2xl lg:text-3xl tabular-nums"
+                  : "font-anton text-xl sm:text-3xl tabular-nums",
             )}
           >
             {item.value}
           </dd>
-          {item.hint && <p className="mt-0.5 text-[11px] text-ink-2 line-clamp-2">{item.hint}</p>}
+          {item.hint && <p className="mt-0.5 text-[10px] sm:text-[11px] text-ink-2 truncate">{item.hint}</p>}
         </div>
       ))}
     </dl>

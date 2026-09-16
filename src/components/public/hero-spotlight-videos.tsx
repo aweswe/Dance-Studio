@@ -98,7 +98,7 @@ export function HeroSpotlightVideos() {
       aria-label="Studio video highlights"
     >
       {/* Match hero card inner padding so first card lines up with “Different” and last with hero video */}
-      <div className="px-6 sm:px-10 lg:px-12 xl:px-14">
+      <div className="px-0 sm:px-10 lg:px-12 xl:px-14">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
           {HERO_SPOTLIGHT_VIDEOS.map((item) => (
             <SpotlightCard

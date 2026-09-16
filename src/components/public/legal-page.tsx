@@ -18,7 +18,7 @@ export function LegalPage({
   return (
     <PublicPage>
       <PublicPageTitle eyebrow={eyebrow} title={title} description={description} />
-      <HomepageSection className={sectionPadAfterTitle} innerClassName="px-6 sm:px-10 lg:px-12 xl:px-14">
+      <HomepageSection className={sectionPadAfterTitle}>
         <div className="max-w-3xl space-y-6 text-sm text-ink-2 leading-relaxed">{children}</div>
       </HomepageSection>
     </PublicPage>

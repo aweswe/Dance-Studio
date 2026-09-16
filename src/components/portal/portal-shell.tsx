@@ -166,7 +166,7 @@ export function PortalShell({ role, name, isKuchipudi, unreadNotices, children }
         </div>
       </aside>
 
-      <div className="flex-1 md:ml-[15.5rem] flex flex-col min-w-0">
+      <div className="flex-1 md:ml-[15.5rem] flex flex-col min-w-0 overflow-x-hidden">
         <header className="h-14 sm:h-16 sticky top-0 z-50 flex items-center gap-3 px-3 sm:px-6 justify-between bg-canvas/90 backdrop-blur-md border-b border-line">
           <div className="flex items-center gap-2 min-w-0">
             <button
@@ -192,7 +192,7 @@ export function PortalShell({ role, name, isKuchipudi, unreadNotices, children }
           </div>
         </header>
 
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
+        <main className="flex-1 overflow-y-auto p-3.5 sm:p-6 lg:p-8">
           <div className="max-w-5xl mx-auto">{children}</div>
         </main>
       </div>

@@ -17,7 +17,7 @@ interface HeroProps {
 export function Hero({ stats }: HeroProps) {
   return (
     <section className="relative w-full px-4 sm:px-6 md:px-10 pt-4 sm:pt-6 pb-6 sm:pb-8 max-w-[1440px] mx-auto">
-      <div className="relative px-6 sm:px-10 lg:px-12 xl:px-14 py-8 sm:py-10 lg:py-12">
+      <div className="relative px-0 sm:px-10 lg:px-12 xl:px-14 py-6 sm:py-10 lg:py-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 lg:gap-x-10 xl:gap-x-12 gap-y-10 items-center">
           {/* Left — copy + CTAs */}
           <div className="@container min-w-0 w-full max-w-[36rem]">
@@ -61,7 +61,7 @@ export function Hero({ stats }: HeroProps) {
           </div>
         </div>
 
-        <div className="mt-8 sm:mt-9 pt-6 sm:pt-7 pr-8 sm:pr-10 border-t border-white/[0.08]">
+        <div className="mt-8 sm:mt-9 pt-6 sm:pt-7 pr-0 sm:pr-10 border-t border-white/[0.08]">
           <HeroStats stats={stats} />
         </div>
       </div>

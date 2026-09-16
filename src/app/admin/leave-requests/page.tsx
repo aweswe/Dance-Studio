@@ -66,7 +66,7 @@ function LeaveCard({ row, showActions }: { row: any; showActions: boolean }) {
   return (
     <Card className={`p-5 space-y-4 ${isResolved ? "opacity-60" : "border-danger/20"}`}>
       {/* Header row */}
-      <div className="flex items-start justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 sm:gap-4">
         <div className="min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
             <Link

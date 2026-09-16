@@ -119,7 +119,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           }}
         />
       </head>
-      <body className="min-h-full flex flex-col font-body">
+      <body className="min-h-full flex flex-col font-body overflow-x-hidden w-full max-w-full">
         <NavigationProgress />
         <ThemeInitializer />
         {children}
