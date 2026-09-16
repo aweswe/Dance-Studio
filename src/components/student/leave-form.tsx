@@ -30,7 +30,7 @@ export function LeaveForm() {
             required
             value={date}
             onChange={(e) => setDate(e.target.value)}
-            className="mt-1 w-full border border-line rounded-xl px-3 py-2 text-sm bg-canvas"
+            className="mt-1 w-full border border-line rounded-md px-3 py-2 text-sm bg-canvas"
           />
         </div>
         <div className="flex gap-2">
@@ -39,7 +39,7 @@ export function LeaveForm() {
               key={k}
               type="button"
               onClick={() => setKind(k)}
-              className={`flex-1 py-2 rounded-lg text-xs font-bold uppercase border ${kind === k ? "border-bl bg-bl/10 text-bl" : "border-line"}`}
+              className={`flex-1 py-2 rounded-md text-xs font-bold uppercase border ${kind === k ? "border-bl bg-bl/10 text-bl" : "border-line"}`}
             >
               {k === "leave" ? "Leave" : "Makeup class"}
             </button>
@@ -49,7 +49,7 @@ export function LeaveForm() {
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
           placeholder="Reason (optional)"
-          className="w-full border border-line rounded-xl px-3 py-2 text-sm min-h-[80px] bg-canvas"
+          className="w-full border border-line rounded-md px-3 py-2 text-sm min-h-[80px] bg-canvas"
         />
         <Button type="submit" disabled={busy} isLoading={busy}>
           Submit request

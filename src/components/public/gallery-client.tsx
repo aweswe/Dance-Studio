@@ -91,7 +91,7 @@ export function GalleryClient({ images }: { images: ImageType[] }) {
             onClick={() => setFilter(cat)}
             aria-pressed={filter === cat}
             className={cn(
-              "px-5 py-2 text-xs font-mono font-bold tracking-[1.5px] uppercase rounded-lg transition-all duration-150 border focus-visible:focus-ring active:scale-[0.96] cursor-pointer",
+              "px-5 py-2 text-xs font-mono font-bold tracking-[1.5px] uppercase rounded-md transition-all duration-150 border focus-visible:focus-ring active:scale-[0.96] cursor-pointer",
               filter === cat
                 ? "bg-bl text-blk border-bl font-black shadow-sm"
                 : "bg-surface text-ink-2 border-line hover:border-bl hover:text-ink"
@@ -111,7 +111,7 @@ export function GalleryClient({ images }: { images: ImageType[] }) {
           <button
             key={image.id}
             type="button"
-            className="bento-card rounded-[22px] sm:rounded-[26px] relative aspect-square cursor-pointer group focus-visible:focus-ring border border-line text-left p-0 overflow-hidden"
+            className="bento-card rounded-md sm:rounded-md relative aspect-square cursor-pointer group focus-visible:focus-ring border border-line text-left p-0 overflow-hidden"
             onClick={(e) => {
               triggerRef.current = e.currentTarget;
               setLightboxImage(image);
@@ -144,7 +144,7 @@ export function GalleryClient({ images }: { images: ImageType[] }) {
           </button>
         ))}
         {filteredImages.length === 0 && (
-          <div className="col-span-full text-center py-16 text-ink-2 bg-surface rounded-card border border-line">
+          <div className="col-span-full text-center py-16 text-ink-2 bg-surface rounded-md border border-line">
             No images found for this category.
           </div>
         )}

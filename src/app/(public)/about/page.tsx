@@ -98,7 +98,7 @@ export default async function AboutPage() {
 
           {/* Photo Pair */}
           <div className="lg:col-span-6 grid grid-cols-2 gap-4">
-            <div className="relative h-80 sm:h-96 rounded-[24px] overflow-hidden border border-line bg-surface">
+            <div className="relative h-80 sm:h-96 rounded-md overflow-hidden border border-line bg-surface">
               <Image
                 src="/images/studio-training/training-collage.jpg"
                 alt="Studio training session"
@@ -112,7 +112,7 @@ export default async function AboutPage() {
               </div>
             </div>
 
-            <div className="relative h-80 sm:h-96 rounded-[24px] overflow-hidden border border-line bg-surface mt-6 sm:mt-10">
+            <div className="relative h-80 sm:h-96 rounded-md overflow-hidden border border-line bg-surface mt-6 sm:mt-10">
               <Image
                 src="/images/srilanka-tour/raasta-stage-1.jpg"
                 alt="Natfest Sri Lanka stage performance"
@@ -149,7 +149,7 @@ export default async function AboutPage() {
           {coreInstructors.slice(0, 8).map((coach: any) => (
             <div
               key={coach.id}
-              className="flex flex-col border border-line rounded-[20px] overflow-hidden bg-canvas hover:border-ink/30 transition-colors group"
+              className="flex flex-col border border-line rounded-md overflow-hidden bg-canvas hover:border-ink/30 transition-colors group"
             >
               <div className="relative aspect-[3/3.6] w-full overflow-hidden bg-surface">
                 <Image
@@ -217,7 +217,7 @@ export default async function AboutPage() {
             { img: '/images/srilanka-tour/raasta-stage-2.jpg', label: 'Raasta Live Performance' },
             { img: '/images/studio-training/studio-batch-portrait.jpg', label: 'Performance Troupe' },
           ].map((item, i) => (
-            <div key={i} className="relative h-60 rounded-[20px] overflow-hidden border border-line bg-surface group">
+            <div key={i} className="relative h-60 rounded-md overflow-hidden border border-line bg-surface group">
               <Image
                 src={item.img}
                 alt={item.label}
@@ -235,7 +235,7 @@ export default async function AboutPage() {
 
       {/* 05: Bottom CTA Strip */}
       <section className="px-4 sm:px-8 md:px-14 pb-20 sm:pb-28 max-w-[1440px] mx-auto">
-        <div className="border border-line rounded-[24px] p-8 sm:p-12 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+        <div className="border border-line rounded-md p-8 sm:p-12 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
           <div>
             <h2 className="font-anton text-2xl sm:text-3xl text-ink uppercase tracking-tight">
               DANCE WITH US

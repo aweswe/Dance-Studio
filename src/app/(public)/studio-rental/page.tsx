@@ -60,7 +60,7 @@ export default function StudioRentalPage() {
         <div className="lg:col-span-7 space-y-8">
           {/* Dual Studio Imagery */}
           <div className="grid grid-cols-2 gap-4">
-            <div className="relative h-60 sm:h-72 bento-card rounded-[24px] overflow-hidden p-0 group border border-line">
+            <div className="relative h-60 sm:h-72 bento-card rounded-md overflow-hidden p-0 group border border-line">
               <Image
                 src="/images/studio-training/studio-practice-mirrors.jpg"
                 alt="Mirrored rehearsal hall"
@@ -73,7 +73,7 @@ export default function StudioRentalPage() {
               </div>
             </div>
 
-            <div className="relative h-60 sm:h-72 bento-card rounded-[24px] overflow-hidden p-0 group border border-line">
+            <div className="relative h-60 sm:h-72 bento-card rounded-md overflow-hidden p-0 group border border-line">
               <Image
                 src="/images/studio-training/floorwork-stretch.jpg"
                 alt="Sprung floor mobility area"
@@ -89,7 +89,7 @@ export default function StudioRentalPage() {
 
           {/* Pricing Cards with Concentric Radii */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="bento-card rounded-[28px] p-6 text-center border border-line">
+            <div className="bento-card rounded-md p-6 text-center border border-line">
               <span className="text-[10px] font-mono font-bold tracking-[2px] uppercase text-bl block mb-1">
                 Weekdays (Mon – Fri)
               </span>
@@ -99,7 +99,7 @@ export default function StudioRentalPage() {
               <p className="text-[11px] text-ink-3 mt-2">Ideal for private rehearsals &amp; auditions</p>
             </div>
 
-            <div className="bento-card rounded-[28px] p-6 text-center border border-bl/40 bg-surface">
+            <div className="bento-card rounded-md p-6 text-center border border-bl/40 bg-surface">
               <span className="text-[10px] font-mono font-bold tracking-[2px] uppercase text-bl block mb-1">
                 Weekends (Sat – Sun)
               </span>
@@ -111,7 +111,7 @@ export default function StudioRentalPage() {
           </div>
 
           {/* Essential Guidelines (De-Noised) */}
-          <div className="bento-card rounded-[28px] p-6 space-y-3 border border-line">
+          <div className="bento-card rounded-md p-6 space-y-3 border border-line">
             <span className="text-[10px] font-mono font-bold uppercase tracking-[2px] text-ink-3 block">
               Essential Studio Rules
             </span>

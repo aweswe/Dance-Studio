@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { cn } from '@/lib/utils/cn';
 
 const actionBase =
-  'inline-flex flex-1 @md:flex-none items-center justify-center min-h-11 px-5 rounded-xl text-[11px] font-mono uppercase tracking-wider transition-colors active:scale-[0.98]';
+  'inline-flex flex-1 @md:flex-none items-center justify-center min-h-11 px-5 rounded-md text-[11px] font-mono uppercase tracking-wider transition-colors active:scale-[0.98]';
 
 export function CardFooterActions({
   className,

@@ -46,7 +46,7 @@ export default function SyllabusIndexPage() {
           </Link>
           <Link
             href={enrolHref({ programme: 'classical-dance', intent: 'trial' })}
-            className="px-6 py-3 rounded-xl text-xs font-mono font-bold uppercase tracking-wider border border-line hover:border-ink"
+            className="px-6 py-3 rounded-md text-xs font-mono font-bold uppercase tracking-wider border border-line hover:border-ink"
           >
             Enrol — Kathak
           </Link>
@@ -57,7 +57,7 @@ export default function SyllabusIndexPage() {
             <Link
               key={style.href}
               href={style.href}
-              className="rounded-[24px] border border-line bg-surface p-6 sm:p-8 hover:border-ink transition-colors active:scale-[0.98]"
+              className="rounded-md border border-line bg-surface p-6 sm:p-8 hover:border-ink transition-colors active:scale-[0.98]"
             >
               <span className="text-[10px] font-mono uppercase tracking-widest text-bl">
                 {style.status}

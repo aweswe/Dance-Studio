@@ -185,7 +185,7 @@ export function GalleryManager({ initialItems }: { initialItems: GalleryItem[] }
     <div className="space-y-6">
       {feedback && (
         <div
-          className={`p-4 rounded-xl border text-sm font-medium flex items-center justify-between ${
+          className={`p-4 rounded-md border text-sm font-medium flex items-center justify-between ${
             feedback.ok
               ? 'bg-green-500/10 border-green-500/30 text-green-400'
               : 'bg-red-500/10 border-red-500/30 text-red-400'
@@ -218,13 +218,13 @@ export function GalleryManager({ initialItems }: { initialItems: GalleryItem[] }
             fileRef.current?.click();
           }
         }}
-        className={`bg-surface rounded-2xl border-2 p-10 text-center border-dashed transition-all cursor-pointer focus-visible:focus-ring ${
+        className={`bg-surface rounded-md border-2 p-10 text-center border-dashed transition-all cursor-pointer focus-visible:focus-ring ${
           isDragging
             ? 'border-bl bg-bl/10 shadow-[0_0_20px_rgba(43,180,216,0.2)]'
             : 'border-line hover:border-bl/60 hover:bg-canvas-muted'
         }`}
       >
-        <div className="w-14 h-14 rounded-2xl bg-bl/10 text-bl flex items-center justify-center mx-auto mb-4 border border-bl/20">
+        <div className="w-14 h-14 rounded-md bg-bl/10 text-bl flex items-center justify-center mx-auto mb-4 border border-bl/20">
           <Upload size={28} />
         </div>
         <h4 className="font-display text-xl text-ink font-semibold">
@@ -258,7 +258,7 @@ export function GalleryManager({ initialItems }: { initialItems: GalleryItem[] }
         {items.map((item, i) => (
           <div
             key={item.id}
-            className="relative group rounded-xl overflow-hidden border border-line-strong bg-surface shadow-sm hover:shadow-md transition-shadow"
+            className="relative group rounded-md overflow-hidden border border-line-strong bg-surface shadow-sm hover:shadow-md transition-shadow"
           >
             <div className="aspect-square relative bg-canvas-muted">
               {item.type === 'video' ? (
@@ -323,7 +323,7 @@ export function GalleryManager({ initialItems }: { initialItems: GalleryItem[] }
               </span>
               <div className="flex items-center gap-1 shrink-0">
                 <button
-                  className="p-1.5 rounded-lg text-ink-2 hover:text-bl hover:bg-canvas-muted transition-colors focus-visible:focus-ring"
+                  className="p-1.5 rounded-md text-ink-2 hover:text-bl hover:bg-canvas-muted transition-colors focus-visible:focus-ring"
                   onClick={() => doToggle(item.id)}
                   title={item.is_visible ? 'Hide from public site' : 'Show on public site'}
                   aria-label={item.is_visible ? 'Hide' : 'Show'}
@@ -331,7 +331,7 @@ export function GalleryManager({ initialItems }: { initialItems: GalleryItem[] }
                   {item.is_visible ? <Eye size={15} /> : <EyeOff size={15} />}
                 </button>
                 <button
-                  className="p-1.5 rounded-lg text-danger hover:bg-danger/10 transition-colors focus-visible:focus-ring"
+                  className="p-1.5 rounded-md text-danger hover:bg-danger/10 transition-colors focus-visible:focus-ring"
                   onClick={() => setPendingDelete(item)}
                   title="Delete photo"
                   aria-label="Delete photo"
@@ -345,7 +345,7 @@ export function GalleryManager({ initialItems }: { initialItems: GalleryItem[] }
       </div>
 
       {items.length === 0 && (
-        <div className="py-16 text-center text-ink-2 bg-canvas-muted rounded-2xl border border-line">
+        <div className="py-16 text-center text-ink-2 bg-canvas-muted rounded-md border border-line">
           <ImageIcon size={40} className="mx-auto mb-3 text-ink-2 opacity-50" />
           <p className="font-medium text-ink">No photos uploaded to database yet.</p>
           <p className="text-xs text-ink-2 mt-1">Upload your first studio photo above!</p>
@@ -377,7 +377,7 @@ export function GalleryManager({ initialItems }: { initialItems: GalleryItem[] }
             {previewUrls.map((url, idx) => (
               <div
                 key={idx}
-                className="w-16 h-16 rounded-lg overflow-hidden border border-line shrink-0 relative bg-canvas-muted"
+                className="w-16 h-16 rounded-md overflow-hidden border border-line shrink-0 relative bg-canvas-muted"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={url} alt="preview" className="object-cover w-full h-full" />
@@ -415,7 +415,7 @@ export function GalleryManager({ initialItems }: { initialItems: GalleryItem[] }
           </div>
 
           {busy && (
-            <div className="p-3 bg-bl/10 border border-bl/20 rounded-xl flex items-center gap-3 text-xs text-bl font-medium">
+            <div className="p-3 bg-bl/10 border border-bl/20 rounded-md flex items-center gap-3 text-xs text-bl font-medium">
               <Loader2 className="w-4 h-4 animate-spin shrink-0" />
               <span>{uploadStatus || 'Processing...'}</span>
             </div>

@@ -118,7 +118,7 @@ export function AttendanceMarker({ batches, initialBatchId }: AttendanceMarkerPr
         <div className="flex-1">
           <label className="block text-sm font-semibold mb-2">Select Batch</label>
           <select
-            className="w-full p-3 rounded-lg border border-line bg-surface focus-visible:focus-ring"
+            className="w-full p-3 rounded-md border border-line bg-surface focus-visible:focus-ring"
             value={selectedBatchId}
             onChange={(e) => setSelectedBatchId(e.target.value)}
           >
@@ -131,7 +131,7 @@ export function AttendanceMarker({ batches, initialBatchId }: AttendanceMarkerPr
           <label className="block text-sm font-semibold mb-2">Date</label>
           <input
             type="date"
-            className="w-full p-3 rounded-lg border border-line bg-surface focus-visible:focus-ring"
+            className="w-full p-3 rounded-md border border-line bg-surface focus-visible:focus-ring"
             value={date}
             onChange={(e) => setDate(e.target.value)}
           />
@@ -139,7 +139,7 @@ export function AttendanceMarker({ batches, initialBatchId }: AttendanceMarkerPr
       </div>
 
       {message && (
-        <div className={`p-4 rounded-lg mb-6 ${message.type === "success" ? "bg-green/10 text-green" : "bg-danger/10 text-danger-deep"}`}>
+        <div className={`p-4 rounded-md mb-6 ${message.type === "success" ? "bg-green/10 text-green" : "bg-danger/10 text-danger-deep"}`}>
           {message.text}
         </div>
       )}
@@ -147,10 +147,10 @@ export function AttendanceMarker({ batches, initialBatchId }: AttendanceMarkerPr
       <div className="space-y-3 mb-8">
         {students.length > 0 ? (
           students.map((student) => (
-            <div key={student.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-canvas-muted-2 rounded-lg gap-4">
+            <div key={student.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-canvas-muted-2 rounded-md gap-4">
               <span className="font-medium">{student.name}</span>
 
-              <div className="flex bg-surface rounded-lg border border-line overflow-hidden">
+              <div className="flex bg-surface rounded-md border border-line overflow-hidden">
                 <button
                   type="button"
                   className={cn("flex-1 flex items-center justify-center gap-1.5 px-4 py-2 text-sm font-semibold transition-colors focus-visible:focus-ring active:scale-[0.98]",

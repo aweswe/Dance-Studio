@@ -102,7 +102,7 @@ export function DanceStylesCarousel() {
               href={`/programmes#${style.slug}`}
               onMouseEnter={() => setHoveredId(style.id)}
               onMouseLeave={() => setHoveredId(null)}
-              className="group relative rounded-[24px] sm:rounded-[28px] overflow-hidden min-h-[400px] sm:min-h-[440px] border border-line hover:border-bl transition-all duration-500 shadow-xl flex flex-col justify-between p-5 bg-blk hover:-translate-y-1.5"
+              className="group relative rounded-md sm:rounded-md overflow-hidden min-h-[400px] sm:min-h-[440px] border border-line hover:border-bl transition-all duration-500 shadow-xl flex flex-col justify-between p-5 bg-blk hover:-translate-y-1.5"
             >
               {/* Background Media with Cinema Grading */}
               <div className="absolute inset-0 z-0">
@@ -147,7 +147,7 @@ export function DanceStylesCarousel() {
                   <span className="text-[11px] font-mono uppercase tracking-[0.18em] font-bold">
                     View Syllabus
                   </span>
-                  <div className="w-7 h-7 rounded-lg border border-white/25 group-hover:border-bl group-hover:bg-bl group-hover:text-blk flex items-center justify-center transition-all">
+                  <div className="w-7 h-7 rounded-md border border-white/25 group-hover:border-bl group-hover:bg-bl group-hover:text-blk flex items-center justify-center transition-all">
                     <ArrowUpRight size={14} className="stroke-[2.5]" />
                   </div>
                 </div>

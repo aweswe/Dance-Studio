@@ -30,11 +30,11 @@ function GoogleMark({ className }: { className?: string }) {
 export function GoogleProofStrip() {
   return (
     <section className="px-4 sm:px-8 md:px-14 py-10 max-w-[1440px] mx-auto">
-      <div className="rounded-2xl border border-line bg-surface overflow-hidden shadow-[0_8px_32px_-12px_rgba(0,0,0,0.12)] dark:shadow-none">
+      <div className="rounded-md border border-line bg-surface overflow-hidden shadow-[0_8px_32px_-12px_rgba(0,0,0,0.12)] dark:shadow-none">
         <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 px-5 sm:px-6 py-4 sm:py-5">
           {/* Score block */}
           <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white border border-line shadow-sm">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-white border border-line shadow-sm">
               <GoogleMark className="h-6 w-6" />
             </div>
             <div className="min-w-0">

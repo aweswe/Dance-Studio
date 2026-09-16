@@ -80,7 +80,7 @@ export function KathakSyllabusLevels() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {KATHAK_SYLLABUS.outcomes.map(({ title, text }) => (
-          <div key={title} className="rounded-2xl border border-line p-5">
+          <div key={title} className="rounded-md border border-line p-5">
             <p className="font-anton text-base uppercase tracking-tight text-ink mb-1">{title}</p>
             <p className="text-sm text-ink-2 leading-relaxed">{text}</p>
           </div>

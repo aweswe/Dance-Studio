@@ -172,7 +172,7 @@ export function BlogEditor({ initialPosts }: { initialPosts: Post[] }) {
                 <p className="text-[10px] font-display tracking-[2px] text-ink-2 uppercase mb-2">Live Preview</p>
                 {form.content.trim() ? (
                   <div
-                    className="prose prose-neutral max-w-none prose-headings:font-display prose-headings:font-normal prose-a:text-bl-ink prose-img:rounded-xl text-sm"
+                    className="prose prose-neutral max-w-none prose-headings:font-display prose-headings:font-normal prose-a:text-bl-ink prose-img:rounded-md text-sm"
                     dangerouslySetInnerHTML={{ __html: form.content }}
                   />
                 ) : (
@@ -235,7 +235,7 @@ export function BlogEditor({ initialPosts }: { initialPosts: Post[] }) {
         ))}
 
         {posts.length === 0 && (
-          <div className="py-12 text-center text-ink-2 bg-canvas-muted rounded-[16px]">
+          <div className="py-12 text-center text-ink-2 bg-canvas-muted rounded-md">
             No posts yet. Write the first one.
           </div>
         )}

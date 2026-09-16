@@ -55,11 +55,11 @@
   --space-stack-lg: clamp(1.5rem, 3.5vw, 2.75rem);
   --space-inline: clamp(0.75rem, 1.5vw, 1.25rem);
 
-  /* ── Radius scale ── */
-  --radius-control: 4px;
-  --radius-chip: 8px;
-  --radius-tile: 12px;
-  --radius-card: 16px;
+  /* ── Radius scale (minimal — matches homepage buttons, rounded-md) ── */
+  --radius-control: 0.375rem;
+  --radius-chip: 0.375rem;
+  --radius-tile: 0.375rem;
+  --radius-card: 0.375rem;
 
   /* ── Depth (light: layered shadow; dark: ring + inset highlight) ── */
   --shadow-pop: 0 8px 24px -12px rgb(15 15 15 / 0.18);
@@ -551,7 +551,7 @@ html.theme-transition *::after {
 .bento-card {
   background-color: var(--surface-card);
   border: 1px solid var(--line);
-  border-radius: 24px;
+  border-radius: 0.375rem;
   overflow: hidden;
   position: relative;
   padding: clamp(1.25rem, 2.5vw, 1.75rem);
@@ -634,7 +634,7 @@ html.theme-transition *::after {
   background-color: var(--bl);
   color: var(--wh) !important;
   font-weight: 800;
-  border-radius: 9999px;
+  border-radius: 0.375rem;
   transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1);
   display: inline-flex;
   align-items: center;

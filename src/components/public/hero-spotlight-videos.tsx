@@ -40,7 +40,7 @@ function SpotlightCard({
   };
 
   return (
-    <div className="relative aspect-video overflow-hidden rounded-xl sm:rounded-2xl border border-white/10 bg-blk">
+    <div className="relative aspect-video overflow-hidden rounded-md sm:rounded-md border border-white/10 bg-blk">
       {hasVideo ? (
         <video
           ref={videoRef}

@@ -95,7 +95,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
         isOpen ? "translate-x-0" : "-translate-x-full"
       )}>
         <div className="px-5 pt-5 pb-4 shrink-0">
-          <Link href="/admin" className="block focus-visible:focus-ring rounded-lg">
+          <Link href="/admin" className="block focus-visible:focus-ring rounded-md">
             <p className="font-anton text-xl text-ink tracking-tight">Rhythmzz</p>
             <p className="text-[11px] text-ink-3 mt-0.5">Front desk</p>
           </Link>
@@ -114,7 +114,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                         href={item.href}
                         onClick={onClose}
                         className={cn(
-                          "flex items-center gap-3 min-h-11 px-3 rounded-xl text-sm font-medium focus-visible:focus-ring",
+                          "flex items-center gap-3 min-h-11 px-3 rounded-md text-sm font-medium focus-visible:focus-ring",
                           isActive
                             ? "bg-surface-card text-ink shadow-lift"
                             : "text-ink-2 hover:bg-canvas-muted hover:text-ink"
@@ -135,7 +135,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
           <Link
             href="/"
             onClick={onClose}
-            className="flex w-full items-center gap-3 min-h-11 px-3 rounded-xl text-sm text-ink-2 hover:bg-canvas-muted hover:text-ink focus-visible:focus-ring"
+            className="flex w-full items-center gap-3 min-h-11 px-3 rounded-md text-sm text-ink-2 hover:bg-canvas-muted hover:text-ink focus-visible:focus-ring"
           >
             <ExternalLink size={16} strokeWidth={1.5} />
             View homepage
@@ -144,7 +144,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
             <button
               type="submit"
               disabled={isSigningOut}
-              className="flex w-full items-center gap-3 min-h-11 px-3 rounded-xl text-sm text-ink-2 hover:bg-canvas-muted hover:text-ink focus-visible:focus-ring disabled:opacity-50"
+              className="flex w-full items-center gap-3 min-h-11 px-3 rounded-md text-sm text-ink-2 hover:bg-canvas-muted hover:text-ink focus-visible:focus-ring disabled:opacity-50"
             >
               {isSigningOut ? <Loader2 size={16} className="animate-spin" /> : <LogOut size={16} strokeWidth={1.5} />}
               {isSigningOut ? "Signing out" : "Sign out"}

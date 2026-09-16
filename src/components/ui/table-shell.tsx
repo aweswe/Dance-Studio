@@ -18,7 +18,7 @@ export function TableShell({ toolbar, error, table, footer, className }: TableSh
     <div className={cn("bg-surface rounded-card border border-line overflow-hidden", className)}>
       {toolbar && <div className="p-4 border-b border-line bg-canvas-muted/50">{toolbar}</div>}
       {error && (
-        <div className="mx-4 mt-4 px-4 py-3 rounded-lg bg-danger/10 border border-danger/30 text-sm text-danger">
+        <div className="mx-4 mt-4 px-4 py-3 rounded-md bg-danger/10 border border-danger/30 text-sm text-danger">
           {error}
         </div>
       )}

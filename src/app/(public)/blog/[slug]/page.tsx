@@ -85,7 +85,7 @@ export default async function BlogPostPage({ params }: Props) {
           </h1>
           
           {coverImg && (
-            <div className="relative aspect-video w-full rounded-2xl overflow-hidden mt-10">
+            <div className="relative aspect-video w-full rounded-md overflow-hidden mt-10">
               <Image 
                 src={coverImg} 
                 alt={post.title} 
@@ -99,7 +99,7 @@ export default async function BlogPostPage({ params }: Props) {
 
         {/* Content */}
         <Reveal y={20}>
-          <div className="prose prose-lg md:prose-xl prose-neutral dark:prose-invert max-w-none prose-headings:font-display prose-headings:font-normal prose-a:text-bl prose-img:rounded-xl">
+          <div className="prose prose-lg md:prose-xl prose-neutral dark:prose-invert max-w-none prose-headings:font-display prose-headings:font-normal prose-a:text-bl prose-img:rounded-md">
             {post.content ? (
               <div dangerouslySetInnerHTML={{ __html: post.content }} />
             ) : (

@@ -71,7 +71,7 @@ export default async function InstructorDashboardPage() {
       <section className="space-y-3">
         <h2 className="text-[11px] text-ink-3">Today</h2>
         {todaysBatches.length > 0 ? (
-          <ul className="bg-surface-card border border-line shadow-lift rounded-[20px] divide-y divide-line overflow-hidden">
+          <ul className="bg-surface-card border border-line shadow-lift rounded-md divide-y divide-line overflow-hidden">
             {todaysBatches.map((batch) => (
               <li key={batch.id} className="flex items-center justify-between gap-3 min-h-16 px-4 sm:px-5">
                 <div className="min-w-0">
@@ -86,7 +86,7 @@ export default async function InstructorDashboardPage() {
                 </div>
                 <Link
                   href={`${ROUTES.instructor}/attendance?batch=${batch.id}`}
-                  className="shrink-0 text-sm font-medium text-bl-ink hover:text-bl focus-visible:focus-ring rounded-lg px-2 py-1"
+                  className="shrink-0 text-sm font-medium text-bl-ink hover:text-bl focus-visible:focus-ring rounded-md px-2 py-1"
                 >
                   Roster
                 </Link>
@@ -103,13 +103,13 @@ export default async function InstructorDashboardPage() {
       <div className="flex flex-wrap gap-2">
         <Link
           href={`${ROUTES.instructor}/classes`}
-          className="inline-flex items-center justify-center min-h-11 px-4 rounded-xl border border-line-strong text-sm font-medium text-ink hover:bg-canvas-muted focus-visible:focus-ring active:scale-[0.96]"
+          className="inline-flex items-center justify-center min-h-11 px-4 rounded-md border border-line-strong text-sm font-medium text-ink hover:bg-canvas-muted focus-visible:focus-ring active:scale-[0.96]"
         >
           All classes
         </Link>
         <Link
           href={`${ROUTES.instructor}/students`}
-          className="inline-flex items-center justify-center min-h-11 px-4 rounded-xl border border-line-strong text-sm font-medium text-ink hover:bg-canvas-muted focus-visible:focus-ring active:scale-[0.96]"
+          className="inline-flex items-center justify-center min-h-11 px-4 rounded-md border border-line-strong text-sm font-medium text-ink hover:bg-canvas-muted focus-visible:focus-ring active:scale-[0.96]"
         >
           Student roster
         </Link>

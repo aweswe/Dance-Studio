@@ -40,7 +40,7 @@ export function AnnouncementBanner({ banner }: { banner?: BannerContent | null }
       {inner}
       <button
         onClick={handleDismiss}
-        className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 p-1.5 min-w-9 min-h-9 flex items-center justify-center rounded-sm hover:opacity-70 transition-opacity focus-visible:focus-ring"
+        className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 p-1.5 min-w-9 min-h-9 flex items-center justify-center rounded-md hover:opacity-70 transition-opacity focus-visible:focus-ring"
         aria-label="Dismiss banner"
       >
         <X size={14} />

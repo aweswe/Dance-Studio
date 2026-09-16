@@ -99,7 +99,7 @@ export function CoachesGrid() {
         {COACHES.map((coach) => (
           <div
             key={coach.id}
-            className="group relative rounded-[26px] overflow-hidden aspect-[3/4.6] border border-line hover:border-bl transition-all duration-500 shadow-xl flex flex-col justify-between p-6 sm:p-6 bg-blk hover:-translate-y-2"
+            className="group relative rounded-md overflow-hidden aspect-[3/4.6] border border-line hover:border-bl transition-all duration-500 shadow-xl flex flex-col justify-between p-6 sm:p-6 bg-blk hover:-translate-y-2"
           >
             {/* Background Media with Dark Dramatic Vignette */}
             <div className="absolute inset-0 z-0">

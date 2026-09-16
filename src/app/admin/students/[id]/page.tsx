@@ -140,7 +140,7 @@ export default async function StudentDetailPage({ params }: { params: Promise<{ 
           <Card className="p-6">
             <h3 className="font-display text-xl text-ink border-b border-line-subtle pb-2 mb-4">Enrolment</h3>
             {student.batch ? (
-              <div className="bg-canvas-muted rounded-lg p-4 flex items-center justify-between">
+              <div className="bg-canvas-muted rounded-md p-4 flex items-center justify-between">
                 <div>
                   <h4 className="font-medium text-ink">{student.batch.programme?.name || 'Programme'}</h4>
                   <p className="text-sm text-ink-2">

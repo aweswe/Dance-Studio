@@ -6,9 +6,9 @@ interface InstructorCardProps {
 
 export function InstructorCard({ instructor }: InstructorCardProps) {
   return (
-    <div className="bento-card p-6 flex flex-col justify-between h-full group rounded-[28px] hover:border-line-strong transition-all">
+    <div className="bento-card p-6 flex flex-col justify-between h-full group rounded-md hover:border-line-strong transition-all">
       <div>
-        <div className="w-full aspect-[4/5] rounded-2xl overflow-hidden mb-5 relative bg-canvas border border-line">
+        <div className="w-full aspect-[4/5] rounded-md overflow-hidden mb-5 relative bg-canvas border border-line">
           {instructor.photo_url ? (
             <Image
               src={instructor.photo_url}

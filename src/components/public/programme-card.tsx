@@ -24,7 +24,7 @@ export function ProgrammeCard({ programme, schedule }: ProgrammeCardProps) {
     '/images/studio-training/floorwork-stretch.jpg';
 
   return (
-    <div className="@container group flex flex-col border border-line rounded-[24px] overflow-hidden hover:border-ink/30 transition-colors bg-canvas">
+    <div className="@container group flex flex-col border border-line rounded-md overflow-hidden hover:border-ink/30 transition-colors bg-canvas">
       {/* Photo */}
       <div className="relative h-52 w-full overflow-hidden bg-surface">
         <Image

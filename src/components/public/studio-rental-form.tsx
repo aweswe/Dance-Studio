@@ -52,7 +52,7 @@ export function StudioRentalForm() {
 
   if (success) {
     return (
-      <div className="bento-card rounded-[28px] p-8 sm:p-12 text-center border border-line">
+      <div className="bento-card rounded-md p-8 sm:p-12 text-center border border-line">
         <div className="w-16 h-16 bg-bl/15 text-bl rounded-full flex items-center justify-center mx-auto mb-4 border border-bl/30">
           <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -71,7 +71,7 @@ export function StudioRentalForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="bento-card rounded-[28px] sm:rounded-[32px] p-8 md:p-10 shadow-lg flex flex-col gap-5 border border-line">
+    <form onSubmit={handleSubmit} className="bento-card rounded-md sm:rounded-md p-8 md:p-10 shadow-lg flex flex-col gap-5 border border-line">
       <div>
         <div className="text-[10px] font-mono uppercase tracking-[0.25em] text-bl font-bold block mb-1">
           Instant Slot Request
@@ -133,7 +133,7 @@ export function StudioRentalForm() {
       </div>
 
       {error && (
-        <p className="text-sm text-danger bg-danger/10 border border-danger/30 rounded-lg p-3">
+        <p className="text-sm text-danger bg-danger/10 border border-danger/30 rounded-md p-3">
           {error}
         </p>
       )}

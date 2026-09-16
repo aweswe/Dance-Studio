@@ -45,7 +45,7 @@ export default async function BlogPage() {
               <Link
                 key={post.id}
                 href={`/blog/${post.slug}`}
-                className="bento-card group flex flex-col justify-between p-0 rounded-[28px] overflow-hidden active:scale-[0.98] transition-all hover:border-line-strong shadow-sm"
+                className="bento-card group flex flex-col justify-between p-0 rounded-md overflow-hidden active:scale-[0.98] transition-all hover:border-line-strong shadow-sm"
               >
                 <div className="relative aspect-video bg-canvas w-full overflow-hidden border-b border-line">
                   {post.cover_image_url || post.cover_image ? (
@@ -92,7 +92,7 @@ export default async function BlogPage() {
             ))}
           </div>
         ) : (
-          <div className="text-center py-20 text-ink-2 bento-card rounded-[28px] max-w-lg mx-auto p-10">
+          <div className="text-center py-20 text-ink-2 bento-card rounded-md max-w-lg mx-auto p-10">
             <h3 className="font-anton text-3xl mb-2 text-ink uppercase">NO POSTS YET</h3>
             <p className="text-xs font-mono text-ink-3">Check back soon for new choreo breakdowns and technique essays.</p>
           </div>

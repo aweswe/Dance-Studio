@@ -76,8 +76,8 @@ export default async function EnrolPage({
             </div>
 
             <div className="space-y-3">
-              <div className="bento-card p-4 rounded-[22px] flex gap-3.5 items-start">
-                <div className="w-8 h-8 rounded-xl bg-bl/10 text-bl flex items-center justify-center shrink-0 font-mono font-bold text-xs">
+              <div className="bento-card p-4 rounded-md flex gap-3.5 items-start">
+                <div className="w-8 h-8 rounded-md bg-bl/10 text-bl flex items-center justify-center shrink-0 font-mono font-bold text-xs">
                   01
                 </div>
                 <div>
@@ -92,8 +92,8 @@ export default async function EnrolPage({
                 </div>
               </div>
 
-              <div className="bento-card p-4 rounded-[22px] flex gap-3.5 items-start">
-                <div className="w-8 h-8 rounded-xl bg-bl/10 text-bl flex items-center justify-center shrink-0 font-mono font-bold text-xs">
+              <div className="bento-card p-4 rounded-md flex gap-3.5 items-start">
+                <div className="w-8 h-8 rounded-md bg-bl/10 text-bl flex items-center justify-center shrink-0 font-mono font-bold text-xs">
                   02
                 </div>
                 <div>
@@ -104,8 +104,8 @@ export default async function EnrolPage({
                 </div>
               </div>
 
-              <div className="bento-card p-4 rounded-[22px] flex gap-3.5 items-start">
-                <div className="w-8 h-8 rounded-xl bg-bl/10 text-bl flex items-center justify-center shrink-0 font-mono font-bold text-xs">
+              <div className="bento-card p-4 rounded-md flex gap-3.5 items-start">
+                <div className="w-8 h-8 rounded-md bg-bl/10 text-bl flex items-center justify-center shrink-0 font-mono font-bold text-xs">
                   03
                 </div>
                 <div>
@@ -117,7 +117,7 @@ export default async function EnrolPage({
               </div>
             </div>
 
-            <div className="bento-card p-6 rounded-[24px] border-bl/30 bg-surface flex items-center justify-between">
+            <div className="bento-card p-6 rounded-md border-bl/30 bg-surface flex items-center justify-between">
               <div>
                 <span className="text-[10px] font-mono uppercase tracking-wider text-ink-3 block mb-0.5">Need Guidance?</span>
                 <p className="text-xs font-bold text-ink">Call or WhatsApp us directly</p>
@@ -126,7 +126,7 @@ export default async function EnrolPage({
                 href={`https://wa.me/${ACADEMY.phone.replace(/[^0-9]/g, '')}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-4 py-2 rounded-xl bg-canvas border border-line text-xs font-mono font-bold text-bl hover:border-bl transition-colors inline-flex items-center gap-1.5"
+                className="px-4 py-2 rounded-md bg-canvas border border-line text-xs font-mono font-bold text-bl hover:border-bl transition-colors inline-flex items-center gap-1.5"
               >
                 <span>Chat</span>
                 <ArrowRight size={13} />

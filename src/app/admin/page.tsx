@@ -169,7 +169,7 @@ export default async function AdminDashboardPage() {
     <div className="space-y-8">
       <PageHeader label="Front desk" title="Today" description={deskLine} />
 
-      <Suspense fallback={<div className="h-[5.75rem] rounded-[20px] border border-line bg-surface-card shadow-lift animate-pulse" />}>
+      <Suspense fallback={<div className="h-[5.75rem] rounded-md border border-line bg-surface-card shadow-lift animate-pulse" />}>
         <AnalyticsCards initialData={initialData} />
       </Suspense>
 

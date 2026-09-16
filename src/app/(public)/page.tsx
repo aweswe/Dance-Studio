@@ -5,17 +5,17 @@ import { SITE_URL } from '@/lib/utils/constants';
 import { Hero } from '@/components/public/hero';
 import { HeroSpotlightVideos } from '@/components/public/hero-spotlight-videos';
 import { ProgrammePricingBoard } from '@/components/public/programme-pricing-board';
-import { BentoHighlights } from '@/components/public/bento-highlights';
-import { DanziaClassesSection } from '@/components/public/danzia-classes-section';
+import { HomepageClassesSection } from '@/components/public/homepage-classes-section';
 import { LevelCertificationSection } from '@/components/public/level-certification-section';
 import { DanziaInstructorsSection } from '@/components/public/danzia-instructors-section';
 import { DanziaGallerySection } from '@/components/public/danzia-gallery-section';
+import { HomepageAboutSection } from '@/components/public/homepage-about-section';
 import { DanziaTestimonialsSection } from '@/components/public/danzia-testimonials-section';
 import { DanziaCTASection } from '@/components/public/danzia-cta-section';
 import { ReelsStrip } from '@/components/public/reels-strip';
 import { getHomepageReels } from '@/data/reels';
 // import { GoogleProofStrip } from '@/components/public/google-proof-strip';
-import { FAQAccordion } from '@/components/public/faq-accordion';
+import { FAQSection } from '@/components/public/faq-section';
 import { StructuredData } from '@/components/shared/structured-data';
 
 export const metadata: Metadata = {
@@ -41,17 +41,13 @@ export default async function HomePage() {
       <HeroSpotlightVideos />
       {/* <GoogleProofStrip /> */}
       <ProgrammePricingBoard />
-      <BentoHighlights />
-      <DanziaClassesSection />
+      <HomepageClassesSection />
       <LevelCertificationSection />
       <DanziaInstructorsSection />
       <DanziaGallerySection />
+      <HomepageAboutSection stats={stats} />
       <DanziaTestimonialsSection quotes={Array.isArray(testimonials) ? testimonials : []} />
-      <section className="px-4 sm:px-8 md:px-14 py-16 max-w-[1440px] mx-auto">
-        <p className="text-[11px] font-mono uppercase tracking-[0.22em] text-ink-3 mb-3">Questions parents ask</p>
-        <h2 className="font-anton text-4xl sm:text-5xl text-ink tracking-tight uppercase mb-8">FAQ</h2>
-        <FAQAccordion faqs={Array.isArray(faqs) ? faqs : []} />
-      </section>
+      <FAQSection faqs={Array.isArray(faqs) ? faqs : []} />
       <DanziaCTASection />
       <ReelsStrip reels={reels} />
     </div>

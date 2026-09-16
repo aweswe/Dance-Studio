@@ -1,36 +1,50 @@
 'use client';
 
 import Link from 'next/link';
-import { ROUTES } from '@/lib/utils/constants';
+import { ArrowUpRight } from 'lucide-react';
+import { HomepageSection } from '@/components/public/homepage-section';
+import { WhatsAppIcon } from '@/components/public/whatsapp-icon';
+import {
+  homepageCtaPairButton,
+  homepageCtaPairCentered,
+  homepageCtaPrimary,
+  homepageCtaWhatsApp,
+} from '@/lib/ui/homepage-cta';
+import { ACADEMY, ROUTES } from '@/lib/utils/constants';
 
 export function DanziaCTASection() {
   return (
-    <section className="w-full px-4 sm:px-8 md:px-14 py-24 sm:py-36 max-w-[1440px] mx-auto select-none">
-      <div className="relative rounded-[32px] sm:rounded-[48px] ink-stage text-wh p-10 sm:p-16 md:p-24 overflow-hidden flex flex-col items-center text-center">
-        {/* Subtle radial ambient glow behind text */}
+    <HomepageSection className="py-16 sm:py-24 select-none">
+      <div className="ink-stage text-wh py-12 sm:py-16 md:py-20 px-6 sm:px-10 rounded-md border border-white/10 relative overflow-hidden flex flex-col items-center text-center">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-bl/20 via-transparent to-transparent pointer-events-none" />
 
-        <div className="relative z-10 max-w-4xl flex flex-col items-center">
-          {/* Monumental Danzia Closing Headline */}
-          <h2 className="font-anton text-4xl sm:text-7xl md:text-8xl lg:text-9xl tracking-tight uppercase leading-[1.08] sm:leading-[0.88] text-wh mb-6 sm:mb-8">
-            LET’S DANCE
-            <br />
-            <span className="text-bl">TOGETHER</span>
+        <div className="relative z-10 max-w-3xl flex flex-col items-center">
+          <h2 className="font-anton uppercase tracking-tight leading-[0.92] text-wh mb-4 sm:mb-5 flex flex-col gap-1">
+            <span className="text-2xl sm:text-3xl md:text-[2.25rem]">Move</span>
+            <span className="text-2xl sm:text-3xl md:text-[2.25rem] text-bl">Different</span>
           </h2>
 
-          <p className="max-w-xl text-base sm:text-lg md:text-xl text-wh/80 leading-relaxed font-medium mb-10 sm:mb-12">
-            Message +91 90529 80859 with the dancer’s age and a time that works. We’ll put you in a trial.
+          <p className="max-w-xl text-sm sm:text-base text-wh/80 leading-relaxed mb-8 sm:mb-10">
+            Message {ACADEMY.phoneDisplay} with the dancer&apos;s age and a time that works. We&apos;ll put you in a trial.
           </p>
 
-          {/* Minimalist Signature Bracket CTA */}
-          <Link
-            href={ROUTES.enrol}
-            className="inline-flex items-center gap-1 font-mono text-sm sm:text-base font-bold uppercase tracking-[0.25em] text-bl hover:text-white transition-all py-2.5 px-6 rounded active:scale-95 group"
-          >
-            <span className="group-hover:underline underline-offset-8 mx-1">ENROLL TODAY</span>
-          </Link>
+          <div className={homepageCtaPairCentered}>
+            <Link href={ROUTES.enrol} className={`${homepageCtaPrimary} ${homepageCtaPairButton}`}>
+              Book free trial
+              <ArrowUpRight size={13} strokeWidth={2.5} />
+            </Link>
+            <a
+              href={ACADEMY.whatsapp}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`${homepageCtaWhatsApp} ${homepageCtaPairButton}`}
+            >
+              <WhatsAppIcon className="size-3.5 shrink-0" />
+              WhatsApp us
+            </a>
+          </div>
         </div>
       </div>
-    </section>
+    </HomepageSection>
   );
 }

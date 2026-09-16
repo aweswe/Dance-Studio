@@ -61,7 +61,7 @@ export function FeeStatusCard({ status, amountDue, dueDate }: FeeStatusCardProps
             {upiLink && (
               <a
                 href={upiLink}
-                className="inline-flex items-center justify-center min-h-11 bg-bl text-white text-sm font-semibold px-4 rounded-xl hover:bg-bl-deep focus-visible:focus-ring active:scale-[0.96]"
+                className="inline-flex items-center justify-center min-h-11 bg-bl text-white text-sm font-semibold px-4 rounded-md hover:bg-bl-deep focus-visible:focus-ring active:scale-[0.96]"
               >
                 Pay ₹{amountDue} with UPI
               </a>
@@ -70,7 +70,7 @@ export function FeeStatusCard({ status, amountDue, dueDate }: FeeStatusCardProps
               href={whatsappLink(payMessage)}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center justify-center min-h-11 border border-line-strong text-sm font-medium px-4 rounded-xl hover:bg-canvas-muted focus-visible:focus-ring active:scale-[0.96]"
+              className="inline-flex items-center justify-center min-h-11 border border-line-strong text-sm font-medium px-4 rounded-md hover:bg-canvas-muted focus-visible:focus-ring active:scale-[0.96]"
             >
               Pay on WhatsApp
             </a>

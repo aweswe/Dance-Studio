@@ -101,7 +101,7 @@ export function KuchipudiAdmin({
                 return (
                   <label
                     key={module}
-                    className={`flex items-center gap-2 px-3 py-2 rounded-lg border text-sm cursor-pointer transition-colors ${
+                    className={`flex items-center gap-2 px-3 py-2 rounded-md border text-sm cursor-pointer transition-colors ${
                       checked ? 'border-bl/30 bg-bl-pale/40 text-ink' : 'border-line-strong text-ink-2 hover:border-bl'
                     }`}
                   >

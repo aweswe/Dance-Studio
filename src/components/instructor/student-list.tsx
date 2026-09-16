@@ -28,7 +28,7 @@ export function StudentList({ students }: { students: StudentProps[] }) {
         <input
           type="text"
           placeholder="Search students by name or ID..."
-          className="w-full pl-10 pr-4 py-3 rounded-lg border border-line bg-surface focus-visible:focus-ring"
+          className="w-full pl-10 pr-4 py-3 rounded-md border border-line bg-surface focus-visible:focus-ring"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />

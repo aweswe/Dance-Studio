@@ -123,7 +123,7 @@ export function RentalCalendar({ initialRentals }: { initialRentals: Rental[] })
 
       <div className="grid grid-cols-7 gap-1">
         {Array.from({ length: firstWeekday }).map((_, i) => (
-          <div key={`pad-${i}`} className="min-h-[96px] bg-canvas-muted/40 rounded-lg" />
+          <div key={`pad-${i}`} className="min-h-[96px] bg-canvas-muted/40 rounded-md" />
         ))}
         {Array.from({ length: daysInMonth }).map((_, i) => {
           const day = i + 1
@@ -135,7 +135,7 @@ export function RentalCalendar({ initialRentals }: { initialRentals: Rental[] })
           return (
             <div
               key={key}
-              className={`min-h-[96px] rounded-lg border p-1.5 flex flex-col gap-1 ${
+              className={`min-h-[96px] rounded-md border p-1.5 flex flex-col gap-1 ${
                 isToday ? 'border-bl bg-bl-pale/20' : 'border-line-subtle bg-canvas-muted/40'
               }`}
             >
@@ -199,7 +199,7 @@ export function RentalCalendar({ initialRentals }: { initialRentals: Rental[] })
       ) : (
         <div className="space-y-4">
           {rentals.filter((r) => filter === 'all' || r.status === filter).map((r) => (
-            <div key={r.id} className="bg-surface rounded-xl border border-line-subtle p-4">
+            <div key={r.id} className="bg-surface rounded-md border border-line-subtle p-4">
               <div className="flex justify-between items-start mb-2">
                 <div>
                   <h4 className="font-medium text-ink">{r.name}</h4>

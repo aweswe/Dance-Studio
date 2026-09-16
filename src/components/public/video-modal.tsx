@@ -48,7 +48,7 @@ export function VideoModal({
     >
       <div
         ref={modalRef}
-        className="relative w-full max-w-5xl bg-deep border border-white/20 rounded-2xl overflow-hidden shadow-2xl flex flex-col"
+        className="relative w-full max-w-5xl bg-deep border border-white/20 rounded-md overflow-hidden shadow-2xl flex flex-col"
       >
         {/* Header bar */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-black/40">
@@ -104,13 +104,13 @@ export function VideoModal({
                     href="https://www.instagram.com/rhythmzzdance.live"
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white text-blk text-xs font-bold uppercase tracking-wider hover:bg-bl hover:text-white transition-all active:scale-[0.96]"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md bg-white text-blk text-xs font-bold uppercase tracking-wider hover:bg-bl hover:text-white transition-all active:scale-[0.96]"
                   >
                     Watch on Instagram Reels
                   </a>
                   <button
                     onClick={onClose}
-                    className="px-5 py-2.5 rounded-xl border border-white/30 text-white text-xs font-bold uppercase tracking-wider hover:bg-white/10 transition-all active:scale-[0.96]"
+                    className="px-5 py-2.5 rounded-md border border-white/30 text-white text-xs font-bold uppercase tracking-wider hover:bg-white/10 transition-all active:scale-[0.96]"
                   >
                     Back to Studio
                   </button>

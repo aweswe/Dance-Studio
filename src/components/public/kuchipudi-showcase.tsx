@@ -40,14 +40,14 @@ export function KuchipudiShowcase() {
               </Link>
               <Link
                 href={ROUTES.syllabusKuchipudi}
-                className="px-6 py-3 rounded-xl text-xs font-mono font-bold uppercase tracking-wider border border-line hover:border-ink"
+                className="px-6 py-3 rounded-md text-xs font-mono font-bold uppercase tracking-wider border border-line hover:border-ink"
               >
                 Syllabus
               </Link>
             </div>
           </div>
 
-          <div className="relative aspect-[4/5] rounded-[28px] overflow-hidden bg-canvas-muted">
+          <div className="relative aspect-[4/5] rounded-md overflow-hidden bg-canvas-muted">
             <Image
               src="/images/classical-certification-dancer.png"
               alt="Kuchipudi at Rhythmzz"

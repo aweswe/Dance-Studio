@@ -94,7 +94,7 @@ export function UpcomingClasses() {
         {UPCOMING_CLASSES.map((item) => (
           <div
             key={item.id}
-            className="group relative rounded-[26px] overflow-hidden border border-line hover:border-bl transition-all duration-300 bg-blk shadow-xl flex flex-col justify-between hover:-translate-y-1.5"
+            className="group relative rounded-md overflow-hidden border border-line hover:border-bl transition-all duration-300 bg-blk shadow-xl flex flex-col justify-between hover:-translate-y-1.5"
           >
             {/* Top Aspect Media Showcase */}
             <div className="relative aspect-[16/10] w-full overflow-hidden">
@@ -175,7 +175,7 @@ export function UpcomingClasses() {
 
                 <Link
                   href={item.href}
-                  className="inline-flex items-center justify-center gap-1.5 min-h-11 px-5 rounded-xl bg-bl text-blk text-[10px] font-mono font-black uppercase tracking-wider hover:bg-white transition-all active:scale-[0.98] shadow-sm w-full sm:w-auto shrink-0"
+                  className="inline-flex items-center justify-center gap-1.5 min-h-11 px-5 rounded-md bg-bl text-blk text-[10px] font-mono font-black uppercase tracking-wider hover:bg-white transition-all active:scale-[0.98] shadow-sm w-full sm:w-auto shrink-0"
                 >
                   <span>Book Trial</span>
                   <ArrowUpRight size={12} className="stroke-[2.5]" />

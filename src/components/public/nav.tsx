@@ -91,7 +91,7 @@ function NavLinkItem({
       prefetch
       onClick={onClick}
       className={cn(
-        'whitespace-nowrap text-[10px] font-semibold uppercase tracking-[0.1em] transition-colors relative py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl rounded-sm',
+        'whitespace-nowrap text-[11px] font-semibold uppercase tracking-[0.1em] transition-colors relative py-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl rounded-md',
         active ? 'text-ink font-bold' : 'text-ink-2 hover:text-bl',
         className,
       )}
@@ -114,16 +114,16 @@ function DiscoverPanel({
   return (
     <div
       role="menu"
-      className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-[min(100vw-2rem,22rem)] rounded-2xl border border-line bg-canvas/95 backdrop-blur-xl shadow-overlay p-2 z-[70] animate-panel-in"
+      className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-[min(100vw-2rem,28rem)] rounded-md border border-line bg-canvas/95 backdrop-blur-xl shadow-overlay p-2.5 z-[70] animate-panel-in"
     >
       <div className="px-3 pt-2 pb-2 flex items-center gap-2 border-b border-line-subtle mb-1">
         <Compass size={14} className="text-bl shrink-0" strokeWidth={2} />
-        <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-ink-3">Discover Rhythmzz</p>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-ink-3">Discover Rhythmzz</p>
       </div>
       <div className="grid grid-cols-1 gap-0.5 max-h-[min(70vh,24rem)] overflow-y-auto overscroll-contain">
         {DISCOVER_GROUPS.map((group) => (
           <div key={group.label} className="px-1 py-1">
-            <p className="px-2 py-1 text-[9px] font-semibold uppercase tracking-[0.18em] text-ink-3">{group.label}</p>
+            <p className="px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-ink-3">{group.label}</p>
             {group.links.map((item) => (
               <Link
                 key={item.href}
@@ -131,15 +131,15 @@ function DiscoverPanel({
                 href={item.href}
                 onClick={onNavigate}
                 className={cn(
-                  'flex flex-col gap-0.5 rounded-xl px-3 py-2.5 min-h-11 transition-colors touch-manipulation',
+                  'flex flex-col gap-0.5 rounded-md px-3.5 py-3 min-h-12 transition-colors touch-manipulation',
                   isActive(item.href)
                     ? 'bg-bl/10 text-ink'
                     : 'text-ink-2 hover:bg-surface hover:text-ink active:bg-surface',
                 )}
               >
-                <span className="text-[11px] font-bold uppercase tracking-wide">{item.name}</span>
+                <span className="text-xs font-bold uppercase tracking-wide">{item.name}</span>
                 {item.hint && (
-                  <span className="text-[10px] font-normal normal-case tracking-normal text-ink-3">{item.hint}</span>
+                  <span className="text-[11px] font-normal normal-case tracking-normal text-ink-3">{item.hint}</span>
                 )}
               </Link>
             ))}
@@ -177,12 +177,12 @@ function MobileSection({
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="flex w-full items-center justify-between gap-3 px-5 py-4 min-h-[52px] text-left text-white hover:bg-deep active:bg-deep transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-bl"
+        className="flex w-full items-center justify-between gap-3 px-6 py-4 min-h-[56px] text-left text-white hover:bg-deep active:bg-deep transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-bl"
         aria-expanded={open}
       >
         <span className="flex items-center gap-2.5 min-w-0">
           {Icon && <Icon size={18} className="shrink-0 text-bl" strokeWidth={1.75} />}
-          <span className="text-sm font-bold uppercase tracking-[0.12em] truncate">{title}</span>
+          <span className="text-[15px] font-bold uppercase tracking-[0.12em] truncate">{title}</span>
           {sectionActive && !open && (
             <span className="h-2 w-2 rounded-full bg-bl shrink-0" aria-label="Current section" />
           )}
@@ -198,14 +198,14 @@ function MobileSection({
               prefetch
               onClick={onNavigate}
               className={cn(
-                'flex items-center justify-between gap-4 pl-12 pr-5 py-4 min-h-[52px] transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-bl',
+                'flex items-center justify-between gap-4 pl-14 pr-6 py-4 min-h-[56px] transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-bl',
                 isActive(link.href) ? 'text-bl bg-deep' : 'text-white/70 hover:text-white hover:bg-deep active:bg-deep',
               )}
             >
               <span className="min-w-0">
-                <span className="block font-semibold tracking-wide text-[15px]">{link.name}</span>
+                <span className="block font-semibold tracking-wide text-base">{link.name}</span>
                 {link.hint && (
-                  <span className="block text-xs font-normal text-white/50 mt-0.5 normal-case tracking-normal">
+                  <span className="block text-[13px] font-normal text-white/50 mt-0.5 normal-case tracking-normal">
                     {link.hint}
                   </span>
                 )}
@@ -232,7 +232,7 @@ function MobileDrawerFooter({
         <Link
           href={authInfo.href}
           onClick={onNavigate}
-          className="flex items-center justify-center gap-2 w-full min-h-[52px] rounded-xl border border-bl/40 text-white text-sm font-bold uppercase tracking-[0.1em] hover:bg-bl/10 active:scale-[0.98] transition-all touch-manipulation"
+          className="flex items-center justify-center gap-2 w-full min-h-[52px] rounded-md border border-bl/40 text-white text-sm font-bold uppercase tracking-[0.1em] hover:bg-bl/10 active:scale-[0.98] transition-all touch-manipulation"
         >
           <LayoutDashboard size={18} strokeWidth={1.75} />
           {authInfo.label}
@@ -241,7 +241,7 @@ function MobileDrawerFooter({
         <Link
           href="/login"
           onClick={onNavigate}
-          className="flex items-center justify-center gap-2 w-full min-h-[52px] rounded-xl border border-white/15 text-white text-sm font-bold uppercase tracking-[0.1em] hover:bg-deep active:scale-[0.98] transition-all touch-manipulation"
+          className="flex items-center justify-center gap-2 w-full min-h-[52px] rounded-md border border-white/15 text-white text-sm font-bold uppercase tracking-[0.1em] hover:bg-deep active:scale-[0.98] transition-all touch-manipulation"
         >
           <User size={18} strokeWidth={1.75} />
           Student Login
@@ -403,13 +403,13 @@ export function Nav() {
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-10 flex items-center justify-between lg:grid lg:grid-cols-[auto_minmax(0,1fr)_auto] lg:items-center lg:gap-x-3 xl:gap-x-5">
         <Link
           href={ROUTES.home}
-          className="group flex items-center min-w-0 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl shrink-0 lg:col-start-1 touch-manipulation"
+          className="group flex items-center min-w-0 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl shrink-0 lg:col-start-1 touch-manipulation"
           aria-label="Rhythmzz Academy of Dance — home"
         >
           <BrandLogo priority className="group-hover:opacity-90 transition-opacity" />
         </Link>
 
-        <nav className="hidden lg:flex items-center justify-center gap-4 xl:gap-5 min-w-0" aria-label="Main navigation">
+        <nav className="hidden lg:flex items-center justify-center gap-5 xl:gap-6 min-w-0" aria-label="Main navigation">
           {PRIMARY_LINKS.map((link) => (
             <NavLinkItem key={link.name} link={link} active={isActive(link.href)} />
           ))}
@@ -421,12 +421,12 @@ export function Nav() {
               aria-haspopup="menu"
               onClick={() => setDiscoverOpen((open) => !open)}
               className={cn(
-                'inline-flex items-center gap-1 whitespace-nowrap text-[10px] font-semibold uppercase tracking-[0.1em] py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl rounded-sm transition-colors',
+                'inline-flex items-center gap-1 whitespace-nowrap text-[11px] font-semibold uppercase tracking-[0.1em] py-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl rounded-md transition-colors',
                 discoverActive || discoverOpen ? 'text-ink font-bold' : 'text-ink-2 hover:text-bl',
               )}
             >
               Discover
-              <ChevronDown size={12} className={cn('transition-transform duration-200', discoverOpen && 'rotate-180')} />
+              <ChevronDown size={14} className={cn('transition-transform duration-200', discoverOpen && 'rotate-180')} />
             </button>
             {discoverActive && !discoverOpen && (
               <span className="absolute left-0 right-0 -bottom-0.5 h-[2px] bg-bl rounded-full" aria-hidden />
@@ -440,7 +440,7 @@ export function Nav() {
             <Link
               href={authInfo.href}
               title={authInfo.label}
-              className="inline-flex items-center gap-1.5 min-h-8 px-2.5 rounded-lg border border-bl/25 bg-bl/5 text-bl hover:bg-bl/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl"
+              className="inline-flex items-center gap-1.5 min-h-8 px-2.5 rounded-md border border-bl/25 bg-bl/5 text-bl hover:bg-bl/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl"
             >
               <LayoutDashboard size={14} className="shrink-0" />
               <span className="text-[10px] font-semibold uppercase tracking-[0.1em] max-w-[5.5rem] truncate xl:max-w-none">
@@ -451,7 +451,7 @@ export function Nav() {
             <Link
               href="/login"
               title="Student login"
-              className="inline-flex items-center gap-1.5 min-h-8 px-2.5 rounded-lg border border-line text-ink-2 hover:text-ink hover:border-line-strong transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl"
+              className="inline-flex items-center gap-1.5 min-h-8 px-2.5 rounded-md border border-line text-ink-2 hover:text-ink hover:border-line-strong transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl"
             >
               <User size={14} className="shrink-0" />
               <span className="text-[10px] font-semibold uppercase tracking-[0.1em]">Login</span>
@@ -478,7 +478,7 @@ export function Nav() {
             aria-expanded={isOpen}
             aria-controls="mobile-nav-drawer"
             aria-label={isOpen ? 'Close menu' : 'Open menu'}
-            className="inline-flex items-center justify-center min-h-11 min-w-11 text-ink hover:text-bl transition-colors cursor-pointer rounded-xl border border-line bg-surface/80 touch-manipulation active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl"
+            className="inline-flex items-center justify-center min-h-11 min-w-11 text-ink hover:text-bl transition-colors cursor-pointer rounded-md border border-line bg-surface/80 touch-manipulation active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl"
           >
             {isOpen ? <X size={22} strokeWidth={1.75} /> : <Menu size={22} strokeWidth={1.75} />}
           </button>
@@ -500,7 +500,7 @@ export function Nav() {
             <div
               id="mobile-nav-drawer"
               className={cn(
-                'fixed inset-y-0 right-0 z-[710] w-[min(100vw,24rem)] lg:hidden bg-blk flex flex-col shadow-2xl transition-transform duration-300 ease-out h-[100dvh] max-h-[100dvh]',
+                'fixed inset-y-0 right-0 z-[710] w-[min(100vw,30rem)] lg:hidden bg-blk flex flex-col shadow-2xl transition-transform duration-300 ease-out h-[100dvh] max-h-[100dvh]',
                 isOpen ? 'translate-x-0 visible' : 'translate-x-full invisible pointer-events-none',
               )}
               role="dialog"
@@ -519,7 +519,7 @@ export function Nav() {
                 <button
                   type="button"
                   onClick={closeMobile}
-                  className="inline-flex items-center justify-center min-h-11 min-w-11 text-white hover:text-bl active:bg-deep transition-colors rounded-xl touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl"
+                  className="inline-flex items-center justify-center min-h-11 min-w-11 text-white hover:text-bl active:bg-deep transition-colors rounded-md touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl"
                   aria-label="Close menu"
                 >
                   <X size={22} strokeWidth={1.75} />

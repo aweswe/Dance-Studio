@@ -89,7 +89,7 @@ export function StudentActions({ student, batches }: StudentActionsProps) {
     <div className="pt-4 border-t border-line-subtle space-y-4">
       {/* Portal access */}
       {student.auth_id ? (
-        <div className="flex items-center justify-between bg-green/10 border border-green/20 rounded-lg px-4 py-3">
+        <div className="flex items-center justify-between bg-green/10 border border-green/20 rounded-md px-4 py-3">
           <div>
             <p className="text-sm font-medium text-ink">Portal access enabled</p>
             <p className="text-xs text-ink-2">Student can log in with WhatsApp OTP</p>
@@ -97,7 +97,7 @@ export function StudentActions({ student, batches }: StudentActionsProps) {
           <span className="text-[10px] font-semibold tracking-[2px] text-green-ink">LINKED</span>
         </div>
       ) : (
-        <div className="bg-canvas-muted border border-line-strong rounded-lg px-4 py-3">
+        <div className="bg-canvas-muted border border-line-strong rounded-md px-4 py-3">
           <p className="text-sm font-medium text-ink mb-1">Portal not enabled</p>
           <p className="text-xs text-ink-2 mb-3">
             Creates the student&apos;s WhatsApp OTP login and sends a welcome message.

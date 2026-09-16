@@ -60,7 +60,7 @@ export function StudentStoriesSection() {
             TESTIMONIALS &amp; STAGE REVIEWS
           </h2>
         </div>
-        <div className="flex items-center gap-2 text-xs font-mono text-ink-2 bg-surface px-4 py-2 rounded-xl border border-line">
+        <div className="flex items-center gap-2 text-xs font-mono text-ink-2 bg-surface px-4 py-2 rounded-md border border-line">
           <div className="flex text-gold">
             {[...Array(5)].map((_, i) => (
               <Star key={i} size={14} className="fill-gold" />
@@ -76,7 +76,7 @@ export function StudentStoriesSection() {
         {REVIEWS.map((review) => (
           <div
             key={review.id}
-            className="rounded-[26px] p-7 sm:p-8 bg-surface border border-line hover:border-bl transition-all duration-300 shadow-xl flex flex-col justify-between relative overflow-hidden group hover:-translate-y-1.5"
+            className="rounded-md p-7 sm:p-8 bg-surface border border-line hover:border-bl transition-all duration-300 shadow-xl flex flex-col justify-between relative overflow-hidden group hover:-translate-y-1.5"
           >
             {/* Top Stars & Verified Badge */}
             <div>

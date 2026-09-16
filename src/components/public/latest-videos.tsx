@@ -64,7 +64,7 @@ export function LatestVideos() {
         {/* Left: Dominant Featured Video (approx 62% / 7 cols) */}
         <div
           onClick={() => setSelectedVideo(FEATURED_MAIN)}
-          className="lg:col-span-7 xl:col-span-7 group relative rounded-xl sm:rounded-2xl overflow-hidden border border-line hover:border-bl bg-blk cursor-pointer aspect-[16/10] sm:aspect-[16/9] shadow-2xl flex flex-col justify-between p-5 sm:p-7 transition-all duration-300"
+          className="lg:col-span-7 xl:col-span-7 group relative rounded-md sm:rounded-md overflow-hidden border border-line hover:border-bl bg-blk cursor-pointer aspect-[16/10] sm:aspect-[16/9] shadow-2xl flex flex-col justify-between p-5 sm:p-7 transition-all duration-300"
         >
           {/* Media Backdrop */}
           <div className="absolute inset-0 z-0">
@@ -104,7 +104,7 @@ export function LatestVideos() {
             <div
               key={item.id}
               onClick={() => setSelectedVideo(item)}
-              className="group relative rounded-xl sm:rounded-2xl overflow-hidden border border-line hover:border-bl bg-blk cursor-pointer aspect-[16/9] sm:aspect-[16/8.5] flex-1 flex flex-col justify-between p-4 sm:p-5 shadow-xl transition-all duration-300"
+              className="group relative rounded-md sm:rounded-md overflow-hidden border border-line hover:border-bl bg-blk cursor-pointer aspect-[16/9] sm:aspect-[16/8.5] flex-1 flex flex-col justify-between p-4 sm:p-5 shadow-xl transition-all duration-300"
             >
               {/* Media Backdrop */}
               <div className="absolute inset-0 z-0">

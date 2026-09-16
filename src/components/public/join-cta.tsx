@@ -14,7 +14,7 @@ export function JoinCTA() {
   return (
     <section className="w-full px-4 sm:px-6 md:px-10 py-16 sm:py-24 max-w-[1440px] mx-auto select-none">
       {/* Admissions CTA banner */}
-      <div className="relative rounded-[32px] sm:rounded-[44px] bg-bl text-blk p-8 sm:p-12 md:p-16 overflow-hidden shadow-2xl">
+      <div className="relative rounded-md sm:rounded-md bg-bl text-blk p-8 sm:p-12 md:p-16 overflow-hidden shadow-2xl">
         {/* Subtle decorative background watermark */}
         <div className="absolute right-[-20px] bottom-[-40px] font-anton text-[180px] sm:text-[240px] md:text-[300px] text-blk/[0.04] leading-none pointer-events-none select-none">
           DANCE
@@ -44,7 +44,7 @@ export function JoinCTA() {
             {PERKS.map((perk, idx) => (
               <div
                 key={idx}
-                className="bg-blk text-white p-6 rounded-2xl border border-white/10 flex flex-col items-center justify-center text-center shadow-lg group hover:scale-[1.02] transition-transform"
+                className="bg-blk text-white p-6 rounded-md border border-white/10 flex flex-col items-center justify-center text-center shadow-lg group hover:scale-[1.02] transition-transform"
               >
                 <span className="font-anton text-3xl sm:text-4xl text-bl leading-none mb-1">
                   {perk.value}
@@ -63,7 +63,7 @@ export function JoinCTA() {
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-5 w-full sm:w-auto">
             <Link
               href={ROUTES.enrol}
-              className="w-full sm:w-auto min-h-12 px-8 py-4 rounded-2xl bg-blk text-bl font-anton text-base sm:text-lg uppercase tracking-wider hover:bg-white hover:text-blk transition-all shadow-xl active:scale-[0.98] flex items-center justify-center gap-2 group"
+              className="w-full sm:w-auto min-h-12 px-8 py-4 rounded-md bg-blk text-bl font-anton text-base sm:text-lg uppercase tracking-wider hover:bg-white hover:text-blk transition-all shadow-xl active:scale-[0.98] flex items-center justify-center gap-2 group"
             >
               <span>Book Your Free Trial Today</span>
               <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
@@ -73,7 +73,7 @@ export function JoinCTA() {
               href={ACADEMY.whatsapp}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full sm:w-auto min-h-12 px-6 py-4 rounded-2xl bg-white hover:bg-white text-blk font-mono text-xs font-black uppercase tracking-wider transition-all shadow-sm active:scale-[0.98] flex items-center justify-center gap-2 border border-blk/15"
+              className="w-full sm:w-auto min-h-12 px-6 py-4 rounded-md bg-white hover:bg-white text-blk font-mono text-xs font-black uppercase tracking-wider transition-all shadow-sm active:scale-[0.98] flex items-center justify-center gap-2 border border-blk/15"
             >
               <MessageCircle size={16} />
               <span>WhatsApp Us: {ACADEMY.phoneDisplay}</span>

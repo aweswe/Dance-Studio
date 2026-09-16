@@ -59,7 +59,7 @@ export default async function SchedulePage() {
                     return (
                       <div
                         key={day}
-                        className={`px-4 py-2 rounded-lg text-sm font-semibold border ${
+                        className={`px-4 py-2 rounded-md text-sm font-semibold border ${
                           isClassDay
                             ? "bg-bl/10 border-bl/20 text-bl-ink"
                             : "bg-canvas-muted-2 border-transparent text-ink-2 opacity-50"

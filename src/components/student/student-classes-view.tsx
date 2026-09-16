@@ -227,7 +227,7 @@ export function StudentClassesView({ currentStudent, feePaid, programmes, pendin
     <div className="space-y-6">
       {message && (
         <div
-          className={`flex gap-2 items-start rounded-xl border p-3 text-sm ${
+          className={`flex gap-2 items-start rounded-md border p-3 text-sm ${
             message.type === 'ok'
               ? 'border-success/30 bg-success/10 text-ink'
               : 'border-danger/30 bg-danger/10 text-danger'
@@ -301,7 +301,7 @@ export function StudentClassesView({ currentStudent, feePaid, programmes, pendin
             <select
               value={switchBatchId}
               onChange={(e) => setSwitchBatchId(e.target.value)}
-              className="w-full min-h-11 rounded-xl border border-line bg-canvas-muted px-3 text-sm text-ink focus:outline-none focus:border-bl/50 focus:ring-2 focus:ring-bl/20"
+              className="w-full min-h-11 rounded-md border border-line bg-canvas-muted px-3 text-sm text-ink focus:outline-none focus:border-bl/50 focus:ring-2 focus:ring-bl/20"
             >
               <option value="">Select batch…</option>
               {switchTargetProgrammes.map((prog) => (
@@ -323,7 +323,7 @@ export function StudentClassesView({ currentStudent, feePaid, programmes, pendin
               onChange={(e) => setSwitchNote(e.target.value)}
               placeholder="Optional note — e.g. timing conflict, level change…"
               rows={2}
-              className="w-full rounded-xl border border-line bg-canvas-muted px-3 py-2 text-sm text-ink placeholder:text-ink-3 focus:outline-none focus:border-bl/50 focus:ring-2 focus:ring-bl/20 resize-none"
+              className="w-full rounded-md border border-line bg-canvas-muted px-3 py-2 text-sm text-ink placeholder:text-ink-3 focus:outline-none focus:border-bl/50 focus:ring-2 focus:ring-bl/20 resize-none"
             />
 
             <Button type="button" onClick={handleSwitchRequest} disabled={busy === 'switch' || !switchBatchId} isLoading={busy === 'switch'}>
@@ -351,7 +351,7 @@ export function StudentClassesView({ currentStudent, feePaid, programmes, pendin
             <div
               key={prog.id}
               className={cn(
-                'rounded-[20px] overflow-hidden border bg-surface-card shadow-lift flex flex-col',
+                'rounded-md overflow-hidden border bg-surface-card shadow-lift flex flex-col',
                 enrolledHere ? 'border-bl' : isSelected ? 'border-bl/60 ring-1 ring-bl/20' : 'border-line',
               )}
             >
@@ -403,7 +403,7 @@ export function StudentClassesView({ currentStudent, feePaid, programmes, pendin
                               setSelectedBatchId(b.id);
                             }}
                             className={cn(
-                              'w-full text-left rounded-xl border px-3 py-2.5 text-sm transition-colors',
+                              'w-full text-left rounded-md border px-3 py-2.5 text-sm transition-colors',
                               isYours ? 'border-bl bg-bl/5 text-ink' : selected ? 'border-bl bg-bl/5' : 'border-line text-ink-2',
                               !isEnrolled && b.status !== 'paused' && 'hover:border-bl/40 cursor-pointer',
                               (isEnrolled || b.status === 'paused') && 'cursor-default',

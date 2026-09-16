@@ -147,7 +147,7 @@ export function EventsManager({ initialEvents }: { initialEvents: EventRow[] }) 
             <Input placeholder="Venue" value={form.venue} onChange={(e) => setForm({ ...form, venue: e.target.value })} />
           </div>
           <textarea
-            className="w-full min-h-[100px] rounded-xl border border-line bg-canvas px-3 py-2 text-sm"
+            className="w-full min-h-[100px] rounded-md border border-line bg-canvas px-3 py-2 text-sm"
             placeholder="Description shown on the public event page"
             value={form.description}
             onChange={(e) => setForm({ ...form, description: e.target.value })}

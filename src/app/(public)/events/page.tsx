@@ -29,7 +29,7 @@ export default async function EventsIndexPage() {
           <Link
             key={e.slug}
             href={`${ROUTES.events}/${e.slug}`}
-            className="block border border-line rounded-2xl p-6 hover:border-ink/40 transition-colors"
+            className="block border border-line rounded-md p-6 hover:border-ink/40 transition-colors"
           >
             <h2 className="font-display text-2xl tracking-wide">{e.title}</h2>
             <p className="text-sm text-ink-2 mt-1">

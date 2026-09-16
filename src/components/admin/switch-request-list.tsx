@@ -85,11 +85,11 @@ export function SwitchRequestList({ initialRequests }: { initialRequests: Switch
               </div>
 
               <div className="grid sm:grid-cols-2 gap-3 text-sm">
-                <div className="rounded-xl border border-line px-3 py-2 bg-canvas-muted/50">
+                <div className="rounded-md border border-line px-3 py-2 bg-canvas-muted/50">
                   <p className="text-[10px] uppercase tracking-wider text-ink-3 mb-1">Current</p>
                   <p className="text-ink">{batchSummary(r.current_batch)}</p>
                 </div>
-                <div className="rounded-xl border border-bl/30 px-3 py-2 bg-bl/5">
+                <div className="rounded-md border border-bl/30 px-3 py-2 bg-bl/5">
                   <p className="text-[10px] uppercase tracking-wider text-ink-3 mb-1">Requested</p>
                   <p className="text-ink">{batchSummary(r.requested_batch, r.requested_batch?.programme?.name)}</p>
                 </div>
@@ -107,7 +107,7 @@ export function SwitchRequestList({ initialRequests }: { initialRequests: Switch
                     value={notes[r.id] || ''}
                     onChange={(e) => setNotes((n) => ({ ...n, [r.id]: e.target.value }))}
                     placeholder="Optional note to student…"
-                    className="w-full min-h-10 rounded-xl border border-line bg-canvas-muted px-3 text-sm text-ink placeholder:text-ink-3"
+                    className="w-full min-h-10 rounded-md border border-line bg-canvas-muted px-3 text-sm text-ink placeholder:text-ink-3"
                   />
                   <div className="flex flex-wrap gap-2">
                     <Button

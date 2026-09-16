@@ -1,7 +1,10 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState, type RefObject } from 'react';
-import { Play, ChevronLeft, ChevronRight } from 'lucide-react';
+import Link from 'next/link';
+import { ChevronLeft, ChevronRight, Play } from 'lucide-react';
+import { HomepageSection, HomepageSectionHeading } from '@/components/public/homepage-section';
+import { homepageCtaOutlineLight, homepageMediaRadius } from '@/lib/ui/homepage-cta';
 import type { PublicReel } from '@/data/reels';
 import { ACADEMY } from '@/lib/utils/constants';
 
@@ -65,7 +68,7 @@ function ReelCard({ reel, scrollRoot }: { reel: PublicReel; scrollRoot: RefObjec
         hoveredRef.current = false;
         updatePlayback();
       }}
-      className="group relative shrink-0 snap-start w-[180px] sm:w-[210px] aspect-[9/16] rounded-2xl overflow-hidden bg-blk border border-line hover:border-bl transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-bl"
+      className={`group relative shrink-0 snap-start w-[180px] sm:w-[210px] aspect-[9/16] ${homepageMediaRadius} overflow-hidden bg-blk border border-white/10 hover:border-bl transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-bl`}
     >
       <video
         ref={videoRef}
@@ -87,13 +90,13 @@ function ReelCard({ reel, scrollRoot }: { reel: PublicReel; scrollRoot: RefObjec
 
       {!playing && (
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <span className="w-12 h-12 rounded-full bg-bl/90 text-blk flex items-center justify-center shadow-lg">
-            <Play size={20} className="fill-black ml-0.5" />
+          <span className="w-10 h-10 rounded-md bg-bl/90 text-blk flex items-center justify-center shadow-lg">
+            <Play size={18} className="fill-black ml-0.5" />
           </span>
         </div>
       )}
 
-      <p className="absolute bottom-0 left-0 right-0 p-3.5 text-sm font-bold text-white leading-snug line-clamp-2 z-10">
+      <p className="absolute bottom-0 left-0 right-0 p-3.5 text-[10px] font-bold uppercase tracking-[0.08em] text-white leading-snug line-clamp-2 z-10">
         {reel.title}
       </p>
     </a>
@@ -110,30 +113,27 @@ export function ReelsStrip({ reels }: { reels: PublicReel[] }) {
   if (reels.length === 0) return null;
 
   return (
-    <section aria-label="Instagram reels" className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 md:px-14 pb-20 sm:pb-28 select-none">
-      <div className="flex items-end justify-between gap-6 mb-6 sm:mb-8">
-        <div>
-          <p className="text-[11px] font-mono uppercase tracking-[0.25em] text-bl font-bold mb-2">
-            Stage Reels
-          </p>
-          <h2 className="font-anton text-3xl sm:text-5xl text-ink tracking-wide uppercase leading-none">
-            WATCH THE MOVEMENT
-          </h2>
-        </div>
+    <HomepageSection className="pb-16 sm:pb-24 select-none" ariaLabel="Instagram reels">
+      <div className="flex flex-wrap items-end justify-between gap-4 mb-6 sm:mb-8">
+        <HomepageSectionHeading
+          className="mb-0"
+          eyebrow="Stage reels"
+          title="Watch the movement"
+        />
         <div className="flex items-center gap-2 shrink-0">
-          <a
+          <Link
             href={PROFILE_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden sm:inline text-xs font-mono font-bold uppercase tracking-[0.15em] text-ink-2 hover:text-ink transition-colors mr-2"
+            className={`${homepageCtaOutlineLight} hidden sm:inline-flex`}
           >
-            @rhythmzzdance.live ↗
-          </a>
+            @rhythmzzdance.live
+          </Link>
           <button
             type="button"
             onClick={() => scrollBy(-1)}
             aria-label="Scroll reels left"
-            className="w-10 h-10 rounded-full border border-line text-ink flex items-center justify-center hover:border-ink transition-all active:scale-95"
+            className="inline-flex items-center justify-center min-h-[44px] min-w-[44px] rounded-md border border-line text-ink hover:border-ink hover:bg-ink/[0.04] transition-all active:scale-95"
           >
             <ChevronLeft size={18} />
           </button>
@@ -141,7 +141,7 @@ export function ReelsStrip({ reels }: { reels: PublicReel[] }) {
             type="button"
             onClick={() => scrollBy(1)}
             aria-label="Scroll reels right"
-            className="w-10 h-10 rounded-full border border-line text-ink flex items-center justify-center hover:border-ink transition-all active:scale-95"
+            className="inline-flex items-center justify-center min-h-[44px] min-w-[44px] rounded-md border border-line text-ink hover:border-ink hover:bg-ink/[0.04] transition-all active:scale-95"
           >
             <ChevronRight size={18} />
           </button>
@@ -157,6 +157,6 @@ export function ReelsStrip({ reels }: { reels: PublicReel[] }) {
           <ReelCard key={reel.id} reel={reel} scrollRoot={trackRef} />
         ))}
       </div>
-    </section>
+    </HomepageSection>
   );
 }

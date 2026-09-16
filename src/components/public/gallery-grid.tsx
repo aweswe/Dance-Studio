@@ -14,7 +14,7 @@ export function GalleryGrid({ images }: GalleryGridProps) {
           <Link
             key={image.id || i}
             href={ROUTES.gallery}
-            className={`group relative rounded-card overflow-hidden bg-blk aspect-square border border-line block ${
+            className={`group relative rounded-md overflow-hidden bg-blk aspect-square border border-line block ${
               i === 0 ? 'md:col-span-2 md:row-span-2' : ''
             }`}
           >

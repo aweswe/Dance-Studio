@@ -90,7 +90,7 @@ export default async function AttendancePage({
             {(b.students || []).length > 0 ? (
               <div className="space-y-2">
                 {(b.students as { id: string; name: string }[]).map((student) => (
-                  <div key={student.id} className="flex items-center justify-between p-3 bg-canvas-muted border border-line rounded-xl">
+                  <div key={student.id} className="flex items-center justify-between p-3 bg-canvas-muted border border-line rounded-md">
                     <span className="font-medium">{student.name}</span>
                     {statusBadge(markMap.get(`${b.id}:${student.id}`))}
                   </div>

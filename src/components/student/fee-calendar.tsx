@@ -22,7 +22,7 @@ export function FeeCalendar({ months }: { months: FeeMonth[] }) {
           <div
             key={m.key}
             className={cn(
-              "rounded-xl border p-3 text-center",
+              "rounded-md border p-3 text-center",
               m.covered && "border-green/40 bg-green/5",
               !m.covered && m.isCurrent && "border-danger/40 bg-danger/10",
               !m.covered && !m.isCurrent && "border-line bg-canvas-muted",

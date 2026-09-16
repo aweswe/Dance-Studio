@@ -70,12 +70,12 @@ export function PayNowButton({ amount }: PayNowButtonProps) {
         onClick={pay}
         disabled={busy}
         isLoading={busy}
-        className="min-h-11 px-5 rounded-xl"
+        className="min-h-11 px-5 rounded-md"
       >
         {busy ? 'Opening payment…' : 'Pay now'}
       </Button>
       {error && (
-        <div className="flex gap-2 items-start bg-danger/10 border border-danger/30 rounded-lg p-3 text-xs text-danger leading-relaxed">
+        <div className="flex gap-2 items-start bg-danger/10 border border-danger/30 rounded-md p-3 text-xs text-danger leading-relaxed">
           <AlertCircle size={14} className="shrink-0 mt-0.5" />
           <span>{error}</span>
         </div>

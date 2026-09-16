@@ -1,5 +1,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { ArrowUpRight } from 'lucide-react';
+import { HomepageSection, HomepageSectionHeading } from '@/components/public/homepage-section';
+import { homepageMediaRadius, homepageCtaOutlineLight } from '@/lib/ui/homepage-cta';
 import { getGalleryImages } from '@/data/gallery';
 import { ROUTES } from '@/lib/utils/constants';
 
@@ -9,26 +12,24 @@ export async function DanziaGallerySection() {
   const spans = ['md:col-span-7', 'md:col-span-5', 'md:col-span-4', 'md:col-span-4', 'md:col-span-4'];
 
   return (
-    <section className="w-full px-4 sm:px-8 md:px-14 py-20 sm:py-28 max-w-[1440px] mx-auto select-none">
-      <div className="max-w-3xl mb-12 sm:mb-16 flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h2 className="font-anton text-4xl sm:text-6xl md:text-7xl lg:text-8xl tracking-tight text-ink uppercase leading-[0.92]">
-            FROM THE STUDIO
-          </h2>
-          <p className="text-sm sm:text-base md:text-lg text-ink-2 mt-5 leading-relaxed max-w-2xl font-medium">
-            Pulled from the admin gallery — newest uploads first.
-          </p>
-        </div>
-        <Link href={ROUTES.gallery} className="text-xs font-mono uppercase tracking-wider text-bl hover:underline">
-          Full gallery →
+    <HomepageSection className="py-16 sm:py-24 select-none">
+      <div className="mb-8 sm:mb-10 flex flex-wrap items-end justify-between gap-4">
+        <HomepageSectionHeading
+          className="mb-0"
+          title="From the studio"
+          description="Pulled from the admin gallery — newest uploads first."
+        />
+        <Link href={ROUTES.gallery} className={`${homepageCtaOutlineLight} shrink-0`}>
+          Full gallery
+          <ArrowUpRight size={13} strokeWidth={2.5} />
         </Link>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-5 sm:gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-5">
         {moments.map((item, i) => (
           <div
             key={item.id}
-            className={`group relative aspect-[16/10] rounded-[24px] sm:rounded-[32px] overflow-hidden bg-canvas-muted shadow-lg ${spans[i] ?? 'md:col-span-4'}`}
+            className={`group relative aspect-[16/10] ${homepageMediaRadius} overflow-hidden bg-canvas-muted border border-line shadow-md ${spans[i] ?? 'md:col-span-4'}`}
           >
             {item.type === 'video' ? (
               <video src={item.url} muted playsInline className="absolute inset-0 w-full h-full object-cover" />
@@ -48,6 +49,6 @@ export async function DanziaGallerySection() {
           </div>
         ))}
       </div>
-    </section>
+    </HomepageSection>
   );
 }

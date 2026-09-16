@@ -336,7 +336,7 @@ function LoginForm() {
                   onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
                   placeholder="000000"
                   maxLength={6}
-                  className="w-full min-h-12 bg-canvas-muted border border-line rounded-xl px-4 text-ink text-center text-xl tracking-[0.4em] font-mono focus:outline-none focus:border-bl/50 focus:ring-2 focus:ring-bl/20"
+                  className="w-full min-h-12 bg-canvas-muted border border-line rounded-md px-4 text-ink text-center text-xl tracking-[0.4em] font-mono focus:outline-none focus:border-bl/50 focus:ring-2 focus:ring-bl/20"
                   autoFocus
                 />
                 {error && <p className="text-xs text-danger">{error}</p>}
@@ -355,7 +355,7 @@ function LoginForm() {
                   type="button"
                   onClick={handleGoogleLogin}
                   disabled={oauthLoading || isLoading}
-                  className="w-full min-h-11 bg-canvas-muted hover:bg-canvas-muted-2 border border-line text-ink text-sm font-medium py-2.5 px-4 rounded-xl flex items-center justify-center gap-3 focus-visible:focus-ring active:scale-[0.96]"
+                  className="w-full min-h-11 bg-canvas-muted hover:bg-canvas-muted-2 border border-line text-ink text-sm font-medium py-2.5 px-4 rounded-md flex items-center justify-center gap-3 focus-visible:focus-ring active:scale-[0.96]"
                 >
                   {oauthLoading ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
@@ -409,7 +409,7 @@ function LoginForm() {
                   onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
                   placeholder="000000"
                   maxLength={6}
-                  className="w-full min-h-12 bg-canvas-muted border border-line rounded-xl px-4 text-ink text-center text-xl tracking-[0.4em] font-mono focus:outline-none focus:border-bl/50 focus:ring-2 focus:ring-bl/20"
+                  className="w-full min-h-12 bg-canvas-muted border border-line rounded-md px-4 text-ink text-center text-xl tracking-[0.4em] font-mono focus:outline-none focus:border-bl/50 focus:ring-2 focus:ring-bl/20"
                   autoFocus
                 />
                 {error && <p className="text-xs text-danger leading-relaxed">{error}</p>}

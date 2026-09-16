@@ -30,7 +30,7 @@ export function SyllabusYears() {
               setOpen(null);
             }}
             className={cn(
-              'px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase tracking-wider border transition-colors',
+              'px-4 py-2 rounded-md text-xs font-mono font-bold uppercase tracking-wider border transition-colors',
               track === id
                 ? 'bg-ink text-canvas border-ink'
                 : 'bg-transparent text-ink-2 border-line hover:text-ink',

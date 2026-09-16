@@ -60,7 +60,7 @@ export default async function FeesPage() {
           </div>
           <Link
             href={`${ROUTES.student}/classes`}
-            className="inline-flex items-center justify-center min-h-11 px-4 rounded-xl bg-bl text-white text-sm font-semibold hover:bg-bl-deep focus-visible:focus-ring active:scale-[0.96] shrink-0"
+            className="inline-flex items-center justify-center min-h-11 px-4 rounded-md bg-bl text-white text-sm font-semibold hover:bg-bl-deep focus-visible:focus-ring active:scale-[0.96] shrink-0"
           >
             Choose a class
           </Link>

@@ -1,5 +1,11 @@
 import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
+import {
+  homepageCtaOutlineDark,
+  homepageCtaPair,
+  homepageCtaPairButton,
+  homepageCtaPrimary,
+} from '@/lib/ui/homepage-cta';
 import { ROUTES } from '@/lib/utils/constants';
 import { HeroVideo } from '@/components/public/hero-video';
 import { HeroStats } from '@/components/public/hero-stats';
@@ -35,17 +41,14 @@ export function Hero({ stats }: HeroProps) {
               Secunderabad · Dance &amp; Fitness Classes · Neredmet X Road
             </p>
 
-            <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row flex-wrap gap-2.5">
-              <Link
-                href={ROUTES.enrol}
-                className="inline-flex w-full sm:w-[13.75rem] items-center justify-center gap-1.5 min-h-[44px] px-5 rounded-md bg-white text-blk text-[10px] font-bold uppercase tracking-[0.1em] hover:bg-bl transition-colors active:scale-[0.98] touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl focus-visible:ring-offset-2 focus-visible:ring-offset-canvas"
-              >
+            <div className={`mt-8 sm:mt-10 ${homepageCtaPair}`}>
+              <Link href={ROUTES.enrol} className={`${homepageCtaPrimary} ${homepageCtaPairButton}`}>
                 Book your free trial
                 <ArrowUpRight size={13} strokeWidth={2.5} />
               </Link>
               <Link
                 href={ROUTES.programmes}
-                className="inline-flex w-full sm:w-[13.75rem] items-center justify-center min-h-[44px] px-5 rounded-md text-[10px] font-bold uppercase tracking-[0.1em] text-white ring-1 ring-white/35 bg-white/[0.06] hover:bg-white/[0.1] hover:ring-white/50 transition-colors active:scale-[0.98] touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-canvas"
+                className={`${homepageCtaOutlineDark} ${homepageCtaPairButton}`}
               >
                 Explore more
               </Link>

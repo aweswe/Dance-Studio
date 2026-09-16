@@ -12,7 +12,7 @@ export function TestimonialCard({ testimonial }: TestimonialCardProps) {
   return (
     <SpotlightCard
       tone="pale"
-      className="bg-surface p-7 rounded-2xl border border-line h-full flex flex-col justify-between hover:border-line-strong transition-all duration-200"
+      className="bg-surface p-7 rounded-md border border-line h-full flex flex-col justify-between hover:border-line-strong transition-all duration-200"
     >
       <div>
         <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-green/10 text-green-ink border border-green/20 text-[11px] font-mono font-medium mb-4">

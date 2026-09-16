@@ -180,7 +180,7 @@ export function DashboardPanels({
             <a
               key={r.id}
               href="/admin/studio-rental"
-              className="block rounded-xl bg-canvas-muted border border-line p-3 hover:bg-canvas-muted-2 focus-visible:focus-ring"
+              className="block rounded-md bg-canvas-muted border border-line p-3 hover:bg-canvas-muted-2 focus-visible:focus-ring"
             >
               <p className="text-sm font-medium text-ink">Rental · {r.name}</p>
               <p className="text-[12px] text-ink-3">{formatDate(r.preferred_date, 'long')}</p>
@@ -191,7 +191,7 @@ export function DashboardPanels({
             <a
               key={b.id}
               href={`/admin/attendance?batch=${b.id}`}
-              className="block rounded-xl bg-canvas-muted border border-line p-3 hover:bg-canvas-muted-2 focus-visible:focus-ring"
+              className="block rounded-md bg-canvas-muted border border-line p-3 hover:bg-canvas-muted-2 focus-visible:focus-ring"
             >
               <p className="text-sm font-medium text-ink">{b.programmeName} · {b.name}</p>
               <p className="text-[12px] text-ink-3">Attendance not marked</p>
@@ -202,7 +202,7 @@ export function DashboardPanels({
             <a
               key={e.id}
               href="/admin/enquiries"
-              className="block rounded-xl bg-canvas-muted border border-line p-3 hover:bg-canvas-muted-2 focus-visible:focus-ring"
+              className="block rounded-md bg-canvas-muted border border-line p-3 hover:bg-canvas-muted-2 focus-visible:focus-ring"
             >
               <p className="text-sm font-medium text-ink">{e.name}</p>
               <p className="text-[12px] text-ink-3">{e.phone}</p>

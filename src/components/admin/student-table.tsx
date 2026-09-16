@@ -82,7 +82,7 @@ export function StudentTable({ initialData }: StudentTableProps) {
       </div>
 
       {error && (
-        <div className="mx-4 mt-4 px-4 py-3 rounded-lg bg-danger/10 border border-danger/30 text-sm text-danger">
+        <div className="mx-4 mt-4 px-4 py-3 rounded-md bg-danger/10 border border-danger/30 text-sm text-danger">
           Could not load students: {error}
         </div>
       )}

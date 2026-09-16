@@ -74,7 +74,7 @@ export default async function ReceiptPage({ params }: { params: Promise<{ id: st
           </div>
 
           {/* Receipt body */}
-          <div className="border border-line rounded-lg overflow-hidden mb-8">
+          <div className="border border-line rounded-md overflow-hidden mb-8">
             <table className="w-full text-sm">
               <tbody className="divide-y divide-line-subtle">
                 <tr>

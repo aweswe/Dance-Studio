@@ -108,7 +108,7 @@ export function InstructorManager({ initialInstructors }: { initialInstructors: 
         ))}
 
         {instructors.length === 0 && (
-          <div className="col-span-full py-12 text-center text-ink-2 bg-canvas-muted rounded-[16px]">
+          <div className="col-span-full py-12 text-center text-ink-2 bg-canvas-muted rounded-md">
             No instructors found.
           </div>
         )}

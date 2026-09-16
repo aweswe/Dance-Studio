@@ -48,7 +48,7 @@ export function HeroVideo({
     <div className={cn('flex flex-col gap-2.5 w-full max-w-full', className)}>
       <div
         className={cn(
-          'relative w-full overflow-hidden rounded-[6px] sm:rounded-[8px] lg:rounded-[10px]',
+          'relative w-full overflow-hidden rounded-md sm:rounded-md lg:rounded-md',
           'border border-transparent bg-transparent',
           'aspect-square',
         )}

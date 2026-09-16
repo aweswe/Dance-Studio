@@ -22,7 +22,7 @@ export function MetricStrip({ items, className }: { items: MetricItem[]; classNa
   return (
     <dl
       className={cn(
-        "grid gap-px rounded-[20px] border border-line bg-line overflow-hidden shadow-lift",
+        "grid gap-px rounded-md border border-line bg-line overflow-hidden shadow-lift",
         cols,
         className,
       )}

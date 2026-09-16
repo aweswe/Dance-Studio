@@ -73,7 +73,7 @@ export default async function ProgrammesPage() {
             ALL DISCIPLINES
           </h2>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-line border border-line rounded-[20px] overflow-hidden">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-line border border-line rounded-md overflow-hidden">
             {[
               {
                 label: 'Indian Classical',
@@ -119,7 +119,7 @@ export default async function ProgrammesPage() {
 
       {/* CTA */}
       <section className="px-4 sm:px-8 md:px-14 pb-20 sm:pb-28 max-w-[1440px] mx-auto">
-        <div className="border border-line rounded-[24px] p-8 sm:p-12 flex flex-col sm:flex-row sm:items-center justify-between gap-6 sm:gap-8">
+        <div className="border border-line rounded-md p-8 sm:p-12 flex flex-col sm:flex-row sm:items-center justify-between gap-6 sm:gap-8">
           <div className="space-y-2">
             <h2 className="font-anton text-2xl sm:text-3xl text-ink uppercase tracking-tight">
               NOT SURE WHERE TO START?

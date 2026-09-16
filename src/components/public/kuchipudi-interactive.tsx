@@ -124,7 +124,7 @@ export function KuchipudiRoadmap() {
             <button
               key={s.step}
               onClick={() => setActiveStep(s.step)}
-              className={`p-4 rounded-2xl border text-left transition-all duration-300 min-h-[5.5rem] flex flex-col justify-between active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl focus-visible:ring-offset-2 focus-visible:ring-offset-canvas group ${
+              className={`p-4 rounded-md border text-left transition-all duration-300 min-h-[5.5rem] flex flex-col justify-between active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl focus-visible:ring-offset-2 focus-visible:ring-offset-canvas group ${
                 isActive
                   ? 'bg-surface border-bl shadow-lg shadow-bl/10 ring-1 ring-bl'
                   : 'bg-surface/70 border-line hover:border-bl/40 hover:bg-surface'
@@ -194,7 +194,7 @@ export function KuchipudiRoadmap() {
                 {s.milestones.map((m, idx) => (
                   <li
                     key={idx}
-                    className="flex items-start gap-3 p-4 rounded-xl bg-canvas border border-line text-xs sm:text-sm text-ink-2 hover:border-bl/40 transition-colors"
+                    className="flex items-start gap-3 p-4 rounded-md bg-canvas border border-line text-xs sm:text-sm text-ink-2 hover:border-bl/40 transition-colors"
                   >
                     <span className="w-1.5 h-1.5 rounded-full bg-bl shrink-0 mt-2" />
                     <span className="leading-relaxed">{m}</span>
@@ -203,7 +203,7 @@ export function KuchipudiRoadmap() {
               </ul>
             </div>
 
-            <div className="p-6 rounded-xl bg-canvas border border-line flex flex-col justify-between">
+            <div className="p-6 rounded-md bg-canvas border border-line flex flex-col justify-between">
               <div>
                 <span className="text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-bl block mb-2">
                   Artistic Outcome
@@ -471,7 +471,7 @@ export function KuchipudiFaqAccordion() {
               setActiveFilter(cat);
               setOpenIndex(0);
             }}
-            className={`text-xs font-mono px-3.5 py-1.5 rounded-lg border transition-all duration-200 active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl ${
+            className={`text-xs font-mono px-3.5 py-1.5 rounded-md border transition-all duration-200 active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl ${
               activeFilter === cat
                 ? 'bg-bl text-blk border-bl font-bold shadow-sm'
                 : 'bg-surface border-line text-ink-2 hover:text-ink hover:border-bl/50'

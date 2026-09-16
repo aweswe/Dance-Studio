@@ -46,7 +46,7 @@ export function BatchCard({ batch }: BatchProps) {
           {batch.students && batch.students.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
               {batch.students.map((student: any) => (
-                <div key={student.id} className="p-3 bg-canvas-muted border border-line rounded-xl flex items-center gap-3">
+                <div key={student.id} className="p-3 bg-canvas-muted border border-line rounded-md flex items-center gap-3">
                   <div className="w-8 h-8 rounded-full bg-surface-raised border border-line flex items-center justify-center font-semibold text-xs">
                     {student.name.charAt(0)}
                   </div>

@@ -111,7 +111,7 @@ export function PortalShell({ role, name, isKuchipudi, unreadNotices, children }
         )}
       >
         <div className="px-5 pt-5 pb-4 shrink-0">
-          <Link href={home} className="block focus-visible:focus-ring rounded-lg">
+          <Link href={home} className="block focus-visible:focus-ring rounded-md">
             <p className="font-anton text-xl text-ink tracking-tight">Rhythmzz</p>
             <p className="text-[11px] text-ink-3 mt-0.5">{role === "instructor" ? "Instructor" : "Student"}</p>
           </Link>
@@ -127,7 +127,7 @@ export function PortalShell({ role, name, isKuchipudi, unreadNotices, children }
                 href={item.href}
                 onClick={() => setIsOpen(false)}
                 className={cn(
-                  "flex items-center gap-3 min-h-11 px-3 rounded-xl text-sm font-medium focus-visible:focus-ring",
+                  "flex items-center gap-3 min-h-11 px-3 rounded-md text-sm font-medium focus-visible:focus-ring",
                   isActive
                     ? "bg-surface-card text-ink shadow-lift"
                     : "text-ink-2 hover:bg-canvas-muted hover:text-ink",
@@ -148,7 +148,7 @@ export function PortalShell({ role, name, isKuchipudi, unreadNotices, children }
         <div className="p-3 border-t border-line shrink-0 space-y-1">
           <Link
             href="/"
-            className="flex items-center gap-3 min-h-11 px-3 rounded-xl text-sm text-ink-2 hover:bg-canvas-muted hover:text-ink focus-visible:focus-ring"
+            className="flex items-center gap-3 min-h-11 px-3 rounded-md text-sm text-ink-2 hover:bg-canvas-muted hover:text-ink focus-visible:focus-ring"
           >
             <Home size={16} strokeWidth={1.5} />
             Studio site
@@ -157,7 +157,7 @@ export function PortalShell({ role, name, isKuchipudi, unreadNotices, children }
             <button
               type="submit"
               disabled={isSigningOut}
-              className="flex w-full items-center gap-3 min-h-11 px-3 rounded-xl text-sm text-ink-2 hover:bg-canvas-muted hover:text-ink focus-visible:focus-ring disabled:opacity-50"
+              className="flex w-full items-center gap-3 min-h-11 px-3 rounded-md text-sm text-ink-2 hover:bg-canvas-muted hover:text-ink focus-visible:focus-ring disabled:opacity-50"
             >
               {isSigningOut ? <Loader2 size={16} className="animate-spin" /> : <LogOut size={16} strokeWidth={1.5} />}
               {isSigningOut ? "Signing out" : "Sign out"}
@@ -174,7 +174,7 @@ export function PortalShell({ role, name, isKuchipudi, unreadNotices, children }
               aria-label={isOpen ? "Close menu" : "Open menu"}
               aria-expanded={isOpen}
               onClick={() => setIsOpen(!isOpen)}
-              className="md:hidden min-h-11 min-w-11 inline-flex items-center justify-center text-ink rounded-xl hover:bg-canvas-muted focus-visible:focus-ring"
+              className="md:hidden min-h-11 min-w-11 inline-flex items-center justify-center text-ink rounded-md hover:bg-canvas-muted focus-visible:focus-ring"
             >
               {isOpen ? <X size={20} /> : <Menu size={20} />}
             </button>

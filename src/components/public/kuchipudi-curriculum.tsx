@@ -51,7 +51,7 @@ export function KuchipudiCurriculum() {
   return (
     <div id="curriculum" className="w-full space-y-8 scroll-mt-24">
       {/* Header & Track Selector Card with Concentric Radii */}
-      <div className="bento-card rounded-[28px] sm:rounded-[36px] border border-line p-6 md:p-8">
+      <div className="bento-card rounded-md sm:rounded-md border border-line p-6 md:p-8">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 pb-6 border-b border-line">
           <div>
             <p className="text-[11px] font-mono uppercase tracking-[0.22em] text-ink-3 mb-3">
@@ -66,14 +66,14 @@ export function KuchipudiCurriculum() {
           </div>
 
           {/* Track Switcher with Tactile Press & Clear Focus */}
-          <div className="flex flex-col sm:flex-row gap-2 bg-canvas p-2 rounded-2xl border border-line self-start lg:self-center shadow-inner">
+          <div className="flex flex-col sm:flex-row gap-2 bg-canvas p-2 rounded-md border border-line self-start lg:self-center shadow-inner">
             <button
               onClick={() => {
                 setActiveTrack('10-year');
                 setExpandedYear(1);
                 setSelectedFilter('all');
               }}
-              className={`px-5 py-3 rounded-xl text-xs font-mono font-bold uppercase tracking-[0.15em] transition-all duration-200 flex items-center gap-2 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl cursor-pointer ${
+              className={`px-5 py-3 rounded-md text-xs font-mono font-bold uppercase tracking-[0.15em] transition-all duration-200 flex items-center gap-2 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl cursor-pointer ${
                 activeTrack === '10-year'
                   ? 'bg-bl text-blk font-black shadow-md'
                   : 'text-ink-2 hover:text-ink hover:bg-surface/50'
@@ -91,7 +91,7 @@ export function KuchipudiCurriculum() {
                 setExpandedYear(1);
                 setSelectedFilter('all');
               }}
-              className={`px-5 py-3 rounded-xl text-xs font-mono font-bold uppercase tracking-[0.15em] transition-all duration-200 flex items-center gap-2 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl cursor-pointer ${
+              className={`px-5 py-3 rounded-md text-xs font-mono font-bold uppercase tracking-[0.15em] transition-all duration-200 flex items-center gap-2 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl cursor-pointer ${
                 activeTrack === '6-year'
                   ? 'bg-bl text-blk font-black shadow-md'
                   : 'text-ink-2 hover:text-ink hover:bg-surface/50'
@@ -107,7 +107,7 @@ export function KuchipudiCurriculum() {
         </div>
 
         {/* Current Track Overview Banner */}
-        <div className="mt-6 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-canvas p-5 rounded-2xl border border-line">
+        <div className="mt-6 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-canvas p-5 rounded-md border border-line">
           <div>
             <h3 className="font-anton text-base sm:text-lg text-ink flex items-center gap-2 tracking-wide uppercase">
               <Compass size={16} className="text-bl" />
@@ -141,7 +141,7 @@ export function KuchipudiCurriculum() {
             <button
               key={tab.id}
               onClick={() => setSelectedFilter(tab.id)}
-              className={`text-xs font-mono px-3.5 py-1.5 rounded-lg border transition-all duration-200 active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl cursor-pointer ${
+              className={`text-xs font-mono px-3.5 py-1.5 rounded-md border transition-all duration-200 active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl cursor-pointer ${
                 selectedFilter === tab.id
                   ? 'bg-bl text-blk border-bl font-bold shadow-sm'
                   : 'bg-canvas border-line text-ink-2 hover:text-ink hover:border-bl/50'
@@ -160,7 +160,7 @@ export function KuchipudiCurriculum() {
           return (
             <div
               key={item.year}
-              className={`bento-card rounded-[24px] transition-all duration-300 overflow-hidden p-0 ${
+              className={`bento-card rounded-md transition-all duration-300 overflow-hidden p-0 ${
                 isExpanded
                   ? 'border-bl ring-1 ring-bl/20 shadow-md'
                   : 'border-line hover:border-bl/40'
@@ -173,7 +173,7 @@ export function KuchipudiCurriculum() {
                 aria-expanded={isExpanded}
               >
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-2xl bg-canvas border border-line flex flex-col items-center justify-center shrink-0">
+                  <div className="w-12 h-12 rounded-md bg-canvas border border-line flex flex-col items-center justify-center shrink-0">
                     <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-ink-3">Year</span>
                     <span className="text-xl font-anton text-bl leading-none">{item.year}</span>
                   </div>
@@ -215,7 +215,7 @@ export function KuchipudiCurriculum() {
                 <div className="px-5 pb-6 md:px-8 md:pb-8 pt-2 border-t border-line/60 bg-canvas/30 space-y-6 animate-in fade-in duration-200">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* Theory Column */}
-                    <div className="bg-canvas p-5 rounded-2xl border border-line">
+                    <div className="bg-canvas p-5 rounded-md border border-line">
                       <div className="flex items-center gap-2 text-ink font-bold text-xs font-mono uppercase tracking-wider mb-4 text-bl">
                         <BookOpen size={16} />
                         Theory Syllabus
@@ -231,7 +231,7 @@ export function KuchipudiCurriculum() {
                     </div>
 
                     {/* Practical Column */}
-                    <div className="bg-canvas p-5 rounded-2xl border border-line">
+                    <div className="bg-canvas p-5 rounded-md border border-line">
                       <div className="flex items-center gap-2 text-ink font-bold text-xs font-mono uppercase tracking-wider mb-4 text-bl">
                         <Activity size={16} />
                         Practical &amp; Repertoire
@@ -248,7 +248,7 @@ export function KuchipudiCurriculum() {
                   </div>
 
                   {/* Learning Outcome Banner with Concentric Radius */}
-                  <div className="p-5 rounded-2xl bg-canvas border border-bl/30 flex items-start gap-3.5 shadow-sm">
+                  <div className="p-5 rounded-md bg-canvas border border-bl/30 flex items-start gap-3.5 shadow-sm">
                     <Award className="text-bl shrink-0 mt-0.5" size={20} />
                     <div>
                       <div className="text-xs font-mono font-bold uppercase tracking-wider text-bl mb-1">
@@ -270,10 +270,10 @@ export function KuchipudiCurriculum() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 pt-4">
         {/* Assessment Criteria Card */}
         <Reveal>
-          <div className="bento-card rounded-[28px] p-6 md:p-8 h-full flex flex-col justify-between hover:border-bl/40 transition-colors border border-line">
+          <div className="bento-card rounded-md p-6 md:p-8 h-full flex flex-col justify-between hover:border-bl/40 transition-colors border border-line">
             <div>
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 rounded-xl bg-bl/10 text-bl flex items-center justify-center border border-bl/20">
+                <div className="w-10 h-10 rounded-md bg-bl/10 text-bl flex items-center justify-center border border-bl/20">
                   
                 </div>
                 <div>
@@ -293,7 +293,7 @@ export function KuchipudiCurriculum() {
                 ).map((param: any, idx: number) => (
                   <div
                     key={idx}
-                    className="p-4 rounded-xl bg-canvas border border-line hover:border-bl/30 transition-colors"
+                    className="p-4 rounded-md bg-canvas border border-line hover:border-bl/30 transition-colors"
                   >
                     <div className="font-bold text-xs font-mono uppercase tracking-wider text-ink mb-1 flex items-center gap-2">
                       <Award size={15} className="text-bl shrink-0" />
@@ -315,10 +315,10 @@ export function KuchipudiCurriculum() {
 
         {/* Progression & Mastery Guidelines Card */}
         <Reveal delay={0.08}>
-          <div className="bento-card rounded-[28px] p-6 md:p-8 h-full flex flex-col justify-between hover:border-bl/40 transition-colors border border-line">
+          <div className="bento-card rounded-md p-6 md:p-8 h-full flex flex-col justify-between hover:border-bl/40 transition-colors border border-line">
             <div>
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 rounded-xl bg-bl/10 text-bl flex items-center justify-center border border-bl/20">
+                <div className="w-10 h-10 rounded-md bg-bl/10 text-bl flex items-center justify-center border border-bl/20">
                   <Calendar size={22} />
                 </div>
                 <div>
@@ -338,7 +338,7 @@ export function KuchipudiCurriculum() {
                 ).map((item: any, idx: number) => (
                   <div
                     key={idx}
-                    className="p-4 rounded-xl bg-canvas border border-line hover:border-bl/30 transition-colors"
+                    className="p-4 rounded-md bg-canvas border border-line hover:border-bl/30 transition-colors"
                   >
                     <div className="font-bold text-xs font-mono uppercase tracking-wider text-ink mb-1 flex items-center gap-2">
                       <Award size={15} className="text-bl shrink-0" />

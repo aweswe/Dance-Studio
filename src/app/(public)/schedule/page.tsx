@@ -1,10 +1,12 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { SITE_URL, ROUTES } from '@/lib/utils/constants';
-import { WeekScheduleGrid } from '@/components/public/week-schedule-grid';
+import { ProgrammeClassesList } from '@/components/public/programme-classes-list';
+import { HomepageSection } from '@/components/public/homepage-section';
 import { ArrowRight } from 'lucide-react';
 import { getBatches } from '@/data/batches';
-import { buildWeekScheduleFromBatches } from '@/lib/schedule/from-batches';
+import { getProgrammes } from '@/data/programmes';
+import { buildScheduleFilters, buildWeekScheduleFromBatches } from '@/lib/schedule/from-batches';
 
 export const metadata: Metadata = {
   title: 'Weekly Batch Schedule & Timings | Rhythmzz Academy of Dance',
@@ -14,8 +16,11 @@ export const metadata: Metadata = {
 };
 
 export default async function SchedulePage() {
-  const batches = await getBatches();
-  const weekDays = buildWeekScheduleFromBatches(batches as any[]);
+  const [batches, programmes] = await Promise.all([getBatches(), getProgrammes()]);
+  const weekDays = buildWeekScheduleFromBatches(batches);
+  const filters = buildScheduleFilters(
+    programmes.map((p) => ({ slug: p.slug, name: p.name, sort_order: p.sort_order })),
+  );
 
   return (
     <div className="bg-canvas text-ink min-h-screen">
@@ -39,10 +44,10 @@ export default async function SchedulePage() {
         </div>
       </section>
 
-      {/* 02: Interactive Weekly Schedule Grid */}
-      <section className="py-12 sm:py-24">
-        <WeekScheduleGrid weekDays={weekDays} />
-      </section>
+      {/* 02: Category-wise weekly class list */}
+      <HomepageSection className="py-12 sm:py-24">
+        <ProgrammeClassesList weekDays={weekDays} filters={filters} />
+      </HomepageSection>
 
       {/* 03: Bottom CTA */}
       <section className="py-24 px-4 sm:px-6 md:px-16 bg-surface border-t border-line text-center">

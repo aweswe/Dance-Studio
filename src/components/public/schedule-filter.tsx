@@ -58,7 +58,7 @@ export function ScheduleFilter({ batches }: ScheduleFilterProps) {
             onClick={() => setActiveDay(day)}
             aria-pressed={activeDay === day}
             className={cn(
-              "shrink-0 text-[11px] font-bold tracking-[1.5px] uppercase py-2 px-4.5 bg-surface border rounded-lg cursor-pointer transition-all focus-visible:focus-ring active:scale-[0.98]",
+              "shrink-0 text-[11px] font-bold tracking-[1.5px] uppercase py-2 px-4.5 bg-surface border rounded-md cursor-pointer transition-all focus-visible:focus-ring active:scale-[0.98]",
               activeDay === day
                 ? "bg-bl text-white border-bl dark:bg-bl dark:text-blk shadow-sm font-extrabold"
                 : "border-line text-ink-2 hover:text-ink hover:border-line-strong hover:bg-canvas-muted"
@@ -72,7 +72,7 @@ export function ScheduleFilter({ batches }: ScheduleFilterProps) {
       {grouped.length > 0 ? (
         <div className="flex flex-col gap-8">
           {grouped.map(({ day, batches: dayBatches }) => (
-            <div key={day} className="bg-surface rounded-card p-5 md:p-6 border border-line shadow-sm">
+            <div key={day} className="bg-surface rounded-md p-5 md:p-6 border border-line shadow-sm">
               <h3 className="heading-display text-2xl tracking-[1px] text-ink pb-3 border-b border-line mb-3 flex items-center justify-between">
                 <span>{day}</span>
                 <span className="text-xs font-semibold uppercase tracking-wider text-ink-2 font-body">
@@ -88,7 +88,7 @@ export function ScheduleFilter({ batches }: ScheduleFilterProps) {
                     <div
                       key={batch.id ?? i}
                       className={cn(
-                        "grid grid-cols-[70px_1fr] md:grid-cols-[80px_50px_1fr_140px_120px_110px] items-center gap-3 md:gap-4 py-3.5 px-2 hover:bg-canvas-muted/60 transition-colors rounded-tile",
+                        "grid grid-cols-[70px_1fr] md:grid-cols-[80px_50px_1fr_140px_120px_110px] items-center gap-3 md:gap-4 py-3.5 px-2 hover:bg-canvas-muted/60 transition-colors rounded-md",
                         THEME_BORDER[batch.programme?.slug]
                       )}
                     >
@@ -139,12 +139,12 @@ export function ScheduleFilter({ batches }: ScheduleFilterProps) {
 
                       {/* Actions */}
                       <div className="flex md:flex-col items-center md:items-end gap-2 md:gap-1.5">
-                        <span className="text-[10px] font-semibold tracking-[1px] uppercase text-bl-ink border border-bl/30 px-2 py-0.5 rounded-sm whitespace-nowrap bg-bl/5">
+                        <span className="text-[10px] font-semibold tracking-[1px] uppercase text-bl-ink border border-bl/30 px-2 py-0.5 rounded-md whitespace-nowrap bg-bl/5">
                           {slotsLeft > 0 ? `${slotsLeft} slots left` : 'Filling fast'}
                         </span>
                         <Link
                           href={`${ROUTES.enrol}?programme=${batch.programme?.slug ?? ''}`}
-                          className="text-[10px] font-semibold tracking-[1.5px] uppercase px-4 py-1.5 bg-bl text-white hover:bg-bl-deep transition-all rounded-sm whitespace-nowrap focus-visible:focus-ring active:scale-[0.98]"
+                          className="text-[10px] font-semibold tracking-[1.5px] uppercase px-4 py-1.5 bg-bl text-white hover:bg-bl-deep transition-all rounded-md whitespace-nowrap focus-visible:focus-ring active:scale-[0.98]"
                         >
                           Book Trial
                         </Link>
@@ -157,7 +157,7 @@ export function ScheduleFilter({ batches }: ScheduleFilterProps) {
           ))}
         </div>
       ) : (
-        <p className="text-ink-2 text-sm bg-surface p-8 rounded-card border border-line text-center">
+        <p className="text-ink-2 text-sm bg-surface p-8 rounded-md border border-line text-center">
           No batches found for {activeDay}.
         </p>
       )}

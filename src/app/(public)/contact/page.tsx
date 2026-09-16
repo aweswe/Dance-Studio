@@ -42,7 +42,7 @@ export default function ContactPage() {
         
         {/* Left Column: Direct Studio Coordinates */}
         <div className="lg:col-span-6 space-y-6">
-          <div className="bento-card p-6 sm:p-8 rounded-[28px] space-y-6">
+          <div className="bento-card p-6 sm:p-8 rounded-md space-y-6">
             <div>
               <div className="flex items-center gap-2 mb-1">
                 <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-bl font-bold">
@@ -55,8 +55,8 @@ export default function ContactPage() {
             </div>
 
             <div className="space-y-5">
-              <div className="flex gap-4 items-start p-3.5 rounded-2xl bg-canvas border border-line">
-                <div className="w-10 h-10 rounded-xl bg-bl/10 flex items-center justify-center text-bl shrink-0">
+              <div className="flex gap-4 items-start p-3.5 rounded-md bg-canvas border border-line">
+                <div className="w-10 h-10 rounded-md bg-bl/10 flex items-center justify-center text-bl shrink-0">
                   <MapPin size={20} />
                 </div>
                 <div>
@@ -68,8 +68,8 @@ export default function ContactPage() {
                 </div>
               </div>
 
-              <div className="flex gap-4 items-start p-3.5 rounded-2xl bg-canvas border border-line">
-                <div className="w-10 h-10 rounded-xl bg-bl/10 flex items-center justify-center text-bl shrink-0">
+              <div className="flex gap-4 items-start p-3.5 rounded-md bg-canvas border border-line">
+                <div className="w-10 h-10 rounded-md bg-bl/10 flex items-center justify-center text-bl shrink-0">
                   <Phone size={20} />
                 </div>
                 <div>
@@ -87,8 +87,8 @@ export default function ContactPage() {
                 </div>
               </div>
 
-              <div className="flex gap-4 items-start p-3.5 rounded-2xl bg-canvas border border-line">
-                <div className="w-10 h-10 rounded-xl bg-bl/10 flex items-center justify-center text-bl shrink-0">
+              <div className="flex gap-4 items-start p-3.5 rounded-md bg-canvas border border-line">
+                <div className="w-10 h-10 rounded-md bg-bl/10 flex items-center justify-center text-bl shrink-0">
                   <Clock size={20} />
                 </div>
                 <div>
@@ -119,7 +119,7 @@ export default function ContactPage() {
         </div>
 
         {/* Right Column: Clean Enquiry Card */}
-        <div className="lg:col-span-6 bento-card p-6 sm:p-10 rounded-[28px] shadow-lg">
+        <div className="lg:col-span-6 bento-card p-6 sm:p-10 rounded-md shadow-lg">
           <div className="flex items-center gap-2 mb-1">
             <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-bl font-bold">
               {"// Send Message"}

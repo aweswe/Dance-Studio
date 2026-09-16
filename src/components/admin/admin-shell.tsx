@@ -37,7 +37,7 @@ export function AdminShell({ email, initial, banner, children }: AdminShellProps
               type="button"
               aria-label={isOpen ? "Close menu" : "Open menu"}
               onClick={() => setIsOpen((v) => !v)}
-              className="md:hidden min-h-11 min-w-11 inline-flex items-center justify-center text-ink rounded-xl hover:bg-canvas-muted focus-visible:focus-ring"
+              className="md:hidden min-h-11 min-w-11 inline-flex items-center justify-center text-ink rounded-md hover:bg-canvas-muted focus-visible:focus-ring"
             >
               {isOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
@@ -46,7 +46,7 @@ export function AdminShell({ email, initial, banner, children }: AdminShellProps
           <div className="flex items-center gap-2 shrink-0">
             <Link
               href="/"
-              className="hidden sm:inline-flex items-center gap-1.5 min-h-11 px-3 rounded-xl text-xs font-medium text-ink-2 hover:text-ink hover:bg-canvas-muted focus-visible:focus-ring"
+              className="hidden sm:inline-flex items-center gap-1.5 min-h-11 px-3 rounded-md text-xs font-medium text-ink-2 hover:text-ink hover:bg-canvas-muted focus-visible:focus-ring"
             >
               <ExternalLink size={14} />
               Homepage

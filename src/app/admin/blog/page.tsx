@@ -18,7 +18,7 @@ export default async function BlogPage() {
       </div>
 
       <Suspense fallback={
-        <div className="bg-surface rounded-2xl border border-line-subtle overflow-hidden">
+        <div className="bg-surface rounded-md border border-line-subtle overflow-hidden">
           {Array.from({ length: 4 }).map((_, i) => (
             <ListRowSkeleton key={i} />
           ))}

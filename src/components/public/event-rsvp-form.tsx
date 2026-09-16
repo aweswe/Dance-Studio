@@ -37,13 +37,13 @@ export function EventRsvpForm({ slug }: { slug: string }) {
           max={12}
           value={guests}
           onChange={(e) => setGuests(Number(e.target.value))}
-          className="ml-2 w-16 border border-line rounded-lg px-2 py-1"
+          className="ml-2 w-16 border border-line rounded-md px-2 py-1"
         />
       </label>
       <button
         type="submit"
         disabled={busy}
-        className="w-full bg-bl text-blk font-black uppercase tracking-wider text-xs py-3 rounded-xl"
+        className="w-full bg-bl text-blk font-black uppercase tracking-wider text-xs py-3 rounded-md"
       >
         {busy ? "Saving…" : "RSVP"}
       </button>

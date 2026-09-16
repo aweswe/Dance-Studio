@@ -23,7 +23,7 @@ export async function PricingSection() {
         </div>
         <Link
           href={ROUTES.enrol}
-          className="hidden sm:inline-flex items-center gap-1.5 text-sm font-medium text-ink-3 hover:text-ink border border-line px-4 py-2.5 rounded-xl hover:border-ink"
+          className="hidden sm:inline-flex items-center gap-1.5 text-sm font-medium text-ink-3 hover:text-ink border border-line px-4 py-2.5 rounded-md hover:border-ink"
         >
           Book a free trial <ArrowUpRight size={12} />
         </Link>
@@ -45,7 +45,7 @@ export async function PricingSection() {
               href={enrolHref({ programme: programme.slug, intent: 'pay' })}
               className={cn(
                 snapSlideClass,
-                'group block rounded-[24px] overflow-hidden hover:-translate-y-1 transition-transform duration-300 ease-[cubic-bezier(0.2,0,0,1)] active:scale-[0.96]',
+                'group block rounded-md overflow-hidden hover:-translate-y-1 transition-transform duration-300 ease-[cubic-bezier(0.2,0,0,1)] active:scale-[0.96]',
                 tile === 'ink' && 'fee-tile-ink',
                 tile === 'sun' && 'fee-tile-sun',
                 tile === 'velvet' && 'fee-tile-velvet',
@@ -78,7 +78,7 @@ export async function PricingSection() {
                 )}
 
                 <div className="mt-auto pt-4 flex justify-end">
-                  <span className={cn('w-9 h-9 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform', arrowOn)}>
+                  <span className={cn('w-9 h-9 rounded-md flex items-center justify-center group-hover:scale-110 transition-transform', arrowOn)}>
                     <ArrowUpRight size={16} className="stroke-[2.5]" />
                   </span>
                 </div>

@@ -59,7 +59,7 @@ export function HeroStats({ stats }: { stats: { key: string; value: string }[] }
         >
           <dt className={`${VALUE_ROW} gap-2`}>
             <span
-              className="flex h-[1.875rem] w-[1.875rem] shrink-0 items-center justify-center rounded-[7px] bg-white shadow-[0_2px_6px_-1px_rgba(0,0,0,0.32)]"
+              className="flex h-[1.875rem] w-[1.875rem] shrink-0 items-center justify-center rounded-md bg-white shadow-[0_2px_6px_-1px_rgba(0,0,0,0.32)]"
               aria-hidden
             >
               <GoogleMark className="h-4 w-4" />

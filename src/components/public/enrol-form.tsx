@@ -233,7 +233,7 @@ export function EnrolForm({
   if (status === 'success' || status === 'lead') {
     const paid = status === 'success';
     return (
-      <div className="bg-surface p-8 md:p-10 rounded-2xl border border-line shadow-2xl max-w-lg mx-auto w-full text-center space-y-6">
+      <div className="bg-surface p-8 md:p-10 rounded-md border border-line shadow-2xl max-w-lg mx-auto w-full text-center space-y-6">
         <div className="w-16 h-16 rounded-full bg-green/15 text-green flex items-center justify-center mx-auto">
           {paid ? <CheckCircle2 size={32} /> : <MessageSquare size={28} />}
         </div>
@@ -253,7 +253,7 @@ export function EnrolForm({
           </p>
         </div>
 
-        <div className="bg-canvas-muted rounded-2xl p-4 text-xs text-ink space-y-2 text-left border border-line">
+        <div className="bg-canvas-muted rounded-md p-4 text-xs text-ink space-y-2 text-left border border-line">
           <div className="flex justify-between py-1 border-b border-line">
             <span className="text-ink-2">Student</span>
             <span className="font-medium">{childName}</span>
@@ -272,7 +272,7 @@ export function EnrolForm({
           {paid ? (
             <a
               href={ROUTES.login}
-              className="btn-sun w-full text-center text-xs font-black tracking-[1.5px] uppercase px-6 py-4 rounded-xl shadow-md active:scale-[0.98] flex items-center justify-center gap-2"
+              className="btn-sun w-full text-center text-xs font-black tracking-[1.5px] uppercase px-6 py-4 rounded-md shadow-md active:scale-[0.98] flex items-center justify-center gap-2"
             >
               Sign in to student portal <ArrowRight size={16} />
             </a>
@@ -281,7 +281,7 @@ export function EnrolForm({
               href={whatsappLink(waMessage)}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full text-center text-xs font-black tracking-[1.5px] uppercase px-6 py-4 bg-green text-white rounded-xl shadow-md"
+              className="w-full text-center text-xs font-black tracking-[1.5px] uppercase px-6 py-4 bg-green text-white rounded-md shadow-md"
             >
               Continue on WhatsApp
             </a>
@@ -295,9 +295,9 @@ export function EnrolForm({
   }
 
   return (
-    <div className="bento-card rounded-[28px] sm:rounded-[36px] border border-line p-6 md:p-8 shadow-xl max-w-xl mx-auto w-full space-y-6">
+    <div className="bento-card rounded-md sm:rounded-md border border-line p-6 md:p-8 shadow-xl max-w-xl mx-auto w-full space-y-6">
       <div className="flex items-center justify-between gap-3">
-        <div className="inline-flex items-center gap-2 rounded-xl border border-line bg-canvas px-3 py-2 text-[11px] font-mono font-bold uppercase tracking-wider text-ink">
+        <div className="inline-flex items-center gap-2 rounded-md border border-line bg-canvas px-3 py-2 text-[11px] font-mono font-bold uppercase tracking-wider text-ink">
           {isPay ? <CreditCard size={14} /> : <MessageSquare size={14} />}
           {isPay ? 'Enrol & pay' : 'Free trial · WhatsApp'}
         </div>
@@ -330,7 +330,7 @@ export function EnrolForm({
                   type="button"
                   onClick={() => handleSelectProgramme(p.id)}
                   className={cn(
-                    "p-3 rounded-2xl border text-left transition-all flex flex-col justify-between cursor-pointer",
+                    "p-3 rounded-md border text-left transition-all flex flex-col justify-between cursor-pointer",
                     isSelected ? "border-bl bg-bl/10 shadow-sm" : "border-line bg-canvas hover:border-line-strong"
                   )}
                 >
@@ -354,19 +354,19 @@ export function EnrolForm({
             <select
               value={selectedBatchId || filteredBatches[0]?.id}
               onChange={(e) => setSelectedBatchId(e.target.value)}
-              className="w-full bg-canvas-muted border border-line rounded-xl p-3 text-xs font-semibold text-ink focus:outline-none focus:ring-2 focus:ring-bl cursor-pointer"
+              className="w-full bg-canvas-muted border border-line rounded-md p-3 text-xs font-semibold text-ink focus:outline-none focus:ring-2 focus:ring-bl cursor-pointer"
             >
               {filteredBatches.map((b) => (
                 <option key={b.id} value={b.id}>{b.name || batchLabel(b)}</option>
               ))}
             </select>
           ) : (
-            <p className="text-xs text-ink-2 bg-canvas-muted rounded-xl p-3 border border-line">
+            <p className="text-xs text-ink-2 bg-canvas-muted rounded-md p-3 border border-line">
               Batch timings confirmed on registration.
             </p>
           )}
           {selectedBatch && (
-            <div className="p-2.5 rounded-lg bg-canvas-muted/60 border border-line-subtle flex items-center justify-between text-[11px] text-ink-2">
+            <div className="p-2.5 rounded-md bg-canvas-muted/60 border border-line-subtle flex items-center justify-between text-[11px] text-ink-2">
               <span className="flex items-center gap-1.5">
                 <Calendar size={13} className="text-bl" /> {selectedBatch.days?.join(', ')}
               </span>
@@ -430,7 +430,7 @@ export function EnrolForm({
                 type="button"
                 onClick={() => setPlan(p)}
                 className={cn(
-                  'flex-1 py-2 rounded-lg text-[11px] font-bold uppercase tracking-wider border',
+                  'flex-1 py-2 rounded-md text-[11px] font-bold uppercase tracking-wider border',
                   plan === p ? 'border-bl bg-bl/10 text-bl' : 'border-line text-ink-2'
                 )}
               >
@@ -441,7 +441,7 @@ export function EnrolForm({
         )}
 
         {status === 'error' && (
-          <div className="flex gap-2.5 items-start bg-danger/10 border border-danger/30 rounded-xl p-3.5 text-xs text-danger leading-relaxed">
+          <div className="flex gap-2.5 items-start bg-danger/10 border border-danger/30 rounded-md p-3.5 text-xs text-danger leading-relaxed">
             <AlertCircle size={16} className="shrink-0 mt-0.5" />
             <span>{errorMsg}</span>
           </div>
@@ -476,7 +476,7 @@ export function EnrolForm({
             <button
               type="submit"
               disabled={status === 'submitting'}
-              className="w-full text-xs font-black tracking-[2px] uppercase py-4 bg-green hover:bg-green-ink text-white rounded-xl shadow-md active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
+              className="w-full text-xs font-black tracking-[2px] uppercase py-4 bg-green hover:bg-green-ink text-white rounded-md shadow-md active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
             >
               {status === 'submitting' ? (
                 <><Spinner className="w-4 h-4" /> Saving...</>
@@ -488,7 +488,7 @@ export function EnrolForm({
           {upiLink && (
             <a
               href={upiLink}
-              className="block w-full text-center text-[11px] font-bold uppercase tracking-wider py-3 rounded-xl border border-line text-ink hover:border-bl"
+              className="block w-full text-center text-[11px] font-bold uppercase tracking-wider py-3 rounded-md border border-line text-ink hover:border-bl"
             >
               Open UPI app ({formatCurrency(fee)})
             </a>

@@ -215,7 +215,7 @@ export function BatchManager({
             </Card>
           ))}
           {(!initialBatches || initialBatches.length === 0) && (
-            <div className="col-span-full py-12 text-center text-ink-2 bg-canvas-muted rounded-[16px]">
+            <div className="col-span-full py-12 text-center text-ink-2 bg-canvas-muted rounded-md">
               No batches available. Create one to get started.
             </div>
           )}
@@ -238,7 +238,7 @@ export function BatchManager({
             </Card>
           ))}
           {(!initialProgrammes || initialProgrammes.length === 0) && (
-            <div className="col-span-full py-12 text-center text-ink-2 bg-canvas-muted rounded-[16px]">
+            <div className="col-span-full py-12 text-center text-ink-2 bg-canvas-muted rounded-md">
               No programmes available. Create one to get started.
             </div>
           )}

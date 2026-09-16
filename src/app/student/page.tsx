@@ -89,7 +89,7 @@ export default async function StudentDashboardPage() {
           </div>
           <Link
             href={`${ROUTES.student}/fees`}
-            className="inline-flex items-center justify-center min-h-11 px-4 rounded-xl bg-bl text-white text-sm font-semibold hover:bg-bl-deep focus-visible:focus-ring active:scale-[0.96]"
+            className="inline-flex items-center justify-center min-h-11 px-4 rounded-md bg-bl text-white text-sm font-semibold hover:bg-bl-deep focus-visible:focus-ring active:scale-[0.96]"
           >
             Pay fees
           </Link>
@@ -118,7 +118,7 @@ export default async function StudentDashboardPage() {
         ]}
       />
 
-      <nav className="bg-surface-card border border-line shadow-lift rounded-[20px] divide-y divide-line overflow-hidden">
+      <nav className="bg-surface-card border border-line shadow-lift rounded-md divide-y divide-line overflow-hidden">
         {links.map((item) => (
           <Link
             key={item.href}

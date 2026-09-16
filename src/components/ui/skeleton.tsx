@@ -53,7 +53,7 @@ export function StatSkeleton() {
 /** Skeleton for programme cards */
 export function ProgrammeCardSkeleton() {
   return (
-    <div className="rounded-[20px] bg-surface-card border border-line shadow-lift p-10">
+    <div className="rounded-md bg-surface-card border border-line shadow-lift p-10">
       <Skeleton className="h-5 w-24 rounded-full mb-4" />
       <Skeleton className="h-8 w-48 mb-2" />
       <Skeleton className="h-3 w-32 mb-5" />
@@ -62,7 +62,7 @@ export function ProgrammeCardSkeleton() {
           <Skeleton key={i} className="h-4 w-full" />
         ))}
       </div>
-      <Skeleton className="h-20 w-full rounded-lg mb-5" />
+      <Skeleton className="h-20 w-full rounded-md mb-5" />
       <Skeleton className="h-12 w-full" />
     </div>
   );
@@ -199,7 +199,7 @@ export function AvatarRowSkeleton() {
 export function ListRowSkeleton() {
   return (
     <div className="flex items-center gap-4 p-4 border-b border-line-subtle">
-      <Skeleton className="h-12 w-12 rounded-lg shrink-0" />
+      <Skeleton className="h-12 w-12 rounded-md shrink-0" />
       <div className="flex-1 space-y-2">
         <Skeleton className="h-4 w-48 max-w-full" />
         <Skeleton className="h-3 w-72 max-w-full" />

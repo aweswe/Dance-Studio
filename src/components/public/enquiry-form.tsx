@@ -45,7 +45,7 @@ export function EnquiryForm() {
   }
 
   const textareaClass =
-    'w-full bg-canvas border border-line rounded-2xl px-4 py-3 text-sm text-ink placeholder:text-ink-3 h-32 resize-none focus:outline-none focus:border-bl focus:ring-2 focus:ring-bl/20 transition-all';
+    'w-full bg-canvas border border-line rounded-md px-4 py-3 text-sm text-ink placeholder:text-ink-3 h-32 resize-none focus:outline-none focus:border-bl focus:ring-2 focus:ring-bl/20 transition-all';
 
   return (
     <form onSubmit={submit} className="space-y-5" noValidate>
