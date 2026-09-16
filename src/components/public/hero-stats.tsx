@@ -48,16 +48,16 @@ export function HeroStats({ stats }: { stats: { key: string; value: string }[] }
   }, {});
 
   return (
-    <dl className="grid w-full grid-cols-2 gap-x-5 gap-y-4 sm:flex sm:flex-nowrap sm:items-start sm:justify-between sm:gap-x-3 lg:gap-x-4">
-      <div className={`${CELL} col-span-2 sm:col-span-1 sm:shrink-0`}>
+    <dl className="grid w-full grid-cols-2 gap-x-6 gap-y-5 sm:flex sm:flex-nowrap sm:items-start sm:justify-between sm:gap-x-3 lg:gap-x-4">
+      <div className="col-span-2 sm:col-span-1 sm:shrink-0 flex justify-center sm:justify-start">
         <a
           href={ACADEMY.mapLink}
           target="_blank"
           rel="noopener noreferrer"
           aria-label={`${ACADEMY.googleRating} stars on Google, ${ACADEMY.googleReviewCount}+ reviews`}
-          className={`${CELL} rounded-md transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl focus-visible:ring-offset-2 focus-visible:ring-offset-blk`}
+          className="flex flex-col items-center sm:items-start gap-1.5 rounded-md transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl focus-visible:ring-offset-2 focus-visible:ring-offset-blk"
         >
-          <dt className={`${VALUE_ROW} gap-2`}>
+          <dt className="m-0 flex h-[1.875rem] items-center justify-center sm:justify-start gap-2">
             <span
               className="flex h-[1.875rem] w-[1.875rem] shrink-0 items-center justify-center rounded-md bg-white shadow-[0_2px_6px_-1px_rgba(0,0,0,0.32)]"
               aria-hidden
@@ -73,20 +73,25 @@ export function HeroStats({ stats }: { stats: { key: string; value: string }[] }
               </span>
             </span>
           </dt>
-          <dd className={`${LABEL_CLASS} pl-[calc(1.875rem+0.5rem)]`}>
+          <dd className="m-0 text-[8px] sm:text-[9px] font-semibold uppercase tracking-[0.12em] leading-snug text-white/40 text-center sm:text-left sm:pl-[calc(1.875rem+0.5rem)]">
             {ACADEMY.googleReviewCount}+ reviews
           </dd>
         </a>
       </div>
 
       {STAT_META.map((stat) => (
-        <div key={stat.key} className={`${CELL} sm:shrink-0`}>
-          <dt className={VALUE_ROW}>
+        <div
+          key={stat.key}
+          className="flex min-w-0 flex-col items-center sm:items-start justify-center text-center sm:text-left gap-1.5 sm:shrink-0"
+        >
+          <dt className="m-0 flex h-[1.875rem] items-center justify-center sm:justify-start">
             <span className={VALUE_CLASS}>
               <CountUp value={valueByKey[stat.key] || stat.fallback} />
             </span>
           </dt>
-          <dd className={LABEL_CLASS}>{stat.label}</dd>
+          <dd className="m-0 text-[8px] sm:text-[9px] font-semibold uppercase tracking-[0.12em] leading-snug text-white/40 text-center sm:text-left">
+            {stat.label}
+          </dd>
         </div>
       ))}
     </dl>
