@@ -15,7 +15,7 @@ const FALLBACK_REELS: PublicReel[] = [
   { id: 'r3', title: 'Maha Shivratri — classical offering', videoSrc: '/reels/r3.mp4', href: ACADEMY.socials.instagram },
   { id: 'r4', title: 'Choreo & song — studio cut', videoSrc: '/reels/r4.mp4', href: ACADEMY.socials.instagram },
   { id: 'r5', title: 'Freestyle popping', videoSrc: '/reels/r5.mp4', href: ACADEMY.socials.instagram },
-  { id: 'r6', title: 'After Hours — Divya choreo', videoSrc: '/reels/r6.mp4', href: ACADEMY.socials.instagram },
+  { id: 'r6', title: 'Lights, camera, naach! — bol mitthi with swag', videoSrc: '/reels/r6.mp4', href: ACADEMY.socials.instagram },
 ];
 
 export async function getHomepageReels(limit = 6): Promise<PublicReel[]> {

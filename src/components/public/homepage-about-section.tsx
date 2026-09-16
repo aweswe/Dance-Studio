@@ -7,6 +7,7 @@ import {
   homepageCtaPair,
   homepageCtaPairButton,
 } from '@/lib/ui/homepage-cta';
+import { sectionPad } from '@/lib/ui/section-layout';
 import { ROUTES } from '@/lib/utils/constants';
 import { cn } from '@/lib/utils/cn';
 
@@ -37,11 +38,15 @@ const STORY_STATS = [
   },
 ] as const;
 
+const BLOCK_GAP = 'gap-4 sm:gap-5';
+const COL_GAP = 'gap-12 lg:gap-24 xl:gap-28';
+
 interface HomepageAboutSectionProps {
   stats?: { key: string; value: string }[];
+  showLearnMore?: boolean;
 }
 
-export function HomepageAboutSection({ stats }: HomepageAboutSectionProps) {
+export function HomepageAboutSection({ stats, showLearnMore = true }: HomepageAboutSectionProps) {
   const valueByKey = (stats ?? []).reduce<Record<string, string>>((acc, item) => {
     if (item?.key) acc[item.key] = String(item.value ?? '');
     return acc;
@@ -54,46 +59,55 @@ export function HomepageAboutSection({ stats }: HomepageAboutSectionProps) {
 
   return (
     <section id="about" className="bg-blk text-wh w-full">
-      <HomepageSection className="py-16 sm:py-20 md:py-24">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 xl:gap-[4rem] items-center">
-          <div className="flex flex-col gap-5 sm:gap-6 min-w-0">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-bl-light">
-              Our story
-            </p>
-            <h2 className="font-anton text-[clamp(1.75rem,4.5vw,2.75rem)] uppercase leading-[0.93] tracking-tight text-wh">
-              15+ years of teaching
-              <br />
-              Hyderabad to dance.
-            </h2>
-            <div className="space-y-5 text-sm text-wh/65 leading-[1.78] max-w-[32rem]">
-              <p>
-                Rhythmzz Academy of Dance was founded by Nitish at Neredmet X Road, Secunderabad.
-                What began with a handful of neighbourhood students has grown into one of East
-                Hyderabad&apos;s most trusted dance and fitness academies.
+      <HomepageSection className={sectionPad}>
+        <div className={cn('grid grid-cols-1 lg:grid-cols-2 items-stretch', COL_GAP)}>
+          {/* Copy — title top, CTAs bottom (matches stats grid height) */}
+          <div className="flex min-w-0 flex-col gap-6 lg:gap-0 lg:justify-between">
+            <div className={cn('flex flex-col', BLOCK_GAP)}>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-bl-light">
+                Our story
               </p>
-              <p>
-                We&apos;ve represented India internationally, performed at Amazon and IPL events,
-                organised the Hyderabad Dance Premier League with 1,500+ participants, and trained
-                over 5,000 students — from 5-year-olds discovering dance for the first time to
-                adults rediscovering movement after years away.
-              </p>
+              <h2 className="font-anton text-[clamp(1.75rem,4.5vw,2.75rem)] uppercase leading-[0.93] tracking-tight text-wh">
+                15+ years teaching
+                <br />
+                Hyderabad to <span className="text-bl">dance.</span>
+              </h2>
+              <div className="space-y-4 text-sm text-wh/65 leading-[1.75] max-w-[34rem]">
+                <p>
+                  Nitish started Rhythmzz at Neredmet X Road — one room above the ICICI ATM, a
+                  handful of neighbourhood kids, and a sprung floor he built himself.
+                </p>
+                <p>
+                  Since then: representing India abroad, Amazon and IPL stages, the Hyderabad Dance
+                  Premier League with 1,500+ dancers, and 5,000+ students — from five-year-olds in
+                  their first class to adults coming back after years away.
+                </p>
+              </div>
             </div>
-            <div className={cn(homepageCtaPair, 'sm:max-w-none mt-1 sm:mt-2')}>
+
+            <div className={cn(homepageCtaPair, 'w-full')}>
               <Link href={ROUTES.enrol} className={`${homepageCtaBrand} ${homepageCtaPairButton}`}>
                 Join a class
               </Link>
-              <Link href={ROUTES.about} className={`${homepageCtaOutlineDark} ${homepageCtaPairButton}`}>
-                Learn more
-              </Link>
+              {showLearnMore ? (
+                <Link href={ROUTES.about} className={`${homepageCtaOutlineDark} ${homepageCtaPairButton}`}>
+                  Learn more
+                </Link>
+              ) : (
+                <Link href={ROUTES.contact} className={`${homepageCtaOutlineDark} ${homepageCtaPairButton}`}>
+                  Visit us
+                </Link>
+              )}
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 sm:gap-3.5">
+          {/* Stats — stretched to row height so left CTAs meet this baseline */}
+          <div className="grid h-full min-h-[17rem] sm:min-h-[19rem] grid-cols-2 auto-rows-fr gap-3 sm:gap-4">
             {highlights.map((item) => (
               <div
                 key={item.key}
                 className={cn(
-                  'text-center px-4 py-7 sm:px-5 sm:py-8',
+                  'flex flex-col items-center justify-center text-center px-4 py-6 sm:px-5 sm:py-7',
                   homepageCardRadius,
                   item.accent
                     ? 'bg-bl/10 border border-bl/20'

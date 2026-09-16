@@ -1,9 +1,7 @@
 import type { ReactNode } from 'react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils/cn';
-
-const actionBase =
-  'inline-flex flex-1 @md:flex-none items-center justify-center min-h-11 px-5 rounded-md text-[11px] font-mono uppercase tracking-wider transition-colors active:scale-[0.98]';
+import { homepageCtaBrand, homepageCtaOutlineLight, homepageCtaPairButton } from '@/lib/ui/homepage-cta';
 
 export function CardFooterActions({
   className,
@@ -30,10 +28,7 @@ export function CardFooterActions({
         href={secondaryHref}
         prefetch
         onClick={onSecondaryClick}
-        className={cn(
-          actionBase,
-          'border border-line bg-surface text-ink-2 hover:text-ink hover:border-line-strong',
-        )}
+        className={cn(homepageCtaOutlineLight, homepageCtaPairButton, '@md:flex-none')}
       >
         {secondaryLabel}
       </Link>
@@ -41,10 +36,7 @@ export function CardFooterActions({
         href={primaryHref}
         prefetch
         onClick={onPrimaryClick}
-        className={cn(
-          actionBase,
-          'gap-1.5 border-0 btn-sun font-black tracking-[0.12em] whitespace-nowrap',
-        )}
+        className={cn(homepageCtaBrand, homepageCtaPairButton, '@md:flex-none')}
       >
         {primaryLabel}
         {primaryIcon}

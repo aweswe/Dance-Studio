@@ -1,8 +1,15 @@
 import { Metadata } from 'next';
-import { MapPin, Phone, Mail, Clock, ArrowRight } from 'lucide-react';
+import { MapPin, Phone, Clock } from 'lucide-react';
 import { ACADEMY, HOURS, AREAS_SERVED, SITE_URL } from '@/lib/utils/constants';
 import { formatTime } from '@/lib/utils/format';
 import { EnquiryForm } from '@/components/public/enquiry-form';
+import { HomepageSection, HomepageSectionHeading } from '@/components/public/homepage-section';
+import { PublicBookTrialCta } from '@/components/public/public-book-trial-cta';
+import { PublicPage } from '@/components/public/public-page';
+import { PublicPageTitle } from '@/components/public/public-page-title';
+import { homepageCtaWhatsApp } from '@/lib/ui/homepage-cta';
+import { sectionGap, sectionPadAfterTitleLg, sectionPadLg } from '@/lib/ui/section-layout';
+import { cn } from '@/lib/utils/cn';
 
 const hoursLabel = `${HOURS.days[0]} – ${HOURS.days[HOURS.days.length - 1]}: ${formatTime(`${HOURS.opens}:00`)} – ${formatTime(`${HOURS.closes}:00`)}`;
 
@@ -14,141 +21,113 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <div className="bg-canvas text-ink">
-      {/* 01: Hero Section */}
-      <section className="relative overflow-hidden pt-12 pb-16 sm:pt-16 sm:pb-24 px-4 sm:px-6 md:px-16 border-b border-line bg-canvas">
-        <div className="max-w-7xl mx-auto">
-          <div className="max-w-4xl mx-auto text-center">
-            <div className="mb-5">
-              <span className="text-[10px] sm:text-xs font-mono tracking-[0.22em] text-bl uppercase font-bold">
-                DIRECT COMMUNICATIONS DESK
-              </span>
-            </div>
+    <PublicPage>
+      <PublicPageTitle
+        eyebrow="Contact"
+        title="Get in touch"
+        description="WhatsApp +91 90529 80859. Or fill the form — we reply the same day if it isn’t a class hour."
+      />
 
-            <h1 className="font-anton text-5xl sm:text-7xl md:text-8xl text-ink mb-6 leading-[0.92] tracking-tight uppercase">
-              CONNECT WITH <br className="hidden sm:inline" />
-              <span className="text-bl">THE ACADEMY.</span>
-            </h1>
+      <HomepageSection className={sectionPadAfterTitleLg}>
+        <div className="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:grid-rows-[auto_minmax(0,1fr)] lg:gap-x-12 lg:gap-y-4">
+          <div className={cn('flex min-h-0 flex-col', sectionGap, 'lg:grid lg:grid-rows-subgrid lg:row-span-2 lg:gap-y-4')}>
+            <HomepageSectionHeading
+              eyebrow="Studio"
+              title="Visit us"
+              description="Neredmet X Road — sprung floor, above the ICICI ATM."
+              className="mb-0 [&>p:last-child]:min-h-[2.75rem]"
+            />
 
-            <p className="text-ink-2 text-base sm:text-lg md:text-xl leading-relaxed max-w-2xl mx-auto">
-              WhatsApp +91 90529 80859. Or fill the form — we reply the same day if it isn’t a class hour.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* 02: Spacious 2-Column Contact & Enquiry Section */}
-      <section className="py-20 sm:py-28 px-4 sm:px-6 md:px-16 max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
-        
-        {/* Left Column: Direct Studio Coordinates */}
-        <div className="lg:col-span-6 space-y-6">
-          <div className="bento-card p-6 sm:p-8 rounded-md space-y-6">
-            <div>
-              <div className="flex items-center gap-2 mb-1">
-                <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-bl font-bold">
-                  {"// Studio Location"}
-                </span>
-              </div>
-              <h2 className="font-anton text-3xl sm:text-4xl text-ink uppercase tracking-wide">
-                VISIT THE STUDIO
-              </h2>
-            </div>
-
-            <div className="space-y-5">
-              <div className="flex gap-4 items-start p-3.5 rounded-md bg-canvas border border-line">
+            <div className="flex h-full flex-col rounded-md border border-line bg-surface p-6 sm:p-8 space-y-5">
+              <div className="flex gap-4 items-start">
                 <div className="w-10 h-10 rounded-md bg-bl/10 flex items-center justify-center text-bl shrink-0">
                   <MapPin size={20} />
                 </div>
                 <div>
-                  <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-ink mb-1">Address</h4>
-                  <p className="text-xs sm:text-sm text-ink-2 leading-relaxed">
-                    Plot 597, 3rd Floor, Above ICICI ATM,<br />
+                  <h3 className="text-[11px] font-semibold uppercase tracking-[0.14em] text-ink mb-1">Address</h3>
+                  <p className="text-sm text-ink-2 leading-relaxed">
+                    Plot 597, 3rd Floor, Above ICICI ATM,
+                    <br />
                     Neredmet X Road, Secunderabad 500094
                   </p>
                 </div>
               </div>
 
-              <div className="flex gap-4 items-start p-3.5 rounded-md bg-canvas border border-line">
+              <div className="flex gap-4 items-start">
                 <div className="w-10 h-10 rounded-md bg-bl/10 flex items-center justify-center text-bl shrink-0">
                   <Phone size={20} />
                 </div>
-                <div>
-                  <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-ink mb-1">Direct Line &amp; WhatsApp</h4>
-                  <p className="text-xs sm:text-sm text-ink-2 font-mono mb-2">{ACADEMY.phoneDisplay}</p>
+                <div className="min-w-0">
+                  <h3 className="text-[11px] font-semibold uppercase tracking-[0.14em] text-ink mb-1">Phone & WhatsApp</h3>
+                  <p className="text-sm text-ink-2 mb-2">{ACADEMY.phoneDisplay}</p>
                   <a
-                    href={`https://wa.me/${ACADEMY.phone.replace(/[^0-9]/g, '')}`}
+                    href={ACADEMY.whatsapp}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-bl hover:text-bl/80 text-xs font-mono font-bold inline-flex items-center gap-1.5 transition-colors"
+                    className={homepageCtaWhatsApp}
                   >
-                    <span>[Message on WhatsApp]</span>
-                    <ArrowRight size={13} />
+                    WhatsApp us
                   </a>
                 </div>
               </div>
 
-              <div className="flex gap-4 items-start p-3.5 rounded-md bg-canvas border border-line">
+              <div className="flex gap-4 items-start">
                 <div className="w-10 h-10 rounded-md bg-bl/10 flex items-center justify-center text-bl shrink-0">
                   <Clock size={20} />
                 </div>
                 <div>
-                  <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-ink mb-1">Timings</h4>
-                  <p className="text-xs sm:text-sm text-ink-2 leading-relaxed font-mono">
-                    {hoursLabel}
-                  </p>
+                  <h3 className="text-[11px] font-semibold uppercase tracking-[0.14em] text-ink mb-1">Timings</h3>
+                  <p className="text-sm text-ink-2 leading-relaxed">{hoursLabel}</p>
+                </div>
+              </div>
+
+              <div className="mt-auto pt-5 border-t border-line">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-3 mb-3">Areas we serve</p>
+                <div className="flex flex-wrap gap-2">
+                  {AREAS_SERVED.map((area) => (
+                    <span
+                      key={area}
+                      className="px-3 py-1 rounded-md bg-canvas border border-line text-xs font-medium text-ink-2"
+                    >
+                      {area}
+                    </span>
+                  ))}
                 </div>
               </div>
             </div>
+          </div>
 
-            <div className="pt-5 border-t border-line">
-              <span className="text-[10px] font-mono uppercase tracking-wider text-ink-3 block mb-3 font-bold">
-                Serving Surrounding Localities
-              </span>
-              <div className="flex flex-wrap gap-2">
-                {AREAS_SERVED.map((area) => (
-                  <span
-                    key={area}
-                    className="px-3 py-1 rounded-md bg-canvas border border-line text-xs font-medium text-ink-2 hover:border-bl/30 transition-colors"
-                  >
-                    {area}
-                  </span>
-                ))}
-              </div>
+          <div className={cn('flex min-h-0 flex-col', sectionGap, 'lg:grid lg:grid-rows-subgrid lg:row-span-2 lg:gap-y-4')}>
+            <HomepageSectionHeading
+              eyebrow="Message"
+              title="Have a question?"
+              description="Leave a message and the desk will get back to you within 24 hours."
+              className="mb-0 [&>p:last-child]:min-h-[2.75rem]"
+            />
+            <div className="flex h-full flex-col rounded-md border border-line bg-surface p-6 sm:p-8">
+              <EnquiryForm />
             </div>
           </div>
         </div>
+      </HomepageSection>
 
-        {/* Right Column: Clean Enquiry Card */}
-        <div className="lg:col-span-6 bento-card p-6 sm:p-10 rounded-md shadow-lg">
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-bl font-bold">
-              {"// Send Message"}
-            </span>
-          </div>
-          <h2 className="font-anton text-3xl sm:text-4xl text-ink uppercase tracking-wide mb-2">
-            HAVE A QUESTION?
-          </h2>
-          <p className="text-xs sm:text-sm text-ink-2 mb-8">
-            Leave a message and our admissions team will get back to you within 24 hours.
-          </p>
-          <EnquiryForm />
+      <HomepageSection className={sectionPadLg}>
+        <div className="relative h-[420px] w-full overflow-hidden rounded-md border border-line">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3806.0270505191834!2d78.50058347596005!3d17.4431478834533!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb9a6225a0a38b%3A0xc3e167389eefab2!2sRhythmzz%20Academy%20of%20Dance!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
+            title="Rhythmzz Academy of Dance on Google Maps"
+            width="100%"
+            height="100%"
+            style={{ border: 0 }}
+            allowFullScreen
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            className="absolute inset-0 w-full h-full"
+          />
         </div>
+      </HomepageSection>
 
-      </section>
-
-      {/* Embedded Studio Map */}
-      <section className="h-[420px] w-full bg-canvas relative border-y border-line">
-        <iframe
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3806.0270505191834!2d78.50058347596005!3d17.4431478834533!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb9a6225a0a38b%3A0xc3e167389eefab2!2sRhythmzz%20Academy%20of%20Dance!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
-          width="100%"
-          height="100%"
-          style={{ border: 0 }}
-          allowFullScreen
-          loading="lazy"
-          referrerPolicy="no-referrer-when-downgrade"
-          className="absolute inset-0 w-full h-full grayscale hover:grayscale-0 transition-all duration-700"
-        ></iframe>
-      </section>
-    </div>
+      <PublicBookTrialCta />
+    </PublicPage>
   );
 }

@@ -571,6 +571,37 @@ export const ALL_AUTHENTIC_GALLERY_IMAGES: GalleryItem[] = [
   },
 ];
 
+export type HomepageGalleryMoment = {
+  id: string;
+  url: string;
+  alt: string;
+  type: 'image' | 'video';
+};
+
+/** Mixed homepage picks — spread across the pool, no category filters or labels. */
+export async function getHomepageGalleryMoments(count = 6): Promise<HomepageGalleryMoment[]> {
+  const pool = await getGalleryImages(60);
+  if (pool.length === 0) return [];
+
+  const step = Math.max(1, Math.floor(pool.length / count));
+  const seen = new Set<string>();
+  const picks: HomepageGalleryMoment[] = [];
+
+  for (let i = 0; picks.length < count && i < pool.length * 2; i++) {
+    const item = pool[(i * step + 2) % pool.length];
+    if (seen.has(item.id)) continue;
+    seen.add(item.id);
+    picks.push({
+      id: item.id,
+      url: item.url,
+      alt: item.alt || item.title || 'Rhythmzz studio moment',
+      type: item.type === 'video' ? 'video' : 'image',
+    });
+  }
+
+  return picks;
+}
+
 export async function getGalleryImages(limit = 60) {
   try {
     const supabase = getPublicSupabase();

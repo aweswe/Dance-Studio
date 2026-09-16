@@ -1,30 +1,26 @@
 import Link from 'next/link';
 import { ROUTES } from '@/lib/utils/constants';
+import { homepageCtaBrand, homepageCtaOutlineLight, homepageCtaPair, homepageCtaPairButton } from '@/lib/ui/homepage-cta';
+import { cn } from '@/lib/utils/cn';
 
 export default function NotFound() {
   return (
     <div className="flex-1 flex items-center justify-center px-6 py-24 bg-canvas text-ink">
-      {/* in-page notFound() streams as 200 (soft 404) — noindex keeps it out of search results */}
       <meta name="robots" content="noindex" />
       <div className="max-w-md text-center">
-        <div className="section-label mb-3">404 · Curtain Call</div>
-        <h1 className="heading-display text-6xl text-ink mb-4">THIS PAGE ISN&apos;T ON THE FLOOR</h1>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-bl mb-3">404</p>
+        <h1 className="font-anton text-4xl sm:text-5xl text-ink mb-4 uppercase tracking-tight leading-[0.95]">
+          This page isn&apos;t on the floor
+        </h1>
         <p className="text-sm text-ink-2 leading-relaxed mb-8">
-          The page you are looking for has left the stage. Head back to the programmes, or talk to
-          us directly.
+          Head back to the programmes, or talk to us directly.
         </p>
-        <div className="flex gap-3 justify-center flex-wrap">
-          <Link
-            href={ROUTES.programmes}
-            className="bg-blk text-white text-[11px] font-semibold tracking-[2px] uppercase py-3.5 px-9 hover:bg-bl transition-all focus-visible:focus-ring active:scale-[0.98]"
-          >
-            View Programmes
+        <div className={cn(homepageCtaPair, 'sm:mx-auto')}>
+          <Link href={ROUTES.programmes} className={cn(homepageCtaBrand, homepageCtaPairButton)}>
+            View programmes
           </Link>
-          <Link
-            href={ROUTES.contact}
-            className="border border-line-strong text-ink text-[11px] font-medium tracking-[2px] uppercase py-[13px] px-8 hover:border-bl hover:text-bl transition-all focus-visible:focus-ring active:scale-[0.98]"
-          >
-            Contact Us
+          <Link href={ROUTES.contact} className={cn(homepageCtaOutlineLight, homepageCtaPairButton)}>
+            Contact us
           </Link>
         </div>
       </div>

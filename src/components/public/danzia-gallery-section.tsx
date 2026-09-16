@@ -1,53 +1,64 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
-import { HomepageSection, HomepageSectionHeading } from '@/components/public/homepage-section';
-import { homepageMediaRadius, homepageCtaOutlineLight } from '@/lib/ui/homepage-cta';
-import { getGalleryImages } from '@/data/gallery';
+import { HomepageSection } from '@/components/public/homepage-section';
+import { getHomepageGalleryMoments } from '@/data/gallery';
+import { homepageCtaOutlineLight, homepageMediaFrame } from '@/lib/ui/homepage-cta';
+import { sectionGap } from '@/lib/ui/section-layout';
 import { ROUTES } from '@/lib/utils/constants';
+import { cn } from '@/lib/utils/cn';
 
 export async function DanziaGallerySection() {
-  const images = await getGalleryImages(5);
-  const moments = images.slice(0, 5);
-  const spans = ['md:col-span-7', 'md:col-span-5', 'md:col-span-4', 'md:col-span-4', 'md:col-span-4'];
+  const moments = await getHomepageGalleryMoments(6);
 
   return (
-    <HomepageSection className="py-16 sm:py-24 select-none">
-      <div className="mb-8 sm:mb-10 flex flex-wrap items-end justify-between gap-4">
-        <HomepageSectionHeading
-          className="mb-0"
-          title="From the studio"
-          description="Pulled from the admin gallery — newest uploads first."
-        />
-        <Link href={ROUTES.gallery} className={`${homepageCtaOutlineLight} shrink-0`}>
-          Full gallery
-          <ArrowUpRight size={13} strokeWidth={2.5} />
-        </Link>
-      </div>
+    <HomepageSection id="gallery" className="py-16 sm:py-20 select-none">
+      <div className={cn('flex flex-col', sectionGap)}>
+        <div className={cn('flex flex-wrap items-end justify-between', sectionGap)}>
+          <header className={cn('min-w-0 flex-1 max-w-2xl flex flex-col', sectionGap)}>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-bl">Studio life</p>
+            <h2 className="font-anton text-2xl sm:text-3xl md:text-[2.25rem] uppercase leading-[0.95] tracking-tight text-ink">
+              From the <span className="text-bl">studio.</span>
+            </h2>
+            <p className="text-sm text-ink-2 leading-relaxed">
+              Rehearsals, classes, and stage moments — a quick look inside Rhythmzz.
+            </p>
+          </header>
+          <Link href={ROUTES.gallery} className={`${homepageCtaOutlineLight} shrink-0`}>
+            Full gallery
+            <ArrowUpRight size={13} strokeWidth={2.5} />
+          </Link>
+        </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-5">
-        {moments.map((item, i) => (
-          <div
-            key={item.id}
-            className={`group relative aspect-[16/10] ${homepageMediaRadius} overflow-hidden bg-canvas-muted border border-line shadow-md ${spans[i] ?? 'md:col-span-4'}`}
-          >
-            {item.type === 'video' ? (
-              <video src={item.url} muted playsInline className="absolute inset-0 w-full h-full object-cover" />
-            ) : (
-              <Image
-                src={item.url}
-                alt={item.title || item.alt}
-                fill
-                sizes="(max-width: 768px) 100vw, 50vw"
-                className="object-cover object-center grayscale contrast-115 brightness-95 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out"
-              />
-            )}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-40 group-hover:opacity-10 transition-opacity" />
-            {item.title && (
-              <p className="absolute bottom-4 left-4 text-sm font-bold text-white">{item.title}</p>
-            )}
-          </div>
-        ))}
+        <div className={cn('grid grid-cols-2 lg:grid-cols-3', sectionGap)}>
+          {moments.map((item) => (
+            <Link
+              key={item.id}
+              href={ROUTES.gallery}
+              className={cn(
+                'group relative aspect-[4/3] bg-canvas-muted border border-line',
+                homepageMediaFrame,
+              )}
+            >
+              {item.type === 'video' ? (
+                <video
+                  src={item.url}
+                  muted
+                  playsInline
+                  className="absolute inset-0 h-full w-full object-cover object-center"
+                />
+              ) : (
+                <Image
+                  src={item.url}
+                  alt={item.alt}
+                  fill
+                  sizes="(max-width: 1024px) 50vw, 33vw"
+                  className="object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
+                />
+              )}
+            </Link>
+          ))}
+        </div>
       </div>
     </HomepageSection>
   );

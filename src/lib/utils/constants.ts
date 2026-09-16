@@ -81,6 +81,10 @@ export const ROUTES = {
   syllabus: "/syllabus",
   syllabusKuchipudi: "/syllabus/kuchipudi",
   syllabusKathak: "/syllabus/kathak",
+  privacy: "/privacy",
+  terms: "/terms",
+  refund: "/refund",
+  shipping: "/shipping",
   // Auth
   login: "/login",
   adminLogin: "/admin-login",

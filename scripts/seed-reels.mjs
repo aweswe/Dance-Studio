@@ -20,7 +20,7 @@ const titles = [
   'Maha Shivratri — classical offering',
   'Choreo & song — studio cut',
   'Freestyle popping',
-  'After Hours — Divya choreo',
+  'Lights, camera, naach! — bol mitthi with swag',
 ];
 
 const headers = { apikey: key, Authorization: `Bearer ${key}` };

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { Volume2, VolumeX } from 'lucide-react';
+import { homepageMediaFrame } from '@/lib/ui/homepage-cta';
 import { cn } from '@/lib/utils/cn';
 import { HERO_REEL } from '@/lib/utils/constants';
 
@@ -47,11 +48,7 @@ export function HeroVideo({
   return (
     <div className={cn('flex flex-col gap-2.5 w-full max-w-full', className)}>
       <div
-        className={cn(
-          'relative w-full overflow-hidden rounded-md sm:rounded-md lg:rounded-md',
-          'border border-transparent bg-transparent',
-          'aspect-square',
-        )}
+        className={cn('relative w-full aspect-square', homepageMediaFrame)}
       >
         {hasVideo ? (
           <>

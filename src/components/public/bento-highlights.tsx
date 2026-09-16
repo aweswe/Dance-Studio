@@ -12,7 +12,7 @@ export function BentoHighlights() {
     <HomepageSection className="py-16 sm:py-20 md:py-24 select-none">
       <div className="flex items-center justify-between mb-8">
         <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-ink-2">
-          02 · Rhythmzz Academy · Since 2010
+          Rhythmzz Academy · Since 2010
         </span>
         <div className="flex items-center gap-2 text-[10px] font-bold tracking-[0.1em] uppercase text-bl bg-blk px-3.5 py-1.5 rounded-md border border-bl/40">
           <span className="w-1.5 h-1.5 rounded-full bg-bl" />

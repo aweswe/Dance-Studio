@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import { X, ZoomIn } from 'lucide-react';
-import { cn } from '@/lib/utils/cn';
+import { homepageFilterPill } from '@/lib/ui/homepage-cta';
 
 interface ImageType {
   id: string;
@@ -90,11 +90,9 @@ export function GalleryClient({ images }: { images: ImageType[] }) {
             type="button"
             onClick={() => setFilter(cat)}
             aria-pressed={filter === cat}
-            className={cn(
-              "px-5 py-2 text-xs font-mono font-bold tracking-[1.5px] uppercase rounded-md transition-all duration-150 border focus-visible:focus-ring active:scale-[0.96] cursor-pointer",
-              filter === cat
-                ? "bg-bl text-blk border-bl font-black shadow-sm"
-                : "bg-surface text-ink-2 border-line hover:border-bl hover:text-ink"
+            className={homepageFilterPill(
+              filter === cat,
+              'px-5 py-2 text-xs font-mono tracking-[1.5px]',
             )}
           >
             {cat}

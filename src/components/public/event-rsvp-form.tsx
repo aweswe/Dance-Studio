@@ -4,6 +4,8 @@ import { useState } from "react";
 import { rsvpEvent } from "@/actions/studio";
 import { Input } from "@/components/ui/input";
 import { indianPhoneSchema } from "@/lib/validators/phone";
+import { homepageCtaBrand, homepageCtaPairButton } from '@/lib/ui/homepage-cta';
+import { cn } from '@/lib/utils/cn';
 
 export function EventRsvpForm({ slug }: { slug: string }) {
   const [name, setName] = useState("");
@@ -26,7 +28,7 @@ export function EventRsvpForm({ slug }: { slug: string }) {
   }
 
   return (
-    <form onSubmit={submit} className="space-y-3 max-w-md">
+    <form onSubmit={submit} className="mx-auto w-full max-w-md space-y-3 text-left">
       <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name" required />
       <Input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="WhatsApp number" required />
       <label className="text-xs text-ink-2">
@@ -43,7 +45,7 @@ export function EventRsvpForm({ slug }: { slug: string }) {
       <button
         type="submit"
         disabled={busy}
-        className="w-full bg-bl text-blk font-black uppercase tracking-wider text-xs py-3 rounded-md"
+        className={cn(homepageCtaBrand, homepageCtaPairButton, 'cursor-pointer disabled:opacity-60')}
       >
         {busy ? "Saving…" : "RSVP"}
       </button>

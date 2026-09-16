@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { submitEnquiry } from '@/actions/enquiries';
 import { CheckCircle2, Send } from 'lucide-react';
 import { Input } from '@/components/ui/input';
+import { homepageCtaBrand, homepageCtaPairButton } from '@/lib/ui/homepage-cta';
+import { cn } from '@/lib/utils/cn';
 
 export function EnquiryForm() {
   const [form, setForm] = useState({ name: '', phone: '', email: '', message: '' });
@@ -48,7 +50,7 @@ export function EnquiryForm() {
     'w-full bg-canvas border border-line rounded-md px-4 py-3 text-sm text-ink placeholder:text-ink-3 h-32 resize-none focus:outline-none focus:border-bl focus:ring-2 focus:ring-bl/20 transition-all';
 
   return (
-    <form onSubmit={submit} className="space-y-5" noValidate>
+    <form onSubmit={submit} className="flex h-full flex-col gap-5" noValidate>
       <Input
         id="enq-name"
         label="Name *"
@@ -98,7 +100,7 @@ export function EnquiryForm() {
       <button
         type="submit"
         disabled={busy}
-        className="btn-sun w-full py-4 text-xs font-black tracking-[2px] uppercase gap-2 shadow-md cursor-pointer flex items-center justify-center transition-transform active:scale-[0.98]"
+        className={cn(homepageCtaBrand, homepageCtaPairButton, 'mt-auto cursor-pointer disabled:opacity-60')}
       >
         <Send size={14} /> {busy ? 'Sending...' : 'Send Message'}
       </button>

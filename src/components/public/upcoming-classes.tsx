@@ -77,7 +77,7 @@ export function UpcomingClasses() {
         <div>
           <div className="flex items-center gap-2.5 mb-2.5">
             <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-bl font-bold">
-              04 · New Batches &amp; Routines
+              New Batches &amp; Routines
             </span>
           </div>
           <h2 className="font-anton text-4xl sm:text-6xl md:text-7xl text-ink tracking-wide uppercase leading-[0.92]">

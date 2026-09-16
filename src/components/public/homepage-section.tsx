@@ -34,19 +34,23 @@ export function HomepageSectionHeading({
   accent,
   description,
   className,
+  as = 'h2',
 }: {
   eyebrow?: string;
   title: string;
   accent?: string;
   description?: string;
   className?: string;
+  as?: 'h1' | 'h2';
 }) {
+  const HeadingTag = as;
+
   return (
     <header className={cn('mb-7 sm:mb-10 max-w-2xl', className)}>
       {eyebrow ? (
         <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-bl mb-2">{eyebrow}</p>
       ) : null}
-      <h2 className="font-anton text-2xl sm:text-3xl md:text-[2.25rem] uppercase leading-[0.95] tracking-tight text-ink">
+      <HeadingTag className="font-anton text-2xl sm:text-3xl md:text-[2.25rem] uppercase leading-[0.95] tracking-tight text-ink">
         {title}
         {accent ? (
           <>
@@ -54,7 +58,7 @@ export function HomepageSectionHeading({
             <span className="text-bl">{accent}</span>
           </>
         ) : null}
-      </h2>
+      </HeadingTag>
       {description ? <p className="mt-2.5 text-sm text-ink-2 leading-relaxed">{description}</p> : null}
     </header>
   );

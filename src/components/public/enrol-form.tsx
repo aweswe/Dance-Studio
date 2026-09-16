@@ -12,6 +12,7 @@ import {
   CheckCircle2,
 } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
+import { homepageCtaBrand, homepageCtaOutlineLight, homepageCtaPairButton, homepageCtaWhatsApp } from '@/lib/ui/homepage-cta';
 import { ACADEMY, enrolHref, type EnrolIntent, ROUTES } from '@/lib/utils/constants';
 import { enrolFormSchema } from '@/lib/validators/enrol';
 import { formatCurrency, formatTime, whatsappLink, normalizeIndianPhone } from '@/lib/utils/format';
@@ -272,7 +273,7 @@ export function EnrolForm({
           {paid ? (
             <a
               href={ROUTES.login}
-              className="btn-sun w-full text-center text-xs font-black tracking-[1.5px] uppercase px-6 py-4 rounded-md shadow-md active:scale-[0.98] flex items-center justify-center gap-2"
+              className={cn(homepageCtaBrand, homepageCtaPairButton)}
             >
               Sign in to student portal <ArrowRight size={16} />
             </a>
@@ -281,7 +282,7 @@ export function EnrolForm({
               href={whatsappLink(waMessage)}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full text-center text-xs font-black tracking-[1.5px] uppercase px-6 py-4 bg-green text-white rounded-md shadow-md"
+              className={cn(homepageCtaWhatsApp, homepageCtaPairButton)}
             >
               Continue on WhatsApp
             </a>
@@ -452,7 +453,7 @@ export function EnrolForm({
             <button
               type="submit"
               disabled={status === 'submitting'}
-              className="btn-sun w-full py-4 text-xs font-black tracking-[2px] uppercase shadow-md cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2 active:scale-[0.98]"
+              className={cn(homepageCtaBrand, homepageCtaPairButton, 'cursor-pointer disabled:opacity-60')}
             >
               {status === 'submitting' ? (
                 <><Spinner className="w-4 h-4" /> Processing...</>
@@ -464,7 +465,7 @@ export function EnrolForm({
             <button
               type="submit"
               disabled={status === 'submitting'}
-              className="btn-sun w-full py-4 text-xs font-black tracking-[2px] uppercase shadow-md cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2 active:scale-[0.98]"
+              className={cn(homepageCtaBrand, homepageCtaPairButton, 'cursor-pointer disabled:opacity-60')}
             >
               {status === 'submitting' ? (
                 <><Spinner className="w-4 h-4" /> Saving...</>
@@ -476,7 +477,7 @@ export function EnrolForm({
             <button
               type="submit"
               disabled={status === 'submitting'}
-              className="w-full text-xs font-black tracking-[2px] uppercase py-4 bg-green hover:bg-green-ink text-white rounded-md shadow-md active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
+              className={cn(homepageCtaWhatsApp, homepageCtaPairButton, 'cursor-pointer disabled:opacity-60')}
             >
               {status === 'submitting' ? (
                 <><Spinner className="w-4 h-4" /> Saving...</>
@@ -488,7 +489,7 @@ export function EnrolForm({
           {upiLink && (
             <a
               href={upiLink}
-              className="block w-full text-center text-[11px] font-bold uppercase tracking-wider py-3 rounded-md border border-line text-ink hover:border-bl"
+              className={cn(homepageCtaOutlineLight, homepageCtaPairButton)}
             >
               Open UPI app ({formatCurrency(fee)})
             </a>

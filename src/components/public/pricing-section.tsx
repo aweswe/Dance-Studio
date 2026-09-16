@@ -15,7 +15,7 @@ export async function PricingSection() {
     <section className="w-full px-4 sm:px-6 md:px-10 pb-24 sm:pb-32 max-w-[1360px] mx-auto">
       <div className="flex items-baseline justify-between mb-10 px-1">
         <div>
-          <p className="text-[11px] font-mono uppercase tracking-[0.22em] text-ink-2 mb-1">03 · Classes &amp; Fees</p>
+          <p className="text-[11px] font-mono uppercase tracking-[0.22em] text-ink-2 mb-1">Classes &amp; Fees</p>
           <h2 className="font-anton text-3xl sm:text-4xl md:text-5xl text-ink uppercase tracking-tight leading-none">
             PICK YOUR<br />
             <span className="text-bl">CLASS.</span>

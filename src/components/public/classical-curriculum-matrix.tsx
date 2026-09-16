@@ -7,6 +7,7 @@ import {
   CurriculumYear,
 } from '@/data/kuchipudi';
 import { BookOpen, ChevronDown, GraduationCap, Zap } from 'lucide-react';
+import { homepageFilterPill } from '@/lib/ui/homepage-cta';
 
 export function ClassicalCurriculumMatrix() {
   const [activeKuchipudiTrack, setActiveKuchipudiTrack] = useState<'10-year' | '6-year'>('10-year');
@@ -47,11 +48,10 @@ export function ClassicalCurriculumMatrix() {
                 setActiveKuchipudiTrack('10-year');
                 setExpandedYear(1);
               }}
-              className={`px-4 py-2 rounded-md text-xs font-mono font-bold tracking-wider uppercase transition-all ${
-                activeKuchipudiTrack === '10-year'
-                  ? 'bg-ink text-canvas shadow-sm'
-                  : 'bg-canvas text-ink-2 hover:text-ink border border-line'
-              }`}
+              className={homepageFilterPill(
+                activeKuchipudiTrack === '10-year',
+                'px-4 py-2 text-xs font-mono tracking-wider',
+              )}
             >
               10-year foundation
             </button>
@@ -61,11 +61,10 @@ export function ClassicalCurriculumMatrix() {
                 setActiveKuchipudiTrack('6-year');
                 setExpandedYear(1);
               }}
-              className={`px-4 py-2 rounded-md text-xs font-mono font-bold tracking-wider uppercase transition-all ${
-                activeKuchipudiTrack === '6-year'
-                  ? 'bg-bl text-white shadow-sm'
-                  : 'bg-canvas text-ink-2 hover:text-ink border border-line'
-              }`}
+              className={homepageFilterPill(
+                activeKuchipudiTrack === '6-year',
+                'px-4 py-2 text-xs font-mono tracking-wider',
+              )}
             >
               6-year certificate
             </button>

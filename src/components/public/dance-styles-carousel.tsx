@@ -80,7 +80,7 @@ export function DanceStylesCarousel() {
         <div>
           <div className="flex items-center gap-2.5 mb-2.5">
             <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-bl font-bold">
-              03 · Explore All Disciplines
+              Explore All Disciplines
             </span>
           </div>
           <h2 className="font-anton text-4xl sm:text-6xl md:text-7xl text-ink tracking-wide uppercase leading-[0.92]">

@@ -7,6 +7,7 @@ import {
   KUCHIPUDI_6_YEAR_PLAN,
 } from '@/data/kuchipudi';
 import { cn } from '@/lib/utils/cn';
+import { homepageFilterPill } from '@/lib/ui/homepage-cta';
 
 export function SyllabusYears() {
   const [track, setTrack] = useState<'10-year' | '6-year'>('10-year');
@@ -15,7 +16,7 @@ export function SyllabusYears() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap justify-center gap-2">
         {(
           [
             ['10-year', '10-year'],
@@ -29,12 +30,7 @@ export function SyllabusYears() {
               setTrack(id);
               setOpen(null);
             }}
-            className={cn(
-              'px-4 py-2 rounded-md text-xs font-mono font-bold uppercase tracking-wider border transition-colors',
-              track === id
-                ? 'bg-ink text-canvas border-ink'
-                : 'bg-transparent text-ink-2 border-line hover:text-ink',
-            )}
+            className={homepageFilterPill(track === id, 'px-4 py-2 text-xs font-mono tracking-wider')}
           >
             {label}
           </button>

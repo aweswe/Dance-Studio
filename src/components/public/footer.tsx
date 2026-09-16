@@ -1,110 +1,101 @@
 import Link from 'next/link';
+import { BrandLogo } from '@/components/shared/brand-logo';
+import { HomepageSection } from '@/components/public/homepage-section';
 import { ROUTES, ACADEMY } from '@/lib/utils/constants';
+
+const linkClass = 'text-wh/75 hover:text-bl transition-colors';
+
+function FooterColumn({
+  title,
+  links,
+}: {
+  title: string;
+  links: { href: string; label: string }[];
+}) {
+  return (
+    <nav className="w-max max-w-full shrink-0 text-left" aria-label={title}>
+      <h4 className="font-anton text-lg tracking-wide mb-3 select-none text-bl">{title}</h4>
+      <ul className="flex flex-col gap-1.5 list-none p-0 m-0 text-[11px] sm:text-xs font-bold uppercase tracking-wide">
+        {links.map((link) => (
+          <li key={link.href + link.label}>
+            <Link href={link.href} className={linkClass}>
+              {link.label}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  );
+}
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="w-full bg-blk text-wh pt-16 sm:pt-20 pb-12 px-6 sm:px-10 md:px-14 border-t border-white/10 mt-12 transition-colors duration-300">
-      <div className="max-w-[1440px] mx-auto overflow-hidden">
-        <div aria-hidden="true" className="font-anton whitespace-nowrap leading-none tracking-wide select-none text-wh text-[clamp(1.6rem,8vw,9rem)] mb-12">
-          RHYTHMZZ DANCE ACADEMY
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-8 mb-16">
-          {/* Column 1: Studio Identity (approx 5 cols) */}
-          <div className="md:col-span-5 flex flex-col justify-between">
-            <div>
-              <div className="text-xs sm:text-sm font-medium opacity-85 leading-relaxed space-y-1 text-wh/80">
-                <p className="font-bold text-wh">Secunderabad</p>
-                <p>Plot 597, 3rd Floor, Above ICICI ATM,</p>
-                <p>Neredmet X Road, Secunderabad 500094</p>
-                <p className="pt-3">
-                  <a
-                    href={`tel:${ACADEMY.phone}`}
-                    className="font-bold text-bl hover:text-bl transition-colors"
-                  >
-                    +91 90529 80859
-                  </a>
-                </p>
-              </div>
+    <footer className="w-full bg-blk text-wh border-t border-white/10 transition-colors duration-300">
+      <HomepageSection className="pt-10 sm:pt-12 pb-8">
+        <div className="mb-6 flex w-full flex-col gap-8 sm:flex-row sm:flex-wrap sm:gap-x-10 sm:gap-y-10 lg:flex-nowrap lg:items-start lg:justify-between lg:gap-x-8">
+          <div className="w-max max-w-full shrink-0 text-left">
+            <Link
+              href={ROUTES.home}
+              aria-label="Rhythmzz Academy of Dance — home"
+              className="inline-block w-fit max-w-full rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl"
+            >
+              <BrandLogo className="h-16 sm:h-20 md:h-24 lg:h-28 w-auto max-w-full" />
+            </Link>
+          </div>
+
+          <div className="w-max max-w-[13rem] shrink-0 text-left">
+            <h4 className="font-anton text-lg tracking-wide mb-3 select-none text-bl">Secunderabad</h4>
+            <div className="text-[11px] sm:text-xs font-medium opacity-85 leading-relaxed space-y-0.5 text-wh/80">
+              <p>Plot 597, 3rd Floor, Above ICICI ATM,</p>
+              <p>Neredmet X Road, Secunderabad 500094</p>
+              <p className="pt-2">
+                <a href={`tel:${ACADEMY.phone}`} className="font-bold text-bl hover:text-bl transition-colors">
+                  +91 90529 80859
+                </a>
+              </p>
             </div>
           </div>
 
-          {/* Spacer Column (1 col) */}
-          <div className="hidden md:block md:col-span-2" />
+          <FooterColumn
+            title="Important links"
+            links={[
+              { href: ROUTES.privacy, label: 'Privacy policy' },
+              { href: ROUTES.terms, label: 'Terms & conditions' },
+              { href: ROUTES.refund, label: 'Refund policy' },
+              { href: ROUTES.shipping, label: 'Shipping & delivery' },
+            ]}
+          />
 
-          {/* Column 2: SERVICES (2-3 cols) */}
-          <div className="md:col-span-2">
-            <h4 className="font-anton text-xl tracking-wider mb-4 select-none text-bl">
-              SERVICES
-            </h4>
-            <ul className="flex flex-col gap-2 list-none p-0 m-0 text-xs sm:text-sm font-bold uppercase tracking-wider">
-              <li>
-                <Link href={ROUTES.schedule} className="text-wh/75 hover:text-bl transition-colors">
-                  Schedule
-                </Link>
-              </li>
-              <li>
-                <Link href={ROUTES.about} className="text-wh/75 hover:text-bl transition-colors">
-                  Coaches
-                </Link>
-              </li>
-              <li>
-                <Link href={ROUTES.programmes} className="text-wh/75 hover:text-bl transition-colors">
-                  Styles
-                </Link>
-              </li>
-              <li>
-                <Link href={ROUTES.syllabus} className="text-wh/75 hover:text-bl transition-colors">
-                  Syllabus
-                </Link>
-              </li>
-              <li>
-                <Link href={ROUTES.gallery} className="text-wh/75 hover:text-bl transition-colors">
-                  Gallery
-                </Link>
-              </li>
-              <li>
-                <Link href={ROUTES.blog} className="text-wh/75 hover:text-bl transition-colors">
-                  Blog
-                </Link>
-              </li>
-            </ul>
-          </div>
+          <FooterColumn
+            title="Services"
+            links={[
+              { href: ROUTES.schedule, label: 'Schedule' },
+              { href: ROUTES.about, label: 'Coaches' },
+              { href: ROUTES.programmes, label: 'Styles' },
+              { href: ROUTES.syllabus, label: 'Syllabus' },
+              { href: ROUTES.gallery, label: 'Gallery' },
+              { href: ROUTES.blog, label: 'Blog' },
+            ]}
+          />
 
-          {/* Column 3: INFO (2-3 cols) */}
-          <div className="md:col-span-3">
-            <h4 className="font-anton text-xl tracking-wider mb-4 select-none text-bl">
-              INFO
-            </h4>
-            <ul className="flex flex-col gap-2 list-none p-0 m-0 text-xs sm:text-sm font-bold uppercase tracking-wider">
-              <li>
-                <Link href={ROUTES.about} className="text-wh/75 hover:text-bl transition-colors">
-                  Who We Are
-                </Link>
-              </li>
-              <li>
-                <Link href={ROUTES.contact} className="text-wh/75 hover:text-bl transition-colors">
-                  Contacts
-                </Link>
-              </li>
-              <li>
-                <Link href={ROUTES.annualDay} className="text-wh/75 hover:text-bl transition-colors">
-                  Annual Day
-                </Link>
-              </li>
-            </ul>
-          </div>
+          <FooterColumn
+            title="Info"
+            links={[
+              { href: ROUTES.about, label: 'Who we are' },
+              { href: ROUTES.contact, label: 'Contacts' },
+              { href: ROUTES.annualDay, label: 'Annual day' },
+              { href: ROUTES.enrol, label: 'Enrol & pay' },
+            ]}
+          />
         </div>
 
-        {/* Bottom copyright hairline */}
-        <div className="pt-6 border-t border-current/10 flex flex-col sm:flex-row justify-between items-center gap-3 text-[10px] sm:text-[11px] font-mono uppercase tracking-widest opacity-60">
+        <div className="pt-4 border-t border-current/10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 w-full text-[10px] font-mono uppercase tracking-widest opacity-60">
           <span>&copy; {currentYear} Rhythmzz Academy of Dance. Since 2010.</span>
           <span>Neredmet X Road · Secunderabad</span>
         </div>
-      </div>
+      </HomepageSection>
     </footer>
   );
 }
-
-

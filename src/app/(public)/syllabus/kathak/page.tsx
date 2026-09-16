@@ -3,6 +3,11 @@ import Link from 'next/link';
 import { enrolHref, SITE_URL } from '@/lib/utils/constants';
 import { KathakSyllabusLevels } from '@/components/public/kathak-syllabus-levels';
 import { KATHAK_SYLLABUS } from '@/data/kathak-syllabus';
+import { HomepageSection, HomepageSectionHeading } from '@/components/public/homepage-section';
+import { PublicPage } from '@/components/public/public-page';
+import { PublicPageTitle } from '@/components/public/public-page-title';
+import { homepageCtaBrand, homepageCtaOutlineLight } from '@/lib/ui/homepage-cta';
+import { sectionPadAfterTitle } from '@/lib/ui/section-layout';
 
 export const metadata: Metadata = {
   title: 'Kathak syllabus',
@@ -13,38 +18,28 @@ export const metadata: Metadata = {
 
 export default function KathakSyllabusPage() {
   return (
-    <div className="bg-canvas text-ink">
-      <section className="px-4 sm:px-8 md:px-14 py-16 sm:py-24 max-w-[800px] mx-auto">
-        <p className="text-[11px] font-mono uppercase tracking-[0.22em] text-ink-3 mb-3">
-          Syllabus adoption
-        </p>
-        <h1 className="font-anton text-4xl sm:text-6xl uppercase tracking-tight leading-[1.05] mb-4">
-          Kathak
-        </h1>
-        <p className="text-ink-2 text-sm sm:text-base leading-relaxed mb-8 max-w-lg">
-          {KATHAK_SYLLABUS.intro} {KATHAK_SYLLABUS.guru} holds the batch — WhatsApp the desk for days and fees.
-        </p>
+    <PublicPage>
+      <PublicPageTitle
+        eyebrow="Syllabus"
+        title="Kathak"
+        description={`${KATHAK_SYLLABUS.intro} ${KATHAK_SYLLABUS.guru} holds the batch — WhatsApp the desk for days and fees.`}
+        align="center"
+      />
 
-        <div className="flex flex-wrap gap-3 mb-14">
-          <Link
-            href={enrolHref({ programme: 'classical-dance', intent: 'trial' })}
-            className="btn-sun px-6 py-3 text-xs font-black uppercase tracking-[0.16em]"
-          >
-            Enrol — Kathak
-          </Link>
-          <Link
-            href={enrolHref({ programme: 'kuchipudi', intent: 'trial' })}
-            className="px-6 py-3 rounded-md text-xs font-mono font-bold uppercase tracking-wider border border-line hover:border-ink"
-          >
-            Enrol — Kuchipudi
-          </Link>
+      <HomepageSection className={sectionPadAfterTitle} innerClassName="px-6 sm:px-10 lg:px-12 xl:px-14">
+        <div className="mx-auto max-w-3xl">
+          <div className="mb-10 flex flex-wrap justify-center gap-2.5">
+            <Link href={enrolHref({ programme: 'classical-dance', intent: 'trial' })} className={homepageCtaBrand}>
+              Enrol — Kathak
+            </Link>
+            <Link href={enrolHref({ programme: 'kuchipudi', intent: 'trial' })} className={homepageCtaOutlineLight}>
+              Enrol — Kuchipudi
+            </Link>
+          </div>
+          <HomepageSectionHeading eyebrow="Five levels" title="The path" className="mb-6 mx-auto text-center" />
+          <KathakSyllabusLevels />
         </div>
-
-        <p className="text-[11px] font-mono uppercase tracking-[0.22em] text-ink-3 mb-4">
-          Five levels
-        </p>
-        <KathakSyllabusLevels />
-      </section>
-    </div>
+      </HomepageSection>
+    </PublicPage>
   );
 }

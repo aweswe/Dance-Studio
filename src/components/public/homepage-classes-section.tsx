@@ -3,6 +3,7 @@ import { HomepageSection, HomepageSectionHeading } from '@/components/public/hom
 import { getBatches } from '@/data/batches';
 import { getProgrammes } from '@/data/programmes';
 import { buildScheduleFilters, buildWeekScheduleFromBatches } from '@/lib/schedule/from-batches';
+import { sectionPadLg } from '@/lib/ui/section-layout';
 
 export async function HomepageClassesSection() {
   const [batches, programmes] = await Promise.all([getBatches(), getProgrammes()]);
@@ -12,7 +13,7 @@ export async function HomepageClassesSection() {
   );
 
   return (
-    <HomepageSection id="classes" className="py-16 sm:py-20 md:py-24">
+    <HomepageSection id="classes" className={sectionPadLg}>
       <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4 mb-7 sm:mb-8">
         <HomepageSectionHeading
           eyebrow="Weekly timetable"

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { cn } from '@/lib/utils/cn';
 import { Input } from '@/components/ui/input';
+import { homepageCtaBrand, homepageCtaPairButton } from '@/lib/ui/homepage-cta';
 
 export function StudioRentalForm() {
   const [loading, setLoading] = useState(false);
@@ -142,8 +143,10 @@ export function StudioRentalForm() {
         type="submit"
         disabled={loading}
         className={cn(
-          "btn-sun mt-2 py-4 text-xs font-black tracking-[2px] uppercase shadow-md cursor-pointer w-full transition-transform active:scale-[0.98]",
-          loading && "opacity-70 cursor-not-allowed",
+          homepageCtaBrand,
+          homepageCtaPairButton,
+          'mt-2 cursor-pointer',
+          loading && 'opacity-70 cursor-not-allowed',
         )}
       >
         {loading ? 'Submitting...' : 'Submit Request'}

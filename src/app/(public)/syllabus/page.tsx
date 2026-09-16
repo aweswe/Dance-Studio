@@ -1,6 +1,11 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { enrolHref, SITE_URL } from '@/lib/utils/constants';
+import { HomepageSection } from '@/components/public/homepage-section';
+import { PublicPage } from '@/components/public/public-page';
+import { PublicPageTitle } from '@/components/public/public-page-title';
+import { homepageCtaBrand, homepageCtaOutlineLight } from '@/lib/ui/homepage-cta';
+import { sectionPadAfterTitle } from '@/lib/ui/section-layout';
 
 export const metadata: Metadata = {
   title: 'Syllabus adoption',
@@ -25,51 +30,37 @@ const STYLES = [
 
 export default function SyllabusIndexPage() {
   return (
-    <div className="bg-canvas text-ink">
-      <section className="px-4 sm:px-8 md:px-14 py-16 sm:py-24 max-w-[960px] mx-auto">
-        <p className="text-[11px] font-mono uppercase tracking-[0.22em] text-ink-3 mb-3">
-          Syllabus adoption
-        </p>
-        <h1 className="font-anton text-4xl sm:text-6xl md:text-7xl uppercase tracking-tight leading-[1.05] mb-4">
-          What we teach, year by year
-        </h1>
-        <p className="text-ink-2 text-sm sm:text-base max-w-lg leading-relaxed mb-8">
-          Kuchipudi and Kathak — year by year, level by level.
-        </p>
+    <PublicPage>
+      <PublicPageTitle
+        eyebrow="Syllabus"
+        title="What we teach, year by year"
+        description="Kuchipudi and Kathak — year by year, level by level."
+      />
 
-        <div className="flex flex-wrap gap-3 mb-12">
-          <Link
-            href={enrolHref({ programme: 'kuchipudi', intent: 'trial' })}
-            className="btn-sun px-6 py-3 text-xs font-black uppercase tracking-[0.16em]"
-          >
+      <HomepageSection className={sectionPadAfterTitle}>
+        <div className="flex flex-wrap gap-2.5 mb-10">
+          <Link href={enrolHref({ programme: 'kuchipudi', intent: 'trial' })} className={homepageCtaBrand}>
             Enrol — Kuchipudi
           </Link>
-          <Link
-            href={enrolHref({ programme: 'classical-dance', intent: 'trial' })}
-            className="px-6 py-3 rounded-md text-xs font-mono font-bold uppercase tracking-wider border border-line hover:border-ink"
-          >
+          <Link href={enrolHref({ programme: 'classical-dance', intent: 'trial' })} className={homepageCtaOutlineLight}>
             Enrol — Kathak
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 max-w-3xl">
           {STYLES.map((style) => (
             <Link
               key={style.href}
               href={style.href}
-              className="rounded-md border border-line bg-surface p-6 sm:p-8 hover:border-ink transition-colors active:scale-[0.98]"
+              className="rounded-md border border-line bg-surface p-6 sm:p-8 hover:border-ink/30 transition-colors"
             >
-              <span className="text-[10px] font-mono uppercase tracking-widest text-bl">
-                {style.status}
-              </span>
-              <h2 className="font-anton text-3xl sm:text-4xl uppercase tracking-tight mt-2 mb-2">
-                {style.name}
-              </h2>
+              <span className="text-[10px] font-semibold uppercase tracking-widest text-bl">{style.status}</span>
+              <h2 className="font-anton text-3xl sm:text-4xl uppercase tracking-tight mt-2 mb-2">{style.name}</h2>
               <p className="text-sm text-ink-2">{style.note}</p>
             </Link>
           ))}
         </div>
-      </section>
-    </div>
+      </HomepageSection>
+    </PublicPage>
   );
 }

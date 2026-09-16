@@ -18,10 +18,24 @@ import {
   X,
 } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
+import { homepageCtaBrand, homepageCtaPairButton } from '@/lib/ui/homepage-cta';
 import { ROUTES } from '@/lib/utils/constants';
-import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { BrandLogo } from '@/components/shared/brand-logo';
 import { createClient } from '@/lib/supabase/client';
+
+const navActionButton =
+  'inline-flex items-center justify-center gap-1.5 box-border h-9 min-h-9 py-0 px-4 min-w-[9.75rem] rounded-md text-[10px] font-bold uppercase tracking-[0.1em] transition-colors active:scale-[0.98] touch-manipulation whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl focus-visible:ring-offset-2 focus-visible:ring-offset-canvas';
+
+/** Login — resting state uses the previous hover fill; hover deepens slightly. */
+const navLoginButton = cn(
+  navActionButton,
+  'text-ink ring-1 ring-ink/30 bg-ink/[0.08] hover:bg-ink/[0.14] hover:ring-ink/50',
+);
+
+const navBookButton = cn(
+  navActionButton,
+  'bg-bl text-blk hover:bg-bl-deep shadow-[0_6px_28px_-8px_rgba(43,180,216,0.45)]',
+);
 
 type NavLink = { name: string; href: string; hint?: string };
 
@@ -251,7 +265,7 @@ function MobileDrawerFooter({
         href={ROUTES.enrol}
         prefetch
         onClick={onNavigate}
-        className="btn-sun flex items-center justify-center gap-2 w-full min-h-[52px] text-sm font-semibold touch-manipulation"
+        className={cn(homepageCtaBrand, homepageCtaPairButton)}
       >
         Book free trial
         <ArrowRight size={18} strokeWidth={2} />
@@ -435,42 +449,26 @@ export function Nav() {
           </div>
         </nav>
 
-        <div className="hidden lg:flex items-center justify-end gap-2 shrink-0">
+        <div className="hidden lg:flex items-center justify-end gap-3 shrink-0">
           {authInfo?.isLoggedIn ? (
-            <Link
-              href={authInfo.href}
-              title={authInfo.label}
-              className="inline-flex items-center gap-1.5 min-h-8 px-2.5 rounded-md border border-bl/25 bg-bl/5 text-bl hover:bg-bl/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl"
-            >
+            <Link href={authInfo.href} title={authInfo.label} className={navLoginButton}>
               <LayoutDashboard size={14} className="shrink-0" />
-              <span className="text-[10px] font-semibold uppercase tracking-[0.1em] max-w-[5.5rem] truncate xl:max-w-none">
-                {authInfo.shortLabel}
-              </span>
+              <span className="max-w-[5.5rem] truncate xl:max-w-none">{authInfo.shortLabel}</span>
             </Link>
           ) : (
-            <Link
-              href="/login"
-              title="Student login"
-              className="inline-flex items-center gap-1.5 min-h-8 px-2.5 rounded-md border border-line text-ink-2 hover:text-ink hover:border-line-strong transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl"
-            >
+            <Link href="/login" title="Student login" className={navLoginButton}>
               <User size={14} className="shrink-0" />
-              <span className="text-[10px] font-semibold uppercase tracking-[0.1em]">Login</span>
+              Login
             </Link>
           )}
 
-          <Link
-            href={ROUTES.enrol}
-            className="btn-sun px-4 py-1.5 text-xs font-semibold shadow-sm active:scale-95 whitespace-nowrap"
-          >
+          <Link href={ROUTES.enrol} className={navBookButton}>
             Book a class
           </Link>
-
-          <ThemeToggle />
         </div>
 
-        {/* Mobile / tablet: logo + theme + menu only — Book lives in drawer footer */}
+        {/* Mobile / tablet: logo + menu only — Book lives in drawer footer */}
         <div className="flex lg:hidden items-center gap-2 shrink-0">
-          <ThemeToggle />
           <button
             ref={menuButtonRef}
             type="button"

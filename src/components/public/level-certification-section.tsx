@@ -14,8 +14,10 @@ import {
   homepageCtaPair,
   homepageCtaPairButton,
   homepageCtaPrimary,
-  homepageMediaRadius,
+  homepageFilterPill,
+  homepageMediaFrame,
 } from '@/lib/ui/homepage-cta';
+import { sectionPad } from '@/lib/ui/section-layout';
 import { cn } from '@/lib/utils/cn';
 import { enrolHref } from '@/lib/utils/constants';
 
@@ -23,6 +25,10 @@ interface LevelCertificationSectionProps {
   className?: string;
   defaultTrack?: CertificationTrackId;
 }
+
+/** Shared vertical rhythm inside the copy column */
+const BLOCK_GAP = 'gap-4 sm:gap-5';
+const COL_GAP = 'gap-12 lg:gap-24 xl:gap-28';
 
 export function LevelCertificationSection({
   className = '',
@@ -32,17 +38,17 @@ export function LevelCertificationSection({
   const track = CERTIFICATION_TRACKS.find((t) => t.id === activeId) ?? CERTIFICATION_TRACKS[0];
 
   return (
-    <HomepageSection id="certification" className={cn('py-16 sm:py-24', className)}>
+    <HomepageSection id="certification" className={cn(sectionPad, className)}>
       <HomepageSectionHeading
         eyebrow="Certification programmes"
         title="Level-based"
         accent="training."
         description="Board exams, published syllabi, and stage milestones — pick a track below."
-        className="mb-6 sm:mb-8"
+        className="mb-8 sm:mb-10"
       />
 
       <div
-        className="flex flex-wrap gap-2 mb-8 sm:mb-10"
+        className="mb-10 sm:mb-12 flex flex-wrap gap-2"
         role="tablist"
         aria-label="Certification programme tracks"
       >
@@ -54,27 +60,27 @@ export function LevelCertificationSection({
             aria-selected={activeId === item.id}
             aria-controls={`certification-panel-${item.id}`}
             onClick={() => setActiveId(item.id)}
-            className={cn(
-              'px-3.5 py-2 rounded-md text-[10px] font-bold uppercase tracking-[0.12em] transition-colors cursor-pointer active:scale-[0.98]',
-              activeId === item.id
-                ? 'bg-blk text-white'
-                : 'bg-surface text-ink-2 ring-1 ring-line hover:text-ink hover:ring-ink/20',
-            )}
+            className={homepageFilterPill(activeId === item.id)}
           >
             {item.label}
           </button>
         ))}
       </div>
 
+      {/*
+        Reference layout: equal-width columns, equal outer inset (via HomepageSection),
+        image top ↔ title top, image bottom ↔ CTA bottom, uniform gaps between text blocks.
+      */}
       <div
         id={`certification-panel-${track.id}`}
         role="tabpanel"
-        className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-14 items-center"
+        className={cn('grid w-full grid-cols-1 lg:grid-cols-2 items-stretch', COL_GAP)}
       >
-        <div
+        {/* Left — portrait, fills column width, height driven by row */}
+        <figure
           className={cn(
-            'relative w-full aspect-[4/5] overflow-hidden bg-canvas border border-line',
-            homepageMediaRadius,
+            'relative w-full aspect-[4/5] lg:aspect-auto lg:h-full lg:min-h-[26rem] xl:min-h-[28rem]',
+            homepageMediaFrame,
           )}
         >
           <Image
@@ -86,23 +92,20 @@ export function LevelCertificationSection({
             className="object-cover object-center transition-opacity duration-500"
             priority={track.id === 'overview'}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent pointer-events-none" />
-          <div className="absolute bottom-5 left-5 right-5 text-white">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-bl mb-1">
-              {track.imageBadge}
+          <figcaption className="absolute bottom-0 inset-x-0 z-[2] flex items-end pb-3 px-3 sm:px-4 pointer-events-none">
+            <p className="min-w-0 max-w-[85%] rounded-md bg-black/55 backdrop-blur-sm px-2.5 py-1 font-body text-[12px] sm:text-[13px] font-medium normal-case tracking-normal text-white/90 leading-snug line-clamp-3">
+              {track.imageBadge} · {track.imageTags}
             </p>
-            <p className="font-anton text-base sm:text-lg uppercase tracking-wide leading-tight">
-              {track.imageTags}
-            </p>
-          </div>
-        </div>
+          </figcaption>
+        </figure>
 
-        <div className="flex flex-col gap-6 sm:gap-8 min-w-0">
-          <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-bl mb-2">
+        {/* Right — single left edge, even spacing, stretched to match image height */}
+        <div className={cn('flex min-w-0 flex-col justify-between', BLOCK_GAP)}>
+          <header>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-bl mb-3">
               {track.eyebrow}
             </p>
-            <h3 className="font-anton text-2xl sm:text-3xl md:text-[2.25rem] text-ink tracking-tight uppercase leading-[0.95]">
+            <h3 className="font-anton text-[1.75rem] sm:text-3xl md:text-[2.35rem] text-ink tracking-tight uppercase leading-[0.94]">
               {track.title}
               {track.titleAccent ? (
                 <>
@@ -111,22 +114,23 @@ export function LevelCertificationSection({
                 </>
               ) : null}
             </h3>
-            <p className="mt-3 text-sm text-ink-2 leading-relaxed max-w-lg">{track.summary}</p>
-          </div>
+            <p className="mt-2.5 text-sm sm:text-[15px] text-ink-2 leading-[1.7]">
+              {track.summary}
+            </p>
+          </header>
 
-          <div className="divide-y divide-line border-t border-b border-line">
+          <dl className="w-full border-y border-line divide-y divide-line">
             {track.details.map(({ label, value }) => (
-              <div
-                key={label}
-                className="py-3.5 sm:py-4 flex flex-col sm:flex-row sm:items-start gap-1 sm:gap-6"
-              >
-                <span className="font-mono text-[11px] uppercase tracking-widest text-ink-3 shrink-0 sm:w-36">
+              <div key={label} className="py-2.5 sm:py-3 flex flex-col gap-1">
+                <dt className="font-mono text-[11px] uppercase tracking-[0.2em] text-ink-3">
                   {label}
-                </span>
-                <span className="text-sm text-ink font-medium leading-relaxed">{value}</span>
+                </dt>
+                <dd className="text-sm sm:text-[15px] text-ink font-medium leading-relaxed">
+                  {value}
+                </dd>
               </div>
             ))}
-          </div>
+          </dl>
 
           <div className={homepageCtaPair}>
             <Link

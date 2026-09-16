@@ -21,6 +21,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${baseUrl}/syllabus`, lastModified: buildDate, changeFrequency: "monthly", priority: 0.8 },
     { url: `${baseUrl}/syllabus/kuchipudi`, lastModified: buildDate, changeFrequency: "monthly", priority: 0.8 },
     { url: `${baseUrl}/syllabus/kathak`, lastModified: buildDate, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${baseUrl}/privacy`, lastModified: buildDate, changeFrequency: "yearly", priority: 0.3 },
+    { url: `${baseUrl}/terms`, lastModified: buildDate, changeFrequency: "yearly", priority: 0.3 },
+    { url: `${baseUrl}/refund`, lastModified: buildDate, changeFrequency: "yearly", priority: 0.3 },
+    { url: `${baseUrl}/shipping`, lastModified: buildDate, changeFrequency: "yearly", priority: 0.3 },
   ];
 
   const supabase = getPublicSupabase();

@@ -1,22 +1,25 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { enrolHref, ROUTES } from '@/lib/utils/constants';
+import { HomepageSection } from '@/components/public/homepage-section';
+import { KuchipudiCurriculum } from '@/components/public/kuchipudi-curriculum';
+import { PublicBookTrialCta } from '@/components/public/public-book-trial-cta';
+import { PublicPageTitle } from '@/components/public/public-page-title';
+import { homepageCtaBrand, homepageCtaOutlineLight } from '@/lib/ui/homepage-cta';
+import { sectionPadAfterTitleLg, sectionPadLg } from '@/lib/ui/section-layout';
 
 export function KuchipudiShowcase() {
   return (
-    <div className="bg-canvas text-ink">
-      <section className="px-4 sm:px-8 md:px-14 py-16 sm:py-24 max-w-[1100px] mx-auto">
+    <>
+      <PublicPageTitle
+        eyebrow="Classical · Fri & Sat"
+        title="Kuchipudi"
+        description="Srusti, 6:30 to 7:30. From age 5. Exam when she says you are ready — not before."
+      />
+
+      <HomepageSection className={sectionPadAfterTitleLg}>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
           <div>
-            <p className="text-[11px] font-mono uppercase tracking-[0.22em] text-ink-3 mb-3">
-              Classical · Fri &amp; Sat
-            </p>
-            <h1 className="font-anton text-5xl sm:text-7xl uppercase tracking-tight leading-[1.05] mb-5">
-              Kuchipudi
-            </h1>
-            <p className="text-ink-2 text-sm sm:text-base leading-relaxed max-w-md mb-8">
-              Srusti, 6:30 to 7:30. From age 5. Exam when she says you are ready — not before.
-            </p>
             <dl className="divide-y divide-line border-y border-line mb-8">
               {[
                 ['Days', 'Friday & Saturday'],
@@ -24,30 +27,22 @@ export function KuchipudiShowcase() {
                 ['Fee', '₹2,000 / month · ₹5,000 / quarter'],
               ].map(([k, v]) => (
                 <div key={k} className="py-3.5 flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-6">
-                  <dt className="font-mono text-[11px] uppercase tracking-widest text-ink-3 w-24 shrink-0">
-                    {k}
-                  </dt>
+                  <dt className="text-[11px] uppercase tracking-widest text-ink-3 w-24 shrink-0">{k}</dt>
                   <dd className="text-sm text-ink">{v}</dd>
                 </div>
               ))}
             </dl>
-            <div className="flex flex-wrap gap-3">
-              <Link
-                href={enrolHref({ programme: 'kuchipudi', intent: 'trial' })}
-                className="btn-sun px-6 py-3 text-xs font-black uppercase tracking-[0.16em]"
-              >
+            <div className="flex flex-wrap gap-2.5">
+              <Link href={enrolHref({ programme: 'kuchipudi', intent: 'trial' })} className={homepageCtaBrand}>
                 Book a trial
               </Link>
-              <Link
-                href={ROUTES.syllabusKuchipudi}
-                className="px-6 py-3 rounded-md text-xs font-mono font-bold uppercase tracking-wider border border-line hover:border-ink"
-              >
+              <Link href={ROUTES.syllabusKuchipudi} className={homepageCtaOutlineLight}>
                 Syllabus
               </Link>
             </div>
           </div>
 
-          <div className="relative aspect-[4/5] rounded-md overflow-hidden bg-canvas-muted">
+          <div className="relative aspect-[4/5] rounded-md overflow-hidden bg-canvas-muted border border-line">
             <Image
               src="/images/classical-certification-dancer.png"
               alt="Kuchipudi at Rhythmzz"
@@ -58,7 +53,13 @@ export function KuchipudiShowcase() {
             />
           </div>
         </div>
-      </section>
-    </div>
+      </HomepageSection>
+
+      <HomepageSection className={sectionPadLg}>
+        <KuchipudiCurriculum />
+      </HomepageSection>
+
+      <PublicBookTrialCta />
+    </>
   );
 }

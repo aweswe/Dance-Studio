@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
+import { homepageFilterPill } from '@/lib/ui/homepage-cta';
 import { ArrowUpRight } from 'lucide-react';
 import {
   accentForSlug,
@@ -101,11 +102,7 @@ export function ProgrammeClassesList({
             key={filter.id}
             type="button"
             onClick={() => setActiveFilter(filter.id)}
-            className={`px-3.5 py-2 rounded-md text-[10px] font-bold uppercase tracking-[0.12em] transition-colors cursor-pointer active:scale-[0.98] ${
-              activeFilter === filter.id
-                ? 'bg-blk text-white'
-                : 'bg-surface text-ink-2 ring-1 ring-line hover:text-ink hover:ring-ink/20'
-            }`}
+            className={homepageFilterPill(activeFilter === filter.id)}
           >
             {filter.label}
           </button>

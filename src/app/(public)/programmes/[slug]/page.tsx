@@ -8,6 +8,13 @@ import { Clock, Calendar, IndianRupee, MapPin } from 'lucide-react';
 import { formatTime } from '@/lib/utils/format';
 import { enrolHref, SITE_URL, ROUTES } from '@/lib/utils/constants';
 import { KuchipudiShowcase } from '@/components/public/kuchipudi-showcase';
+import { HomepageSection, HomepageSectionHeading } from '@/components/public/homepage-section';
+import { PublicBookTrialCta } from '@/components/public/public-book-trial-cta';
+import { PublicPage } from '@/components/public/public-page';
+import { PublicPageTitle } from '@/components/public/public-page-title';
+import { homepageCtaBrand, homepageCtaOutlineLight, homepageCtaPairButton, homepageCtaPairStack } from '@/lib/ui/homepage-cta';
+import { sectionPad, sectionPadAfterTitleLg } from '@/lib/ui/section-layout';
+import { cn } from '@/lib/utils/cn';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -128,266 +135,207 @@ export default async function ProgrammeDetailPage({ params }: Props) {
 
   if (slug === 'kuchipudi') {
     return (
-      <div className="bg-canvas text-ink">
+      <PublicPage>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(courseSchema) }}
         />
         <KuchipudiShowcase />
-      </div>
+      </PublicPage>
     );
   }
 
   return (
-    <div className="bg-canvas text-ink">
+    <PublicPage>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(courseSchema) }}
       />
 
-      {/* 01: Hero Section */}
-      <section className="relative overflow-hidden pt-12 pb-16 sm:pt-16 sm:pb-24 px-4 sm:px-6 md:px-16 border-b border-line bg-canvas">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-            <div className="lg:col-span-7 space-y-6">
-              <div className="mb-2">
-                <span className="text-[10px] sm:text-xs font-mono tracking-[0.22em] text-bl uppercase font-bold">
-                  {programme.age_group || 'Open batch'}
-                </span>
-              </div>
+      <PublicPageTitle
+        eyebrow={programme.age_group || 'Open batch'}
+        title={programme.name}
+        description={programme.description}
+      />
 
-              <h1 className="font-anton text-5xl sm:text-7xl md:text-8xl text-ink leading-[0.92] tracking-tight uppercase">
-                {programme.name}
-              </h1>
-
-              <p className="text-ink-2 text-base sm:text-lg md:text-xl leading-relaxed max-w-2xl">
-                {programme.description}
-              </p>
-
-              <div className="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-3 sm:gap-4 pt-2">
-                <Link
-                  href={enrolHref({ programme: programme.slug, intent: 'trial' })}
-                  className="btn-sun inline-flex items-center justify-center min-h-11 px-8 py-3.5 text-sm font-semibold shadow-md gap-2 active:scale-[0.96]"
-                >
-                  <span>Book free trial</span>
-                </Link>
-                {slug === 'kuchipudi' && (
-                  <a
-                    href="#curriculum"
-                    className="inline-flex items-center justify-center min-h-11 px-6 py-3.5 rounded-md bg-surface border border-line text-xs font-mono font-bold uppercase tracking-wider text-ink hover:border-bl transition-colors gap-2"
-                  >
-                    <span>View Syllabus</span>
-                    <span className="text-bl">↓</span>
-                  </a>
-                )}
-              </div>
+      <HomepageSection className={sectionPadAfterTitleLg}>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
+          <div className="lg:col-span-8 flex flex-col gap-8">
+            <div className="relative h-72 sm:h-96 w-full rounded-md overflow-hidden border border-line">
+              <Image
+                src={heroImage.src}
+                alt={heroImage.alt}
+                fill
+                className="object-cover"
+                priority
+              />
             </div>
 
-            <div className="lg:col-span-5">
-              <div className="relative h-80 sm:h-96 w-full bento-card rounded-md overflow-hidden p-0 shadow-xl group border-line-strong">
-                <Image
-                  src={heroImage.src}
-                  alt={heroImage.alt}
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                  priority
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-6">
-                  <div className="space-y-1">
-                    <span className="text-[10px] font-mono tracking-widest text-bl uppercase font-bold">STUDIO ARCHIVE</span>
-                    <h3 className="font-anton text-2xl text-white uppercase tracking-wide">{programme.name} Masterclass</h3>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 02: Content Grid */}
-      <section className="py-16 sm:py-24 px-4 sm:px-6 md:px-16 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14">
-        
-        {/* Main Column */}
-        <div className="lg:col-span-8 space-y-12">
-          
-          {/* About */}
-          <div className="bento-card p-6 sm:p-8 rounded-md space-y-4">
-            <div className="flex items-center gap-2">
-              <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-bl font-bold">
-                {"// Programme Scope"}
-              </span>
-            </div>
-            <h2 className="font-anton text-3xl sm:text-4xl text-ink tracking-tight uppercase">ABOUT THIS DISCIPLINE</h2>
-            <div className="text-sm sm:text-base text-ink-2 space-y-4 leading-relaxed">
-              <p>{PROGRAMME_NOTES[slug] ?? programme.description}</p>
-              <p>
-                The studio is at Neredmet X Road, Secunderabad — 8–15 minutes by drive
-                from Sainikpuri, AS Rao Nagar and Yapral. Every learner receives one complimentary
-                trial class with zero registration fee.
-              </p>
-            </div>
-          </div>
-
-          {/* Includes */}
-          {includesList.length > 0 && (
-            <div className="bento-card p-6 sm:p-8 rounded-md space-y-6">
-              <div className="flex items-center gap-2">
-                <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-bl font-bold">
-                  {"// Curriculum Highlights"}
-                </span>
-              </div>
-              <h2 className="font-anton text-3xl sm:text-4xl text-ink tracking-tight uppercase">WHAT YOU&apos;LL MASTER</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {includesList.map((item: string, idx: number) => (
-                  <div key={idx} className="flex gap-3.5 items-center bg-canvas p-4 rounded-md border border-line">
-                    <span className="w-6 h-6 rounded-md bg-bl/10 text-bl flex items-center justify-center font-mono font-bold text-xs shrink-0">
-                      ✓
-                    </span>
-                    <span className="text-xs sm:text-sm font-medium text-ink">{item}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Batches / Schedule */}
-          <div className="bento-card p-6 sm:p-8 rounded-md space-y-6">
-            <div className="flex items-center gap-2">
-              <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-bl font-bold">
-                {"// Timetable"}
-              </span>
-            </div>
-            <h2 className="font-anton text-3xl sm:text-4xl text-ink tracking-tight uppercase">ACTIVE BATCH SCHEDULE</h2>
-            {(programmeBatches.length > 0
-              ? programmeBatches
-              : ((programme.batches ?? []) as any[])
-            ).length > 0 ? (
-              <div className="space-y-4">
-                {(programmeBatches.length > 0
-                  ? programmeBatches
-                  : ((programme.batches ?? []) as any[])
-                ).map((batch: any, idx: number) => (
-                  <div key={idx} className="flex flex-col sm:flex-row sm:items-center justify-between p-5 bg-canvas border border-line rounded-md gap-4">
-                    <div className="flex flex-col gap-1.5">
-                      <div className="flex items-center gap-2 text-ink font-semibold text-sm">
-                        <Calendar size={16} className="text-bl" />
-                        {Array.isArray(batch.days) ? batch.days.join(', ') : batch.days}
-                      </div>
-                      <div className="flex items-center gap-2 text-ink-2 text-xs font-mono">
-                        <Clock size={14} className="text-ink-3" />
-                        {formatTime(batch.time_start)} – {formatTime(batch.time_end)}
-                      </div>
-                    </div>
-                    {batch.instructor && (
-                      <div className="flex items-center gap-3">
-                        {batch.instructor.photo_url ? (
-                          <Image src={batch.instructor.photo_url} alt={batch.instructor.name} width={40} height={40} className="rounded-full object-cover border border-line" />
-                        ) : (
-                          <div className="w-10 h-10 rounded-full bg-blk text-bl flex items-center justify-center text-xs font-bold font-mono">
-                            {batch.instructor.name?.charAt(0) || 'I'}
-                          </div>
-                        )}
-                        <div className="text-sm">
-                          <div className="text-[10px] text-ink-3 font-mono uppercase tracking-wider">Coach</div>
-                          <div className="font-bold text-xs text-ink">{batch.instructor.name}</div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-ink-2 bg-canvas p-6 rounded-md border border-line text-center text-xs font-mono">Schedule details will be updated soon.</p>
-            )}
-          </div>
-        </div>
-
-        {/* Sidebar */}
-        <div className="lg:col-span-4 space-y-6">
-          {/* Pricing Card */}
-          <div className="bento-card p-6 sm:p-8 rounded-md space-y-6">
-            <div className="flex items-center justify-between border-b border-line pb-4">
-              <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-bl font-bold">
-                Tuition Fee
-              </span>
-              <span className="text-[9px] font-mono uppercase tracking-wider text-blk font-bold bg-bl px-2 py-0.5 rounded-md">
-                Zero Admission Fee
-              </span>
-            </div>
-
-            <div className="space-y-4">
-              {programme.fees_monthly && (
-                <div className="flex justify-between items-center p-3.5 bg-canvas rounded-md border border-line">
-                  <span className="text-xs font-mono uppercase tracking-wider text-ink-2 font-semibold">Monthly Plan</span>
-                  <div className="flex items-center font-anton text-2xl text-ink">
-                    <IndianRupee size={18} className="mr-0.5 text-ink-3" />
-                    {programme.fees_monthly}
-                  </div>
-                </div>
-              )}
-              {programme.fees_quarterly && (
-                <div className="flex justify-between items-center p-3.5 bg-canvas rounded-md border border-line">
-                  <div>
-                    <span className="text-xs font-mono uppercase tracking-wider text-ink-2 font-semibold block">Quarterly Plan</span>
-                    <span className="text-[10px] font-mono text-bl">Save 10%</span>
-                  </div>
-                  <div className="flex items-center font-anton text-2xl text-bl">
-                    <IndianRupee size={18} className="mr-0.5" />
-                    {programme.fees_quarterly}
-                  </div>
-                </div>
-              )}
-            </div>
-
-            <Link
-              href={enrolHref({ programme: programme.slug, intent: 'pay' })}
-              className="btn-sun w-full py-4 text-xs font-black uppercase tracking-[0.16em] shadow-md flex items-center justify-center gap-2 active:scale-[0.96]"
-            >
-              <span>Enrol &amp; pay</span>
-            </Link>
-          </div>
-
-          {/* Location Info */}
-          <div className="bento-card p-6 rounded-md border border-line space-y-4">
-            <div className="flex items-start gap-3.5">
-              <div className="w-10 h-10 rounded-md bg-bl/10 text-bl flex items-center justify-center shrink-0">
-                <MapPin size={20} />
-              </div>
-              <div>
-                <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-ink mb-1">Campus Location</h4>
-                <p className="text-xs text-ink-2 leading-relaxed">
-                  Rhythmzz Academy, Plot 597, 3rd Floor, Neredmet X Road, Secunderabad
+            <div className="flex flex-col gap-3 sm:gap-4">
+              <HomepageSectionHeading eyebrow="Programme" title="About this discipline" className="mb-0" />
+              <div className="text-sm text-ink-2 space-y-4 leading-relaxed">
+                <p>{PROGRAMME_NOTES[slug] ?? programme.description}</p>
+                <p>
+                  The studio is at Neredmet X Road, Secunderabad — 8–15 minutes by drive
+                  from Sainikpuri, AS Rao Nagar and Yapral. Every learner receives one complimentary
+                  trial class with zero registration fee.
                 </p>
               </div>
             </div>
-            <p className="text-[11px] text-ink-3 font-mono border-t border-line pt-3">
-              Near ICICI ATM · 8–15 mins from Sainikpuri, AS Rao Nagar &amp; Yapral.
-            </p>
+
+            {includesList.length > 0 && (
+              <div className="flex flex-col gap-3 sm:gap-4">
+                <HomepageSectionHeading eyebrow="Curriculum" title="What you'll master" className="mb-0" />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                  {includesList.map((item: string) => (
+                    <div key={item} className="flex gap-3.5 items-center bg-surface p-4 rounded-md border border-line">
+                      <span className="w-6 h-6 rounded-md bg-bl/10 text-bl flex items-center justify-center font-bold text-xs shrink-0">
+                        ✓
+                      </span>
+                      <span className="text-sm font-medium text-ink">{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div className="flex flex-col gap-3 sm:gap-4">
+              <HomepageSectionHeading eyebrow="Timetable" title="Active batch schedule" className="mb-0" />
+              {(programmeBatches.length > 0 ? programmeBatches : ((programme.batches ?? []) as any[])).length > 0 ? (
+                <div className="space-y-3">
+                  {(programmeBatches.length > 0 ? programmeBatches : ((programme.batches ?? []) as any[])).map(
+                    (batch: any, idx: number) => (
+                      <div
+                        key={idx}
+                        className="flex flex-col sm:flex-row sm:items-center justify-between p-5 bg-surface border border-line rounded-md gap-4"
+                      >
+                        <div className="flex flex-col gap-1.5">
+                          <div className="flex items-center gap-2 text-ink font-semibold text-sm">
+                            <Calendar size={16} className="text-bl" />
+                            {Array.isArray(batch.days) ? batch.days.join(', ') : batch.days}
+                          </div>
+                          <div className="flex items-center gap-2 text-ink-2 text-xs">
+                            <Clock size={14} className="text-ink-3" />
+                            {formatTime(batch.time_start)} – {formatTime(batch.time_end)}
+                          </div>
+                        </div>
+                        {batch.instructor && (
+                          <div className="flex items-center gap-3">
+                            {batch.instructor.photo_url ? (
+                              <Image
+                                src={batch.instructor.photo_url}
+                                alt={batch.instructor.name}
+                                width={40}
+                                height={40}
+                                className="rounded-full object-cover border border-line"
+                              />
+                            ) : (
+                              <div className="w-10 h-10 rounded-full bg-blk text-bl flex items-center justify-center text-xs font-bold">
+                                {batch.instructor.name?.charAt(0) || 'I'}
+                              </div>
+                            )}
+                            <div className="text-sm">
+                              <div className="text-[10px] text-ink-3 uppercase tracking-wider">Coach</div>
+                              <div className="font-bold text-xs text-ink">{batch.instructor.name}</div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    ),
+                  )}
+                </div>
+              ) : (
+                <p className="text-ink-2 bg-surface p-6 rounded-md border border-line text-sm">
+                  Schedule details will be updated soon.
+                </p>
+              )}
+            </div>
+          </div>
+
+          <div className="lg:col-span-4 space-y-4">
+            <div className="rounded-md border border-line bg-surface p-6 sm:p-8 space-y-6">
+              <div className="flex items-center justify-between border-b border-line pb-4">
+                <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-bl">Tuition</span>
+                <span className="text-[9px] uppercase tracking-wider text-blk font-bold bg-bl px-2 py-0.5 rounded-md">
+                  Zero admission fee
+                </span>
+              </div>
+
+              <div className="space-y-3">
+                {programme.fees_monthly && (
+                  <div className="flex justify-between items-center p-3.5 bg-canvas rounded-md border border-line">
+                    <span className="text-xs uppercase tracking-wider text-ink-2 font-semibold">Monthly</span>
+                    <div className="flex items-center font-anton text-2xl text-ink">
+                      <IndianRupee size={18} className="mr-0.5 text-ink-3" />
+                      {programme.fees_monthly}
+                    </div>
+                  </div>
+                )}
+                {programme.fees_quarterly && (
+                  <div className="flex justify-between items-center p-3.5 bg-canvas rounded-md border border-line">
+                    <div>
+                      <span className="text-xs uppercase tracking-wider text-ink-2 font-semibold block">Quarterly</span>
+                      <span className="text-[10px] text-bl">Save 10%</span>
+                    </div>
+                    <div className="flex items-center font-anton text-2xl text-bl">
+                      <IndianRupee size={18} className="mr-0.5" />
+                      {programme.fees_quarterly}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <div className={cn(homepageCtaPairStack, 'gap-2.5')}>
+                <Link
+                  href={enrolHref({ programme: programme.slug, intent: 'trial' })}
+                  className={cn(homepageCtaBrand, homepageCtaPairButton)}
+                >
+                  Book free trial
+                </Link>
+                <Link
+                  href={enrolHref({ programme: programme.slug, intent: 'pay' })}
+                  className={cn(homepageCtaOutlineLight, homepageCtaPairButton)}
+                >
+                  Enrol &amp; pay
+                </Link>
+              </div>
+            </div>
+
+            <div className="rounded-md border border-line bg-surface p-6 space-y-4">
+              <div className="flex items-start gap-3.5">
+                <div className="w-10 h-10 rounded-md bg-bl/10 text-bl flex items-center justify-center shrink-0">
+                  <MapPin size={20} />
+                </div>
+                <div>
+                  <h3 className="text-[11px] font-semibold uppercase tracking-[0.14em] text-ink mb-1">Studio</h3>
+                  <p className="text-sm text-ink-2 leading-relaxed">
+                    Rhythmzz Academy, Plot 597, 3rd Floor, Neredmet X Road, Secunderabad
+                  </p>
+                </div>
+              </div>
+              <p className="text-[11px] text-ink-3 border-t border-line pt-3">
+                Near ICICI ATM · 8–15 mins from Sainikpuri, AS Rao Nagar &amp; Yapral.
+              </p>
+            </div>
           </div>
         </div>
-
-      </section>
+      </HomepageSection>
 
       {(slug === 'classical-dance' || slug === 'classical-certification') && (
-        <section className="border-t border-line px-4 sm:px-8 md:px-16 py-16 max-w-3xl mx-auto">
-          <p className="text-[11px] font-mono uppercase tracking-[0.22em] text-ink-3 mb-3">
-            Syllabus adoption
-          </p>
-          <h2 className="font-anton text-3xl sm:text-4xl uppercase tracking-tight mb-3">
-            Kuchipudi, year by year
-          </h2>
-          <p className="text-sm text-ink-2 leading-relaxed mb-6 max-w-md">
-            Srusti. Friday and Saturday. The full list lives on the syllabus page — not here.
-          </p>
-          <Link
-            href={ROUTES.syllabusKuchipudi}
-            className="btn-sun inline-flex px-6 py-3 text-xs font-black uppercase tracking-[0.16em]"
-          >
+        <HomepageSection className={sectionPad}>
+          <HomepageSectionHeading
+            eyebrow="Syllabus"
+            title="Kuchipudi, year by year"
+            description="Srusti. Friday and Saturday. The full list lives on the syllabus page — not here."
+          />
+          <Link href={ROUTES.syllabusKuchipudi} className={homepageCtaBrand}>
             Open syllabus
           </Link>
-        </section>
+        </HomepageSection>
       )}
-    </div>
+
+      <PublicBookTrialCta />
+    </PublicPage>
   );
 }
 

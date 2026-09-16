@@ -4,48 +4,36 @@ import Link from 'next/link';
 import { getBlogPosts } from '@/data/blog';
 import { formatDate } from '@/lib/utils/format';
 import { ArrowRight } from 'lucide-react';
+import { HomepageSection } from '@/components/public/homepage-section';
+import { PublicPage } from '@/components/public/public-page';
+import { PublicPageTitle } from '@/components/public/public-page-title';
+import { sectionPadAfterTitleLg } from '@/lib/ui/section-layout';
 
 export const metadata: Metadata = {
   title: 'Journal & Insights | Rhythmzz Academy of Dance',
-  description: 'Dance conditioning, choreography breakdowns, performance culture, and community stories from Rhythmzz Academy in Secunderabad.',
+  description:
+    'Dance conditioning, choreography breakdowns, performance culture, and community stories from Rhythmzz Academy in Secunderabad.',
 };
 
 export default async function BlogPage() {
   const posts: any[] = (await getBlogPosts()) || [];
 
   return (
-    <div className="bg-canvas text-ink">
-      {/* 01: Hero with Top Indicator */}
-      <section className="relative overflow-hidden pt-12 pb-16 sm:pt-16 sm:pb-24 px-4 sm:px-6 md:px-16 border-b border-line bg-canvas">
-        <div className="max-w-7xl mx-auto">
-          <div className="max-w-4xl mx-auto text-center">
-            <div className="mb-5">
-              <span className="text-[10px] sm:text-xs font-mono tracking-[0.22em] text-bl uppercase font-bold">
-                CHOREOGRAPHY · CONDITIONING · STUDIO JOURNAL
-              </span>
-            </div>
+    <PublicPage>
+      <PublicPageTitle
+        eyebrow="Journal"
+        title="From the studio"
+        description="Essays on movement mechanics, musicality, performance mindset, and academy news from our coaching faculty."
+      />
 
-            <h1 className="font-anton text-5xl sm:text-7xl md:text-8xl text-ink mb-6 leading-[0.92] tracking-tight uppercase">
-              THE RHYTHMZZ <br className="hidden sm:inline" />
-              <span className="text-bl">JOURNAL.</span>
-            </h1>
-
-            <p className="text-ink-2 text-base sm:text-lg md:text-xl leading-relaxed max-w-2xl mx-auto">
-              Essays on movement mechanics, musicality, performance mindset, and academy news from our coaching faculty.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* 02: Spacious Grid */}
-      <section className="py-20 sm:py-28 px-4 sm:px-6 md:px-16 max-w-6xl mx-auto min-h-[50vh]">
+      <HomepageSection className={sectionPadAfterTitleLg}>
         {posts.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
             {posts.map((post: any) => (
               <Link
                 key={post.id}
                 href={`/blog/${post.slug}`}
-                className="bento-card group flex flex-col justify-between p-0 rounded-md overflow-hidden active:scale-[0.98] transition-all hover:border-line-strong shadow-sm"
+                className="group flex flex-col justify-between rounded-md overflow-hidden border border-line bg-surface hover:border-ink/30 transition-colors"
               >
                 <div className="relative aspect-video bg-canvas w-full overflow-hidden border-b border-line">
                   {post.cover_image_url || post.cover_image ? (
@@ -57,7 +45,7 @@ export default async function BlogPage() {
                       className="object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-ink-3 text-xs font-mono bg-surface">
+                    <div className="w-full h-full flex items-center justify-center text-ink-3 text-xs bg-surface">
                       Rhythmzz Journal
                     </div>
                   )}
@@ -66,25 +54,23 @@ export default async function BlogPage() {
                 <div className="p-6 flex flex-col flex-grow justify-between">
                   <div>
                     <div className="flex items-center justify-between mb-3">
-                      <span className="text-[10px] font-mono font-bold tracking-[2px] uppercase text-bl">
+                      <span className="text-[10px] font-semibold tracking-[0.14em] uppercase text-bl">
                         {post.author?.name || 'Academy'}
                       </span>
-                      <span className="text-[10px] font-mono text-ink-3 uppercase tracking-wider">
+                      <span className="text-[10px] uppercase tracking-wider text-ink-3">
                         {post.published_at ? formatDate(post.published_at) : ''}
                       </span>
                     </div>
 
-                    <h3 className="font-anton text-2xl mb-2 text-ink group-hover:text-bl transition-colors line-clamp-2 uppercase tracking-wide leading-tight">
+                    <h2 className="font-anton text-2xl mb-2 text-ink group-hover:text-bl transition-colors line-clamp-2 uppercase tracking-tight leading-tight">
                       {post.title}
-                    </h3>
+                    </h2>
 
-                    <p className="text-xs text-ink-2 line-clamp-2 mb-6 leading-relaxed">
-                      {post.excerpt}
-                    </p>
+                    <p className="text-sm text-ink-2 line-clamp-2 mb-6 leading-relaxed">{post.excerpt}</p>
                   </div>
 
-                  <div className="pt-3 border-t border-line flex items-center gap-1.5 text-xs font-mono font-bold tracking-[1.5px] uppercase text-bl group-hover:translate-x-1 transition-transform">
-                    <span>Read Article</span>
+                  <div className="pt-3 border-t border-line flex items-center gap-1.5 text-[10px] font-bold tracking-[0.12em] uppercase text-bl">
+                    <span>Read article</span>
                     <ArrowRight size={13} />
                   </div>
                 </div>
@@ -92,12 +78,12 @@ export default async function BlogPage() {
             ))}
           </div>
         ) : (
-          <div className="text-center py-20 text-ink-2 bento-card rounded-md max-w-lg mx-auto p-10">
-            <h3 className="font-anton text-3xl mb-2 text-ink uppercase">NO POSTS YET</h3>
-            <p className="text-xs font-mono text-ink-3">Check back soon for new choreo breakdowns and technique essays.</p>
+          <div className="text-center py-16 rounded-md border border-line max-w-lg mx-auto p-10">
+            <h2 className="font-anton text-3xl mb-2 text-ink uppercase">No posts yet</h2>
+            <p className="text-sm text-ink-2">Check back soon for new choreo breakdowns and technique essays.</p>
           </div>
         )}
-      </section>
-    </div>
+      </HomepageSection>
+    </PublicPage>
   );
 }

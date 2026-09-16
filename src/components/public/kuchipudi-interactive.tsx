@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { homepageFilterPill } from '@/lib/ui/homepage-cta';
 import {
   ChevronDown,
   Award,
@@ -471,11 +472,10 @@ export function KuchipudiFaqAccordion() {
               setActiveFilter(cat);
               setOpenIndex(0);
             }}
-            className={`text-xs font-mono px-3.5 py-1.5 rounded-md border transition-all duration-200 active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl ${
-              activeFilter === cat
-                ? 'bg-bl text-blk border-bl font-bold shadow-sm'
-                : 'bg-surface border-line text-ink-2 hover:text-ink hover:border-bl/50'
-            }`}
+            className={homepageFilterPill(
+              activeFilter === cat,
+              'text-xs font-mono px-3.5 py-1.5',
+            )}
           >
             {cat === 'all' ? 'All Questions' : cat}
           </button>

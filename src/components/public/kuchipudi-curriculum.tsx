@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { homepageCtaBrand, homepageFilterPill } from '@/lib/ui/homepage-cta';
 import {
   KUCHIPUDI_10_YEAR_PLAN,
   KUCHIPUDI_6_YEAR_PLAN,
@@ -54,11 +55,11 @@ export function KuchipudiCurriculum() {
       <div className="bento-card rounded-md sm:rounded-md border border-line p-6 md:p-8">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 pb-6 border-b border-line">
           <div>
-            <p className="text-[11px] font-mono uppercase tracking-[0.22em] text-ink-3 mb-3">
-              Official Master Syllabus
+            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-bl mb-2">
+              Official master syllabus
             </p>
-            <h2 className="font-anton text-3xl sm:text-4xl md:text-5xl text-ink tracking-wide uppercase">
-              YEAR-WISE MASTER CURRICULUM
+            <h2 className="font-anton text-2xl sm:text-3xl md:text-[2.25rem] text-ink tracking-tight uppercase leading-[0.95]">
+              Year-wise master curriculum
             </h2>
             <p className="text-ink-2 text-xs sm:text-sm md:text-base max-w-2xl mt-2 leading-relaxed">
               Structured classical training prioritizing developmental pacing, physical safety, and artistic depth — leading to recognized Certificate Public Examinations.
@@ -73,11 +74,10 @@ export function KuchipudiCurriculum() {
                 setExpandedYear(1);
                 setSelectedFilter('all');
               }}
-              className={`px-5 py-3 rounded-md text-xs font-mono font-bold uppercase tracking-[0.15em] transition-all duration-200 flex items-center gap-2 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl cursor-pointer ${
-                activeTrack === '10-year'
-                  ? 'bg-bl text-blk font-black shadow-md'
-                  : 'text-ink-2 hover:text-ink hover:bg-surface/50'
-              }`}
+              className={homepageFilterPill(
+                activeTrack === '10-year',
+                'px-5 py-3 text-xs font-mono tracking-[0.15em] flex items-center gap-2',
+              )}
             >
               
               10-Year Master Plan
@@ -91,11 +91,10 @@ export function KuchipudiCurriculum() {
                 setExpandedYear(1);
                 setSelectedFilter('all');
               }}
-              className={`px-5 py-3 rounded-md text-xs font-mono font-bold uppercase tracking-[0.15em] transition-all duration-200 flex items-center gap-2 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl cursor-pointer ${
-                activeTrack === '6-year'
-                  ? 'bg-bl text-blk font-black shadow-md'
-                  : 'text-ink-2 hover:text-ink hover:bg-surface/50'
-              }`}
+              className={homepageFilterPill(
+                activeTrack === '6-year',
+                'px-5 py-3 text-xs font-mono tracking-[0.15em] flex items-center gap-2',
+              )}
             >
               
               6-Year Certificate
@@ -141,11 +140,10 @@ export function KuchipudiCurriculum() {
             <button
               key={tab.id}
               onClick={() => setSelectedFilter(tab.id)}
-              className={`text-xs font-mono px-3.5 py-1.5 rounded-md border transition-all duration-200 active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl cursor-pointer ${
-                selectedFilter === tab.id
-                  ? 'bg-bl text-blk border-bl font-bold shadow-sm'
-                  : 'bg-canvas border-line text-ink-2 hover:text-ink hover:border-bl/50'
-              }`}
+              className={homepageFilterPill(
+                selectedFilter === tab.id,
+                'text-xs font-mono px-3.5 py-1.5',
+              )}
             >
               {tab.label}
             </button>
@@ -358,11 +356,8 @@ export function KuchipudiCurriculum() {
                 <div className="text-xs font-semibold text-ink">Ready to begin your journey?</div>
                 <div className="text-[11px] text-ink-2">Free trial class &amp; diagnostic alignment check.</div>
               </div>
-              <Link
-                href="/enrol?programme=kuchipudi"
-                className="btn-sun w-full sm:w-auto text-center text-xs font-black uppercase tracking-[0.18em] py-3.5 px-6 shadow-sm active:scale-[0.96]"
-              >
-                Enrol In Kuchipudi
+              <Link href="/enrol?programme=kuchipudi" className={homepageCtaBrand}>
+                Enrol in Kuchipudi
               </Link>
             </div>
           </div>
