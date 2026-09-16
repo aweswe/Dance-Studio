@@ -48,48 +48,52 @@ export function HeroStats({ stats }: { stats: { key: string; value: string }[] }
   }, {});
 
   return (
-    <dl className="grid w-full grid-cols-2 gap-x-6 gap-y-5 sm:flex sm:flex-nowrap sm:items-start sm:justify-between sm:gap-x-3 lg:gap-x-4">
-      <div className="col-span-2 sm:col-span-1 sm:shrink-0 flex justify-center sm:justify-start">
+    <dl className="flex w-full items-start justify-between gap-1 sm:gap-3 lg:gap-4 overflow-hidden">
+      {/* Google Review */}
+      <div className="flex min-w-0 flex-col gap-1 sm:gap-1.5 shrink-0">
         <a
           href={ACADEMY.mapLink}
           target="_blank"
           rel="noopener noreferrer"
           aria-label={`${ACADEMY.googleRating} stars on Google, ${ACADEMY.googleReviewCount}+ reviews`}
-          className="flex flex-col items-center sm:items-start gap-1.5 rounded-md transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl focus-visible:ring-offset-2 focus-visible:ring-offset-blk"
+          className="flex flex-col gap-1 sm:gap-1.5 rounded-md transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl focus-visible:ring-offset-2 focus-visible:ring-offset-blk"
         >
-          <dt className="m-0 flex h-[1.875rem] items-center justify-center sm:justify-start gap-2">
+          <dt className="m-0 flex h-6 sm:h-[1.875rem] items-center gap-1 sm:gap-1.5">
             <span
-              className="flex h-[1.875rem] w-[1.875rem] shrink-0 items-center justify-center rounded-md bg-white shadow-[0_2px_6px_-1px_rgba(0,0,0,0.32)]"
+              className="flex h-5 w-5 sm:h-[1.875rem] sm:w-[1.875rem] shrink-0 items-center justify-center rounded bg-white shadow-sm"
               aria-hidden
             >
-              <GoogleMark className="h-4 w-4" />
+              <GoogleMark className="h-3 w-3 sm:h-4 sm:w-4" />
             </span>
-            <span className="flex items-center gap-1.5">
-              <span className={VALUE_CLASS}>{ACADEMY.googleRating}</span>
+            <span className="flex items-center gap-0.5 sm:gap-1.5">
+              <span className="font-anton text-xs xs:text-sm sm:text-[clamp(1.25rem,3.25vw,1.875rem)] leading-none tracking-tight text-white">
+                {ACADEMY.googleRating}
+              </span>
               <span className="flex shrink-0 items-center gap-px text-gold" aria-hidden>
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <Star key={i} size={11} fill="currentColor" strokeWidth={0} />
-                ))}
+                <Star size={9} className="fill-gold sm:hidden" strokeWidth={0} />
+                <span className="hidden sm:flex items-center gap-px">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <Star key={i} size={11} fill="currentColor" strokeWidth={0} />
+                  ))}
+                </span>
               </span>
             </span>
           </dt>
-          <dd className="m-0 text-[8px] sm:text-[9px] font-semibold uppercase tracking-[0.12em] leading-snug text-white/40 text-center sm:text-left sm:pl-[calc(1.875rem+0.5rem)]">
+          <dd className="m-0 text-[7px] xs:text-[8px] sm:text-[9px] font-semibold uppercase tracking-wider leading-none text-white/40 truncate sm:pl-[calc(1.875rem+0.375rem)]">
             {ACADEMY.googleReviewCount}+ reviews
           </dd>
         </a>
       </div>
 
+      {/* 4 Stats */}
       {STAT_META.map((stat) => (
-        <div
-          key={stat.key}
-          className="flex min-w-0 flex-col items-center sm:items-start justify-center text-center sm:text-left gap-1.5 sm:shrink-0"
-        >
-          <dt className="m-0 flex h-[1.875rem] items-center justify-center sm:justify-start">
-            <span className={VALUE_CLASS}>
+        <div key={stat.key} className="flex min-w-0 flex-col gap-1 sm:gap-1.5 shrink-0">
+          <dt className="m-0 flex h-6 sm:h-[1.875rem] items-center">
+            <span className="font-anton text-xs xs:text-sm sm:text-[clamp(1.25rem,3.25vw,1.875rem)] leading-none tracking-tight text-white tabular-nums">
               <CountUp value={valueByKey[stat.key] || stat.fallback} />
             </span>
           </dt>
-          <dd className="m-0 text-[8px] sm:text-[9px] font-semibold uppercase tracking-[0.12em] leading-snug text-white/40 text-center sm:text-left">
+          <dd className="m-0 text-[7px] xs:text-[8px] sm:text-[9px] font-semibold uppercase tracking-wider leading-tight text-white/40">
             {stat.label}
           </dd>
         </div>
