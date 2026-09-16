@@ -1,5 +1,7 @@
 'use client';
 
+import { useSyncExternalStore } from 'react';
+
 import { useEffect, useRef, useState, type ComponentType } from 'react';
 import { createPortal } from 'react-dom';
 import Link from 'next/link';
@@ -181,10 +183,12 @@ function MobileSection({
 }) {
   const sectionActive = links.some((l) => isActive(l.href));
   const [open, setOpen] = useState(() => sectionActive || title === 'Explore');
+  const [prevPathname, setPrevPathname] = useState(pathname);
 
-  useEffect(() => {
+  if (prevPathname !== pathname) {
+    setPrevPathname(pathname);
     if (sectionActive) setOpen(true);
-  }, [pathname, sectionActive]);
+  }
 
   return (
     <div className="border-b border-white/10">
@@ -284,7 +288,7 @@ export function Nav() {
   const [discoverOpen, setDiscoverOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [authInfo, setAuthInfo] = useState<AuthInfo | null>(null);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useSyncExternalStore(() => () => {}, () => true, () => false);
   const pathname = usePathname();
   const [lastPathname, setLastPathname] = useState(pathname);
   const discoverRef = useRef<HTMLDivElement>(null);
@@ -375,9 +379,7 @@ export function Nav() {
     };
   }, [isOpen]);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+
 
   useEffect(() => {
     if (!isOpen) return;

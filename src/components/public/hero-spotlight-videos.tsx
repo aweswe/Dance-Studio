@@ -17,11 +17,12 @@ function SpotlightCard({
   const videoRef = useRef<HTMLVideoElement>(null);
   const [muted, setMuted] = useState(true);
   const [failed, setFailed] = useState(false);
-  const hasVideo = Boolean(src?.trim()) && !failed;
-
-  useEffect(() => {
+  const [prevSrc, setPrevSrc] = useState(src);
+  if (prevSrc !== src) {
+    setPrevSrc(src);
     setFailed(false);
-  }, [src]);
+  }
+  const hasVideo = Boolean(src?.trim()) && !failed;
 
   useEffect(() => {
     const el = videoRef.current;

@@ -23,11 +23,12 @@ export function HeroVideo({
   const videoRef = useRef<HTMLVideoElement>(null);
   const [muted, setMuted] = useState(true);
   const [loadFailed, setLoadFailed] = useState(false);
-  const hasVideo = Boolean(src?.trim()) && !loadFailed;
-
-  useEffect(() => {
+  const [prevSrc, setPrevSrc] = useState(src);
+  if (prevSrc !== src) {
+    setPrevSrc(src);
     setLoadFailed(false);
-  }, [src]);
+  }
+  const hasVideo = Boolean(src?.trim()) && !loadFailed;
 
   useEffect(() => {
     const el = videoRef.current;
