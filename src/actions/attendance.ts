@@ -1,9 +1,39 @@
 "use server";
 
 import { createAdminSupabase, createServerSupabase } from "@/lib/supabase/server";
-import { getUserRole, isAdmin } from "@/lib/supabase/guards";
+import { getUserRole } from "@/lib/supabase/guards";
+import { getLinkedInstructor } from "@/lib/auth/instructor";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+
+/** Verify user is admin, or instructor who owns this batch. */
+async function assertCanManageBatch(
+  supabase: Awaited<ReturnType<typeof createServerSupabase>>,
+  batchId: string,
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { ok: false, error: "Not signed in" };
+
+  const role = await getUserRole(supabase);
+  if (role === "admin") return { ok: true };
+
+  if (role === "instructor") {
+    const instructor = await getLinkedInstructor(supabase, user);
+    if (!instructor) return { ok: false, error: "Instructor profile not linked" };
+    const { data: batch } = await supabase
+      .from("batches")
+      .select("id")
+      .eq("id", batchId)
+      .eq("instructor_id", instructor.id)
+      .maybeSingle();
+    if (!batch) return { ok: false, error: "You can only mark attendance for your own batches" };
+    return { ok: true };
+  }
+
+  return { ok: false, error: "Only admin or instructor can mark attendance" };
+}
 
 const markAttendanceSchema = z.object({
   batchId: z.string().uuid(),
@@ -30,22 +60,8 @@ export async function markAttendance(
     return { success: false, error: "Invalid attendance data" };
   }
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return { success: false, error: "Not signed in" };
-
-  const role = await getUserRole(supabase);
-  if (role !== "admin") {
-    return { success: false, error: "Only academy admin can mark attendance" };
-  }
-
-  const { data: batch } = await supabase
-    .from("batches")
-    .select("id")
-    .eq("id", parsed.data.batchId)
-    .single();
-  if (!batch) return { success: false, error: "Batch not found" };
+  const auth = await assertCanManageBatch(supabase, parsed.data.batchId);
+  if (!auth.ok) return { success: false, error: auth.error };
 
   const inserts = parsed.data.records.map((r) => ({
     batch_id: parsed.data.batchId,
@@ -104,14 +120,14 @@ export async function markAttendance(
 }
 
 /**
- * Admin attendance report for a batch on a given date:
+ * Attendance report for a batch on a given date:
  * the roster joined against what was marked, plus summary counts.
+ * Accessible by admin (any batch) or instructor (own batches only).
  */
 export async function getAttendanceReport(batchId: string, date: string) {
   const supabase = await createServerSupabase();
-  if (!(await isAdmin(supabase))) {
-    return { success: false, error: "Not authorized" };
-  }
+  const auth = await assertCanManageBatch(supabase, batchId);
+  if (!auth.ok) return { success: false, error: auth.error };
 
   const parsed = z
     .object({
