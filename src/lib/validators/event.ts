@@ -10,6 +10,8 @@ export const eventSchema = z.object({
   venue: z.string().min(2, 'Venue is required'),
   description: z.string().min(10, 'Description is required'),
   isPublished: z.boolean(),
+  imageUrl: z.string().optional().nullable(),
+  images: z.array(z.string()).optional().default([]),
 });
 
 export type EventFormData = z.infer<typeof eventSchema>;

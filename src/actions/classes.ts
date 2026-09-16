@@ -110,3 +110,76 @@ export async function updateBatchStatus(id: string, status: 'active' | 'paused' 
   revalidatePath('/')
   return { success: true }
 }
+
+export async function deleteBatch(id: string) {
+  const supabase = await createServerSupabase()
+  if (!(await isAdmin(supabase))) return { success: false, error: 'Not authorized' }
+
+  const { createAdminSupabase } = await import('@/lib/supabase/server')
+  const admin = createAdminSupabase()
+
+  // Unassign any students currently enrolled in this batch
+  await admin.from('students').update({ batch_id: null }).eq('batch_id', id)
+
+  // Clean up any batch switch requests referencing this batch
+  await admin.from('batch_switch_requests').delete().eq('requested_batch_id', id)
+  await admin.from('batch_switch_requests').delete().eq('current_batch_id', id)
+
+  // Clean up waitlist
+  await admin.from('batch_waitlist').delete().eq('batch_id', id)
+
+  // Delete attendance records
+  await admin.from('attendance').delete().eq('batch_id', id)
+
+  // Delete batch
+  const { error } = await admin.from('batches').delete().eq('id', id)
+  if (error) return { success: false, error: error.message }
+
+  revalidatePath('/admin/classes')
+  revalidatePath('/programmes')
+  revalidatePath('/schedule')
+  revalidatePath('/')
+  return { success: true }
+}
+
+export async function deleteProgramme(id: string) {
+  const supabase = await createServerSupabase()
+  if (!(await isAdmin(supabase))) return { success: false, error: 'Not authorized' }
+
+  const { createAdminSupabase } = await import('@/lib/supabase/server')
+  const admin = createAdminSupabase()
+
+  // Get all batches for this programme
+  const { data: batches } = await admin.from('batches').select('id').eq('programme_id', id)
+  const batchIds = (batches || []).map((b) => b.id)
+
+  if (batchIds.length > 0) {
+    // Unassign students from these batches
+    await admin.from('students').update({ batch_id: null }).in('batch_id', batchIds)
+
+    // Delete switch requests, waitlist, attendance for these batches
+    for (const bId of batchIds) {
+      await admin.from('batch_switch_requests').delete().eq('requested_batch_id', bId)
+      await admin.from('batch_switch_requests').delete().eq('current_batch_id', bId)
+      await admin.from('batch_waitlist').delete().eq('batch_id', bId)
+      await admin.from('attendance').delete().eq('batch_id', bId)
+    }
+
+    // Delete batches
+    await admin.from('batches').delete().eq('programme_id', id)
+  }
+
+  // Unassign students from this programme
+  await admin.from('students').update({ programme_id: null, batch_id: null }).eq('programme_id', id)
+
+  // Delete programme
+  const { error } = await admin.from('programmes').delete().eq('id', id)
+  if (error) return { success: false, error: error.message }
+
+  revalidatePath('/admin/classes')
+  revalidatePath('/programmes')
+  revalidatePath('/schedule')
+  revalidatePath('/')
+  return { success: true }
+}
+

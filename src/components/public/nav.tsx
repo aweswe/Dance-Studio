@@ -66,7 +66,7 @@ const DISCOVER_GROUPS: { label: string; links: NavLink[] }[] = [
   {
     label: 'Events & studio',
     links: [
-      { name: 'Annual Day', href: ROUTES.annualDay, hint: 'Showcase & tickets' },
+      { name: 'Events', href: ROUTES.events, hint: 'Showcases & workshops' },
       { name: 'Studio Rental', href: ROUTES.studioRental, hint: 'Book the space' },
     ],
   },

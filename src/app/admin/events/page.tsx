@@ -5,7 +5,7 @@ export default async function AdminEventsPage() {
   const supabase = await createServerSupabase();
   const { data: events } = await supabase
     .from('events')
-    .select('id, slug, title, starts_at, venue, description, is_published, event_rsvps(id, name, phone, guests)')
+    .select('id, slug, title, starts_at, venue, description, is_published, image_url, images, event_rsvps(id, name, phone, guests)')
     .order('starts_at', { ascending: true });
 
   return (

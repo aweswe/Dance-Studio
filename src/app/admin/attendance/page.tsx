@@ -12,7 +12,7 @@ export default async function AttendancePage({
   const supabase = await createServerSupabase()
   const { data: batches } = await supabase
     .from('batches')
-    .select('id, name, days, time_start, time_end, programme:programmes(name), students(id, name)')
+    .select('id, name, days, time_start, time_end, programme:programmes(name), students(id, name, status)')
     .order('created_at', { ascending: false })
 
   const { data: leaves } = await supabase
@@ -25,7 +25,7 @@ export default async function AttendancePage({
     id: b.id,
     name: b.name || `${(b.programme as any)?.name ?? ''} ${Array.isArray(b.days) ? b.days.join(', ') : ''}`.trim(),
     days: b.days,
-    students: b.students ?? [],
+    students: (b.students ?? []).filter((s: any) => s.status !== 'left'),
   }))
 
   return (

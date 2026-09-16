@@ -85,7 +85,7 @@ export function Footer() {
             links={[
               { href: ROUTES.about, label: 'Who we are' },
               { href: ROUTES.contact, label: 'Contacts' },
-              { href: ROUTES.annualDay, label: 'Annual day' },
+              { href: ROUTES.events, label: 'Events' },
               { href: ROUTES.enrol, label: 'Enrol & pay' },
             ]}
           />

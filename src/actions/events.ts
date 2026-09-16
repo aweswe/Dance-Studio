@@ -29,6 +29,8 @@ export async function createEvent(data: EventFormData) {
       venue: d.venue,
       description: d.description,
       is_published: d.isPublished,
+      image_url: d.imageUrl ?? null,
+      images: d.images ?? [],
     })
     .select()
     .single();
@@ -70,6 +72,8 @@ export async function updateEvent(id: string, data: EventFormData) {
       venue: d.venue,
       description: d.description,
       is_published: d.isPublished,
+      image_url: d.imageUrl ?? null,
+      images: d.images ?? [],
     })
     .eq('id', id)
     .select()
@@ -81,6 +85,52 @@ export async function updateEvent(id: string, data: EventFormData) {
   revalidatePath('/events');
   revalidatePath(`/events/${d.slug}`);
   return { success: true, event: updated };
+}
+
+export async function uploadEventImage(formData: FormData) {
+  const supabase = await createServerSupabase();
+  if (!(await isAdmin(supabase))) return { success: false, error: 'Not authorized' };
+
+  const file = formData.get('file') as File | null;
+  if (!file) return { success: false, error: 'No file selected' };
+
+  if (file.size > 10 * 1024 * 1024) {
+    return { success: false, error: 'Image must be 10 MB or smaller' };
+  }
+
+  if (!file.type.startsWith('image/')) {
+    return { success: false, error: 'Only image files are allowed' };
+  }
+
+  const ext = file.name.split('.').pop()?.toLowerCase() || 'webp';
+  const path = `${Date.now()}-${crypto.randomUUID()}.${ext}`;
+
+  const admin = createAdminSupabase();
+  const buffer = Buffer.from(await file.arrayBuffer());
+
+  // Try 'events' bucket first, fallback to 'gallery'
+  let bucket = 'events';
+  let uploadRes = await admin.storage.from(bucket).upload(path, buffer, {
+    contentType: file.type || 'image/webp',
+    upsert: true,
+  });
+
+  if (uploadRes.error) {
+    bucket = 'gallery';
+    uploadRes = await admin.storage.from(bucket).upload(`events/${path}`, buffer, {
+      contentType: file.type || 'image/webp',
+      upsert: true,
+    });
+  }
+
+  if (uploadRes.error) {
+    return { success: false, error: uploadRes.error.message };
+  }
+
+  const filePath = bucket === 'events' ? path : `events/${path}`;
+  const { data: publicUrl } = admin.storage.from(bucket).getPublicUrl(filePath);
+
+  return { success: true, url: publicUrl.publicUrl };
 }
 
 export async function deleteEvent(id: string) {

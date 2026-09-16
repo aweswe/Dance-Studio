@@ -6,15 +6,17 @@ import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Modal } from '@/components/ui/modal'
-import { Plus, Mail, Phone } from 'lucide-react'
+import { ConfirmModal } from '@/components/ui/confirm-modal'
+import { Plus, Mail, Phone, Trash2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { createInstructor, linkInstructorAuth } from '@/actions/instructors'
+import { createInstructor, linkInstructorAuth, deleteInstructor } from '@/actions/instructors'
 
 export function InstructorManager({ initialInstructors }: { initialInstructors: any[] }) {
   const router = useRouter()
   const [isOpen, setIsOpen] = useState(false)
   const [busy, setBusy] = useState(false)
   const [feedback, setFeedback] = useState<{ ok: boolean; text: string } | null>(null)
+  const [pendingDelete, setPendingDelete] = useState<any | null>(null)
 
   const [form, setForm] = useState({
     name: '',
@@ -48,6 +50,21 @@ export function InstructorManager({ initialInstructors }: { initialInstructors: 
     }
   }
 
+  const confirmDelete = async () => {
+    if (!pendingDelete) return
+    setBusy(true)
+    setFeedback(null)
+    const res = await deleteInstructor(pendingDelete.id)
+    setBusy(false)
+    setPendingDelete(null)
+    if (res.success) {
+      setFeedback({ ok: true, text: `Instructor "${pendingDelete.name}" deleted` })
+      router.refresh()
+    } else {
+      setFeedback({ ok: false, text: res.error ?? 'Could not delete instructor' })
+    }
+  }
+
   const instructors = initialInstructors || []
 
   return (
@@ -78,6 +95,16 @@ export function InstructorManager({ initialInstructors }: { initialInstructors: 
                   </Badge>
                 </div>
               </div>
+              <Button
+                type="button"
+                size="sm"
+                variant="ghost"
+                className="text-red-600 hover:text-red-700 hover:bg-red-500/10 p-2"
+                title="Delete instructor"
+                onClick={() => setPendingDelete(instructor)}
+              >
+                <Trash2 size={16} />
+              </Button>
             </div>
 
             {instructor.role && (
@@ -169,6 +196,17 @@ export function InstructorManager({ initialInstructors }: { initialInstructors: 
           </div>
         </div>
       </Modal>
+
+      <ConfirmModal
+        isOpen={!!pendingDelete}
+        title="Delete instructor?"
+        description={`Are you sure you want to delete instructor "${pendingDelete?.name}"? Any batches currently assigned to them will have their instructor unassigned.`}
+        confirmLabel="Delete"
+        danger
+        busy={busy}
+        onConfirm={confirmDelete}
+        onClose={() => setPendingDelete(null)}
+      />
     </div>
   )
 }

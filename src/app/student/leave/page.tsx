@@ -1,36 +1,36 @@
-import { LeaveForm } from "@/components/student/leave-form";
+import { LeaveAcademyForm } from "@/components/student/leave-form";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { getCurrentStudent } from "@/lib/auth/student";
 import { redirect } from "next/navigation";
 import { ROUTES } from "@/lib/utils/constants";
-import { Card } from "@/components/ui/card";
 
-export const metadata = { title: "Leave & makeup | Student" };
+export const metadata = { title: "Leave Academy | Student" };
 
 export default async function LeavePage() {
   const supabase = await createServerSupabase();
   const { student } = await getCurrentStudent();
   if (!student) redirect(ROUTES.login);
 
-  const { data: rows } = await supabase
+  // Check for an existing pending platform-leave request
+  const { data: existing } = await supabase
     .from("leave_requests")
-    .select("id, date, kind, status, notes")
+    .select("date, status")
     .eq("student_id", student.id)
-    .order("created_at", { ascending: false })
-    .limit(20);
+    .eq("kind", "platform_leave")
+    .eq("status", "pending")
+    .maybeSingle();
 
   return (
-    <div className="space-y-6">
-      <p className="text-sm text-ink-2">Tell the academy when you will miss a class, or request a makeup slot.</p>
-      <LeaveForm />
-      <div className="space-y-2">
-        {(rows || []).map((r: any) => (
-          <Card key={r.id} className="p-4 flex justify-between text-sm">
-            <span>{r.kind} · {r.date}</span>
-            <span className="text-xs text-ink-3 capitalize">{r.status}</span>
-          </Card>
-        ))}
+    <div className="space-y-6 max-w-lg">
+      <div>
+        <h1 className="text-lg font-semibold text-ink">Leave Rhythmzz Academy</h1>
+        <p className="text-sm text-ink-2 mt-1">
+          We're sorry to see you go. If you'd like to withdraw from the programme,
+          tell us why — this helps us improve for everyone.
+        </p>
       </div>
+
+      <LeaveAcademyForm existingPendingDate={(existing as any)?.date ?? null} />
     </div>
   );
 }

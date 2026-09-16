@@ -35,6 +35,92 @@ export async function requestLeave(input: {
   return { success: true };
 }
 
+/**
+ * Student submits a platform-leave (dropout) request with a mandatory reason.
+ * Stored as kind='platform_leave' in leave_requests; date = submission date.
+ */
+export async function submitPlatformLeave(reason: string) {
+  const { getCurrentStudent } = await import('@/lib/auth/student');
+  const { student } = await getCurrentStudent();
+  if (!student?.id) return { success: false, error: 'Not signed in' };
+
+  const trimmed = reason.trim();
+  if (!trimmed || trimmed.length < 10) {
+    return { success: false, error: 'Please share a reason (at least 10 characters).' };
+  }
+
+  const admin = createAdminSupabase();
+
+  // Prevent duplicate pending requests
+  const { data: existing } = await admin
+    .from('leave_requests')
+    .select('id')
+    .eq('student_id', student.id)
+    .eq('kind', 'platform_leave')
+    .eq('status', 'pending')
+    .maybeSingle();
+
+  if (existing) {
+    return { success: false, error: 'You already have a pending withdrawal request. The admin will be in touch.' };
+  }
+
+  const today = new Date().toISOString().split('T')[0];
+  const { error } = await admin.from('leave_requests').insert({
+    student_id: student.id,
+    batch_id: student.batch_id || student.batch?.id || null,
+    date: today,
+    kind: 'platform_leave',
+    notes: trimmed,
+    status: 'pending',
+  } as any);
+
+  if (error) return { success: false, error: error.message };
+  revalidatePath('/student/leave');
+  revalidatePath('/admin');
+  return { success: true };
+}
+
+/**
+ * Admin acknowledges / closes a platform-leave request.
+ * When approved, also marks the student as 'left' to revoke portal access.
+ */
+export async function acknowledgePlatformLeave(id: string, status: 'approved' | 'declined') {
+  const supabase = await createServerSupabase();
+  const adminOk = await isAdmin(supabase);
+  if (!adminOk) return { success: false, error: 'Not authorized' };
+
+  const admin = createAdminSupabase();
+
+  // Fetch the leave request to get the student ID
+  const { data: leaveRow } = await admin
+    .from('leave_requests')
+    .select('student_id')
+    .eq('id', id)
+    .eq('kind', 'platform_leave')
+    .maybeSingle();
+
+  const { error } = await admin
+    .from('leave_requests')
+    .update({ status } as any)
+    .eq('id', id)
+    .eq('kind', 'platform_leave');
+  if (error) return { success: false, error: error.message };
+
+  // When approved: mark student as 'left' — blocks their portal on next check
+  if (status === 'approved' && leaveRow?.student_id) {
+    await admin
+      .from('students')
+      .update({ status: 'left' } as any)
+      .eq('id', leaveRow.student_id);
+  }
+
+  revalidatePath('/admin');
+  revalidatePath('/student/leave');
+  return { success: true };
+}
+
+
+
 export async function reviewLeaveRequest(id: string, status: 'approved' | 'declined') {
   const supabase = await createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();

@@ -6,18 +6,20 @@ import { getLinkedInstructor } from "@/lib/auth/instructor";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
-/** Verify user is admin, or instructor who owns this batch. */
+/** Verify user is admin, or instructor who owns this batch.
+ *  Returns the instructor's row ID when applicable so the caller can set `marked_by`.
+ */
 async function assertCanManageBatch(
   supabase: Awaited<ReturnType<typeof createServerSupabase>>,
   batchId: string,
-): Promise<{ ok: true } | { ok: false; error: string }> {
+): Promise<{ ok: true; instructorId: string | null } | { ok: false; error: string }> {
   const {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) return { ok: false, error: "Not signed in" };
 
   const role = await getUserRole(supabase);
-  if (role === "admin") return { ok: true };
+  if (role === "admin") return { ok: true, instructorId: null };
 
   if (role === "instructor") {
     const instructor = await getLinkedInstructor(supabase, user);
@@ -29,7 +31,7 @@ async function assertCanManageBatch(
       .eq("instructor_id", instructor.id)
       .maybeSingle();
     if (!batch) return { ok: false, error: "You can only mark attendance for your own batches" };
-    return { ok: true };
+    return { ok: true, instructorId: instructor.id };
   }
 
   return { ok: false, error: "Only admin or instructor can mark attendance" };
@@ -68,7 +70,7 @@ export async function markAttendance(
     date: parsed.data.date,
     student_id: r.studentId,
     status: r.status,
-    marked_by: null,
+    marked_by: auth.instructorId,
   }));
 
   const admin = createAdminSupabase();
@@ -141,6 +143,7 @@ export async function getAttendanceReport(batchId: string, date: string) {
     .from("students")
     .select("id, name, student_id_display, status")
     .eq("batch_id", parsed.data.batchId)
+    .neq("status", "left")
     .order("name");
   if (rosterErr) return { success: false, error: rosterErr.message };
 
@@ -165,3 +168,39 @@ export async function getAttendanceReport(batchId: string, date: string) {
     unmarked: (roster ?? []).filter((s) => !marked.has(s.id)),
   };
 }
+
+export async function markStudentAsLeft(studentId: string) {
+  const supabase = await createServerSupabase();
+  const role = await getUserRole(supabase);
+  if (role !== "admin" && role !== "instructor") {
+    return { success: false, error: "Not authorized" };
+  }
+
+  const admin = createAdminSupabase();
+
+  // Update student status to 'left' and unassign from batch
+  const { error: studentErr } = await admin
+    .from("students")
+    .update({ status: "left", batch_id: null })
+    .eq("id", studentId);
+
+  if (studentErr) {
+    return { success: false, error: studentErr.message };
+  }
+
+  // If there are any pending platform_leave requests, mark them approved
+  await admin
+    .from("leave_requests")
+    .update({ status: "approved" })
+    .eq("student_id", studentId)
+    .eq("kind", "platform_leave")
+    .eq("status", "pending");
+
+  revalidatePath("/admin/attendance");
+  revalidatePath("/instructor/attendance");
+  revalidatePath("/admin/students");
+  revalidatePath("/admin/leave-requests");
+  revalidatePath("/admin");
+  return { success: true };
+}
+

@@ -11,11 +11,19 @@ const EMPTY_ANALYTICS: AnalyticsData = {
   revenue_this_month: 0,
   avg_attendance_this_week: 0,
   batch_occupancy: [],
+  pending_dropouts: 0,
 }
 
 async function getAnalytics(): Promise<AnalyticsData> {
   const supabase = await createServerSupabase()
-  const { data, error } = await supabase.rpc('get_dashboard_analytics')
+  const [{ data, error }, { count: dropoutCount }] = await Promise.all([
+    supabase.rpc('get_dashboard_analytics'),
+    supabase
+      .from('leave_requests')
+      .select('id', { count: 'exact', head: true })
+      .eq('kind', 'platform_leave')
+      .eq('status', 'pending'),
+  ])
 
   if (error || !data) {
     console.error('get_dashboard_analytics failed:', error)
@@ -30,6 +38,7 @@ async function getAnalytics(): Promise<AnalyticsData> {
     revenue_this_month: d.revenue_this_month ?? 0,
     avg_attendance_this_week: d.avg_attendance_this_week ?? 0,
     batch_occupancy: Array.isArray(d.batch_occupancy) ? d.batch_occupancy : [],
+    pending_dropouts: dropoutCount ?? 0,
   }
 }
 
@@ -57,6 +66,14 @@ interface UnmarkedBatch {
   id: string
   name: string
   programmeName: string
+}
+
+interface DropoutRequest {
+  id: string
+  studentName: string
+  reason: string
+  date: string
+  studentId: string
 }
 
 async function getPanelsData() {
@@ -141,19 +158,37 @@ async function getPanelsData() {
       programmeName: b.programme?.name ?? '',
     }))
 
+  // --- Pending platform-leave (dropout) requests ---
+  const { data: dropoutRows } = await supabase
+    .from('leave_requests')
+    .select('id, date, notes, student:students(id, name)')
+    .eq('kind', 'platform_leave')
+    .eq('status', 'pending')
+    .order('created_at', { ascending: false })
+    .limit(10)
+
+  const dropoutRequests: DropoutRequest[] = (dropoutRows ?? []).map((r: any) => ({
+    id: r.id,
+    studentName: r.student?.name ?? 'Unknown',
+    studentId: r.student?.id ?? '',
+    reason: r.notes ?? '',
+    date: r.date,
+  }))
+
   return {
     revenueSeries,
     batchAttendance,
     pendingRentals: (pendingRentals ?? []) as PendingRental[],
     newEnquiries: ((newEnquiries ?? []) as { id: string; name: string; phone: string }[]),
     unmarkedToday,
+    dropoutRequests,
   }
 }
 
 export default async function AdminDashboardPage() {
   const [initialData, panels] = await Promise.all([getAnalytics(), getPanelsData()])
   const waiting =
-    panels.unmarkedToday.length + panels.pendingRentals.length + panels.newEnquiries.length
+    panels.unmarkedToday.length + panels.pendingRentals.length + panels.newEnquiries.length + panels.dropoutRequests.length
   const deskLine =
     waiting === 0
       ? 'Nothing waiting at the desk.'
@@ -161,6 +196,7 @@ export default async function AdminDashboardPage() {
           panels.unmarkedToday.length ? `${panels.unmarkedToday.length} unmarked` : null,
           panels.pendingRentals.length ? `${panels.pendingRentals.length} rentals` : null,
           panels.newEnquiries.length ? `${panels.newEnquiries.length} enquiries` : null,
+          panels.dropoutRequests.length ? `${panels.dropoutRequests.length} leaving` : null,
         ]
           .filter(Boolean)
           .join(' · ')
@@ -179,6 +215,7 @@ export default async function AdminDashboardPage() {
         pendingRentals={panels.pendingRentals}
         newEnquiries={panels.newEnquiries}
         unmarkedToday={panels.unmarkedToday}
+        dropoutRequests={panels.dropoutRequests}
       />
     </div>
   )

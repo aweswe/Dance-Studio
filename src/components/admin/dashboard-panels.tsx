@@ -38,12 +38,21 @@ interface NewEnquiry {
   phone: string
 }
 
+interface DropoutRequest {
+  id: string
+  studentName: string
+  reason: string
+  date: string
+  studentId: string
+}
+
 interface DashboardPanelsProps {
   revenueSeries: RevenuePoint[]
   batchAttendance: BatchAttendanceRow[]
   pendingRentals: PendingRental[]
   newEnquiries: NewEnquiry[]
   unmarkedToday: UnmarkedBatch[]
+  dropoutRequests: DropoutRequest[]
 }
 
 /** Debounced router.refresh() — attendance marking inserts N rows at once. */
@@ -62,6 +71,7 @@ export function DashboardPanels({
   pendingRentals,
   newEnquiries,
   unmarkedToday,
+  dropoutRequests,
 }: DashboardPanelsProps) {
   const refresh = useDebouncedRefresh()
 
@@ -103,7 +113,7 @@ export function DashboardPanels({
     if (above >= PAD_TOP + 4) return { y: above, fill: 'var(--ink)' as const }
     return { y: chartBase - h / 2 + 4, fill: '#fff' as const }
   }
-  const deskClear = pendingRentals.length === 0 && unmarkedToday.length === 0 && newEnquiries.length === 0
+  const deskClear = pendingRentals.length === 0 && unmarkedToday.length === 0 && newEnquiries.length === 0 && dropoutRequests.length === 0
 
   return (
     <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 sm:gap-6">
@@ -206,6 +216,17 @@ export function DashboardPanels({
             >
               <p className="text-sm font-medium text-ink">{e.name}</p>
               <p className="text-[12px] text-ink-3">{e.phone}</p>
+            </a>
+          ))}
+
+          {dropoutRequests.map((d) => (
+            <a
+              key={d.id}
+              href="/admin/leave-requests"
+              className="block rounded-md border border-danger/30 bg-danger/5 p-3 hover:bg-danger/10 focus-visible:focus-ring"
+            >
+              <p className="text-sm font-medium text-ink">{d.studentName} · Leaving</p>
+              <p className="text-[12px] text-ink-3 line-clamp-2 mt-0.5">{d.reason}</p>
             </a>
           ))}
         </div>

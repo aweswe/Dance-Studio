@@ -21,6 +21,7 @@ import {
   Loader2,
   Clapperboard,
   ExternalLink,
+  DoorOpen,
 } from 'lucide-react'
 import { useState } from 'react'
 import { triggerActionLoader } from '@/components/shared/navigation-progress'
@@ -48,6 +49,7 @@ const navGroups = [
       { name: 'Broadcast', href: '/admin/broadcast', icon: MessageSquare },
       { name: 'Enquiries', href: '/admin/enquiries', icon: Inbox },
       { name: 'Switch requests', href: '/admin/switch-requests', icon: ArrowRightLeft },
+      { name: 'Leave requests', href: '/admin/leave-requests', icon: DoorOpen },
     ],
   },
   {

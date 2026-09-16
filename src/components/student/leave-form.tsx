@@ -1,61 +1,109 @@
 "use client";
 
 import { useState } from "react";
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { requestLeave } from "@/actions/studio";
+import { submitPlatformLeave } from "@/actions/studio";
+import { AlertTriangle, LogOut } from "lucide-react";
 
-export function LeaveForm() {
-  const [date, setDate] = useState("");
-  const [kind, setKind] = useState<"leave" | "makeup">("leave");
-  const [notes, setNotes] = useState("");
+interface PlatformLeaveFormProps {
+  /** Pass an existing pending request date if one already exists */
+  existingPendingDate?: string | null;
+}
+
+export function LeaveAcademyForm({ existingPendingDate }: PlatformLeaveFormProps) {
+  const [reason, setReason] = useState("");
+  const [confirmed, setConfirmed] = useState(false);
   const [busy, setBusy] = useState(false);
-  const [msg, setMsg] = useState<string | null>(null);
+  const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  async function submit(e: React.FormEvent) {
+  if (existingPendingDate || submitted) {
+    return (
+      <div className="rounded-xl border border-gold/40 bg-gold/5 p-6 text-center space-y-2">
+        <p className="text-sm font-semibold text-ink">Your withdrawal request is pending</p>
+        <p className="text-sm text-ink-2">
+          The team has been notified and will reach out to you soon. If you change your mind, please contact the academy directly.
+        </p>
+        {existingPendingDate && (
+          <p className="text-[11px] text-ink-3">Submitted on {existingPendingDate}</p>
+        )}
+      </div>
+    );
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (!confirmed) {
+      setError("Please check the confirmation box before submitting.");
+      return;
+    }
+    setError(null);
     setBusy(true);
-    const res = await requestLeave({ date, kind, notes });
-    setMsg(res.success ? "Request sent to the academy." : res.error || "Could not submit");
+    const res = await submitPlatformLeave(reason);
     setBusy(false);
+    if (res.success) {
+      setSubmitted(true);
+    } else {
+      setError(res.error || "Could not submit. Please try again.");
+    }
   }
 
   return (
-    <Card className="p-6 max-w-lg">
-      <form onSubmit={submit} className="space-y-4">
-        <div>
-          <label className="text-xs font-semibold uppercase tracking-wider text-ink-2">Date</label>
-          <input
-            type="date"
-            required
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            className="mt-1 w-full border border-line rounded-md px-3 py-2 text-sm bg-canvas"
-          />
+    <form onSubmit={handleSubmit} className="space-y-5">
+      {/* Warning banner */}
+      <div className="flex gap-3 rounded-lg border border-danger/30 bg-danger/5 p-4">
+        <AlertTriangle className="w-5 h-5 text-danger shrink-0 mt-0.5" />
+        <div className="text-sm text-ink-2 space-y-1.5">
+          <p className="font-semibold text-ink">This can only be submitted once</p>
+          <p>Once the admin reviews your request, <strong className="text-ink">your access will be permanently revoked</strong> — you won't be able to log in or use this platform anymore.</p>
         </div>
-        <div className="flex gap-2">
-          {(["leave", "makeup"] as const).map((k) => (
-            <button
-              key={k}
-              type="button"
-              onClick={() => setKind(k)}
-              className={`flex-1 py-2 rounded-md text-xs font-bold uppercase border ${kind === k ? "border-bl bg-bl/10 text-bl" : "border-line"}`}
-            >
-              {k === "leave" ? "Leave" : "Makeup class"}
-            </button>
-          ))}
-        </div>
+      </div>
+
+      {/* Reason — mandatory */}
+      <div className="space-y-1.5">
+        <label className="text-xs font-semibold uppercase tracking-wider text-ink-2" htmlFor="leave-reason">
+          Why do you want to leave? <span className="text-danger">*</span>
+        </label>
         <textarea
-          value={notes}
-          onChange={(e) => setNotes(e.target.value)}
-          placeholder="Reason (optional)"
-          className="w-full border border-line rounded-md px-3 py-2 text-sm min-h-[80px] bg-canvas"
+          id="leave-reason"
+          required
+          minLength={10}
+          value={reason}
+          onChange={(e) => setReason(e.target.value)}
+          placeholder="e.g. Relocating to another city, schedule conflicts, financial reasons…"
+          className="w-full border border-line rounded-lg px-4 py-3 text-sm bg-canvas min-h-[120px] resize-none focus:outline-none focus:border-bl/50 focus:ring-2 focus:ring-bl/20 placeholder:text-ink-3"
         />
-        <Button type="submit" disabled={busy} isLoading={busy}>
-          Submit request
-        </Button>
-        {msg && <p className="text-sm text-ink-2">{msg}</p>}
-      </form>
-    </Card>
+        <p className="text-[11px] text-ink-3">
+          Your feedback helps us improve. ({reason.trim().length}/10 min)
+        </p>
+      </div>
+
+      {/* Confirmation checkbox */}
+      <label className="flex items-start gap-3 cursor-pointer group">
+        <input
+          type="checkbox"
+          checked={confirmed}
+          onChange={(e) => setConfirmed(e.target.checked)}
+          className="mt-0.5 h-4 w-4 rounded border-line accent-bl"
+        />
+        <span className="text-sm text-ink-2 group-hover:text-ink transition-colors">
+          I understand that submitting this form will notify the Rhythmzz Academy team that I wish to withdraw from the programme.
+        </span>
+      </label>
+
+      {error && (
+        <p className="text-sm text-danger">{error}</p>
+      )}
+
+      <Button
+        type="submit"
+        disabled={busy || !reason.trim() || reason.trim().length < 10 || !confirmed}
+        isLoading={busy}
+        className="w-full !bg-danger hover:!bg-danger/90 text-white gap-2"
+      >
+        <LogOut className="w-4 h-4" />
+        Submit withdrawal request
+      </Button>
+    </form>
   );
 }

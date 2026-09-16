@@ -441,6 +441,8 @@ export type Database = {
           created_at: string | null
           description: string | null
           id: string
+          image_url: string | null
+          images: string[] | null
           is_published: boolean | null
           slug: string
           starts_at: string
@@ -451,6 +453,8 @@ export type Database = {
           created_at?: string | null
           description?: string | null
           id?: string
+          image_url?: string | null
+          images?: string[] | null
           is_published?: boolean | null
           slug: string
           starts_at: string
@@ -461,6 +465,8 @@ export type Database = {
           created_at?: string | null
           description?: string | null
           id?: string
+          image_url?: string | null
+          images?: string[] | null
           is_published?: boolean | null
           slug?: string
           starts_at?: string

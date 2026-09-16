@@ -17,7 +17,10 @@ export function MetricStrip({ items, className }: { items: MetricItem[]; classNa
         ? "grid-cols-1 sm:grid-cols-3"
         : n === 4
           ? "grid-cols-2 lg:grid-cols-4"
-          : "grid-cols-2 sm:grid-cols-3 lg:grid-cols-5";
+          : n === 6
+            ? "grid-cols-2 sm:grid-cols-3 lg:grid-cols-6"
+            : "grid-cols-2 sm:grid-cols-3 lg:grid-cols-5";
+
 
   return (
     <dl

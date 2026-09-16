@@ -53,7 +53,7 @@ export default async function InstructorDashboardPage() {
       <PageHeader
         label={dateLabel}
         title={firstName}
-        description="Admin marks attendance. Open a class to see today’s roster."
+        description="Select a class below to mark today's attendance."
       />
 
       <MetricStrip
@@ -101,6 +101,12 @@ export default async function InstructorDashboardPage() {
       </section>
 
       <div className="flex flex-wrap gap-2">
+        <Link
+          href={`${ROUTES.instructor}/attendance`}
+          className="inline-flex items-center justify-center min-h-11 px-4 rounded-md bg-bl text-white text-sm font-medium hover:bg-bl/90 focus-visible:focus-ring active:scale-[0.96]"
+        >
+          Mark attendance
+        </Link>
         <Link
           href={`${ROUTES.instructor}/classes`}
           className="inline-flex items-center justify-center min-h-11 px-4 rounded-md border border-line-strong text-sm font-medium text-ink hover:bg-canvas-muted focus-visible:focus-ring active:scale-[0.96]"

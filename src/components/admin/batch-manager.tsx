@@ -7,9 +7,10 @@ import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Select } from '@/components/ui/select'
 import { Modal } from '@/components/ui/modal'
-import { Users, Clock, UserCircle, Plus } from 'lucide-react'
+import { ConfirmModal } from '@/components/ui/confirm-modal'
+import { Users, Clock, UserCircle, Plus, Trash2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { createProgramme, createBatch, updateBatchStatus } from '@/actions/classes'
+import { createProgramme, createBatch, updateBatchStatus, deleteBatch, deleteProgramme } from '@/actions/classes'
 import { formatTime } from '@/lib/utils/format'
 
 type Programme = any
@@ -33,6 +34,8 @@ export function BatchManager({
   const [isProgrammeModalOpen, setIsProgrammeModalOpen] = useState(false)
   const [busy, setBusy] = useState(false)
   const [feedback, setFeedback] = useState<{ ok: boolean; text: string } | null>(null)
+  const [pendingDeleteBatch, setPendingDeleteBatch] = useState<any | null>(null)
+  const [pendingDeleteProgramme, setPendingDeleteProgramme] = useState<any | null>(null)
 
   // New batch form
   const [batchForm, setBatchForm] = useState({
@@ -109,6 +112,36 @@ export function BatchManager({
     }
   }
 
+  const confirmDeleteBatch = async () => {
+    if (!pendingDeleteBatch) return
+    setBusy(true)
+    setFeedback(null)
+    const res = await deleteBatch(pendingDeleteBatch.id)
+    setBusy(false)
+    setPendingDeleteBatch(null)
+    if (res.success) {
+      setFeedback({ ok: true, text: `Class batch "${pendingDeleteBatch.name || 'Batch'}" deleted` })
+      router.refresh()
+    } else {
+      setFeedback({ ok: false, text: res.error ?? 'Could not delete batch' })
+    }
+  }
+
+  const confirmDeleteProgramme = async () => {
+    if (!pendingDeleteProgramme) return
+    setBusy(true)
+    setFeedback(null)
+    const res = await deleteProgramme(pendingDeleteProgramme.id)
+    setBusy(false)
+    setPendingDeleteProgramme(null)
+    if (res.success) {
+      setFeedback({ ok: true, text: `Programme "${pendingDeleteProgramme.name}" deleted` })
+      router.refresh()
+    } else {
+      setFeedback({ ok: false, text: res.error ?? 'Could not delete programme' })
+    }
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-4 border-b border-line-strong">
@@ -177,39 +210,52 @@ export function BatchManager({
                     <span>{batch.instructor.name}</span>
                   </div>
                 )}
-                <div className="pt-3 flex gap-2">
-                  <Badge variant={batch.status === 'active' ? 'green' : 'default'}>{batch.status ?? 'active'}</Badge>
-                  {batch.status === 'active' ? (
-                    <Button
-                      type="button"
-                      size="sm"
-                      variant="secondary"
-                      disabled={busy}
-                      onClick={async () => {
-                        setBusy(true)
-                        await updateBatchStatus(batch.id, 'paused')
-                        setBusy(false)
-                        router.refresh()
-                      }}
-                    >
-                      Pause
-                    </Button>
-                  ) : (
-                    <Button
-                      type="button"
-                      size="sm"
-                      variant="secondary"
-                      disabled={busy}
-                      onClick={async () => {
-                        setBusy(true)
-                        await updateBatchStatus(batch.id, 'active')
-                        setBusy(false)
-                        router.refresh()
-                      }}
-                    >
-                      Activate
-                    </Button>
-                  )}
+                <div className="pt-3 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Badge variant={batch.status === 'active' ? 'green' : 'default'}>{batch.status ?? 'active'}</Badge>
+                    {batch.status === 'active' ? (
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="secondary"
+                        disabled={busy}
+                        onClick={async () => {
+                          setBusy(true)
+                          await updateBatchStatus(batch.id, 'paused')
+                          setBusy(false)
+                          router.refresh()
+                        }}
+                      >
+                        Pause
+                      </Button>
+                    ) : (
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="secondary"
+                        disabled={busy}
+                        onClick={async () => {
+                          setBusy(true)
+                          await updateBatchStatus(batch.id, 'active')
+                          setBusy(false)
+                          router.refresh()
+                        }}
+                      >
+                        Activate
+                      </Button>
+                    )}
+                  </div>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="ghost"
+                    className="text-red-600 hover:text-red-700 hover:bg-red-500/10 p-2"
+                    title="Delete batch"
+                    disabled={busy}
+                    onClick={() => setPendingDeleteBatch(batch)}
+                  >
+                    <Trash2 size={16} />
+                  </Button>
                 </div>
               </div>
             </Card>
@@ -225,10 +271,23 @@ export function BatchManager({
           {initialProgrammes?.map((prog: any) => (
             <Card key={prog.id} className="p-6">
               <div className="flex justify-between items-start mb-2">
-                <h4 className="font-display text-xl text-ink">{prog.name}</h4>
-                <Badge variant={prog.is_active ? 'green' : 'default'}>
-                  {prog.is_active ? 'ACTIVE' : 'INACTIVE'}
-                </Badge>
+                <div>
+                  <h4 className="font-display text-xl text-ink">{prog.name}</h4>
+                  <Badge variant={prog.is_active ? 'green' : 'default'} className="mt-1">
+                    {prog.is_active ? 'ACTIVE' : 'INACTIVE'}
+                  </Badge>
+                </div>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="ghost"
+                  className="text-red-600 hover:text-red-700 hover:bg-red-500/10 p-2"
+                  title="Delete programme"
+                  disabled={busy}
+                  onClick={() => setPendingDeleteProgramme(prog)}
+                >
+                  <Trash2 size={16} />
+                </Button>
               </div>
               <p className="text-sm text-ink-2 line-clamp-2">{prog.description}</p>
               <div className="mt-4 text-xs text-ink-2 space-y-1">
@@ -392,6 +451,32 @@ export function BatchManager({
           </div>
         </div>
       </Modal>
+
+      <ConfirmModal
+        isOpen={!!pendingDeleteBatch}
+        title="Delete class batch?"
+        description={`Delete "${pendingDeleteBatch?.name || 'this batch'}"? ${
+          pendingDeleteBatch?.enrolled_count
+            ? `${pendingDeleteBatch.enrolled_count} enrolled student(s) will be unassigned from this batch.`
+            : 'This will permanently remove this batch and its schedule.'
+        }`}
+        confirmLabel="Delete"
+        danger
+        busy={busy}
+        onConfirm={confirmDeleteBatch}
+        onClose={() => setPendingDeleteBatch(null)}
+      />
+
+      <ConfirmModal
+        isOpen={!!pendingDeleteProgramme}
+        title="Delete programme?"
+        description={`Delete "${pendingDeleteProgramme?.name}"? All batches under this programme will also be deleted, and enrolled students will have their programme unassigned.`}
+        confirmLabel="Delete"
+        danger
+        busy={busy}
+        onConfirm={confirmDeleteProgramme}
+        onClose={() => setPendingDeleteProgramme(null)}
+      />
     </div>
   )
 }

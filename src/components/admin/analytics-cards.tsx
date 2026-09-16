@@ -20,6 +20,7 @@ export interface AnalyticsData {
   revenue_this_month: number
   avg_attendance_this_week: number
   batch_occupancy: BatchOccupancyRow[]
+  pending_dropouts: number
 }
 
 interface AnalyticsCardsProps {
@@ -50,6 +51,11 @@ export function AnalyticsCards({ initialData }: AnalyticsCardsProps) {
 
   const enrolmentsDelta = data.enrollments_this_month - (data.enrollments_last_month ?? 0)
 
+  const dropouts = data.pending_dropouts ?? 0
+  const churnPct = data.active_students > 0
+    ? Math.round((dropouts / data.active_students) * 100)
+    : 0
+
   return (
     <MetricStrip
       items={[
@@ -76,6 +82,11 @@ export function AnalyticsCards({ initialData }: AnalyticsCardsProps) {
           label: 'Occupancy',
           value: `${batchOccupancyPct}%`,
           hint: rows.length > 0 ? `${rows.length} batches` : undefined,
+        },
+        {
+          label: 'Leaving',
+          value: dropouts > 0 ? `${churnPct}%` : '—',
+          hint: dropouts > 0 ? `${dropouts} pending` : 'No requests',
         },
       ]}
     />

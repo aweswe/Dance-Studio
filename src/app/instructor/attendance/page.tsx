@@ -32,15 +32,15 @@ export default async function AttendancePage({
 
   const { data: batches } = await supabase
     .from("batches")
-    .select("id, name, days, time_start, time_end, students(id, name)")
+    .select("id, name, days, time_start, time_end, students(id, name, status)")
     .eq("instructor_id", instructor.id);
 
-  const markerBatches = ((batches || []) as { id: string; name: string | null; days: string[] | null; students: { id: string; name: string }[] }[]).map(
+  const markerBatches = ((batches || []) as any[]).map(
     (b) => ({
       id: b.id,
       name: b.name,
       days: b.days,
-      students: (b.students || []) as { id: string; name: string }[],
+      students: ((b.students || []) as any[]).filter((s) => s.status !== 'left'),
     }),
   );
 

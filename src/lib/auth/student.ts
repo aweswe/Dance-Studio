@@ -57,10 +57,14 @@ export async function getCurrentStudent(): Promise<CurrentStudentResult> {
     }
 
     const student =
-      siblings.find((r) => r.batch_id) ||
-      siblings.find((r) => r.programme_id) ||
-      siblings[0] ||
+      siblings.find((r) => r.batch_id && r.status !== 'left') ||
+      siblings.find((r) => r.programme_id && r.status !== 'left') ||
+      siblings.find((r) => r.status !== 'left') ||
       null;
+
+    if (!student || student.status === 'left') {
+      return { student: null, siblings: [], user, isDemo: false };
+    }
 
     return { student, siblings, user, isDemo: false };
   }

@@ -72,7 +72,7 @@ export default async function StudentDashboardPage() {
     { href: `${ROUTES.student}/attendance`, label: "Attendance", hint: "Marks from the front desk" },
     { href: `${ROUTES.student}/fees`, label: "Fees", hint: feePaid ? "Receipts" : "Pay this month" },
     { href: `${ROUTES.student}/notices`, label: "Notices", hint: "Studio updates" },
-    { href: `${ROUTES.student}/leave`, label: "Leave", hint: "Missed class or makeup" },
+    { href: `${ROUTES.student}/leave`, label: "Leave Academy", hint: "Withdraw from programme" },
   ];
 
   return (

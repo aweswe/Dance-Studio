@@ -42,7 +42,7 @@ const STUDENT_NAV = [
   { name: "Attendance", href: `${ROUTES.student}/attendance`, icon: CheckSquare },
   { name: "Fees", href: `${ROUTES.student}/fees`, icon: CreditCard },
   { name: "Notices", href: `${ROUTES.student}/notices`, icon: Bell },
-  { name: "Leave", href: `${ROUTES.student}/leave`, icon: Calendar },
+  { name: "Leave Academy", href: `${ROUTES.student}/leave`, icon: LogOut },
   { name: "Profile", href: `${ROUTES.student}/profile`, icon: User },
 ];
 
@@ -66,7 +66,7 @@ function getPageLabel(pathname: string, role: PortalRole): string {
   if (pathname.startsWith(`${ROUTES.student}/attendance`)) return "Attendance";
   if (pathname.startsWith(`${ROUTES.student}/fees`)) return "Fees";
   if (pathname.startsWith(`${ROUTES.student}/notices`)) return "Notices";
-  if (pathname.startsWith(`${ROUTES.student}/leave`)) return "Leave";
+  if (pathname.startsWith(`${ROUTES.student}/leave`)) return "Leave Academy";
   if (pathname.startsWith(`${ROUTES.student}/profile`)) return "Profile";
   if (pathname.startsWith(`${ROUTES.student}/progress`)) return "Progress";
   return "Today";

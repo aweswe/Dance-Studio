@@ -82,3 +82,39 @@ export async function linkInstructorAuth(instructorId: string, email: string) {
   revalidatePath('/admin/instructors')
   return { success: true }
 }
+
+export async function deleteInstructor(id: string) {
+  const supabase = await createServerSupabase()
+  if (!(await isAdmin(supabase))) return { success: false, error: 'Not authorized' }
+
+  const { createAdminSupabase } = await import('@/lib/supabase/server')
+  const admin = createAdminSupabase()
+
+  // Get instructor to check for auth_id
+  const { data: inst } = await admin.from('instructors').select('auth_id, name').eq('id', id).maybeSingle()
+  if (!inst) return { success: false, error: 'Instructor not found' }
+
+  // Unassign instructor from any batches
+  await admin.from('batches').update({ instructor_id: null }).eq('instructor_id', id)
+
+  // Delete from instructors table
+  const { error: delErr } = await admin.from('instructors').delete().eq('id', id)
+  if (delErr) return { success: false, error: delErr.message }
+
+  // If there's an auth user, remove from users table and auth.admin
+  if (inst.auth_id) {
+    try {
+      await (admin as any).from('users').delete().eq('id', inst.auth_id)
+      await admin.auth.admin.deleteUser(inst.auth_id)
+    } catch {
+      // ignore auth cleanup error if user already gone
+    }
+  }
+
+  revalidatePath('/admin/instructors')
+  revalidatePath('/admin/classes')
+  revalidatePath('/about')
+  revalidatePath('/')
+  return { success: true }
+}
+
