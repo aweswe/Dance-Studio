@@ -8,8 +8,8 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
-  themeColor: "#0F0F0F",
-  colorScheme: "dark light",
+  themeColor: "#ffffff",
+  colorScheme: "light",
 };
 
 const dmSans = DM_Sans({
@@ -110,12 +110,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html
       lang="en-IN"
       suppressHydrationWarning
-      className={`dark ${dmSans.variable} ${anton.variable} h-full antialiased`}
+      className={`${dmSans.variable} ${anton.variable} h-full antialiased`}
     >
       <head>
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem('rhythmzz-theme');if(t==='light'){document.documentElement.classList.remove('dark');document.documentElement.style.colorScheme='light';}else{document.documentElement.classList.add('dark');document.documentElement.style.colorScheme='dark';}}catch(e){document.documentElement.classList.add('dark');}})();`,
+            __html: `(function(){try{var t=localStorage.getItem('rhythmzz-theme');if(t==='dark'){localStorage.setItem('rhythmzz-theme','light');}document.documentElement.classList.remove('dark');document.documentElement.style.colorScheme='light';}catch(e){document.documentElement.classList.remove('dark');}})();`,
           }}
         />
       </head>

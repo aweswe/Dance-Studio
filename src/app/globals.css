@@ -8,7 +8,7 @@
 
 @theme inline {
   /* ── Brand Colors (FROZEN — do not change these values) ── */
-  --color-blk: #0F0F0F;
+  --color-blk: #111111;
   --color-deep: #141414;
   --color-bl: #2BB4D8;
   --color-bl-light: #B8E4F0;
@@ -20,6 +20,7 @@
   --color-green: #1DB954;
   --color-gold: #F5A623;
   --color-purp: #8B5CF6;
+  --color-border: rgba(0, 0, 0, 0.07);
 
   /* ── Semantic (flip with .dark; light values ≡ HTML reference) ── */
   --color-canvas: var(--canvas);
@@ -88,8 +89,8 @@
 :root {
   color-scheme: light;
 
-  /* Raw brand tokens */
-  --blk: #0F0F0F;
+  /* Raw brand tokens (from HTML reference) */
+  --blk: #111111;
   --deep: #141414;
   --bl: #2BB4D8;
   --bll: #B8E4F0;
@@ -101,6 +102,7 @@
   --green: #1DB954;
   --gold: #F5A623;
   --purp: #8B5CF6;
+  --border: rgba(0, 0, 0, 0.07);
 
   --background: var(--wh);
   --foreground: var(--blk);
@@ -112,9 +114,9 @@
   --surface-card: var(--wh);
   --surface-raised: var(--wh);
   --bl-pale-surface: var(--blp);
-  --shadow-lift: 0 0 0 1px rgba(15, 15, 15, 0.06), 0 1px 2px rgba(15, 15, 15, 0.04), 0 10px 28px -14px rgba(15, 15, 15, 0.12);
-  --shadow-pop: 0 8px 24px -12px rgb(15 15 15 / 0.18);
-  --shadow-overlay: 0 24px 64px -16px rgb(15 15 15 / 0.35);
+  --shadow-lift: 0 0 0 1px rgba(17, 17, 17, 0.06), 0 1px 2px rgba(17, 17, 17, 0.04), 0 10px 28px -14px rgba(17, 17, 17, 0.12);
+  --shadow-pop: 0 8px 24px -12px rgb(17 17 17 / 0.18);
+  --shadow-overlay: 0 24px 64px -16px rgb(17 17 17 / 0.35);
 
   --ink: var(--blk);
   --ink-2: var(--mu);
@@ -132,37 +134,47 @@
   --danger-deep: #dc2626;
 }
 
-/* ── Dark variant (derived from frozen brand palette) ── */
+/* ── Light theme only (per client requirement) ── */
 .dark {
-  color-scheme: dark;
-  --background: var(--blk);
-  --foreground: var(--wh);
+  color-scheme: light;
+  --background: var(--wh);
+  --foreground: var(--blk);
 
-  --canvas: var(--blk);
-  --canvas-muted: var(--deep);
-  --canvas-muted-2: color-mix(in oklch, var(--deep) 55%, var(--blk));
-  --surface: var(--deep);
-  --surface-card: var(--deep);
-  --surface-raised: color-mix(in oklch, var(--deep) 70%, var(--wh) 5%);
-  --bl-pale-surface: color-mix(in oklch, var(--bl) 18%, var(--deep));
-  --shadow-lift: inset 0 1px 0 rgba(255, 255, 255, 0.07), 0 0 0 1px rgba(255, 255, 255, 0.1), 0 16px 40px -20px rgba(0, 0, 0, 0.85);
-  --shadow-pop: 0 12px 32px -12px rgb(0 0 0 / 0.7);
-  --shadow-overlay: 0 24px 64px -16px rgb(0 0 0 / 0.8);
+  --canvas: var(--wh);
+  --canvas-muted: var(--light);
+  --canvas-muted-2: var(--off);
+  --surface: var(--wh);
+  --surface-card: var(--wh);
+  --surface-raised: var(--wh);
+  --bl-pale-surface: var(--blp);
+  --shadow-lift: 0 0 0 1px rgba(17, 17, 17, 0.06), 0 1px 2px rgba(17, 17, 17, 0.04), 0 10px 28px -14px rgba(17, 17, 17, 0.12);
+  --shadow-pop: 0 8px 24px -12px rgb(17 17 17 / 0.18);
+  --shadow-overlay: 0 24px 64px -16px rgb(17 17 17 / 0.35);
 
-  --ink: var(--wh);
-  --ink-2: color-mix(in oklch, var(--mu) 62%, var(--wh));
-  --ink-3: color-mix(in oklch, var(--wh) 45%, var(--deep));
+  --ink: var(--blk);
+  --ink-2: var(--mu);
+  --ink-3: color-mix(in oklch, var(--mu) 55%, var(--wh));
 
-  --line: color-mix(in oklch, var(--wh) 12%, var(--deep));
-  --line-subtle: color-mix(in oklch, var(--wh) 8%, var(--deep));
-  --line-strong: color-mix(in oklch, var(--wh) 20%, var(--deep));
+  --line: color-mix(in oklch, var(--blk) 7%, var(--wh));
+  --line-subtle: color-mix(in oklch, var(--blk) 5%, var(--wh));
+  --line-strong: color-mix(in oklch, var(--blk) 10%, var(--wh));
 
-  --bl-ink: var(--bl);
-  --gold-ink: var(--gold);
-  --green-ink: var(--green);
-  --bl-deep: #22a0c4;
+  --bl-ink: color-mix(in oklch, var(--bl) 52%, var(--blk));
+  --gold-ink: color-mix(in oklch, var(--gold) 45%, var(--blk));
+  --green-ink: color-mix(in oklch, var(--green) 55%, var(--blk));
+  --bl-deep: color-mix(in oklch, var(--bl) 85%, var(--blk));
   --danger: #ef4444;
   --danger-deep: #dc2626;
+}
+
+/* ── Homepage Hero Cinema Stage (matches reference HTML .hero { background: var(--blk) }) ── */
+section:has(h1.text-white),
+section:has(h1.text-white) + section,
+section:has(h1.text-white) + section + section {
+  background-color: var(--blk);
+  color: var(--wh);
+  box-shadow: 0 0 0 100vmax var(--blk);
+  clip-path: inset(0 -100vmax);
 }
 
 html {
