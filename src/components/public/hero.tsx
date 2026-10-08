@@ -7,6 +7,7 @@ import {
   homepageCtaPrimary,
 } from '@/lib/ui/homepage-cta';
 import { ROUTES } from '@/lib/utils/constants';
+import { BrandLogo } from '@/components/shared/brand-logo';
 import { HeroVideo } from '@/components/public/hero-video';
 import { HeroStats } from '@/components/public/hero-stats';
 
@@ -16,16 +17,30 @@ interface HeroProps {
 
 export function Hero({ stats }: HeroProps) {
   return (
-    <section className="relative w-full px-4 sm:px-6 md:px-10 pt-2 sm:pt-3 pb-4 sm:pb-5 max-w-[1440px] mx-auto">
+    <section className="relative w-full px-4 sm:px-6 md:px-10 pt-3 sm:pt-4 pb-4 sm:pb-5 max-w-[1440px] mx-auto">
+      {/* Subtle top ambient sheen transitioning smoothly from the header */}
+      <div
+        className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-white/70 to-transparent"
+        aria-hidden
+      />
+
       <div className="relative px-0 sm:px-10 lg:px-12 xl:px-14 py-3 sm:py-5 lg:py-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 lg:gap-x-10 xl:gap-x-12 gap-y-8 items-center">
           {/* Left — copy + CTAs */}
           <div className="@container min-w-0 w-full max-w-[36rem]">
-            <div className="inline-flex flex-col gap-2 mb-3 sm:mb-4 w-fit">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-bl">
-                Secunderabad · Since 2010
-              </p>
-              <span className="h-px w-[11.75rem] sm:w-[12.5rem] max-w-[52%] bg-bl/50" aria-hidden />
+            {/* Prominent Academy Hallmark / Logo Badge */}
+            <div className="flex items-center gap-3.5 sm:gap-4 mb-4 sm:mb-5">
+              <div className="p-1.5 sm:p-2 rounded-md bg-surface border border-line shadow-xs shrink-0">
+                <BrandLogo priority className="h-12 sm:h-14 md:h-16 w-auto object-contain" />
+              </div>
+              <div className="flex flex-col gap-0.5 min-w-0">
+                <p className="text-[11px] sm:text-xs font-bold uppercase tracking-[0.2em] text-bl leading-tight">
+                  Secunderabad · Since 2010
+                </p>
+                <p className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-3 leading-tight">
+                  IAO Accredited Studio (USA)
+                </p>
+              </div>
             </div>
 
             <h1 className="font-anton uppercase text-ink w-full max-w-[11ch] flex flex-col gap-1.5 sm:gap-2">

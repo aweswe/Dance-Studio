@@ -30,15 +30,15 @@ import { createClient } from '@/lib/supabase/client';
 const navActionButton =
   'inline-flex items-center justify-center gap-1.5 box-border h-11 min-h-[44px] py-0 px-4 min-w-[9.75rem] rounded-md text-[10px] font-bold uppercase tracking-[0.1em] transition-colors active:scale-[0.98] touch-manipulation whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl focus-visible:ring-offset-2 focus-visible:ring-offset-canvas';
 
-/** Login — resting state uses the previous hover fill; hover deepens slightly. */
+/** Login — resting state uses subtle surface border and hover fill */
 const navLoginButton = cn(
   navActionButton,
-  'text-ink ring-1 ring-ink/30 bg-ink/[0.08] hover:bg-ink/[0.14] hover:ring-ink/50',
+  'text-ink ring-1 ring-line-strong bg-surface hover:bg-canvas-muted hover:ring-ink/30',
 );
 
 const navBookButton = cn(
   navActionButton,
-  'bg-bl text-blk hover:bg-bl-deep shadow-[0_6px_28px_-8px_rgba(43,180,216,0.45)]',
+  'bg-bl text-blk hover:bg-bl-deep shadow-[0_4px_16px_-4px_rgba(43,180,216,0.45)]',
 );
 
 type NavLink = { name: string; href: string; hint?: string };
@@ -486,10 +486,10 @@ export function Nav() {
   return (
     <header
       className={cn(
-        'w-full z-50 transition-all duration-300',
+        'sticky top-0 w-full z-50 transition-all duration-200',
         scrolled
-          ? 'bg-surface/90 backdrop-blur-md border-b border-line py-2 shadow-md'
-          : 'bg-canvas/80 backdrop-blur-md border-b border-line/40 py-2.5 sm:py-3',
+          ? 'bg-white/98 backdrop-blur-md border-b border-line shadow-sm py-2'
+          : 'bg-white/95 backdrop-blur-md border-b border-line shadow-[0_1px_3px_rgba(0,0,0,0.04)] py-2 sm:py-2.5',
       )}
     >
       <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-6 md:px-10">
@@ -499,7 +499,7 @@ export function Nav() {
             className="group flex items-center min-w-0 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl shrink-0 lg:col-start-1 touch-manipulation"
             aria-label="Rhythmzz Academy of Dance — home"
           >
-            <BrandLogo priority className="group-hover:opacity-90 transition-opacity" />
+            <BrandLogo priority className="h-9 sm:h-10 w-auto object-contain group-hover:opacity-90 transition-opacity" />
           </Link>
 
           <nav className="hidden lg:flex items-center justify-center gap-5 xl:gap-6 min-w-0" aria-label="Main navigation">
