@@ -15,7 +15,7 @@ import { STUDIO_INFO } from '@/data/studio-info';
 export const metadata: Metadata = {
   title: 'Dance & Fitness Programmes | Rhythmzz Academy of Dance',
   description:
-    'Certified training across commercial, fitness, and Kuchipudi at Neredmet X Road. First class free.',
+    'Certified training across commercial, fitness, gymnastic, and Kuchipudi at Neredmet X Road. First class is on us.',
   alternates: { canonical: `${SITE_URL}/programmes` },
 };
 
@@ -44,7 +44,7 @@ export default async function ProgrammesPage() {
       <PublicPageTitle
         eyebrow="Programmes"
         title="What we teach"
-        description="Fees from ₹2,000 a month. No registration fee. First class free — WhatsApp or use the form."
+        description="Fees from ₹1,200 a month. No registration fee. First class is on us — WhatsApp or use the form."
       />
 
       <HomepageSection className={sectionPadAfterTitle}>
@@ -108,7 +108,7 @@ export default async function ProgrammesPage() {
         eyebrow="Not sure where to start?"
         title="Join"
         accent="a class"
-        description="Your first class is free. Our coaches will guide you to the right batch."
+        description="Your first class is on us. Our coaches will guide you to the right batch."
       />
     </PublicPage>
   );

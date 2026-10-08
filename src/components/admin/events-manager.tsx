@@ -497,8 +497,8 @@ export function EventsManager({ initialEvents }: { initialEvents: EventRow[] }) 
                     <span
                       className={`inline-block px-2 py-0.5 rounded text-[10px] uppercase font-mono font-bold tracking-wider ${
                         event.is_published
-                          ? 'bg-green-500/15 text-green-700 dark:text-green-400'
-                          : 'bg-amber-500/15 text-amber-700 dark:text-amber-400'
+                          ? 'bg-green-500/15 text-green-700'
+                          : 'bg-amber-500/15 text-amber-700'
                       }`}
                     >
                       {event.is_published ? 'Published' : 'Draft'}

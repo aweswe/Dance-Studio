@@ -108,7 +108,7 @@ export function StudentStoriesSection() {
                   {review.role}
                 </p>
               </div>
-              <span className="text-[10px] font-mono uppercase tracking-wider text-ink-3 bg-black/5 dark:bg-white/5 px-2.5 py-1 rounded-md">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-ink-3 bg-black/5 px-2.5 py-1 rounded-md">
                 {review.tenure}
               </span>
             </div>

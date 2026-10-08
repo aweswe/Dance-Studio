@@ -6,10 +6,10 @@ interface StatsProps {
 
 // Default values based on HTML reference, matched to site_content keys
 const DEFAULT_STATS = [
-  { key: 'stats_students', label: 'Students Trained', value: '5000+' },
+  { key: 'stats_students', label: 'Students Trained', value: '3000+' },
   { key: 'stats_years', label: 'Years Teaching', value: '15+' },
-  { key: 'stats_programmes', label: 'Programmes', value: '4' },
-  { key: 'stats_awards', label: 'Awards', value: '3' },
+  { key: 'stats_programmes', label: 'Programmes', value: '5' },
+  { key: 'stats_shows', label: 'Stage Shows', value: '200+' },
 ];
 
 export function Stats({ stats }: StatsProps) {

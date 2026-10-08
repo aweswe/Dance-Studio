@@ -1,10 +1,7 @@
 @import "tailwindcss";
 
 /* ═══ RHYTHMZZ DESIGN SYSTEM ═══════════════════════════════════════ */
-/* Frozen brand palette + semantic tokens (light default, .dark additive) */
-
-/* Class-based dark mode (light is the default; toggle adds .dark on <html>) */
-@custom-variant dark (&:where(.dark, .dark *));
+/* Frozen brand palette + semantic tokens (light theme only) */
 
 @theme inline {
   /* ── Brand Colors (FROZEN — do not change these values) ── */
@@ -22,7 +19,7 @@
   --color-purp: #8B5CF6;
   --color-border: rgba(0, 0, 0, 0.07);
 
-  /* ── Semantic (flip with .dark; light values ≡ HTML reference) ── */
+  /* ── Semantic tokens (light values ≡ HTML reference) ── */
   --color-canvas: var(--canvas);
   --color-canvas-muted: var(--canvas-muted);
   --color-canvas-muted-2: var(--canvas-muted-2);
@@ -62,7 +59,7 @@
   --radius-tile: 0.375rem;
   --radius-card: 0.375rem;
 
-  /* ── Depth (light: layered shadow; dark: ring + inset highlight) ── */
+  /* ── Depth (layered shadow) ── */
   --shadow-pop: 0 8px 24px -12px rgb(15 15 15 / 0.18);
   --shadow-overlay: 0 24px 64px -16px rgb(15 15 15 / 0.35);
 
@@ -134,47 +131,16 @@
   --danger-deep: #dc2626;
 }
 
-/* ── Light theme only (per client requirement) ── */
-.dark {
-  color-scheme: light;
-  --background: var(--wh);
-  --foreground: var(--blk);
-
-  --canvas: var(--wh);
-  --canvas-muted: var(--light);
-  --canvas-muted-2: var(--off);
-  --surface: var(--wh);
-  --surface-card: var(--wh);
-  --surface-raised: var(--wh);
-  --bl-pale-surface: var(--blp);
-  --shadow-lift: 0 0 0 1px rgba(17, 17, 17, 0.06), 0 1px 2px rgba(17, 17, 17, 0.04), 0 10px 28px -14px rgba(17, 17, 17, 0.12);
-  --shadow-pop: 0 8px 24px -12px rgb(17 17 17 / 0.18);
-  --shadow-overlay: 0 24px 64px -16px rgb(17 17 17 / 0.35);
-
-  --ink: var(--blk);
-  --ink-2: var(--mu);
-  --ink-3: color-mix(in oklch, var(--mu) 55%, var(--wh));
-
-  --line: color-mix(in oklch, var(--blk) 7%, var(--wh));
-  --line-subtle: color-mix(in oklch, var(--blk) 5%, var(--wh));
-  --line-strong: color-mix(in oklch, var(--blk) 10%, var(--wh));
-
-  --bl-ink: color-mix(in oklch, var(--bl) 52%, var(--blk));
-  --gold-ink: color-mix(in oklch, var(--gold) 45%, var(--blk));
-  --green-ink: color-mix(in oklch, var(--green) 55%, var(--blk));
-  --bl-deep: color-mix(in oklch, var(--bl) 85%, var(--blk));
-  --danger: #ef4444;
-  --danger-deep: #dc2626;
-}
-
-/* ── Homepage Hero Cinema Stage (matches reference HTML .hero { background: var(--blk) }) ── */
-section:has(h1.text-white),
-section:has(h1.text-white) + section,
-section:has(h1.text-white) + section + section {
+/* ── Cinema Stage (dark hero/about/CTA sections) ── */
+.cinema-stage {
   background-color: var(--blk);
   color: var(--wh);
-  box-shadow: 0 0 0 100vmax var(--blk);
-  clip-path: inset(0 -100vmax);
+  position: relative;
+}
+
+/* Thin brand-accent rule separates cinema-stage from the light sections below */
+.cinema-stage + * {
+  border-top: 2px solid var(--bl);
 }
 
 html {
@@ -272,15 +238,6 @@ p + p {
   gap: var(--space-stack-lg);
 }
 
-/* ── Theme transition (one-shot class added by ThemeToggle) ── */
-html.theme-transition,
-html.theme-transition *,
-html.theme-transition *::before,
-html.theme-transition *::after {
-  transition-property: background-color, border-color, color, fill, stroke, box-shadow;
-  transition-duration: 250ms;
-}
-
 /* ── Scrollbar ── */
 ::-webkit-scrollbar {
   width: 6px;
@@ -296,10 +253,7 @@ html.theme-transition *::after {
 /* ── Selection ── */
 ::selection {
   background: rgba(43, 180, 216, 0.2);
-  color: #0f0f0f;
-}
-.dark ::selection {
-  color: #ffffff;
+  color: #111111;
 }
 
 /* ── Focus ring (standard for every interactive element) ── */
@@ -582,24 +536,11 @@ html.theme-transition *::after {
   box-shadow: 0 0 0 1px rgba(15, 15, 15, 0.2), 0 16px 40px -20px rgba(15, 15, 15, 0.4);
 }
 
-.dark .ink-panel {
-  background: var(--surface-raised);
-  color: var(--ink);
-  box-shadow: var(--shadow-lift);
-}
-
 /* Solid ink / accent / purple tiles */
 .fee-tile-ink {
   background: var(--blk);
   color: var(--bl);
   box-shadow: 0 0 0 1px rgba(43, 180, 216, 0.28), 0 12px 32px -16px rgba(15, 15, 15, 0.22);
-}
-.dark .fee-tile-ink {
-  background: var(--deep);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.08),
-    0 0 0 1px rgba(43, 180, 216, 0.48),
-    0 18px 40px -18px rgba(0, 0, 0, 0.9);
 }
 
 .fee-tile-sun {
@@ -607,36 +548,16 @@ html.theme-transition *::after {
   color: var(--wh);
   box-shadow: 0 0 0 1px rgba(43, 180, 216, 0.35), 0 12px 32px -16px rgba(15, 15, 15, 0.18);
 }
-.dark .fee-tile-sun {
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.12),
-    0 0 0 1px rgba(43, 180, 216, 0.55),
-    0 18px 40px -18px rgba(0, 0, 0, 0.9);
-}
 
 .fee-tile-velvet {
   background: color-mix(in oklch, var(--purp) 35%, var(--blk));
   color: color-mix(in oklch, var(--purp) 75%, var(--wh));
   box-shadow: 0 0 0 1px rgba(139, 92, 246, 0.28), 0 12px 32px -16px rgba(15, 15, 15, 0.22);
 }
-.dark .fee-tile-velvet {
-  background: color-mix(in oklch, var(--purp) 45%, var(--deep));
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.08),
-    0 0 0 1px rgba(139, 92, 246, 0.55),
-    0 18px 40px -18px rgba(0, 0, 0, 0.9);
-}
 
 .ink-stage {
   background: var(--blk);
   box-shadow: 0 24px 64px -16px rgba(15, 15, 15, 0.35);
-}
-.dark .ink-stage {
-  background: var(--deep);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.07),
-    0 0 0 1px rgba(255, 255, 255, 0.14),
-    0 24px 64px -16px rgba(0, 0, 0, 0.85);
 }
 
 /* Primary CTA (HTML .btn-bl) */

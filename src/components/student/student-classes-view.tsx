@@ -361,7 +361,7 @@ export function StudentClassesView({ currentStudent, feePaid, programmes, pendin
                 className={cn('text-left', !isEnrolled && 'cursor-pointer')}
                 disabled={isEnrolled}
               >
-                <div className="relative h-44 w-full overflow-hidden outline outline-1 outline-black/10 dark:outline-white/10">
+                <div className="relative h-44 w-full overflow-hidden outline outline-1 outline-black/10">
                   <Image
                     src={prog.image || IMAGE_BY_SLUG[prog.slug] || '/images/studio-training/group-circle-drill.jpg'}
                     alt={prog.name}

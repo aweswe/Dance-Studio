@@ -11,12 +11,12 @@ export const STUDIO_INFO = {
   accreditation: "Full Accreditation by IAO (International Accreditation Organization), USA (2014)",
 
   contact: {
-    address: "Beside SBI Bank, Neredmet X Road, Secunderabad, Telangana 500056",
-    landmark: "Beside State Bank of India, Neredmet Cross Roads",
-    city: "Secunderabad / Hyderabad",
-    phone: "+91 99855 24445",
-    email: "support@rhythmzzdance.com",
-    website: "https://rhythmzzdance.com",
+    address: "Plot 597, 3rd Floor, Above Jawed Habib, Defence Colony, Jawahar Nagar, Behind Neredmet X Road Bus Stop, Secunderabad, Telangana 500094, India",
+    landmark: "Above Jawed Habib, Behind Neredmet X Road Bus Stop",
+    city: "Secunderabad",
+    phone: "+91 9052980859",
+    email: "rhythmzzdance@gmail.com",
+    website: "https://rhythmzz.in",
     hours: "Mon – Sun: 6:00 AM – 9:00 PM",
   },
 
@@ -24,7 +24,7 @@ export const STUDIO_INFO = {
     {
       name: "Nitish Kumar",
       role: "Founder & Artistic Director",
-      bio: "Nitish started dancing professionally at age 16. After graduating from Bhavan's, Nitish achieved a Diploma in Performance and Dance from ISPTD (Indian Society for Performer and Teachers of Dance), Bengaluru. Contemporary expert, senior instructor, and Operations Manager at Celebration Makers. Has trained over 1,000+ students and received awards from Art Unites and Indywood Film Carnival.",
+      bio: "Nitish started dancing professionally at age 16. After graduating from Bhavan's, Nitish achieved a Diploma in Performance and Dance from ISPTD (Indian Society for Performer and Teachers of Dance), Bengaluru. Contemporary expert, senior instructor, and Operations Manager at Celebration Makers. Has trained over 3,000+ students and received awards from Art Unites and Indywood Film Carnival.",
       socials: {
         instagram: "https://www.instagram.com/nitish_raod_official/",
         press: "https://www.iuemag.com/june2016/li/story-of-nitish-kumar.php"

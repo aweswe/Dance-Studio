@@ -184,7 +184,7 @@ export function DanziaTestimonialsSection({
 
         <div className="lg:col-span-7 flex flex-col">
           <div
-            className={`relative ${homepageCardRadius} bg-light dark:bg-blk border border-line p-8 sm:p-10 md:p-12 flex-1 flex flex-col justify-between`}
+            className={`relative ${homepageCardRadius} bg-surface border border-line p-8 sm:p-10 md:p-12 flex-1 flex flex-col justify-between`}
           >
             <div className="flex items-center justify-between mb-6 sm:mb-8">
               <span className="text-[10px] font-bold uppercase tracking-[0.1em] text-bl bg-bl/10 px-3 py-1.5 rounded-md border border-bl/20">

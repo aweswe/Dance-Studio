@@ -63,7 +63,7 @@ function ClassRow({ slot }: { slot: DaySchedule['slots'][number] }) {
 
       <p className="hidden sm:block text-xs font-mono text-ink-2">{slot.duration}</p>
 
-      <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-[0.12em] text-bl group-hover:text-bl-deep transition-colors justify-self-end">
+      <span className="hidden sm:inline-flex items-center justify-center gap-1 text-[10px] font-bold uppercase tracking-[0.12em] px-3.5 py-1.5 rounded-md bg-bl text-blk hover:bg-bl-deep shadow-sm transition-all justify-self-end group-hover:scale-[1.02]">
         {bookLabel}
         <ArrowUpRight size={12} strokeWidth={2.5} />
       </span>
@@ -72,7 +72,7 @@ function ClassRow({ slot }: { slot: DaySchedule['slots'][number] }) {
         <p className="text-[11px] text-ink-2">
           {slot.instructor} · {slot.duration}
         </p>
-        <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-[0.12em] text-bl">
+        <span className="inline-flex items-center justify-center gap-1 text-[10px] font-bold uppercase tracking-[0.12em] px-3 py-1 rounded-md bg-bl text-blk hover:bg-bl-deep shadow-sm transition-all">
           {bookLabel}
           <ArrowUpRight size={12} strokeWidth={2.5} />
         </span>
@@ -113,9 +113,14 @@ export function ProgrammeClassesList({
         {visibleDays.length > 0 ? (
           visibleDays.map((day) => (
             <div key={day.dayFull}>
-              <p className="font-anton text-lg sm:text-xl uppercase tracking-[0.12em] text-ink pb-2.5 mb-0.5 border-b-2 border-bl">
-                {day.dayFull}
-              </p>
+              <div className="flex items-center justify-between pb-2 mb-1 border-b border-line">
+                <p className="font-anton text-base sm:text-lg uppercase tracking-[0.06em] text-ink">
+                  {day.dayFull}
+                </p>
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-ink-3">
+                  {day.slots.length} {day.slots.length === 1 ? 'Class' : 'Classes'}
+                </span>
+              </div>
               <div className="flex flex-col gap-px bg-line border border-line overflow-hidden rounded-md">
                 {day.slots.map((slot) => (
                   <ClassRow key={`${day.dayFull}-${slot.batchId}`} slot={slot} />

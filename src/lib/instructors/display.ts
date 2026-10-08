@@ -21,19 +21,22 @@ export function resolveInstructorPhoto(name: string, photoUrl?: string | null): 
   if (n.includes('deepak')) return '/images/studio-training/contemporary-movement-1.jpg';
   if (n.includes('srikanth')) return '/images/srikanth-gymnastics.png';
   if (n.includes('srushti')) return '/images/kuchipudi/kuchipudi-traditional-standing.jpg';
+  if (n.includes('shailaja')) return '/images/studio-training/floorwork-stretch.jpg';
+  if (n.includes('prerna')) return '/images/studio-training/alignment-drills-1.jpg';
   if (n.includes('poonam')) return '/images/studio-training/alignment-drills-1.jpg';
   if (n.includes('ajeesh')) return '/images/ajeesh-balakrishnan.png';
   return '/images/studio-training/contemporary-movement-1.jpg';
 }
 
-/** Short label for cards — takes text before the em dash when present. */
+/** Short label for cards. */
 export function formatInstructorRole(role?: string | null): string {
   if (!role) return 'Faculty';
-  return role.split('—')[0]?.trim() || role;
+  if (role.includes('· Contemporary Dance Trainer')) return 'Contemporary Dance Trainer';
+  return role.trim();
 }
 
 const NON_TEACHING_ROLE =
-  /co-founder|strategic partner|event management|^manager\b|creative content lead/i;
+  /co-founder|strategic partner|director of event|operations manager|^manager\b|creative content lead/i;
 
 /** Floor faculty only — excludes management / leadership that doesn’t teach on schedule. */
 export function filterTeachingInstructors(instructors: InstructorDisplay[]): InstructorDisplay[] {

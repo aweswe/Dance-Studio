@@ -22,7 +22,6 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { ROUTES } from "@/lib/utils/constants";
-import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { triggerActionLoader } from "@/components/shared/navigation-progress";
 
 export type PortalRole = "student" | "instructor";
@@ -39,6 +38,7 @@ const STUDENT_NAV = [
   { name: "Home", href: ROUTES.student, icon: LayoutDashboard },
   { name: "Classes", href: `${ROUTES.student}/classes`, icon: Layers },
   { name: "Schedule", href: `${ROUTES.student}/schedule`, icon: Calendar },
+  { name: "Progress", href: `${ROUTES.student}/progress`, icon: Award },
   { name: "Attendance", href: `${ROUTES.student}/attendance`, icon: CheckSquare },
   { name: "Fees", href: `${ROUTES.student}/fees`, icon: CreditCard },
   { name: "Notices", href: `${ROUTES.student}/notices`, icon: Bell },
@@ -63,12 +63,12 @@ function getPageLabel(pathname: string, role: PortalRole): string {
   if (pathname === ROUTES.student || pathname === `${ROUTES.student}/`) return "Today";
   if (pathname.startsWith(`${ROUTES.student}/classes`)) return "Classes";
   if (pathname.startsWith(`${ROUTES.student}/schedule`)) return "Schedule";
+  if (pathname.startsWith(`${ROUTES.student}/progress`)) return "Progress";
   if (pathname.startsWith(`${ROUTES.student}/attendance`)) return "Attendance";
   if (pathname.startsWith(`${ROUTES.student}/fees`)) return "Fees";
   if (pathname.startsWith(`${ROUTES.student}/notices`)) return "Notices";
   if (pathname.startsWith(`${ROUTES.student}/leave`)) return "Leave Academy";
   if (pathname.startsWith(`${ROUTES.student}/profile`)) return "Profile";
-  if (pathname.startsWith(`${ROUTES.student}/progress`)) return "Progress";
   return "Today";
 }
 
@@ -81,10 +81,7 @@ export function PortalShell({ role, name, isKuchipudi, unreadNotices, children }
   const pageTitle = getPageLabel(pathname, role);
   const initial = name.charAt(0).toUpperCase() || (role === "instructor" ? "I" : "S");
 
-  const navItems =
-    role === "instructor"
-      ? INSTRUCTOR_NAV
-      : [...STUDENT_NAV, ...(isKuchipudi ? [{ name: "Progress", href: `${ROUTES.student}/progress`, icon: Award }] : [])];
+  const navItems = role === "instructor" ? INSTRUCTOR_NAV : STUDENT_NAV;
 
   const handleSignOut = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -182,12 +179,9 @@ export function PortalShell({ role, name, isKuchipudi, unreadNotices, children }
           </div>
 
           <div className="flex items-center gap-2 shrink-0">
-            <ThemeToggle />
-            <div className="flex items-center gap-2 pl-2 border-l border-line">
-              <span className="hidden sm:block text-sm font-medium text-ink truncate max-w-[9rem]">{name}</span>
-              <div className="w-8 h-8 rounded-full bg-surface-raised border border-line text-ink text-xs font-semibold flex items-center justify-center">
-                {initial}
-              </div>
+            <span className="hidden sm:block text-sm font-medium text-ink truncate max-w-[9rem]">{name}</span>
+            <div className="w-8 h-8 rounded-full bg-surface-raised border border-line text-ink text-xs font-semibold flex items-center justify-center">
+              {initial}
             </div>
           </div>
         </header>

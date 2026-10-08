@@ -5,16 +5,16 @@ import { CountUp } from '@/components/motion/count-up';
 import { ACADEMY } from '@/lib/utils/constants';
 
 const STAT_META: { key: string; label: string; fallback: string }[] = [
-  { key: 'stats_students', label: 'Students trained', fallback: '5000+' },
+  { key: 'stats_students', label: 'Students trained', fallback: '3000+' },
   { key: 'stats_years', label: 'Years teaching', fallback: '15+' },
   { key: 'stats_programmes', label: 'Programmes', fallback: '4' },
-  { key: 'stats_awards', label: 'Awards won', fallback: '3' },
+  { key: 'stats_shows', label: 'Stage shows', fallback: '200+' },
 ];
 
 const VALUE_CLASS =
   'font-anton text-[clamp(1.25rem,3.25vw,1.875rem)] leading-none tracking-tight text-white';
 const LABEL_CLASS =
-  'm-0 text-[8px] sm:text-[9px] font-semibold uppercase tracking-[0.12em] leading-snug text-white/40';
+  'm-0 text-[8px] sm:text-[9px] font-semibold uppercase tracking-[0.12em] leading-snug text-white/55';
 const VALUE_ROW = 'm-0 flex h-[1.875rem] items-center';
 const CELL = 'flex min-w-0 flex-col gap-1.5';
 
@@ -79,7 +79,7 @@ export function HeroStats({ stats }: { stats: { key: string; value: string }[] }
               </span>
             </span>
           </dt>
-          <dd className="m-0 text-[7px] xs:text-[8px] sm:text-[9px] font-semibold uppercase tracking-wider leading-none text-white/40 truncate sm:pl-[calc(1.875rem+0.375rem)]">
+          <dd className="m-0 text-[7px] xs:text-[8px] sm:text-[9px] font-semibold uppercase tracking-wider leading-none text-white/55 truncate sm:pl-[calc(1.875rem+0.375rem)]">
             {ACADEMY.googleReviewCount}+ reviews
           </dd>
         </a>
@@ -93,7 +93,7 @@ export function HeroStats({ stats }: { stats: { key: string; value: string }[] }
               <CountUp value={valueByKey[stat.key] || stat.fallback} />
             </span>
           </dt>
-          <dd className="m-0 text-[7px] xs:text-[8px] sm:text-[9px] font-semibold uppercase tracking-wider leading-tight text-white/40">
+          <dd className="m-0 text-[7px] xs:text-[8px] sm:text-[9px] font-semibold uppercase tracking-wider leading-tight text-white/55">
             {stat.label}
           </dd>
         </div>

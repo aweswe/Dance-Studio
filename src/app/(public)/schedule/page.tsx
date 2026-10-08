@@ -13,7 +13,7 @@ import { buildScheduleFilters, buildWeekScheduleFromBatches } from '@/lib/schedu
 export const metadata: Metadata = {
   title: 'Weekly Batch Schedule & Timings | Rhythmzz Academy of Dance',
   description:
-    'Explore weekly class schedules for Kids Dance, Adults Hip Hop, Classical Kuchipudi, and Mind & Body Fitness at Rhythmzz Academy in Secunderabad.',
+    'Explore weekly class schedules for Kids Dance, Adults Hip Hop, Classical Kuchipudi, and Mind & Body Fitness at Rhythmzz Academy of Dance in Secunderabad.',
   alternates: { canonical: `${SITE_URL}/schedule` },
 };
 
@@ -29,7 +29,7 @@ export default async function SchedulePage() {
       <PublicPageTitle
         eyebrow="Weekly timetable"
         title="Batch schedule"
-        description="Find your batch across Classical Kuchipudi, Kids Academy, Urban & Hip Hop, and Mind & Body Fitness. First session is a free trial."
+        description="Find your batch across Classical Kuchipudi, Kids Academy, Urban & Hip Hop, and Mind & Body Fitness. First class is on us."
       />
 
       <HomepageSection className={sectionPadAfterTitleLg}>

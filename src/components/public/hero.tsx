@@ -4,7 +4,7 @@ import {
   homepageCtaOutlineDark,
   homepageCtaPair,
   homepageCtaPairButton,
-  homepageCtaPrimary,
+  homepageCtaHeroPrimary,
 } from '@/lib/ui/homepage-cta';
 import { ROUTES } from '@/lib/utils/constants';
 import { HeroVideo } from '@/components/public/hero-video';
@@ -37,12 +37,12 @@ export function Hero({ stats }: HeroProps) {
               </span>
             </h1>
 
-            <p className="mt-6 sm:mt-8 max-w-[42ch] text-[15px] sm:text-base leading-[1.65] text-white/60 font-normal normal-case">
+            <p className="mt-6 sm:mt-8 max-w-[42ch] text-[15px] sm:text-base leading-[1.65] text-white/75 font-normal normal-case">
               Secunderabad · Dance &amp; Fitness Classes · Neredmet X Road
             </p>
 
             <div className={`mt-8 sm:mt-10 ${homepageCtaPair}`}>
-              <Link href={ROUTES.enrol} className={`${homepageCtaPrimary} ${homepageCtaPairButton}`}>
+              <Link href={ROUTES.enrol} className={`${homepageCtaHeroPrimary} ${homepageCtaPairButton}`}>
                 Book your free trial
                 <ArrowUpRight size={13} strokeWidth={2.5} />
               </Link>

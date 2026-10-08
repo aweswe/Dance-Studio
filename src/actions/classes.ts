@@ -183,3 +183,34 @@ export async function deleteProgramme(id: string) {
   return { success: true }
 }
 
+export async function updateBatchSchedule(
+  batchId: string,
+  updates: { time_start?: string; time_end?: string; days?: string[] },
+) {
+  const supabase = await createServerSupabase()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { success: false, error: 'Not authenticated' }
+
+  const { createAdminSupabase } = await import('@/lib/supabase/server')
+  const admin = createAdminSupabase()
+
+  const { error } = await admin
+    .from('batches')
+    .update({
+      ...(updates.time_start ? { time_start: updates.time_start } : {}),
+      ...(updates.time_end ? { time_end: updates.time_end } : {}),
+      ...(updates.days ? { days: updates.days } : {}),
+    })
+    .eq('id', batchId)
+
+  if (error) return { success: false, error: error.message }
+
+  revalidatePath('/instructor')
+  revalidatePath('/instructor/classes')
+  revalidatePath('/student')
+  revalidatePath('/student/schedule')
+  revalidatePath('/schedule')
+  revalidatePath('/')
+  return { success: true }
+}
+

@@ -74,7 +74,7 @@ function ReelCard({ reel, scrollRoot }: { reel: PublicReel; scrollRoot: RefObjec
         updatePlayback();
       }}
       className={cn(
-        'group relative aspect-[9/16] overflow-hidden bg-blk border border-white/10 hover:border-bl transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-bl',
+        'group relative aspect-[9/16] overflow-hidden bg-blk border border-line hover:border-bl transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-bl',
         'shrink-0 snap-start w-[180px] sm:w-[210px]',
         'lg:flex-1 lg:basis-0 lg:min-w-0 lg:w-auto lg:max-w-none lg:snap-align-none',
         homepageMediaRadius,

@@ -19,14 +19,14 @@ const STORY_STATS = [
     accent: true,
   },
   {
-    key: 'performances',
+    key: 'stats_shows',
     value: '200+',
     label: ['Stage', 'Performances'],
     accent: false,
   },
   {
     key: 'stats_students',
-    value: '5000+',
+    value: '3000+',
     label: ['Students', 'Trained'],
     accent: false,
   },
@@ -72,15 +72,16 @@ export function HomepageAboutSection({ stats, showLearnMore = true }: HomepageAb
                 <br />
                 Hyderabad to <span className="text-bl">dance.</span>
               </h2>
-              <div className="space-y-4 text-sm text-wh/65 leading-[1.75] max-w-[34rem]">
+              <div className="space-y-4 text-sm text-wh/75 leading-[1.75] max-w-[34rem]">
                 <p>
-                  Nitish started Rhythmzz at Neredmet X Road — one room above the ICICI ATM, a
-                  handful of neighbourhood kids, and a sprung floor he built himself.
+                  Rhythmzz Academy of Dance was founded by Nitish Kumar in 2010 — built on one belief:
+                  that dance is the most powerful way to express yourself. What started as a passion
+                  project has grown into one of East Hyderabad’s most trusted dance institutions.
                 </p>
                 <p>
-                  Since then: representing India abroad, Amazon and IPL stages, the Hyderabad Dance
-                  Premier League with 1,500+ dancers, and 5,000+ students — from five-year-olds in
-                  their first class to adults coming back after years away.
+                  Today, an IAO-accredited studio at Neredmet X Road, we’ve trained 3,000+ students from
+                  Sainikpuri, AS Rao Nagar, Yapral, and across the city. We don’t just teach dance — we
+                  build performers, storytellers, and confident individuals, one class at a time.
                 </p>
               </div>
             </div>
@@ -122,7 +123,7 @@ export function HomepageAboutSection({ stats, showLearnMore = true }: HomepageAb
                 >
                   {item.value}
                 </p>
-                <p className="mt-1.5 text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.14em] text-wh/40 leading-snug">
+                <p className="mt-1.5 text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.14em] text-wh/55 leading-snug">
                   {item.label[0]}
                   <br />
                   {item.label[1]}

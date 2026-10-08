@@ -230,7 +230,7 @@ export default async function ProgrammeDetailPage({ params }: Props) {
                                 className="rounded-full object-cover border border-line"
                               />
                             ) : (
-                              <div className="w-10 h-10 rounded-full bg-blk text-bl flex items-center justify-center text-xs font-bold">
+                              <div className="w-10 h-10 rounded-full bg-ink text-bl flex items-center justify-center text-xs font-bold">
                                 {batch.instructor.name?.charAt(0) || 'I'}
                               </div>
                             )}
@@ -309,12 +309,12 @@ export default async function ProgrammeDetailPage({ params }: Props) {
                 <div>
                   <h3 className="text-[11px] font-semibold uppercase tracking-[0.14em] text-ink mb-1">Studio</h3>
                   <p className="text-sm text-ink-2 leading-relaxed">
-                    Rhythmzz Academy, Plot 597, 3rd Floor, Neredmet X Road, Secunderabad
+                    Rhythmzz Academy of Dance, Plot 597, 3rd Floor, Above Jawed Habib, Neredmet X Road, Secunderabad
                   </p>
                 </div>
               </div>
               <p className="text-[11px] text-ink-3 border-t border-line pt-3">
-                Near ICICI ATM · 8–15 mins from Sainikpuri, AS Rao Nagar &amp; Yapral.
+                Behind Neredmet X Road Bus Stop · 8–15 mins from Sainikpuri, AS Rao Nagar &amp; Yapral.
               </p>
             </div>
           </div>

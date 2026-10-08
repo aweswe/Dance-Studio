@@ -7,9 +7,9 @@ export function GoogleReviewTicker() {
   const items = [...GOOGLE_REVIEW_SNIPPETS, ...GOOGLE_REVIEW_SNIPPETS];
 
   return (
-    <div className="relative overflow-hidden py-2.5 sm:py-3 border-t border-line/80 bg-canvas-muted/40 dark:bg-white/[0.03]">
-      <div className="pointer-events-none absolute inset-y-0 left-0 z-[1] w-8 sm:w-12 bg-gradient-to-r from-canvas-muted/40 dark:from-white/[0.03] to-transparent" aria-hidden />
-      <div className="pointer-events-none absolute inset-y-0 right-0 z-[1] w-8 sm:w-12 bg-gradient-to-l from-canvas-muted/40 dark:from-white/[0.03] to-transparent" aria-hidden />
+    <div className="relative overflow-hidden py-2.5 sm:py-3 border-t border-line/80 bg-canvas-muted/40">
+      <div className="pointer-events-none absolute inset-y-0 left-0 z-[1] w-8 sm:w-12 bg-gradient-to-r from-canvas-muted/40 to-transparent" aria-hidden />
+      <div className="pointer-events-none absolute inset-y-0 right-0 z-[1] w-8 sm:w-12 bg-gradient-to-l from-canvas-muted/40 to-transparent" aria-hidden />
       <div className="flex w-max animate-marquee [animation-duration:42s]">
         {items.map((review, i) => (
           <div

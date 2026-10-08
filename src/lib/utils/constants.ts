@@ -4,16 +4,17 @@ export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://rhythmzz.in
 /** Academy contact information */
 export const ACADEMY = {
   name: "Rhythmzz Academy of Dance",
+  tagline: "Feel the Beat",
   phone: "+919052980859",
-  phoneDisplay: "+91 90529 80859",
+  phoneDisplay: "+91 9052980859",
   email: "rhythmzzdance@gmail.com",
   address: {
-    street: "Plot 597, 3rd Floor, Above ICICI ATM",
-    landmark: "Neredmet X Road Bus Stop",
+    street: "Plot 597, 3rd Floor, Above Jawed Habib, Defence Colony, Jawahar Nagar",
+    landmark: "Behind Neredmet X Road Bus Stop",
     city: "Secunderabad",
     state: "Telangana",
     pin: "500094",
-    full: "Plot 597, 3rd Floor, Above ICICI ATM, Neredmet X Road Bus Stop, Secunderabad, Telangana 500094",
+    full: "Plot 597, 3rd Floor, Above Jawed Habib, Defence Colony, Jawahar Nagar, Behind Neredmet X Road Bus Stop, Secunderabad, Telangana 500094, India",
   },
   coordinates: {
     lat: 17.4431,
@@ -28,8 +29,8 @@ export const ACADEMY = {
   foundingYear: 2010,
   teachingSince: 2010,
   registeredYear: 2013,
-  googleRating: 4.9,
-  googleReviewCount: 480,
+  googleRating: 4.5,
+  googleReviewCount: 150,
   upiId: process.env.NEXT_PUBLIC_UPI_ID || "",
   siblingDiscountPercent: 10,
 } as const;

@@ -38,7 +38,7 @@ export function InstructorsCarousel({ instructors }: { instructors: InstructorDi
               Who <span className="text-bl">teaches?</span>
             </h2>
             <p className="text-sm text-ink-2 leading-relaxed">
-              {instructors.length} coaches on the floor — same team as our About page.
+              Meet the coaches who train, guide, and perform with our students every day.
             </p>
           </header>
           <div className="flex items-center shrink-0 gap-2">

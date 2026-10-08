@@ -50,11 +50,11 @@ export async function StructuredData() {
     logo: `${SITE}/logo.png`,
     image: `${SITE}/og-image.jpg`,
     description:
-      'Rhythmzz Academy of Dance is a dance and fitness studio at Neredmet X Road, Secunderabad — teaching since 2010 with 5,000+ students trained. Programmes: Kids Dance, Adults Dance, Mind and Body Fitness and Kuchipudi Classical, plus studio rental.',
+      'Rhythmzz Academy of Dance is a dance and fitness studio at Neredmet X Road, Secunderabad — teaching since 2010 with 3,000+ students trained. Programmes: Kids Dance, Adults Dance, Mind and Body Fitness and Kuchipudi Classical, plus studio rental.',
     foundingDate: '2010',
     address: {
       '@type': 'PostalAddress',
-      streetAddress: 'Plot 597, 3rd Floor, Above ICICI ATM, Neredmet X Road Bus Stop',
+      streetAddress: 'Plot 597, 3rd Floor, Above Jawed Habib, Defence Colony, Jawahar Nagar, Behind Neredmet X Road Bus Stop',
       addressLocality: 'Secunderabad',
       addressRegion: 'Telangana',
       postalCode: '500094',
@@ -110,7 +110,7 @@ export async function StructuredData() {
       name: 'Nitish',
       jobTitle: 'Founder and Artistic Director',
       description:
-        'ISPTD-certified dance instructor with over 15 years of teaching experience and 5,000+ students trained. Represented India at nATFEST International Contemporary Dance Festival, Sri Lanka, 2017.',
+        'ISPTD-certified dance instructor with over 15 years of teaching experience and 3,000+ students trained. Represented India at nATFEST International Contemporary Dance Festival, Sri Lanka, 2017.',
     },
     award: [
       'IAO International Accreditation Organization USA 2014',

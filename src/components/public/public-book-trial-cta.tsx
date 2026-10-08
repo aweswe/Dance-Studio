@@ -21,7 +21,7 @@ const mainCtaPrimary = cn(
 
 const mainCtaWhatsApp = cn(
   mainCtaBase,
-  'text-[#25D366] ring-1 ring-[#25D366]/40 bg-[#25D366]/10 hover:bg-[#25D366] hover:text-white hover:ring-[#25D366]',
+  'text-[#25D366] ring-1 ring-[#25D366]/50 bg-[#25D366]/[0.12] hover:bg-[#25D366] hover:text-white hover:ring-[#25D366]',
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366] focus-visible:ring-offset-2 focus-visible:ring-offset-blk',
 );
 
@@ -30,13 +30,17 @@ export function PublicBookTrialCta({
   eyebrow = 'Free trial',
   title = 'Move',
   accent = 'Different',
-  description = "WhatsApp age and preferred time — we'll confirm your free trial.",
+  description = "WhatsApp your age and preferred time — we'll confirm your free trial class.",
+  primaryHref = ROUTES.enrol,
+  primaryLabel = 'Book free trial',
 }: {
   id?: string;
   eyebrow?: string;
   title?: string;
   accent?: string;
   description?: string;
+  primaryHref?: string;
+  primaryLabel?: string;
 }) {
   return (
     <section id={id} className="relative w-full overflow-hidden bg-blk text-wh">
@@ -57,8 +61,8 @@ export function PublicBookTrialCta({
           </div>
 
           <div className="grid w-full max-w-[34rem] grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
-            <Link href={ROUTES.enrol} className={mainCtaPrimary}>
-              Book free trial
+            <Link href={primaryHref} className={mainCtaPrimary}>
+              {primaryLabel}
               <ArrowUpRight size={15} strokeWidth={2.5} />
             </Link>
             <a

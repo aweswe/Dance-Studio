@@ -380,7 +380,7 @@ export function EnrolForm({
           <label className="text-xs font-bold uppercase tracking-wider text-ink">3. Who is joining</label>
           <Input
             type="text"
-            placeholder="Student / child full name"
+            placeholder="Student full name *"
             error={errors.childName}
             value={childName}
             onChange={(e) => {
@@ -390,16 +390,23 @@ export function EnrolForm({
           />
           <Input
             type="text"
-            placeholder="Parent / guardian name (if booking for a child)"
+            placeholder="Parent / guardian name *"
             error={errors.parentName}
             value={parentName}
-            onChange={(e) => setParentName(e.target.value)}
+            onChange={(e) => {
+              setParentName(e.target.value);
+              if (errors.parentName) setErrors((prev) => ({ ...prev, parentName: '' }));
+            }}
           />
           <Input
             type="text"
-            placeholder="Age (optional)"
+            placeholder="Age (years) *"
+            error={errors.age}
             value={age}
-            onChange={(e) => setAge(e.target.value)}
+            onChange={(e) => {
+              setAge(e.target.value);
+              if (errors.age) setErrors((prev) => ({ ...prev, age: '' }));
+            }}
           />
           <Input
             type="tel"

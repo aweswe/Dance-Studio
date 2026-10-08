@@ -25,7 +25,7 @@ export function ContentEditor({
   initialFaqs,
 }: {
   initialBanner: any
-  initialStats: { students: string; years: string; programmes: string; awards: string }
+  initialStats: { students: string; years: string; programmes: string; shows?: string; awards?: string }
   initialFaqs: FaqRow[]
 }) {
   const router = useRouter()
@@ -58,7 +58,7 @@ export function ContentEditor({
       ['stats_students', stats.students],
       ['stats_years', stats.years],
       ['stats_programmes', stats.programmes],
-      ['stats_awards', stats.awards],
+      ['stats_shows', stats.shows ?? stats.awards ?? '200+'],
     ]
     let failed = false
     for (const [key, value] of entries) {
@@ -143,8 +143,11 @@ export function ContentEditor({
             <Input value={stats.programmes} onChange={(e) => setStats({ ...stats, programmes: e.target.value })} />
           </div>
           <div>
-            <label className="block text-sm text-ink-2 mb-1">Awards</label>
-            <Input value={stats.awards} onChange={(e) => setStats({ ...stats, awards: e.target.value })} />
+            <label className="block text-sm text-ink-2 mb-1">Stage Shows</label>
+            <Input
+              value={stats.shows ?? stats.awards ?? ''}
+              onChange={(e) => setStats({ ...stats, shows: e.target.value })}
+            />
           </div>
         </div>
         <div className="mt-4">

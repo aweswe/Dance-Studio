@@ -47,7 +47,7 @@ export default async function EnrolPage({
         description={
           isPay
             ? 'Pay the first month or quarter from here. If checkout is down, we finish on WhatsApp. Use this mobile number to log into the student portal.'
-            : 'First class is free. No admission fee. We confirm the slot on WhatsApp after you send the form.'
+            : 'First class is on us. No admission fee. We confirm the slot on WhatsApp after you send the form.'
         }
       />
 
@@ -80,7 +80,7 @@ export default async function EnrolPage({
               {
                 n: '03',
                 title: 'Sprung floor studio',
-                body: '1,200 sq. ft. air-conditioned rehearsal floor with full-length mirrors and sound system.',
+                body: '1,200 sq. ft. rehearsal floor with Marley dance flooring, full-length mirrors and sound system.',
               },
             ].map((item) => (
               <div key={item.n} className="rounded-md border border-line bg-surface p-4 flex gap-3.5 items-start">

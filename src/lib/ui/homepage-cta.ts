@@ -19,21 +19,28 @@ const homepageCtaBase =
 
 export const homepageCtaPrimary = [
   homepageCtaBase,
-  'bg-white text-blk hover:bg-bl',
+  'bg-blk text-wh hover:bg-bl hover:text-blk',
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl focus-visible:ring-offset-2 focus-visible:ring-offset-canvas',
+].join(' ');
+
+/** White-fill primary — for dark / cinema-stage sections where bg-blk would be invisible. */
+export const homepageCtaHeroPrimary = [
+  homepageCtaBase,
+  'bg-white text-blk hover:bg-bl hover:text-blk',
+  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl focus-visible:ring-offset-2 focus-visible:ring-offset-blk',
 ].join(' ');
 
 export const homepageCtaOutlineDark = [
   homepageCtaBase,
   'text-white ring-1 ring-white/35 bg-white/[0.06] hover:bg-white/[0.1] hover:ring-white/50',
-  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-canvas',
+  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-blk',
 ].join(' ');
 
 /** Cyan fill — dark sections (Our Story, reference .btn-bl). */
 export const homepageCtaBrand = [
   homepageCtaBase,
   'bg-bl text-blk hover:bg-bl-deep shadow-[0_6px_28px_-8px_rgba(43,180,216,0.45)]',
-  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl focus-visible:ring-offset-2 focus-visible:ring-offset-blk',
+  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl focus-visible:ring-offset-2 focus-visible:ring-offset-canvas',
 ].join(' ');
 
 export const homepageCtaOutlineLight = [
@@ -44,7 +51,7 @@ export const homepageCtaOutlineLight = [
 
 export const homepageCtaWhatsApp = [
   homepageCtaBase,
-  'text-[#25D366] ring-1 ring-[#25D366]/35 bg-[#25D366]/10 hover:bg-[#25D366] hover:text-white hover:ring-[#25D366]',
+  'text-[#128C7E] ring-1 ring-[#25D366]/50 bg-[#25D366]/[0.08] hover:bg-[#25D366] hover:text-white hover:ring-[#25D366]',
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366] focus-visible:ring-offset-2 focus-visible:ring-offset-canvas',
 ].join(' ');
 
@@ -64,9 +71,9 @@ export const homepageCtaPairButton = 'w-full';
 export const homepageFilterPillBase =
   'rounded-md border font-bold uppercase transition-colors cursor-pointer active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl focus-visible:ring-offset-2 focus-visible:ring-offset-canvas';
 
-/** Selected — cyan border hint; readable on light and dark canvas */
+/** Selected — cyan border hint; readable on light canvas */
 export const homepageFilterPillActive =
-  'border-bl bg-bl/10 text-ink dark:text-white shadow-[0_0_0_1px_rgba(43,180,216,0.35)]';
+  'border-bl bg-bl/10 text-ink shadow-[0_0_0_1px_rgba(43,180,216,0.35)]';
 
 /** Unselected — always show border so pills don’t vanish on dark sections */
 export const homepageFilterPillInactive =

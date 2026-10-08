@@ -5,8 +5,9 @@ import { SITE_URL } from '@/lib/utils/constants';
 import { Hero } from '@/components/public/hero';
 import { HeroSpotlightVideos } from '@/components/public/hero-spotlight-videos';
 import { ProgrammePricingBoard } from '@/components/public/programme-pricing-board';
-import { HomepageClassesSection } from '@/components/public/homepage-classes-section';
+import { StudioLocalitiesSection } from '@/components/public/studio-localities-section';
 import { LevelCertificationSection } from '@/components/public/level-certification-section';
+import { HomepageClassesSection } from '@/components/public/homepage-classes-section';
 import { DanziaInstructorsSection } from '@/components/public/danzia-instructors-section';
 import { DanziaGallerySection } from '@/components/public/danzia-gallery-section';
 import { HomepageAboutSection } from '@/components/public/homepage-about-section';
@@ -37,12 +38,15 @@ export default async function HomePage() {
   return (
     <div className="relative bg-canvas text-ink font-body overflow-x-hidden min-h-screen transition-colors duration-300">
       <StructuredData />
-      <Hero stats={stats} />
-      <HeroSpotlightVideos />
+      <div className="cinema-stage bg-blk text-wh w-full">
+        <Hero stats={stats} />
+        <HeroSpotlightVideos />
+      </div>
       {/* <GoogleProofStrip /> */}
       <ProgrammePricingBoard />
-      <HomepageClassesSection />
+      <StudioLocalitiesSection />
       <LevelCertificationSection />
+      <HomepageClassesSection />
       <DanziaInstructorsSection />
       <DanziaGallerySection />
       <HomepageAboutSection stats={stats} />

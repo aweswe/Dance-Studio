@@ -9,12 +9,14 @@ import { usePathname } from 'next/navigation';
 import {
   ArrowRight,
   BookOpen,
+  Building2,
   CalendarDays,
   ChevronDown,
   Compass,
   GraduationCap,
   LayoutDashboard,
   Menu,
+  Phone,
   Sparkles,
   User,
   X,
@@ -44,39 +46,61 @@ type NavLink = { name: string; href: string; hint?: string };
 const PRIMARY_LINKS: NavLink[] = [
   { name: 'Programmes', href: ROUTES.programmes },
   { name: 'Schedule', href: ROUTES.schedule },
-  { name: 'Gallery', href: ROUTES.gallery },
-  { name: 'About', href: ROUTES.about },
+  { name: 'Studio Rental', href: ROUTES.studioRental },
+  { name: 'Contact', href: ROUTES.contact },
+];
+
+const PROGRAMMES_GROUPS: { label: string; links: NavLink[] }[] = [
+  {
+    label: 'Dance Programmes',
+    links: [
+      { name: 'Kids Dance', href: `${ROUTES.programmes}/kids-dance`, hint: 'Ages 4 – 12 · Bollywood, Hip Hop, Freestyle' },
+      { name: 'Adults Dance', href: `${ROUTES.programmes}/adults-dance`, hint: 'Ages 13+ · Bollywood, Contemporary' },
+      { name: 'Mind & Body Fitness', href: `${ROUTES.programmes}/mind-body-fitness`, hint: 'Zumba, Yoga, Pilates, Strength' },
+    ],
+  },
+  {
+    label: 'Classical Syllabus',
+    links: [
+      { name: 'Kuchipudi', href: ROUTES.syllabusKuchipudi, hint: 'Level-wise curriculum' },
+      { name: 'Kathak', href: ROUTES.syllabusKathak, hint: 'Level-wise curriculum' },
+    ],
+  },
 ];
 
 const DISCOVER_GROUPS: { label: string; links: NavLink[] }[] = [
   {
     label: 'Academy',
     links: [
-      { name: 'Contact', href: ROUTES.contact, hint: 'Visit or call us' },
+      { name: 'About', href: ROUTES.about, hint: 'Our story & team' },
+      { name: 'Gallery', href: ROUTES.gallery, hint: 'Stage & studio archive' },
+      { name: 'Teach With Us', href: '/teach-with-us', hint: 'Join our faculty roster' },
       { name: 'Blog', href: ROUTES.blog, hint: 'News & stories' },
     ],
   },
   {
-    label: 'Classical syllabus',
-    links: [
-      { name: 'Kuchipudi', href: ROUTES.syllabusKuchipudi, hint: 'Level-wise curriculum' },
-      { name: 'Kathak', href: ROUTES.syllabusKathak, hint: 'Level-wise curriculum' },
-    ],
-  },
-  {
-    label: 'Events & studio',
+    label: 'Events',
     links: [
       { name: 'Events', href: ROUTES.events, hint: 'Showcases & workshops' },
-      { name: 'Studio Rental', href: ROUTES.studioRental, hint: 'Book the space' },
     ],
   },
 ];
 
 const ALL_DISCOVER_LINKS = DISCOVER_GROUPS.flatMap((g) => g.links);
+const ALL_PROGRAMMES_LINKS = PROGRAMMES_GROUPS.flatMap((g) => g.links);
 
 const MOBILE_SECTIONS: { id: string; title: string; links: NavLink[] }[] = [
-  { id: 'explore', title: 'Explore', links: PRIMARY_LINKS },
-  ...DISCOVER_GROUPS.map((g) => ({ id: g.label, title: g.label, links: g.links })),
+  { id: 'explore', title: 'Programmes', links: ALL_PROGRAMMES_LINKS },
+  { id: 'discover', title: 'Discover', links: ALL_DISCOVER_LINKS },
+  {
+    id: 'studio',
+    title: 'Studio & Contact',
+    links: [
+      { name: 'Studio Rental', href: ROUTES.studioRental, hint: 'Book the space' },
+      { name: 'Schedule', href: ROUTES.schedule, hint: 'Weekly timetable' },
+      { name: 'Contact', href: ROUTES.contact, hint: 'Visit or call us' },
+    ],
+  },
 ];
 
 interface AuthInfo {
@@ -117,6 +141,52 @@ function NavLinkItem({
         <span className="absolute left-0 right-0 -bottom-0.5 h-[2px] bg-bl rounded-full" aria-hidden />
       )}
     </Link>
+  );
+}
+
+function ProgrammesPanel({
+  isActive,
+  onNavigate,
+}: {
+  isActive: (href: string) => boolean;
+  onNavigate?: () => void;
+}) {
+  return (
+    <div
+      role="menu"
+      className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-[min(100vw-2rem,32rem)] rounded-md border border-line bg-canvas/95 backdrop-blur-xl shadow-overlay p-2.5 z-[70] animate-panel-in"
+    >
+      <div className="px-3 pt-2 pb-2 flex items-center gap-2 border-b border-line-subtle mb-1">
+        <GraduationCap size={14} className="text-bl shrink-0" strokeWidth={2} />
+        <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-ink-3">Programmes</p>
+      </div>
+      <div className="grid grid-cols-1 gap-0.5 max-h-[min(70vh,24rem)] overflow-y-auto overscroll-contain">
+        {PROGRAMMES_GROUPS.map((group) => (
+          <div key={group.label} className="px-1 py-1">
+            <p className="px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-ink-3">{group.label}</p>
+            {group.links.map((item) => (
+              <Link
+                key={item.href}
+                role="menuitem"
+                href={item.href}
+                onClick={onNavigate}
+                className={cn(
+                  'flex flex-col gap-0.5 rounded-md px-3.5 py-3 min-h-12 transition-colors touch-manipulation',
+                  isActive(item.href)
+                    ? 'bg-bl/10 text-ink'
+                    : 'text-ink-2 hover:bg-surface hover:text-ink active:bg-surface',
+                )}
+              >
+                <span className="text-xs font-bold uppercase tracking-wide">{item.name}</span>
+                {item.hint && (
+                  <span className="text-[11px] font-normal normal-case tracking-normal text-ink-3">{item.hint}</span>
+                )}
+              </Link>
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -275,7 +345,7 @@ function MobileDrawerFooter({
         <ArrowRight size={18} strokeWidth={2} />
       </Link>
       {authInfo?.isLoggedIn && (
-        <p className="text-center text-[10px] font-semibold uppercase tracking-[0.14em] text-white/40 pt-1">
+        <p className="text-center text-[10px] font-semibold uppercase tracking-[0.14em] text-white/55 pt-1">
           Signed in as {authInfo.name}
         </p>
       )}
@@ -286,12 +356,14 @@ function MobileDrawerFooter({
 export function Nav() {
   const [isOpen, setIsOpen] = useState(false);
   const [discoverOpen, setDiscoverOpen] = useState(false);
+  const [programmesOpen, setProgrammesOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [authInfo, setAuthInfo] = useState<AuthInfo | null>(null);
   const mounted = useSyncExternalStore(() => () => {}, () => true, () => false);
   const pathname = usePathname();
   const [lastPathname, setLastPathname] = useState(pathname);
   const discoverRef = useRef<HTMLDivElement>(null);
+  const programmesRef = useRef<HTMLDivElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const scrollLockRef = useRef(0);
 
@@ -299,6 +371,7 @@ export function Nav() {
     setLastPathname(pathname);
     setIsOpen(false);
     setDiscoverOpen(false);
+    setProgrammesOpen(false);
   }
 
   useEffect(() => {
@@ -361,10 +434,12 @@ export function Nav() {
   useEffect(() => {
     const onPointer = (event: MouseEvent) => {
       if (!discoverRef.current?.contains(event.target as Node)) setDiscoverOpen(false);
+      if (!programmesRef.current?.contains(event.target as Node)) setProgrammesOpen(false);
     };
     const onKey = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         setDiscoverOpen(false);
+        setProgrammesOpen(false);
         if (isOpen) {
           setIsOpen(false);
           menuButtonRef.current?.focus();
@@ -403,6 +478,7 @@ export function Nav() {
 
   const isActive = (href: string) => pathname === href;
   const discoverActive = ALL_DISCOVER_LINKS.some((link) => isActive(link.href));
+  const programmesActive = ALL_PROGRAMMES_LINKS.some((link) => isActive(link.href)) || isActive(ROUTES.programmes);
   const closeMobile = () => setIsOpen(false);
 
   const mobileSectionIcons = [CalendarDays, GraduationCap, Sparkles] as const;
@@ -412,8 +488,8 @@ export function Nav() {
       className={cn(
         'w-full z-50 transition-all duration-300',
         scrolled
-          ? 'bg-surface/90 dark:bg-black/90 backdrop-blur-md border-b border-line py-1.5 shadow-md'
-          : 'bg-canvas/80 dark:bg-black/60 backdrop-blur-md border-b border-line/40 py-2',
+          ? 'bg-surface/90 backdrop-blur-md border-b border-line py-1.5 shadow-md'
+          : 'bg-canvas/80 backdrop-blur-md border-b border-line/40 py-2',
       )}
     >
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-10 flex items-center justify-between lg:grid lg:grid-cols-[auto_minmax(0,1fr)_auto] lg:items-center lg:gap-x-3 xl:gap-x-5">
@@ -426,16 +502,39 @@ export function Nav() {
         </Link>
 
         <nav className="hidden lg:flex items-center justify-center gap-5 xl:gap-6 min-w-0" aria-label="Main navigation">
-          {PRIMARY_LINKS.map((link) => (
+          {/* Programmes dropdown */}
+          <div className="relative shrink-0" ref={programmesRef}>
+            <button
+              type="button"
+              aria-expanded={programmesOpen}
+              aria-haspopup="menu"
+              onClick={() => { setProgrammesOpen((o) => !o); setDiscoverOpen(false); }}
+              className={cn(
+                'inline-flex items-center gap-1 whitespace-nowrap text-[11px] font-semibold uppercase tracking-[0.1em] py-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl rounded-md transition-colors',
+                programmesActive || programmesOpen ? 'text-ink font-bold' : 'text-ink-2 hover:text-bl',
+              )}
+            >
+              Programmes
+              <ChevronDown size={14} className={cn('transition-transform duration-200', programmesOpen && 'rotate-180')} />
+            </button>
+            {programmesActive && !programmesOpen && (
+              <span className="absolute left-0 right-0 -bottom-0.5 h-[2px] bg-bl rounded-full" aria-hidden />
+            )}
+            {programmesOpen && <ProgrammesPanel isActive={isActive} onNavigate={() => setProgrammesOpen(false)} />}
+          </div>
+
+          {/* Remaining primary links (Schedule, Studio Rental, Contact) */}
+          {PRIMARY_LINKS.filter((l) => l.name !== 'Programmes').map((link) => (
             <NavLinkItem key={link.name} link={link} active={isActive(link.href)} />
           ))}
 
+          {/* Discover dropdown */}
           <div className="relative shrink-0" ref={discoverRef}>
             <button
               type="button"
               aria-expanded={discoverOpen}
               aria-haspopup="menu"
-              onClick={() => setDiscoverOpen((open) => !open)}
+              onClick={() => { setDiscoverOpen((open) => !open); setProgrammesOpen(false); }}
               className={cn(
                 'inline-flex items-center gap-1 whitespace-nowrap text-[11px] font-semibold uppercase tracking-[0.1em] py-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl rounded-md transition-colors',
                 discoverActive || discoverOpen ? 'text-ink font-bold' : 'text-ink-2 hover:text-bl',
@@ -490,7 +589,7 @@ export function Nav() {
           <>
             <div
               className={cn(
-                'fixed inset-0 z-[700] bg-blk/80 backdrop-blur-sm lg:hidden transition-opacity duration-300 touch-manipulation',
+                'fixed inset-0 z-[700] bg-black/60 backdrop-blur-sm lg:hidden transition-opacity duration-300 touch-manipulation',
                 isOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none',
               )}
               onClick={closeMobile}

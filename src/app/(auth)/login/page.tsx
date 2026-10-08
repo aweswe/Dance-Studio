@@ -37,6 +37,7 @@ function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [oauthLoading, setOauthLoading] = useState(false);
   const [currentUser, setCurrentUser] = useState<any>(null);
+  const [agreedTerms, setAgreedTerms] = useState(false);
   const [isDemoLoading, startDemoTransition] = useTransition();
 
   useEffect(() => {
@@ -302,8 +303,24 @@ function LoginForm() {
                       />
                     </div>
                   </div>
+                  <label className="flex items-start gap-2 pt-1 text-xs text-ink-2 cursor-pointer select-none">
+                    <input
+                      type="checkbox"
+                      checked={agreedTerms}
+                      onChange={(e) => setAgreedTerms(e.target.checked)}
+                      className="mt-0.5 rounded border-line text-bl focus:ring-bl accent-bl cursor-pointer"
+                      required
+                    />
+                    <span>
+                      I agree to the{" "}
+                      <Link href="/terms" target="_blank" className="text-bl underline hover:text-bl-deep">
+                        Terms &amp; Conditions
+                      </Link>{" "}
+                      and Studio Guidelines.
+                    </span>
+                  </label>
                   {error && <p className="text-xs text-danger leading-relaxed">{error}</p>}
-                  <Button type="submit" className="w-full" disabled={isLoading || !phone.trim()} isLoading={isLoading}>
+                  <Button type="submit" className="w-full" disabled={isLoading || !phone.trim() || !agreedTerms} isLoading={isLoading}>
                     Send SMS code <ArrowRight className="w-3.5 h-3.5" />
                   </Button>
                 </form>
@@ -411,8 +428,24 @@ function LoginForm() {
                     required
                     autoFocus
                   />
+                  <label className="flex items-start gap-2 pt-1 text-xs text-ink-2 cursor-pointer select-none">
+                    <input
+                      type="checkbox"
+                      checked={agreedTerms}
+                      onChange={(e) => setAgreedTerms(e.target.checked)}
+                      className="mt-0.5 rounded border-line text-bl focus:ring-bl accent-bl cursor-pointer"
+                      required
+                    />
+                    <span>
+                      I agree to the{" "}
+                      <Link href="/terms" target="_blank" className="text-bl underline hover:text-bl-deep">
+                        Terms &amp; Conditions
+                      </Link>{" "}
+                      and Studio Guidelines.
+                    </span>
+                  </label>
                   {error && <p className="text-xs text-danger leading-relaxed">{error}</p>}
-                  <Button type="submit" className="w-full" disabled={isLoading || !email.trim()} isLoading={isLoading}>
+                  <Button type="submit" className="w-full" disabled={isLoading || !email.trim() || !agreedTerms} isLoading={isLoading}>
                     Send email code <ArrowRight className="w-3.5 h-3.5" />
                   </Button>
                 </form>

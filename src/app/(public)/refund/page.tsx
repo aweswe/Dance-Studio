@@ -15,7 +15,7 @@ export default function RefundPage() {
       description="Last updated 16 September 2026. Applies to online and desk payments for classes and studio hire."
     >
       <LegalSection title="Trials">
-        <p>The first trial class is free. No payment is collected for a trial, so there is nothing to refund.</p>
+        <p>The first trial class is on us. No payment is collected for a trial, so there is nothing to refund.</p>
       </LegalSection>
       <LegalSection title="Class fees">
         <p>

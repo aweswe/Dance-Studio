@@ -1,6 +1,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { ROUTES } from '@/lib/utils/constants';
+import { homepageCtaOutlineLight, homepageCtaPairButton } from '@/lib/ui/homepage-cta';
+import { cn } from '@/lib/utils/cn';
 
 interface GalleryGridProps {
   images: any[];
@@ -47,7 +49,7 @@ export function GalleryGrid({ images }: GalleryGridProps) {
       <div className="text-center">
         <Link
           href={ROUTES.gallery}
-          className="text-[11px] font-semibold tracking-[2px] uppercase px-8 py-3.5 border border-line-strong text-ink hover:border-bl-ink hover:text-bl-ink inline-block transition-all focus-visible:focus-ring active:scale-[0.98] rounded-control"
+          className={cn(homepageCtaOutlineLight, homepageCtaPairButton, 'px-8')}
         >
           View Full Gallery ({images.length}+ Photos)
         </Link>

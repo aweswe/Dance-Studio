@@ -34,7 +34,7 @@ export default function ContactPage() {
             <HomepageSectionHeading
               eyebrow="Studio"
               title="Visit us"
-              description="Neredmet X Road — sprung floor, above the ICICI ATM."
+              description="Neredmet X Road — sprung floor, above Jawed Habib."
               className="mb-0 [&>p:last-child]:min-h-[2.75rem]"
             />
 
@@ -46,9 +46,11 @@ export default function ContactPage() {
                 <div>
                   <h3 className="text-[11px] font-semibold uppercase tracking-[0.14em] text-ink mb-1">Address</h3>
                   <p className="text-sm text-ink-2 leading-relaxed">
-                    Plot 597, 3rd Floor, Above ICICI ATM,
+                    Plot 597, 3rd Floor, Above Jawed Habib,
                     <br />
-                    Neredmet X Road, Secunderabad 500094
+                    Defence Colony, Jawahar Nagar, Behind Neredmet X Road Bus Stop,
+                    <br />
+                    Secunderabad, Telangana 500094
                   </p>
                 </div>
               </div>

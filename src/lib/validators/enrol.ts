@@ -8,14 +8,12 @@ export const enrolFormSchema = z.object({
     .max(100, "Name is too long"),
   parentName: z
     .string()
-    .max(100, "Name is too long")
-    .optional()
-    .or(z.literal("")),
+    .min(2, "Parent / guardian name is required")
+    .max(100, "Name is too long"),
   age: z
     .string()
-    .max(10)
-    .optional()
-    .or(z.literal("")),
+    .min(1, "Age is required")
+    .max(10, "Age is too long"),
   phone: indianPhoneSchema,
   email: z
     .string()

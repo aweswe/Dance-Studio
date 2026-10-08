@@ -41,6 +41,18 @@ export const PRICING_DISPLAY: Record<
     schedule: 'Mon–Wed · 5–9 PM',
     tagline: 'Kids & adults · Bollywood · Hip hop',
   },
+  gymnastics: {
+    shortLabel: 'Gymnastic',
+    dropIn: DROP_IN_FEE,
+    schedule: 'Thu & Sat · 5:15–6:15 PM',
+    tagline: 'Foundational tumbling · Acrobatics · Ages 4+',
+  },
+  gymnastic: {
+    shortLabel: 'Gymnastic',
+    dropIn: DROP_IN_FEE,
+    schedule: 'Thu & Sat · 5:15–6:15 PM',
+    tagline: 'Foundational tumbling · Acrobatics · Ages 4+',
+  },
 };
 
 export function formatInr(amount: number) {

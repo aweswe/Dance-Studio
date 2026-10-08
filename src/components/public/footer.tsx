@@ -43,16 +43,25 @@ export function Footer() {
             >
               <BrandLogo className="h-16 sm:h-20 md:h-24 lg:h-28 w-auto max-w-full" />
             </Link>
+            <p className="mt-2 text-[10px] font-bold uppercase tracking-[0.25em] text-bl select-none">
+              FEEL THE BEAT
+            </p>
+            <div className="mt-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded border border-white/15 bg-white/5 text-[9px] font-mono uppercase tracking-wider text-white/70">
+              <span className="w-1.5 h-1.5 rounded-full bg-bl" />
+              IAO Accredited Studio (USA)
+            </div>
           </div>
 
-          <div className="w-max max-w-[13rem] shrink-0 text-left">
+          <div className="w-max max-w-[15rem] shrink-0 text-left">
             <h4 className="font-anton text-lg tracking-wide mb-3 select-none text-bl">Secunderabad</h4>
             <div className="text-[11px] sm:text-xs font-medium opacity-85 leading-relaxed space-y-0.5 text-wh/80">
-              <p>Plot 597, 3rd Floor, Above ICICI ATM,</p>
-              <p>Neredmet X Road, Secunderabad 500094</p>
+              <p>Plot 597, 3rd Floor, Above Jawed Habib,</p>
+              <p>Defence Colony, Jawahar Nagar,</p>
+              <p>Behind Neredmet X Road Bus Stop,</p>
+              <p>Secunderabad, Telangana 500094</p>
               <p className="pt-2">
                 <a href={`tel:${ACADEMY.phone}`} className="font-bold text-bl hover:text-bl transition-colors">
-                  +91 90529 80859
+                  {ACADEMY.phoneDisplay}
                 </a>
               </p>
             </div>
@@ -72,8 +81,8 @@ export function Footer() {
             title="Services"
             links={[
               { href: ROUTES.schedule, label: 'Schedule' },
-              { href: ROUTES.about, label: 'Coaches' },
-              { href: ROUTES.programmes, label: 'Styles' },
+              { href: ROUTES.studioRental, label: 'Studio Rental' },
+              { href: ROUTES.programmes, label: 'Programmes' },
               { href: ROUTES.syllabus, label: 'Syllabus' },
               { href: ROUTES.gallery, label: 'Gallery' },
               { href: ROUTES.blog, label: 'Blog' },
@@ -81,9 +90,11 @@ export function Footer() {
           />
 
           <FooterColumn
-            title="Info"
+            title="About Us"
             links={[
               { href: ROUTES.about, label: 'Who we are' },
+              { href: `${ROUTES.about}#founders`, label: 'Founders & Team' },
+              { href: '/teach-with-us', label: 'Teach with us' },
               { href: ROUTES.contact, label: 'Contacts' },
               { href: ROUTES.events, label: 'Events' },
               { href: ROUTES.enrol, label: 'Enrol & pay' },

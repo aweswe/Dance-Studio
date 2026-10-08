@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { Menu, X, ExternalLink } from "lucide-react";
 import { Sidebar } from "@/components/admin/sidebar";
-import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { GsapProvider } from "@/components/motion/gsap-provider";
 
 interface AdminShellProps {
@@ -51,7 +50,6 @@ export function AdminShell({ email, initial, banner, children }: AdminShellProps
               <ExternalLink size={14} />
               Homepage
             </Link>
-            <ThemeToggle />
             <div className="flex items-center gap-2 pl-2 border-l border-line">
               <span className="text-sm text-ink-2 hidden sm:block truncate max-w-[12rem]">{email}</span>
               <div className="w-8 h-8 rounded-full bg-surface-raised border border-line text-ink text-xs font-semibold flex items-center justify-center">

@@ -9,7 +9,7 @@ export default async function ContentPage() {
   const { data: rows } = await supabase
     .from('site_content')
     .select('content_key, content_value')
-    .in('content_key', ['banner', 'stats_students', 'stats_years', 'stats_programmes', 'stats_awards', 'faqs'])
+    .in('content_key', ['banner', 'stats_students', 'stats_years', 'stats_programmes', 'stats_shows', 'faqs'])
 
   const byKey = new Map<string, any>((rows ?? []).map((r: any) => [r.content_key, r.content_value]))
 
@@ -24,10 +24,10 @@ export default async function ContentPage() {
         <ContentEditor
           initialBanner={byKey.get('banner') ?? null}
           initialStats={{
-            students: byKey.get('stats_students') ?? '5000+',
+            students: byKey.get('stats_students') ?? '3000+',
             years: byKey.get('stats_years') ?? '15+',
             programmes: byKey.get('stats_programmes') ?? '4',
-            awards: byKey.get('stats_awards') ?? '3',
+            shows: byKey.get('stats_shows') ?? '200+',
           }}
           initialFaqs={Array.isArray(byKey.get('faqs')) ? byKey.get('faqs') : []}
         />

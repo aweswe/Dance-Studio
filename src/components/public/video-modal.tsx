@@ -16,7 +16,7 @@ export function VideoModal({
   onClose,
   videoUrl,
   title = 'Studio Showcase & Choreography',
-  subtitle = 'Rhythmzz Dance Academy · Neredmet, Secunderabad',
+  subtitle = 'Rhythmzz Academy of Dance · Neredmet, Secunderabad',
 }: VideoModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
 

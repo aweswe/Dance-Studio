@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 export function AuthShell({
   eyebrow,
@@ -18,7 +17,6 @@ export function AuthShell({
         <Link href="/" className="font-anton text-xl text-ink tracking-tight focus-visible:focus-ring rounded-md">
           Rhythmzz
         </Link>
-        <ThemeToggle />
       </div>
 
       <div className="w-full max-w-md mx-auto bg-surface-card border border-line shadow-lift rounded-md p-5 sm:p-8">
@@ -31,3 +29,4 @@ export function AuthShell({
     </main>
   );
 }
+

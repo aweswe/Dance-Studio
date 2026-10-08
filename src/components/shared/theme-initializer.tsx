@@ -5,10 +5,7 @@ import { useLayoutEffect } from "react";
 export function ThemeInitializer() {
   useLayoutEffect(() => {
     try {
-      const t = localStorage.getItem("rhythmzz-theme");
-      if (t === "dark") {
-        localStorage.setItem("rhythmzz-theme", "light");
-      }
+      localStorage.removeItem("rhythmzz-theme");
       document.documentElement.classList.remove("dark");
       document.documentElement.style.colorScheme = "light";
     } catch {}

@@ -618,7 +618,7 @@ export async function getGalleryImages(limit = 60) {
         url: img.url,
         thumbnailUrl: img.thumbnail_url || img.url,
         title: img.title || 'Studio Performance',
-        alt: img.title ?? 'Rhythmzz Dance Academy Photo',
+        alt: img.title ?? 'Rhythmzz Academy of Dance Photo',
         type: (img.type === 'video' ? 'video' : 'image') as 'image' | 'video',
         category: (Array.isArray(img.tags) && img.tags.length > 0 ? img.tags[0] : 'Academy'),
         tags: Array.isArray(img.tags) ? img.tags : ['Academy'],

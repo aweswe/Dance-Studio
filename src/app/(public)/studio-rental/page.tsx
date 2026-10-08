@@ -11,9 +11,9 @@ import { SITE_URL } from '@/lib/utils/constants';
 import { cn } from '@/lib/utils/cn';
 
 export const metadata: Metadata = {
-  title: 'Dance Studio Rental Secunderabad | Rhythmzz Academy',
+  title: 'Book the Space | Dance Studio Rental Secunderabad | Rhythmzz Academy of Dance',
   description:
-    'Rent our professional dance studio at Neredmet X Road, Secunderabad — ₹1,000/hr weekdays, ₹1,500/hr weekends. Sprung hardwood floor, mirrors, and high-fidelity sound.',
+    'Your Vision. Our Space. A fully equipped dance studio at Neredmet X Road, Secunderabad — available for rehearsals, workshops, auditions, fitness sessions, and private coaching. ₹1,000/hr weekdays, ₹1,500/hr weekends.',
   alternates: { canonical: `${SITE_URL}/studio-rental` },
 };
 
@@ -21,22 +21,31 @@ export default function StudioRentalPage() {
   return (
     <PublicPage>
       <PublicPageTitle
-        eyebrow="1,200 sq. ft. rehearsal space"
-        title="Studio rental"
-        description="A fully air-conditioned, shock-absorbing sprung floor at Neredmet X Road. Available for rehearsals, workshops, auditions, and private video shoots."
+        eyebrow="Book the Space"
+        title="Your Vision."
+        accent="Our Space."
+        description="A fully equipped dance studio at Neredmet X Road, Secunderabad—available for rehearsals, workshops, auditions, fitness sessions, and private coaching."
       />
 
       <HomepageSection className={sectionPadAfterTitleLg}>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2.5 sm:gap-3">
           {[
-            { value: '1,200 SQ FT', label: 'Sprung hardwood floor' },
-            { value: 'Full mirrors', label: 'Floor-to-ceiling glass' },
-            { value: 'Acoustic audio', label: 'Bluetooth & aux sound' },
-            { value: 'Climate control', label: '100% air-conditioned' },
-          ].map((item) => (
-            <div key={item.value} className="rounded-md border border-line bg-surface p-5 text-center">
-              <p className="font-anton text-xl sm:text-2xl text-ink uppercase tracking-tight">{item.value}</p>
-              <p className="text-[10px] font-semibold tracking-wider uppercase text-ink-3 mt-1">{item.label}</p>
+            'Washroom',
+            'Mirrors',
+            'Marley Dance Floor',
+            'Bluetooth Sound System',
+            'Changing Rooms',
+            'Central Location',
+            'CCTV-Protected',
+          ].map((feature) => (
+            <div
+              key={feature}
+              className="rounded-md border border-line bg-surface p-3.5 text-center flex flex-col items-center justify-center gap-1.5 shadow-sm"
+            >
+              <CheckCircle2 size={16} className="text-bl shrink-0" />
+              <span className="text-[11px] font-bold uppercase tracking-wider text-ink leading-tight">
+                {feature}
+              </span>
             </div>
           ))}
         </div>
@@ -102,7 +111,7 @@ export default function StudioRentalPage() {
             </div>
           </div>
 
-          <div className="lg:col-span-5 lg:sticky lg:top-24">
+          <div id="rental-form" className="lg:col-span-5 lg:sticky lg:top-24">
             <StudioRentalForm />
           </div>
         </div>
@@ -113,6 +122,8 @@ export default function StudioRentalPage() {
         title="Need the"
         accent="room?"
         description="WhatsApp preferred date and time — we’ll confirm availability."
+        primaryHref="#rental-form"
+        primaryLabel="Request a slot"
       />
     </PublicPage>
   );

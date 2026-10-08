@@ -16,6 +16,8 @@ const PROGRAMME_IMAGES: Record<string, string> = {
   'kids-dance': '/images/studio-training/group-circle-drill.jpg',
   'adults-dance': '/images/studio-training/contemporary-conditioning.jpg',
   kuchipudi: '/images/classical-certification-dancer.png',
+  gymnastics: '/images/srikanth-gymnastics.png',
+  gymnastic: '/images/srikanth-gymnastics.png',
 };
 
 export function ProgrammeCard({ programme, schedule }: ProgrammeCardProps) {
