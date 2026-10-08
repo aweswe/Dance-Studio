@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { ArrowLeft, ArrowRight, Quote, Star } from 'lucide-react';
 import { HomepageSection } from '@/components/public/homepage-section';
 import { homepageCardRadius, homepageFilterPill } from '@/lib/ui/homepage-cta';
-import { sectionGap } from '@/lib/ui/section-layout';
+import { sectionGap, sectionPad } from '@/lib/ui/section-layout';
 import { ACADEMY } from '@/lib/utils/constants';
 import { cn } from '@/lib/utils/cn';
 
@@ -111,7 +111,7 @@ export function DanziaTestimonialsSection({
   };
 
   return (
-    <HomepageSection className="py-16 sm:py-24 select-none">
+    <HomepageSection className={cn(sectionPad, 'select-none')}>
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-stretch">
         <div className="lg:col-span-5 flex flex-col justify-between">
           <div>

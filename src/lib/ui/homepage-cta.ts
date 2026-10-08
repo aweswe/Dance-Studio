@@ -10,9 +10,9 @@ export const homepageControlRadius = homepageRadius;
 export const homepageCardRadius = homepageRadius;
 export const homepageMediaRadius = homepageRadius;
 
-/** Hero video + matching portrait media — rounded frame, transparent border */
+/** Hero video + matching portrait media — rounded frame, light border */
 export const homepageMediaFrame =
-  'overflow-hidden rounded-md border border-transparent bg-transparent';
+  'overflow-hidden rounded-md border border-line bg-surface shadow-sm';
 
 const homepageCtaBase =
   'inline-flex items-center justify-center gap-1.5 box-border min-h-[44px] h-11 px-5 rounded-md text-[10px] font-bold uppercase tracking-[0.1em] transition-colors active:scale-[0.98] touch-manipulation whitespace-nowrap';

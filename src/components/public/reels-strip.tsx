@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { ChevronLeft, ChevronRight, Play } from 'lucide-react';
 import { HomepageSection } from '@/components/public/homepage-section';
 import { homepageCtaOutlineLight, homepageMediaRadius } from '@/lib/ui/homepage-cta';
-import { sectionGap } from '@/lib/ui/section-layout';
+import { sectionGap, sectionPad } from '@/lib/ui/section-layout';
 import type { PublicReel } from '@/data/reels';
 import { ACADEMY } from '@/lib/utils/constants';
 import { cn } from '@/lib/utils/cn';
@@ -128,7 +128,7 @@ export function ReelsStrip({ reels }: { reels: PublicReel[] }) {
   if (reels.length === 0) return null;
 
   return (
-    <HomepageSection className="pt-16 sm:pt-20 pb-10 sm:pb-12 select-none" ariaLabel="Instagram reels">
+    <HomepageSection className={cn(sectionPad, 'select-none')} ariaLabel="Instagram reels">
       <div className={cn('flex flex-col', sectionGap)}>
         <div className={cn('flex flex-wrap items-end justify-between', sectionGap)}>
           <header className={cn('min-w-0 flex-1 max-w-2xl flex flex-col', sectionGap)}>

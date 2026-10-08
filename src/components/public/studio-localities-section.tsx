@@ -21,7 +21,7 @@ const LOCALITIES: LocalityItem[] = [
 
 export function StudioLocalitiesSection() {
   return (
-    <HomepageSection id="localities" className="py-14 sm:py-16 md:py-20 border-t border-line/60">
+    <HomepageSection id="localities" className="py-10 sm:py-12 md:py-14 border-t border-line/60">
       <div className="flex flex-col items-center text-center max-w-3xl mx-auto">
         <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-bl">
           Close to you

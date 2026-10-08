@@ -4,7 +4,7 @@ import { ArrowUpRight } from 'lucide-react';
 import { HomepageSection } from '@/components/public/homepage-section';
 import { getHomepageGalleryMoments } from '@/data/gallery';
 import { homepageCtaOutlineLight, homepageMediaFrame } from '@/lib/ui/homepage-cta';
-import { sectionGap } from '@/lib/ui/section-layout';
+import { sectionGap, sectionPad } from '@/lib/ui/section-layout';
 import { ROUTES } from '@/lib/utils/constants';
 import { cn } from '@/lib/utils/cn';
 
@@ -12,7 +12,7 @@ export async function DanziaGallerySection() {
   const moments = await getHomepageGalleryMoments(6);
 
   return (
-    <HomepageSection id="gallery" className="py-16 sm:py-20 select-none">
+    <HomepageSection id="gallery" className={cn(sectionPad, 'select-none')}>
       <div className={cn('flex flex-col', sectionGap)}>
         <div className={cn('flex flex-wrap items-end justify-between', sectionGap)}>
           <header className={cn('min-w-0 flex-1 max-w-2xl flex flex-col', sectionGap)}>

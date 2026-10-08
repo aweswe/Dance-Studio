@@ -9,7 +9,7 @@ import { HomepageSection } from '@/components/public/homepage-section';
 import type { InstructorDisplay } from '@/lib/instructors/display';
 import { formatInstructorRole, resolveInstructorPhoto } from '@/lib/instructors/display';
 import { homepageCtaOutlineLight, homepageMediaFrame } from '@/lib/ui/homepage-cta';
-import { sectionGap } from '@/lib/ui/section-layout';
+import { sectionGap, sectionPad } from '@/lib/ui/section-layout';
 import { ROUTES } from '@/lib/utils/constants';
 import { cn } from '@/lib/utils/cn';
 
@@ -29,7 +29,7 @@ export function InstructorsCarousel({ instructors }: { instructors: InstructorDi
   };
 
   return (
-    <HomepageSection id="faculty" className="py-16 sm:py-20">
+    <HomepageSection id="faculty" className={sectionPad}>
       <div className={cn('flex flex-col', sectionGap)}>
         <div className={cn('flex flex-wrap items-end justify-between', sectionGap)}>
           <header className={cn('min-w-0 flex-1 max-w-2xl flex flex-col', sectionGap)}>

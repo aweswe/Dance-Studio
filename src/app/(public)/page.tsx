@@ -38,10 +38,8 @@ export default async function HomePage() {
   return (
     <div className="relative bg-canvas text-ink font-body overflow-x-hidden min-h-screen transition-colors duration-300">
       <StructuredData />
-      <div className="cinema-stage bg-blk text-wh w-full">
-        <Hero stats={stats} />
-        <HeroSpotlightVideos />
-      </div>
+      <Hero stats={stats} />
+      <HeroSpotlightVideos />
       {/* <GoogleProofStrip /> */}
       <ProgrammePricingBoard />
       <StudioLocalitiesSection />

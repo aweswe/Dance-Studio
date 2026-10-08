@@ -28,7 +28,7 @@ import { BrandLogo } from '@/components/shared/brand-logo';
 import { createClient } from '@/lib/supabase/client';
 
 const navActionButton =
-  'inline-flex items-center justify-center gap-1.5 box-border h-9 min-h-9 py-0 px-4 min-w-[9.75rem] rounded-md text-[10px] font-bold uppercase tracking-[0.1em] transition-colors active:scale-[0.98] touch-manipulation whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl focus-visible:ring-offset-2 focus-visible:ring-offset-canvas';
+  'inline-flex items-center justify-center gap-1.5 box-border h-11 min-h-[44px] py-0 px-4 min-w-[9.75rem] rounded-md text-[10px] font-bold uppercase tracking-[0.1em] transition-colors active:scale-[0.98] touch-manipulation whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl focus-visible:ring-offset-2 focus-visible:ring-offset-canvas';
 
 /** Login — resting state uses the previous hover fill; hover deepens slightly. */
 const navLoginButton = cn(
@@ -488,99 +488,101 @@ export function Nav() {
       className={cn(
         'w-full z-50 transition-all duration-300',
         scrolled
-          ? 'bg-surface/90 backdrop-blur-md border-b border-line py-1.5 shadow-md'
-          : 'bg-canvas/80 backdrop-blur-md border-b border-line/40 py-2',
+          ? 'bg-surface/90 backdrop-blur-md border-b border-line py-2 shadow-md'
+          : 'bg-canvas/80 backdrop-blur-md border-b border-line/40 py-2.5 sm:py-3',
       )}
     >
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-10 flex items-center justify-between lg:grid lg:grid-cols-[auto_minmax(0,1fr)_auto] lg:items-center lg:gap-x-3 xl:gap-x-5">
-        <Link
-          href={ROUTES.home}
-          className="group flex items-center min-w-0 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl shrink-0 lg:col-start-1 touch-manipulation"
-          aria-label="Rhythmzz Academy of Dance — home"
-        >
-          <BrandLogo priority className="group-hover:opacity-90 transition-opacity" />
-        </Link>
-
-        <nav className="hidden lg:flex items-center justify-center gap-5 xl:gap-6 min-w-0" aria-label="Main navigation">
-          {/* Programmes dropdown */}
-          <div className="relative shrink-0" ref={programmesRef}>
-            <button
-              type="button"
-              aria-expanded={programmesOpen}
-              aria-haspopup="menu"
-              onClick={() => { setProgrammesOpen((o) => !o); setDiscoverOpen(false); }}
-              className={cn(
-                'inline-flex items-center gap-1 whitespace-nowrap text-[11px] font-semibold uppercase tracking-[0.1em] py-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl rounded-md transition-colors',
-                programmesActive || programmesOpen ? 'text-ink font-bold' : 'text-ink-2 hover:text-bl',
-              )}
-            >
-              Programmes
-              <ChevronDown size={14} className={cn('transition-transform duration-200', programmesOpen && 'rotate-180')} />
-            </button>
-            {programmesActive && !programmesOpen && (
-              <span className="absolute left-0 right-0 -bottom-0.5 h-[2px] bg-bl rounded-full" aria-hidden />
-            )}
-            {programmesOpen && <ProgrammesPanel isActive={isActive} onNavigate={() => setProgrammesOpen(false)} />}
-          </div>
-
-          {/* Remaining primary links (Schedule, Studio Rental, Contact) */}
-          {PRIMARY_LINKS.filter((l) => l.name !== 'Programmes').map((link) => (
-            <NavLinkItem key={link.name} link={link} active={isActive(link.href)} />
-          ))}
-
-          {/* Discover dropdown */}
-          <div className="relative shrink-0" ref={discoverRef}>
-            <button
-              type="button"
-              aria-expanded={discoverOpen}
-              aria-haspopup="menu"
-              onClick={() => { setDiscoverOpen((open) => !open); setProgrammesOpen(false); }}
-              className={cn(
-                'inline-flex items-center gap-1 whitespace-nowrap text-[11px] font-semibold uppercase tracking-[0.1em] py-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl rounded-md transition-colors',
-                discoverActive || discoverOpen ? 'text-ink font-bold' : 'text-ink-2 hover:text-bl',
-              )}
-            >
-              Discover
-              <ChevronDown size={14} className={cn('transition-transform duration-200', discoverOpen && 'rotate-180')} />
-            </button>
-            {discoverActive && !discoverOpen && (
-              <span className="absolute left-0 right-0 -bottom-0.5 h-[2px] bg-bl rounded-full" aria-hidden />
-            )}
-            {discoverOpen && <DiscoverPanel isActive={isActive} onNavigate={() => setDiscoverOpen(false)} />}
-          </div>
-        </nav>
-
-        <div className="hidden lg:flex items-center justify-end gap-3 shrink-0">
-          {authInfo?.isLoggedIn ? (
-            <Link href={authInfo.href} title={authInfo.label} className={navLoginButton}>
-              <LayoutDashboard size={14} className="shrink-0" />
-              <span className="max-w-[5.5rem] truncate xl:max-w-none">{authInfo.shortLabel}</span>
-            </Link>
-          ) : (
-            <Link href="/login" title="Student login" className={navLoginButton}>
-              <User size={14} className="shrink-0" />
-              Login
-            </Link>
-          )}
-
-          <Link href={ROUTES.enrol} className={navBookButton}>
-            Book a class
-          </Link>
-        </div>
-
-        {/* Mobile / tablet: logo + menu only — Book lives in drawer footer */}
-        <div className="flex lg:hidden items-center gap-2 shrink-0">
-          <button
-            ref={menuButtonRef}
-            type="button"
-            onClick={() => setIsOpen(!isOpen)}
-            aria-expanded={isOpen}
-            aria-controls="mobile-nav-drawer"
-            aria-label={isOpen ? 'Close menu' : 'Open menu'}
-            className="inline-flex items-center justify-center min-h-11 min-w-11 text-ink hover:text-bl transition-colors cursor-pointer rounded-md border border-line bg-surface/80 touch-manipulation active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl"
+      <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-6 md:px-10">
+        <div className="px-0 sm:px-10 lg:px-12 xl:px-14 flex items-center justify-between lg:grid lg:grid-cols-[auto_minmax(0,1fr)_auto] lg:items-center lg:gap-x-3 xl:gap-x-5">
+          <Link
+            href={ROUTES.home}
+            className="group flex items-center min-w-0 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl shrink-0 lg:col-start-1 touch-manipulation"
+            aria-label="Rhythmzz Academy of Dance — home"
           >
-            {isOpen ? <X size={22} strokeWidth={1.75} /> : <Menu size={22} strokeWidth={1.75} />}
-          </button>
+            <BrandLogo priority className="group-hover:opacity-90 transition-opacity" />
+          </Link>
+
+          <nav className="hidden lg:flex items-center justify-center gap-5 xl:gap-6 min-w-0" aria-label="Main navigation">
+            {/* Programmes dropdown */}
+            <div className="relative shrink-0" ref={programmesRef}>
+              <button
+                type="button"
+                aria-expanded={programmesOpen}
+                aria-haspopup="menu"
+                onClick={() => { setProgrammesOpen((o) => !o); setDiscoverOpen(false); }}
+                className={cn(
+                  'inline-flex items-center gap-1 whitespace-nowrap text-[11px] font-semibold uppercase tracking-[0.1em] py-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl rounded-md transition-colors',
+                  programmesActive || programmesOpen ? 'text-ink font-bold' : 'text-ink-2 hover:text-bl',
+                )}
+              >
+                Programmes
+                <ChevronDown size={14} className={cn('transition-transform duration-200', programmesOpen && 'rotate-180')} />
+              </button>
+              {programmesActive && !programmesOpen && (
+                <span className="absolute left-0 right-0 -bottom-0.5 h-[2px] bg-bl rounded-full" aria-hidden />
+              )}
+              {programmesOpen && <ProgrammesPanel isActive={isActive} onNavigate={() => setProgrammesOpen(false)} />}
+            </div>
+
+            {/* Remaining primary links (Schedule, Studio Rental, Contact) */}
+            {PRIMARY_LINKS.filter((l) => l.name !== 'Programmes').map((link) => (
+              <NavLinkItem key={link.name} link={link} active={isActive(link.href)} />
+            ))}
+
+            {/* Discover dropdown */}
+            <div className="relative shrink-0" ref={discoverRef}>
+              <button
+                type="button"
+                aria-expanded={discoverOpen}
+                aria-haspopup="menu"
+                onClick={() => { setDiscoverOpen((open) => !open); setProgrammesOpen(false); }}
+                className={cn(
+                  'inline-flex items-center gap-1 whitespace-nowrap text-[11px] font-semibold uppercase tracking-[0.1em] py-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl rounded-md transition-colors',
+                  discoverActive || discoverOpen ? 'text-ink font-bold' : 'text-ink-2 hover:text-bl',
+                )}
+              >
+                Discover
+                <ChevronDown size={14} className={cn('transition-transform duration-200', discoverOpen && 'rotate-180')} />
+              </button>
+              {discoverActive && !discoverOpen && (
+                <span className="absolute left-0 right-0 -bottom-0.5 h-[2px] bg-bl rounded-full" aria-hidden />
+              )}
+              {discoverOpen && <DiscoverPanel isActive={isActive} onNavigate={() => setDiscoverOpen(false)} />}
+            </div>
+          </nav>
+
+          <div className="hidden lg:flex items-center justify-end gap-3 shrink-0">
+            {authInfo?.isLoggedIn ? (
+              <Link href={authInfo.href} title={authInfo.label} className={navLoginButton}>
+                <LayoutDashboard size={14} className="shrink-0" />
+                <span className="max-w-[5.5rem] truncate xl:max-w-none">{authInfo.shortLabel}</span>
+              </Link>
+            ) : (
+              <Link href="/login" title="Student login" className={navLoginButton}>
+                <User size={14} className="shrink-0" />
+                Login
+              </Link>
+            )}
+
+            <Link href={ROUTES.enrol} className={navBookButton}>
+              Book a class
+            </Link>
+          </div>
+
+          {/* Mobile / tablet: logo + menu only — Book lives in drawer footer */}
+          <div className="flex lg:hidden items-center gap-2 shrink-0">
+            <button
+              ref={menuButtonRef}
+              type="button"
+              onClick={() => setIsOpen(!isOpen)}
+              aria-expanded={isOpen}
+              aria-controls="mobile-nav-drawer"
+              aria-label={isOpen ? 'Close menu' : 'Open menu'}
+              className="inline-flex items-center justify-center min-h-11 min-w-11 text-ink hover:text-bl transition-colors cursor-pointer rounded-md border border-line bg-surface/80 touch-manipulation active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl"
+            >
+              {isOpen ? <X size={22} strokeWidth={1.75} /> : <Menu size={22} strokeWidth={1.75} />}
+            </button>
+          </div>
         </div>
       </div>
 

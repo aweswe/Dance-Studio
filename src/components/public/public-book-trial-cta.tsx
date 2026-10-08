@@ -11,7 +11,7 @@ import { cn } from '@/lib/utils/cn';
 const stackGap = 'gap-4 sm:gap-5';
 
 const mainCtaBase =
-  'inline-flex w-full items-center justify-center gap-2 min-h-[52px] sm:min-h-[56px] px-7 sm:px-9 rounded-md text-[11px] sm:text-xs font-bold uppercase tracking-[0.14em] transition-colors active:scale-[0.98] touch-manipulation whitespace-nowrap';
+  'inline-flex w-full items-center justify-center gap-1.5 box-border min-h-[44px] h-11 px-5 rounded-md text-[10px] font-bold uppercase tracking-[0.1em] transition-colors active:scale-[0.98] touch-manipulation whitespace-nowrap';
 
 const mainCtaPrimary = cn(
   mainCtaBase,

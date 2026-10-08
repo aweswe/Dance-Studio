@@ -51,11 +51,11 @@ export default async function EventsIndexPage() {
             <Link
               key={e.slug}
               href={`${ROUTES.events}/${e.slug}`}
-              className="group block border border-line rounded-xl p-5 sm:p-6 hover:border-brand/40 transition-all bg-surface hover:shadow-md"
+              className="group block border border-line rounded-md p-5 sm:p-6 hover:border-brand/40 transition-all bg-surface hover:shadow-md"
             >
               <div className="flex flex-col sm:flex-row gap-5 items-start">
                 {e.image_url ? (
-                  <div className="relative w-full sm:w-48 aspect-[16/10] sm:aspect-square shrink-0 rounded-lg overflow-hidden border border-line bg-surface-2">
+                  <div className="relative w-full sm:w-48 aspect-[16/10] sm:aspect-square shrink-0 rounded-md overflow-hidden border border-line bg-surface-2">
                     <Image
                       src={e.image_url}
                       alt={e.title}

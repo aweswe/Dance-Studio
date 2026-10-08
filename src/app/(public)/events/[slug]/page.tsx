@@ -57,7 +57,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
         <div className="mx-auto max-w-2xl space-y-8">
           {/* Cover Poster if available */}
           {e.image_url ? (
-            <div className="relative w-full aspect-[16/9] sm:aspect-[2/1] rounded-2xl overflow-hidden border border-line shadow-lg bg-surface-2">
+            <div className="relative w-full aspect-[16/9] sm:aspect-[2/1] rounded-md overflow-hidden border border-line shadow-lg bg-surface-2">
               <Image
                 src={e.image_url}
                 alt={e.title}
@@ -85,7 +85,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
           </div>
 
           {/* Description */}
-          <div className="rounded-xl border border-line bg-surface p-6 sm:p-8 space-y-4">
+          <div className="rounded-md border border-line bg-surface p-6 sm:p-8 space-y-4">
             <h3 className="font-display text-xl text-ink">About this event</h3>
             <p className="text-sm leading-relaxed text-ink-2 whitespace-pre-line">{e.description}</p>
           </div>
@@ -102,7 +102,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
                 {galleryImages.map((imgUrl, idx) => (
                   <div
                     key={idx}
-                    className="relative aspect-square rounded-xl overflow-hidden border border-line bg-surface-2 group shadow-sm"
+                    className="relative aspect-square rounded-md overflow-hidden border border-line bg-surface-2 group shadow-sm"
                   >
                     <Image
                       src={imgUrl}
@@ -119,7 +119,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
           ) : null}
 
           {/* RSVP Section */}
-          <div className="rounded-xl border border-line bg-surface p-6 sm:p-8 space-y-4 text-center">
+          <div className="rounded-md border border-line bg-surface p-6 sm:p-8 space-y-4 text-center">
             <h3 className="font-display text-xl text-ink">Reserve your spot</h3>
             <p className="text-xs text-ink-3">
               RSVP helps us prepare seating, stage arrangements, and refreshments for your party.
