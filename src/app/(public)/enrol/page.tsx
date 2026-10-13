@@ -13,7 +13,7 @@ import { cn } from '@/lib/utils/cn';
 export async function generateMetadata({
   searchParams,
 }: {
-  searchParams: Promise<{ programme?: string; intent?: string }>;
+  searchParams: Promise<{ programme?: string; intent?: string; plan?: string; fee?: string; batch?: string }>;
 }): Promise<Metadata> {
   const { intent } = await searchParams;
   const isPay = parseEnrolIntent(intent) === 'pay';
@@ -29,7 +29,7 @@ export async function generateMetadata({
 export default async function EnrolPage({
   searchParams,
 }: {
-  searchParams: Promise<{ programme?: string; intent?: string }>;
+  searchParams: Promise<{ programme?: string; intent?: string; plan?: string; fee?: string; batch?: string }>;
 }) {
   const [programmes, batches, params] = await Promise.all([
     getProgrammes(),
@@ -55,10 +55,13 @@ export default async function EnrolPage({
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
           <div className="lg:col-span-7">
             <EnrolForm
-              key={`${intent}-${params.programme ?? ''}`}
+              key={`${intent}-${params.programme ?? ''}-${params.plan ?? ''}`}
               programmes={programmes}
               batches={batches}
               defaultProgramme={params.programme}
+              defaultPlan={params.plan}
+              defaultFee={params.fee}
+              defaultBatch={params.batch}
               intent={intent}
             />
           </div>

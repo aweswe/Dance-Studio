@@ -1,218 +1,1052 @@
+'use client';
+
+import { useState } from 'react';
 import Link from 'next/link';
-import { ArrowUpRight } from 'lucide-react';
-import { WhatsAppIcon } from '@/components/public/whatsapp-icon';
-import { getProgrammes, type ProgrammeItem } from '@/data/programmes';
 import {
-  homepageCtaPairButton,
-  homepageCtaPairStack,
-  homepageCtaPrimary,
-  homepageCtaWhatsApp,
-} from '@/lib/ui/homepage-cta';
+  ArrowUpRight,
+  ArrowRight,
+  Check,
+  X,
+  ShieldCheck,
+  Award,
+  Users,
+  MapPin,
+  Calendar,
+} from 'lucide-react';
+import { WhatsAppIcon } from '@/components/public/whatsapp-icon';
 import { enrolHref } from '@/lib/utils/constants';
 import { whatsappLink } from '@/lib/utils/format';
-import {
-  formatInr,
-  pricingMetaForSlug,
-  quarterlySavings,
-} from '@/lib/programmes/pricing-display';
+import { formatInr } from '@/lib/programmes/pricing-display';
+import { WaitlistModal } from '@/components/public/waitlist-modal';
 
-function programmeWhatsAppMessage(name: string, monthly: number, quarterly: number) {
-  return (
-    `Hi Rhythmzz! I'd like to enquire about ${name}.\n` +
-    `Monthly: ${formatInr(monthly)} · Quarterly: ${formatInr(quarterly)}.\n` +
-    `Please share batch timings and how to book.`
-  );
+interface TierFeature {
+  text: string;
+  included: boolean;
 }
 
-function Tier({
-  label,
-  amount,
-  save,
-  featured = false,
-}: {
-  label: string;
-  amount: string;
-  save?: string;
-  featured?: boolean;
-}) {
-  return (
-    <div
-      className={[
-        'flex flex-col items-center justify-center rounded-md px-2 py-3 text-center min-h-[68px]',
-        featured
-          ? 'bg-bl text-blk shadow-[0_6px_28px_-8px_rgba(43,180,216,0.55)]'
-          : 'bg-canvas-muted border border-line',
-      ].join(' ')}
-    >
-      <span
-        className={`font-anton text-lg leading-none tracking-tight ${featured ? 'text-blk' : 'text-ink'}`}
-      >
-        {amount}
-      </span>
-      <span
-        className={`mt-1 text-[9px] font-semibold uppercase tracking-[0.11em] ${featured ? 'text-blk/65' : 'text-ink-3'}`}
-      >
-        {label}
-      </span>
-      {save && (
-        <span className={`mt-0.5 text-[8px] font-semibold ${featured ? 'text-blk/55' : 'text-bl-ink'}`}>
-          {save}
-        </span>
-      )}
-    </div>
-  );
+interface PricingTier {
+  id: 'monthly' | 'quarterly' | 'half-yearly';
+  name: string;
+  periodLabel: string;
+  price: number;
+  equivalentMonthly?: number;
+  savings?: number;
+  badge?: string;
+  features: TierFeature[];
 }
 
-function ProgrammePricingCard({ programme }: { programme: ProgrammeItem }) {
-  const meta = pricingMetaForSlug(programme.slug, programme.batches_info);
-  const showDropIn = meta.dropIn !== null && meta.dropIn !== undefined;
-  const dropIn = meta.dropIn ?? undefined;
-  const save = quarterlySavings(programme.fees_monthly, programme.fees_quarterly);
-  const waHref = whatsappLink(
-    programmeWhatsAppMessage(programme.name, programme.fees_monthly, programme.fees_quarterly),
-  );
-
-  return (
-    <article className="flex flex-col rounded-md border border-line bg-surface-card shadow-lift p-4 sm:p-5">
-      <div className="mb-5 min-w-0">
-        <h3 className="font-anton text-lg uppercase leading-tight tracking-tight text-ink">
-          {programme.name}
-        </h3>
-        <p className="mt-1 text-[11px] text-ink-3 leading-snug line-clamp-1">
-          {programme.tagline || meta.tagline}
-        </p>
-        {meta.schedule && (
-          <p className="mt-2.5 text-[10px] text-ink-3">{meta.schedule}</p>
-        )}
-      </div>
-
-      <div className={`grid gap-2.5 mb-6 ${showDropIn ? 'grid-cols-3' : 'grid-cols-2'}`}>
-        {showDropIn && dropIn != null && <Tier label="Drop-in" amount={formatInr(dropIn)} />}
-        <Tier label="Monthly" amount={formatInr(programme.fees_monthly)} />
-        <Tier
-          label="Quarterly"
-          amount={formatInr(programme.fees_quarterly)}
-          save={save > 0 ? `Save ${formatInr(save)}` : undefined}
-          featured
-        />
-      </div>
-
-      <div className={`mt-auto pt-1 ${homepageCtaPairStack}`}>
-        <Link
-          href={enrolHref({ programme: programme.slug, intent: 'pay' })}
-          className={`${homepageCtaPrimary} ${homepageCtaPairButton}`}
-        >
-          Book &amp; pay
-          <ArrowUpRight size={13} strokeWidth={2.5} />
-        </Link>
-
-        <a
-          href={waHref}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={`${homepageCtaWhatsApp} ${homepageCtaPairButton}`}
-        >
-          <WhatsAppIcon className="size-3.5 shrink-0" />
-          WhatsApp enquire
-        </a>
-      </div>
-    </article>
-  );
+interface ProgrammeTab {
+  id: string;
+  name: string;
+  tabLabel: string;
+  tabIcon: string;
+  slug: string;
+  headline: string;
+  tags: { label: string; highlight?: boolean }[];
+  schedule: string;
+  dropInFee: number;
+  tiers: PricingTier[];
 }
 
-const PRICING_CARDS: ProgrammeItem[] = [
+const PROGRAMMES: ProgrammeTab[] = [
   {
-    id: 'p-kids',
+    id: 'kids-dance',
     name: 'Kids Dance',
+    tabLabel: 'Kids Dance',
+    tabIcon: '🕺',
     slug: 'kids-dance',
-    tagline: 'Bollywood · Hip hop · Contemporary · Ages 5+',
-    description: 'Foundational movement, rhythm, and stage confidence for young dancers.',
-    styles_highlight: ['Bollywood', 'Hip Hop', 'Contemporary'],
-    includes: [],
-    fees_monthly: 2000,
-    fees_quarterly: 5000,
-    age_group: 'Ages 5–14',
-    sort_order: 1,
-    is_active: true,
+    headline: 'KIDS DANCE PROGRAMME',
+    tags: [
+      { label: 'BOLLYWOOD' },
+      { label: 'HIP HOP' },
+      { label: 'CONTEMPORARY' },
+      { label: 'AGES 3.5 – 12 YRS' },
+      { label: 'ALL SKILL LEVELS', highlight: true },
+    ],
+    schedule: 'Mon - Wed · 5 - 7 PM',
+    dropInFee: 300,
+    tiers: [
+      {
+        id: 'monthly',
+        name: 'MONTHLY',
+        periodLabel: 'per month',
+        price: 2000,
+        features: [
+          { text: '12 classes per month', included: true },
+          { text: 'Attendance tracking', included: true },
+          { text: 'Performance showcase invite', included: true },
+          { text: 'Free uniform kit', included: false },
+          { text: 'Priority batch selection', included: false },
+        ],
+      },
+      {
+        id: 'quarterly',
+        name: 'QUARTERLY',
+        periodLabel: 'per 3 months',
+        price: 5000,
+        equivalentMonthly: 1667,
+        savings: 1000,
+        badge: 'MOST POPULAR',
+        features: [
+          { text: '36 classes over 3 months', included: true },
+          { text: 'Attendance tracking', included: true },
+          { text: 'Performance showcase invite', included: true },
+          { text: 'Free uniform kit', included: true },
+          { text: 'Priority batch selection', included: false },
+        ],
+      },
+      {
+        id: 'half-yearly',
+        name: 'HALF-YEARLY',
+        periodLabel: 'per 6 months',
+        price: 9500,
+        equivalentMonthly: 1583,
+        savings: 2500,
+        badge: 'BEST VALUE',
+        features: [
+          { text: '72 classes over 6 months', included: true },
+          { text: 'Attendance tracking', included: true },
+          { text: 'Performance showcase invite', included: true },
+          { text: 'Free uniform kit included', included: true },
+          { text: 'Priority batch selection', included: true },
+        ],
+      },
+    ],
   },
   {
-    id: 'p-adults',
+    id: 'adults-dance',
     name: 'Adults Dance',
+    tabLabel: 'Adults Dance',
+    tabIcon: '💃',
     slug: 'adults-dance',
-    tagline: 'Bollywood · Hip hop · Choreography · Ages 16+',
-    description: 'Energetic choreography, commercial grooves, and stage performance.',
-    styles_highlight: ['Bollywood', 'Hip Hop', 'Choreography'],
-    includes: [],
-    fees_monthly: 2500,
-    fees_quarterly: 6500,
-    age_group: 'Ages 15+',
-    sort_order: 2,
-    is_active: true,
+    headline: 'ADULTS DANCE PROGRAMME',
+    tags: [
+      { label: 'BOLLYWOOD' },
+      { label: 'HIP HOP' },
+      { label: 'CHOREOGRAPHY' },
+      { label: 'AGES 13+ YRS' },
+      { label: 'BEGINNER TO ADVANCED', highlight: true },
+    ],
+    schedule: 'Mon - Wed · 7 - 9 PM',
+    dropInFee: 300,
+    tiers: [
+      {
+        id: 'monthly',
+        name: 'MONTHLY',
+        periodLabel: 'per month',
+        price: 2500,
+        features: [
+          { text: '12 classes per month', included: true },
+          { text: 'Attendance tracking', included: true },
+          { text: 'Performance showcase & shoot invite', included: true },
+          { text: 'Studio practice credit', included: false },
+          { text: 'Priority workshop access', included: false },
+        ],
+      },
+      {
+        id: 'quarterly',
+        name: 'QUARTERLY',
+        periodLabel: 'per 3 months',
+        price: 6500,
+        equivalentMonthly: 2167,
+        savings: 1000,
+        badge: 'MOST POPULAR',
+        features: [
+          { text: '36 classes over 3 months', included: true },
+          { text: 'Attendance tracking', included: true },
+          { text: 'Performance showcase & shoot invite', included: true },
+          { text: 'Studio practice credit', included: true },
+          { text: 'Priority workshop access', included: false },
+        ],
+      },
+      {
+        id: 'half-yearly',
+        name: 'HALF-YEARLY',
+        periodLabel: 'per 6 months',
+        price: 12000,
+        equivalentMonthly: 2000,
+        savings: 3000,
+        badge: 'BEST VALUE',
+        features: [
+          { text: '72 classes over 6 months', included: true },
+          { text: 'Attendance tracking', included: true },
+          { text: 'Performance showcase & shoot invite', included: true },
+          { text: 'Studio practice credit', included: true },
+          { text: 'Priority workshop access', included: true },
+        ],
+      },
+    ],
   },
   {
-    id: 'p-fitness',
+    id: 'mind-body-fitness',
     name: 'Mind & Body Fitness',
+    tabLabel: 'Mind & Body Fitness',
+    tabIcon: '🔥',
     slug: 'mind-body-fitness',
-    tagline: 'Yoga · Zumba · Dance Fitness · Core Conditioning',
-    description: 'Weekday morning workouts to build endurance, strength, and mobility.',
-    styles_highlight: ['Yoga', 'Zumba', 'Dance Fitness'],
-    includes: [],
-    fees_monthly: 2500,
-    fees_quarterly: 6500,
-    age_group: 'All Levels',
-    sort_order: 3,
-    is_active: true,
+    headline: 'MIND & BODY FITNESS PROGRAMME',
+    tags: [
+      { label: 'YOGA' },
+      { label: 'ZUMBA' },
+      { label: 'DANCE FITNESS' },
+      { label: 'ALL LEVELS' },
+      { label: 'MORNING BATCH', highlight: true },
+    ],
+    schedule: 'Mon - Fri · 9:30 AM',
+    dropInFee: 300,
+    tiers: [
+      {
+        id: 'monthly',
+        name: 'MONTHLY',
+        periodLabel: 'per month',
+        price: 2500,
+        features: [
+          { text: '20–22 classes per month (Mon-Fri)', included: true },
+          { text: 'Cardio & stamina tracking', included: true },
+          { text: 'Mobility & posture drills', included: true },
+          { text: '1-on-1 monthly check-in', included: false },
+          { text: 'Monthly guest pass (1 friend)', included: false },
+        ],
+      },
+      {
+        id: 'quarterly',
+        name: 'QUARTERLY',
+        periodLabel: 'per 3 months',
+        price: 6500,
+        equivalentMonthly: 2167,
+        savings: 1000,
+        badge: 'MOST POPULAR',
+        features: [
+          { text: '60+ classes over 3 months', included: true },
+          { text: 'Cardio & stamina tracking', included: true },
+          { text: 'Mobility & posture drills', included: true },
+          { text: '1-on-1 monthly check-in', included: true },
+          { text: 'Monthly guest pass (1 friend)', included: false },
+        ],
+      },
+      {
+        id: 'half-yearly',
+        name: 'HALF-YEARLY',
+        periodLabel: 'per 6 months',
+        price: 12000,
+        equivalentMonthly: 2000,
+        savings: 3000,
+        badge: 'BEST VALUE',
+        features: [
+          { text: '120+ classes over 6 months', included: true },
+          { text: 'Cardio & stamina tracking', included: true },
+          { text: 'Mobility & posture drills', included: true },
+          { text: '1-on-1 monthly check-in', included: true },
+          { text: 'Monthly guest pass (1 friend)', included: true },
+        ],
+      },
+    ],
   },
   {
-    id: 'p-kuchipudi',
-    name: 'Kuchipudi Classical',
-    slug: 'kuchipudi',
-    tagline: 'Level syllabus · Exams · Stage work',
-    description: 'Classical Indian dance curriculum with board certifications.',
-    styles_highlight: ['Kuchipudi'],
-    includes: [],
-    fees_monthly: 2000,
-    fees_quarterly: 5000,
-    age_group: 'Ages 5+ to Adults',
-    sort_order: 4,
-    is_active: true,
-  },
-  {
-    id: 'p-gymnastics',
-    name: 'Gymnastic',
+    id: 'gymnastics',
+    name: 'Gymnastics',
+    tabLabel: 'Gymnastics',
+    tabIcon: '🤸',
     slug: 'gymnastics',
-    tagline: 'Foundational Tumbling & Acrobatics · Age 4+',
-    description: 'Tumbling, core agility, flexibility, and athletic movement.',
-    styles_highlight: ['Gymnastics', 'Tumbling', 'Acrobatics'],
-    includes: [],
-    fees_monthly: 1200,
-    fees_quarterly: 3000,
-    age_group: 'Ages 4+',
-    sort_order: 5,
-    is_active: true,
+    headline: 'GYMNASTICS & TUMBLING PROGRAMME',
+    tags: [
+      { label: 'TUMBLING' },
+      { label: 'ACROBATICS' },
+      { label: 'FLEXIBILITY' },
+      { label: 'AGES 3.5 – 12 YRS' },
+      { label: 'SAFETY CERTIFIED', highlight: true },
+    ],
+    schedule: 'Thu & Sat · 5:15 - 6:15 PM',
+    dropInFee: 300,
+    tiers: [
+      {
+        id: 'monthly',
+        name: 'MONTHLY',
+        periodLabel: 'per month',
+        price: 1200,
+        features: [
+          { text: '8 classes per month (Thu & Sat)', included: true },
+          { text: 'Safety-certified tumbling mats', included: true },
+          { text: 'Flexibility & balance assessment', included: true },
+          { text: 'Acrobatic progression badge', included: false },
+          { text: 'Showcase routine slot', included: false },
+        ],
+      },
+      {
+        id: 'quarterly',
+        name: 'QUARTERLY',
+        periodLabel: 'per 3 months',
+        price: 3000,
+        equivalentMonthly: 1000,
+        savings: 600,
+        badge: 'MOST POPULAR',
+        features: [
+          { text: '24 classes over 3 months', included: true },
+          { text: 'Safety-certified tumbling mats', included: true },
+          { text: 'Flexibility & balance assessment', included: true },
+          { text: 'Acrobatic progression badge', included: true },
+          { text: 'Showcase routine slot', included: false },
+        ],
+      },
+      {
+        id: 'half-yearly',
+        name: 'HALF-YEARLY',
+        periodLabel: 'per 6 months',
+        price: 5500,
+        equivalentMonthly: 916,
+        savings: 1700,
+        badge: 'BEST VALUE',
+        features: [
+          { text: '48 classes over 6 months', included: true },
+          { text: 'Safety-certified tumbling mats', included: true },
+          { text: 'Flexibility & balance assessment', included: true },
+          { text: 'Acrobatic progression badge', included: true },
+          { text: 'Showcase routine slot', included: true },
+        ],
+      },
+    ],
   },
 ];
 
-export async function ProgrammePricingBoard() {
-  return (
-    <section className="w-full px-4 sm:px-6 md:px-10 pt-6 sm:pt-8 pb-8 sm:pb-10 max-w-[1440px] mx-auto">
-      <div className="px-0 sm:px-10 lg:px-12 xl:px-14">
-        <header className="mb-7 sm:mb-8 max-w-md">
-          <h2 className="font-anton text-2xl sm:text-3xl md:text-[2.25rem] uppercase leading-[0.95] tracking-tight text-ink">
-            Pick a class.{' '}
-            <span className="text-bl">Pay your way.</span>
-          </h2>
-          <p className="mt-2.5 text-sm text-ink-3">
-            Quarterly saves most · First class is on us
-          </p>
-        </header>
+const KUCHIPUDI_DATA = {
+  name: 'KUCHIPUDI CLASSICAL DANCE',
+  subtext: 'IAO-Accredited Classical Academy · Fri & Sat · 6:30 - 7:30 PM',
+  slug: 'kuchipudi',
+  tiers: [
+    {
+      id: 'monthly',
+      name: 'MONTHLY',
+      periodLabel: 'per month',
+      price: 2000,
+      features: [
+        { text: '8 classes per month', included: true },
+        { text: 'Structured syllabus', included: true },
+        { text: 'Stage performance access', included: true },
+        { text: 'Exam/certification prep', included: false },
+        { text: 'Costume guidance', included: false },
+      ],
+    },
+    {
+      id: 'quarterly',
+      name: 'QUARTERLY',
+      periodLabel: 'per 3 months',
+      price: 5000,
+      equivalentMonthly: 1667,
+      savings: 1000,
+      badge: 'MOST POPULAR',
+      features: [
+        { text: '24 classes over 3 months', included: true },
+        { text: 'Structured syllabus', included: true },
+        { text: 'Stage performance access', included: true },
+        { text: 'Exam/certification prep', included: true },
+        { text: 'Costume guidance', included: false },
+      ],
+    },
+    {
+      id: 'half-yearly',
+      name: 'HALF-YEARLY',
+      periodLabel: 'per 6 months',
+      price: 9500,
+      equivalentMonthly: 1583,
+      savings: 2500,
+      badge: 'BEST VALUE',
+      features: [
+        { text: '48 classes over 6 months', included: true },
+        { text: 'Structured syllabus', included: true },
+        { text: 'Stage performance access', included: true },
+        { text: 'Exam/certification prep', included: true },
+        { text: 'Costume & stage guidance', included: true },
+      ],
+    },
+  ],
+  pathway: [
+    {
+      level: 'LEVEL 01',
+      title: 'Foundation',
+      duration: '3 months · 24 classes',
+      fee: '₹6,000',
+    },
+    {
+      level: 'LEVEL 02',
+      title: 'Intermediate',
+      duration: '4 months · 32 classes',
+      fee: '₹8,000',
+    },
+    {
+      level: 'LEVEL 03',
+      title: 'Advanced + Cert',
+      duration: '6 months · 48 classes',
+      fee: '₹12,000',
+    },
+    {
+      level: 'FULL PATHWAY',
+      badge: 'BEST DEAL',
+      title: 'All 3 Levels',
+      duration: '13 months · Save ₹4,000',
+      fee: '₹22,000',
+    },
+  ],
+};
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3 sm:gap-4">
-          {PRICING_CARDS.map((programme) => (
-            <ProgrammePricingCard key={programme.id} programme={programme} />
-          ))}
+export function ProgrammePricingBoard() {
+  const [activeTabId, setActiveTabId] = useState<string>('kids-dance');
+  const [waitlistOpen, setWaitlistOpen] = useState(false);
+  const [waitlistTrack, setWaitlistTrack] = useState('Upcoming Certification Courses');
+  const activeProgramme = PROGRAMMES.find((p) => p.id === activeTabId) || PROGRAMMES[0];
+
+  const handleOpenWaitlist = (track?: string) => {
+    setWaitlistTrack(track || 'Upcoming Certification Courses');
+    setWaitlistOpen(true);
+  };
+
+  const dropInWaHref = whatsappLink(
+    `Hi Rhythmzz! I'd like to book a Drop-in single class for ${activeProgramme.name} (₹${activeProgramme.dropInFee}). Please confirm upcoming batch timing.`,
+  );
+
+  const siblingWaHref = whatsappLink(
+    `Hi Rhythmzz! I'd like to enquire about the Sibling Plan (2 kids · ₹3,500/month). Please share batch details.`,
+  );
+
+  const annualWaHref = whatsappLink(
+    `Hi Rhythmzz! I'd like to lock in the Annual Plan (Full year · ₹18,000). Please share enrolment details.`,
+  );
+
+  const allAccessWaHref = whatsappLink(
+    `Hi Rhythmzz! I'd like to enquire about the All-Access Pass (Unlimited classes · ₹5,500/month).`,
+  );
+
+  const familyWaHref = whatsappLink(
+    `Hi Rhythmzz! I'd like to enquire about the Family Plan (Up to 3 members · ₹6,000/month).`,
+  );
+
+  const certificationWaHref = whatsappLink(
+    `Hi Rhythmzz! I'd like to enquire about the IAO-Accredited Kuchipudi Classical Certification Course. Please share curriculum and admissions info.`,
+  );
+
+  const waitlistWaHref = whatsappLink(
+    `Hi Rhythmzz! I'd like to join the waitlist for upcoming Certification courses (Kathak, Contemporary, etc.).`,
+  );
+
+  const matchmakerWaHref = whatsappLink(
+    `Hi Rhythmzz! I'm not sure which dance plan or batch fits me best. Could you help me choose the right programme?`,
+  );
+
+  return (
+    <section className="w-full bg-white text-neutral-900 py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-10 max-w-[1360px] mx-auto select-none">
+      {/* ── TOP HEADER ── */}
+      <header className="text-center max-w-3xl mx-auto mb-8 sm:mb-10">
+        <p className="text-[#0284c7] font-mono font-bold uppercase tracking-[0.2em] text-[11px] sm:text-xs mb-2">
+          TRANSPARENT · NO HIDDEN FEES · HYDERABAD&apos;S BEST VALUE
+        </p>
+        <h2 className="font-anton text-4xl sm:text-5xl md:text-6xl uppercase tracking-tight leading-[0.95] text-neutral-950">
+          PICK A CLASS.{' '}
+          <span className="text-[#0284c7]">PAY YOUR WAY.</span>
+        </h2>
+        <p className="mt-3 text-sm sm:text-base text-neutral-700 font-medium max-w-xl mx-auto leading-relaxed">
+          Quarterly saves most · Annual locks in the best rate · First class always free
+        </p>
+
+        {/* First class is free pill */}
+        <div className="mt-4 inline-flex items-center gap-2 px-4 py-1.5 rounded-md bg-emerald-50 border border-emerald-300 text-emerald-900 text-xs font-bold shadow-2xs">
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75" />
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-600" />
+          </span>
+          <span>First class is FREE — no credit card, no commitment</span>
+        </div>
+      </header>
+
+      {/* ── CATEGORY SWITCHER TABS ── */}
+      <div
+        className="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5 mb-8"
+        role="tablist"
+        aria-label="Dance Programmes"
+      >
+        {PROGRAMMES.map((prog) => {
+          const isSelected = prog.id === activeTabId;
+          return (
+            <button
+              key={prog.id}
+              role="tab"
+              aria-selected={isSelected}
+              onClick={() => setActiveTabId(prog.id)}
+              className={`flex items-center gap-2 px-4.5 py-2.5 rounded-md text-xs sm:text-sm font-bold uppercase tracking-wider transition-all cursor-pointer min-h-[42px] ${
+                isSelected
+                  ? 'bg-neutral-950 text-white border-2 border-neutral-950 shadow-sm'
+                  : 'bg-white border-2 border-neutral-200 text-neutral-800 hover:border-neutral-900 hover:text-black shadow-2xs'
+              }`}
+            >
+              <span className="text-sm">{prog.tabIcon}</span>
+              <span>{prog.tabLabel}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* ── ACTIVE PROGRAMME HEADER BAR ── */}
+      <div className="rounded-md border-2 border-neutral-200 bg-neutral-50 px-5 sm:px-6 py-4 flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 shadow-2xs">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2.5 sm:gap-3 flex-wrap">
+          <h3 className="font-anton text-lg sm:text-xl uppercase tracking-wide text-neutral-950">
+            {activeProgramme.headline}
+          </h3>
+          <div className="flex flex-wrap items-center gap-1.5">
+            {activeProgramme.tags.map((tag, idx) => (
+              <span
+                key={idx}
+                className={`px-2.5 py-1 rounded-md text-[10px] font-extrabold tracking-wider uppercase border ${
+                  tag.highlight
+                    ? 'bg-sky-50 border-sky-400 text-sky-900'
+                    : 'bg-white border-neutral-300 text-neutral-800'
+                }`}
+              >
+                {tag.label}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-md bg-white border border-neutral-300 text-xs text-neutral-900 font-bold self-start md:self-auto shrink-0 shadow-2xs">
+          <Calendar className="w-3.5 h-3.5 text-[#0284c7]" />
+          <span>{activeProgramme.schedule}</span>
         </div>
       </div>
+
+      {/* ── 3 TIER PRICING CARDS ── */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5 items-stretch mb-5">
+        {activeProgramme.tiers.map((tier) => {
+          const isQuarterly = tier.id === 'quarterly';
+          const isHalfYearly = tier.id === 'half-yearly';
+
+          const cardClasses = isQuarterly
+            ? 'relative rounded-md border-2 border-[#0284c7] bg-white p-6 flex flex-col justify-between shadow-[0_4px_24px_-4px_rgba(2,132,199,0.25)] transition-all'
+            : isHalfYearly
+            ? 'relative rounded-md border-2 border-amber-500 bg-white p-6 flex flex-col justify-between shadow-[0_4px_24px_-4px_rgba(245,158,11,0.25)] transition-all'
+            : 'relative rounded-md border-2 border-neutral-200 bg-white p-6 flex flex-col justify-between shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:border-neutral-400 hover:shadow-md transition-all';
+
+          return (
+            <div key={tier.id} className={cardClasses}>
+              {/* Floating Badges */}
+              {tier.badge && (
+                <div
+                  className={`absolute -top-3 left-1/2 -translate-x-1/2 px-3.5 py-0.5 rounded-md text-[10px] font-extrabold uppercase tracking-wider flex items-center gap-1 shadow-sm whitespace-nowrap ${
+                    isQuarterly ? 'bg-[#0284c7] text-white' : 'bg-amber-500 text-neutral-950'
+                  }`}
+                >
+                  {isQuarterly ? '⭐ MOST POPULAR' : '🏆 BEST VALUE'}
+                </div>
+              )}
+
+              <div>
+                <div className="mb-4">
+                  <span className="text-[11px] font-extrabold uppercase tracking-widest text-neutral-500 block mb-1">
+                    {tier.name}
+                  </span>
+                  <div className="flex items-baseline gap-1.5">
+                    <span className="font-anton text-4xl sm:text-5xl text-neutral-950 tracking-tight leading-none">
+                      {formatInr(tier.price)}
+                    </span>
+                    <span className="text-xs text-neutral-600 font-bold ml-0.5">
+                      {tier.periodLabel}
+                    </span>
+                  </div>
+
+                  {tier.equivalentMonthly && (
+                    <p className="text-xs text-neutral-700 font-semibold mt-1.5">
+                      Equivalent to {formatInr(tier.equivalentMonthly)}/month
+                    </p>
+                  )}
+
+                  {tier.savings && (
+                    <span className="inline-block mt-2 px-2.5 py-0.5 rounded-md bg-emerald-100 border border-emerald-300 text-emerald-900 text-[11px] font-extrabold">
+                      + You save {formatInr(tier.savings)}
+                    </span>
+                  )}
+                </div>
+
+                {/* Feature Checklist */}
+                <ul className="space-y-2.5 my-5 text-xs sm:text-[13px] border-t border-neutral-200 pt-4">
+                  {tier.features.map((feat, fIdx) => (
+                    <li key={fIdx} className="flex items-center gap-2.5">
+                      {feat.included ? (
+                        <span className="w-4 h-4 rounded-md bg-emerald-100 border border-emerald-300 text-emerald-800 flex items-center justify-center shrink-0">
+                          <Check className="w-3 h-3 stroke-[3]" />
+                        </span>
+                      ) : (
+                        <span className="w-4 h-4 rounded-md bg-neutral-100 border border-neutral-200 text-neutral-400 flex items-center justify-center shrink-0">
+                          <X className="w-3 h-3 stroke-[2]" />
+                        </span>
+                      )}
+                      <span className={feat.included ? 'text-neutral-900 font-medium' : 'text-neutral-400 line-through decoration-neutral-300 font-normal'}>
+                        {feat.text}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* CTAs */}
+              <div className="space-y-2 pt-2">
+                <Link
+                  href={enrolHref({
+                    programme: activeProgramme.slug,
+                    intent: 'pay',
+                    plan: tier.id,
+                    fee: tier.price,
+                  })}
+                  className={
+                    isQuarterly
+                      ? 'w-full min-h-[44px] h-11 px-5 rounded-md bg-[#0284c7] hover:bg-[#0369a1] text-white font-extrabold uppercase text-[11px] tracking-wider flex items-center justify-center gap-1.5 transition-all shadow-sm active:scale-[0.98]'
+                      : isHalfYearly
+                      ? 'w-full min-h-[44px] h-11 px-5 rounded-md bg-amber-500 hover:bg-amber-600 text-neutral-950 font-extrabold uppercase text-[11px] tracking-wider flex items-center justify-center gap-1.5 transition-all shadow-sm active:scale-[0.98]'
+                      : 'w-full min-h-[44px] h-11 px-5 rounded-md bg-neutral-950 hover:bg-black text-white font-bold uppercase text-[11px] tracking-wider flex items-center justify-center gap-1.5 transition-all shadow-sm active:scale-[0.98]'
+                  }
+                >
+                  <span>Book this plan</span>
+                  <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.5]" />
+                </Link>
+
+                <Link
+                  href={enrolHref({ programme: activeProgramme.slug, intent: 'trial' })}
+                  className="w-full min-h-[44px] h-11 px-5 rounded-md bg-white hover:bg-neutral-50 border-2 border-neutral-300 text-neutral-900 font-bold uppercase text-[10px] tracking-wider flex items-center justify-center transition-all active:scale-[0.98]"
+                >
+                  Try 1 class free
+                </Link>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* ── DROP-IN SINGLE CLASS BAR ── */}
+      <div className="rounded-md border-2 border-neutral-200 bg-white p-5 sm:px-7 flex flex-col sm:flex-row items-center justify-between gap-4 mb-10 shadow-xs">
+        <div>
+          <h4 className="text-xs font-extrabold uppercase tracking-wider text-neutral-950">
+            DROP-IN · SINGLE CLASS
+          </h4>
+          <p className="text-xs text-neutral-600 font-medium mt-0.5">
+            Walk in any day — no booking needed
+          </p>
+        </div>
+
+        <div className="font-anton text-3xl sm:text-4xl text-neutral-950">
+          ₹{activeProgramme.dropInFee}
+        </div>
+
+        <Link
+          href={enrolHref({
+            programme: activeProgramme.slug,
+            intent: 'pay',
+            plan: 'drop-in',
+            fee: activeProgramme.dropInFee,
+          })}
+          className="min-h-[44px] h-11 px-5 rounded-md bg-neutral-950 hover:bg-black text-white text-[10px] font-bold uppercase tracking-wider flex items-center gap-2 transition-all active:scale-[0.98] whitespace-nowrap shadow-xs"
+        >
+          <span>Book Drop-in (₹{activeProgramme.dropInFee})</span>
+          <ArrowRight className="w-3.5 h-3.5" />
+        </Link>
+      </div>
+
+      {/* ── SIBLING & SPECIAL PLANS ── */}
+      <div className="mb-8">
+        <p className="text-[11px] font-extrabold uppercase tracking-[0.2em] text-neutral-900 mb-3">
+          SIBLING &amp; SPECIAL PLANS
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {/* Sibling Card */}
+          <a
+            href={siblingWaHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-md border border-neutral-200 bg-white hover:border-neutral-400 p-4 sm:p-5 flex items-center justify-between gap-4 transition-all shadow-xs hover:shadow-sm group"
+          >
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-base">👨‍👩‍👧</span>
+                <span className="text-sm font-bold text-neutral-950 group-hover:text-[#0284c7] transition-colors">
+                  Sibling Plan
+                </span>
+              </div>
+              <p className="text-xs text-neutral-600 font-medium mt-1">
+                2 kids (3.5 – 12 yrs) from same family · Monthly
+              </p>
+            </div>
+
+            <div className="text-right shrink-0">
+              <span className="font-anton text-2xl text-neutral-950 block leading-tight">
+                ₹3,500
+              </span>
+              <span className="text-[10px] font-extrabold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 inline-block mt-0.5">
+                Save ₹500/mo
+              </span>
+            </div>
+          </a>
+
+          {/* Annual Card */}
+          <a
+            href={annualWaHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-md border border-neutral-200 bg-white hover:border-neutral-400 p-4 sm:p-5 flex items-center justify-between gap-4 transition-all shadow-xs hover:shadow-sm group"
+          >
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-base">📅</span>
+                <span className="text-sm font-bold text-neutral-950 group-hover:text-[#0284c7] transition-colors">
+                  Annual Plan
+                </span>
+              </div>
+              <p className="text-xs text-neutral-600 font-medium mt-1">
+                Lock in the best rate · Full year
+              </p>
+            </div>
+
+            <div className="text-right shrink-0">
+              <span className="font-anton text-2xl text-neutral-950 block leading-tight">
+                ₹18,000
+              </span>
+              <span className="text-[10px] font-extrabold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 inline-block mt-0.5">
+                Save ₹6,000 vs monthly
+              </span>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      {/* ── ALL-ACCESS & FAMILY PLANS ── */}
+      <div className="mb-14">
+        <p className="text-[11px] font-extrabold uppercase tracking-[0.2em] text-neutral-900 mb-3">
+          ALL-ACCESS &amp; FAMILY PLANS
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {/* All-Access */}
+          <a
+            href={allAccessWaHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-md border border-neutral-200 bg-white hover:border-neutral-400 p-4 sm:p-5 flex items-center justify-between gap-4 transition-all shadow-xs hover:shadow-sm group"
+          >
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-base">🎟️</span>
+                <span className="text-sm font-bold text-neutral-950 group-hover:text-[#0284c7] transition-colors">
+                  All-Access Pass
+                </span>
+              </div>
+              <p className="text-xs text-neutral-600 font-medium mt-1">
+                Every programme, unlimited classes · Monthly
+              </p>
+            </div>
+
+            <div className="text-right shrink-0">
+              <span className="font-anton text-2xl text-neutral-950 block leading-tight">
+                ₹5,500
+              </span>
+              <span className="text-[11px] text-neutral-600 font-bold">/month</span>
+            </div>
+          </a>
+
+          {/* Family Plan */}
+          <a
+            href={familyWaHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-md border border-neutral-200 bg-white hover:border-neutral-400 p-4 sm:p-5 flex items-center justify-between gap-4 transition-all shadow-xs hover:shadow-sm group"
+          >
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-base">👨‍👩‍👦‍👦</span>
+                <span className="text-sm font-bold text-neutral-950 group-hover:text-[#0284c7] transition-colors">
+                  Family Plan
+                </span>
+              </div>
+              <p className="text-xs text-neutral-600 font-medium mt-1">
+                Up to 3 family members · Any programmes · Monthly
+              </p>
+            </div>
+
+            <div className="text-right shrink-0">
+              <span className="font-anton text-2xl text-neutral-950 block leading-tight">
+                ₹6,000
+              </span>
+              <span className="text-[11px] text-neutral-600 font-bold">/month</span>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      {/* ── CERTIFICATION COURSES SECTION ── */}
+      <div className="pt-10 border-t border-neutral-200">
+        <div className="text-center max-w-3xl mx-auto mb-8">
+          <p className="text-amber-800 font-mono font-bold uppercase tracking-[0.22em] text-[11px] sm:text-xs mb-2">
+            IAO-ACCREDITED · LEVELLED SYLLABUS · STAGE PERFORMANCE
+          </p>
+          <h3 className="font-anton text-3xl sm:text-4xl md:text-5xl uppercase tracking-tight leading-[0.95] text-neutral-950">
+            CERTIFICATION COURSES
+          </h3>
+          <p className="mt-3 text-sm sm:text-base text-neutral-700 font-medium max-w-xl mx-auto leading-relaxed">
+            Structured programmes that lead to an internationally recognised IAO certificate — for students serious about mastering their art.
+          </p>
+        </div>
+
+        {/* Kuchipudi Classical Box */}
+        <div className="rounded-md border-2 border-amber-300 bg-white p-6 sm:p-8 relative shadow-xs">
+          {/* Box Header */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
+            <div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-lg">💃</span>
+                <h4 className="font-anton text-xl sm:text-2xl uppercase tracking-wide text-neutral-950">
+                  {KUCHIPUDI_DATA.name}
+                </h4>
+                <div className="flex items-center gap-1.5 ml-1">
+                  <span className="px-2.5 py-0.5 rounded-md bg-amber-100 border border-amber-300 text-amber-950 text-[10px] font-extrabold uppercase tracking-wider">
+                    IAO ACCREDITED
+                  </span>
+                  <span className="px-2.5 py-0.5 rounded-md bg-neutral-100 border border-neutral-300 text-neutral-800 text-[10px] font-bold uppercase tracking-wider">
+                    CLASSICAL ART
+                  </span>
+                </div>
+              </div>
+              <p className="text-xs text-neutral-600 font-medium mt-1">
+                {KUCHIPUDI_DATA.subtext}
+              </p>
+            </div>
+          </div>
+
+          <p className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-neutral-900 mb-4">
+            MONTHLY ENROLMENT
+          </p>
+
+          {/* Kuchipudi 3 Tiers */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5 items-stretch mb-8">
+            {KUCHIPUDI_DATA.tiers.map((tier) => {
+              const isQuarterly = tier.id === 'quarterly';
+              const isHalfYearly = tier.id === 'half-yearly';
+
+              const cardClasses = isQuarterly
+                ? 'relative rounded-md border-2 border-[#0284c7] bg-white p-5 sm:p-6 flex flex-col justify-between shadow-[0_4px_20px_-4px_rgba(2,132,199,0.25)]'
+                : isHalfYearly
+                ? 'relative rounded-md border-2 border-amber-500 bg-white p-5 sm:p-6 flex flex-col justify-between shadow-[0_4px_20px_-4px_rgba(245,158,11,0.25)]'
+                : 'relative rounded-md border-2 border-neutral-200 bg-white p-5 sm:p-6 flex flex-col justify-between shadow-2xs';
+
+              return (
+                <div key={tier.id} className={cardClasses}>
+                  {tier.badge && (
+                    <div
+                      className={`absolute -top-3 left-1/2 -translate-x-1/2 px-3.5 py-0.5 rounded-md text-[10px] font-extrabold uppercase tracking-wider flex items-center gap-1 shadow-sm whitespace-nowrap ${
+                        isQuarterly ? 'bg-[#0284c7] text-white' : 'bg-amber-500 text-neutral-950'
+                      }`}
+                    >
+                      {isQuarterly ? '⭐ MOST POPULAR' : '🏆 BEST VALUE'}
+                    </div>
+                  )}
+
+                  <div>
+                    <span className="text-[10px] font-extrabold uppercase tracking-widest text-neutral-500 block mb-1">
+                      {tier.name}
+                    </span>
+                    <div className="flex items-baseline gap-1.5">
+                      <span className="font-anton text-3xl sm:text-4xl text-neutral-950 tracking-tight leading-none">
+                        {formatInr(tier.price)}
+                      </span>
+                      <span className="text-xs text-neutral-600 font-bold">
+                        {tier.periodLabel}
+                      </span>
+                    </div>
+
+                    {tier.equivalentMonthly && (
+                      <p className="text-xs text-neutral-700 font-semibold mt-1">
+                        Equivalent to {formatInr(tier.equivalentMonthly)}/month
+                      </p>
+                    )}
+
+                    {tier.savings && (
+                      <span className="inline-block mt-2 px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-900 border border-emerald-300 text-[10px] font-extrabold">
+                        + You save {formatInr(tier.savings)}
+                      </span>
+                    )}
+
+                    <ul className="space-y-2 my-5 text-xs border-t border-neutral-200 pt-4">
+                      {tier.features.map((feat, fIdx) => (
+                        <li key={fIdx} className="flex items-center gap-2">
+                          {feat.included ? (
+                            <span className="w-3.5 h-3.5 rounded-md bg-emerald-100 border border-emerald-300 text-emerald-800 flex items-center justify-center shrink-0">
+                              <Check className="w-2.5 h-2.5 stroke-[3]" />
+                            </span>
+                          ) : (
+                            <span className="w-3.5 h-3.5 rounded-md bg-neutral-100 border border-neutral-200 text-neutral-400 flex items-center justify-center shrink-0">
+                              <X className="w-2.5 h-2.5 stroke-[2]" />
+                            </span>
+                          )}
+                          <span className={feat.included ? 'text-neutral-900 font-medium' : 'text-neutral-400 line-through decoration-neutral-300'}>
+                            {feat.text}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="space-y-2 pt-2">
+                    <Link
+                      href={enrolHref({ programme: KUCHIPUDI_DATA.slug, intent: 'pay' })}
+                      className={
+                        isQuarterly
+                          ? 'w-full min-h-[44px] h-11 px-4 rounded-md bg-[#0284c7] hover:bg-[#0369a1] text-white text-[10px] font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-sm active:scale-[0.98]'
+                          : isHalfYearly
+                          ? 'w-full min-h-[44px] h-11 px-4 rounded-md bg-amber-500 hover:bg-amber-600 text-neutral-950 text-[10px] font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-sm active:scale-[0.98]'
+                          : 'w-full min-h-[44px] h-11 px-4 rounded-md bg-neutral-950 hover:bg-black text-white text-[10px] font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-sm active:scale-[0.98]'
+                      }
+                    >
+                      <span>Book this plan</span>
+                      <ArrowUpRight className="w-3 h-3 stroke-[2.5]" />
+                    </Link>
+
+                    <Link
+                      href={enrolHref({ programme: KUCHIPUDI_DATA.slug, intent: 'trial' })}
+                      className="w-full min-h-[44px] h-11 px-4 rounded-md bg-white hover:bg-neutral-50 border-2 border-neutral-300 text-neutral-900 text-[10px] font-bold uppercase tracking-wider flex items-center justify-center transition-all active:scale-[0.98]"
+                    >
+                      Try 1 class free
+                    </Link>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Certification Pathway Sub-Container */}
+          <div className="border-t border-neutral-200 pt-7">
+            <div className="flex items-center justify-between gap-2 flex-wrap mb-4">
+              <span className="text-xs font-extrabold uppercase tracking-wider text-neutral-950">
+                CERTIFICATION PATHWAY
+              </span>
+              <span className="px-2.5 py-0.5 rounded-md bg-amber-100 border border-amber-300 text-amber-950 text-[10px] font-extrabold uppercase tracking-wider">
+                IAO CERTIFICATE INCLUDED
+              </span>
+            </div>
+
+            {/* 4 Levels Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              {KUCHIPUDI_DATA.pathway.map((step, idx) => {
+                const isFull = step.level === 'FULL PATHWAY';
+                return (
+                  <div
+                    key={idx}
+                    className={`rounded-md p-4 flex flex-col justify-between ${
+                      isFull
+                        ? 'bg-amber-50 border-2 border-amber-400 shadow-2xs'
+                        : 'bg-neutral-50 border border-neutral-200'
+                    }`}
+                  >
+                    <div>
+                      <div className="flex items-center justify-between gap-1 mb-1">
+                        <span className="text-[10px] font-extrabold uppercase tracking-wider text-neutral-500">
+                          {step.level}
+                        </span>
+                        {step.badge && (
+                          <span className="px-2 py-0.5 rounded-md bg-amber-500 text-neutral-950 text-[9px] font-extrabold uppercase">
+                            {step.badge}
+                          </span>
+                        )}
+                      </div>
+                      <h5 className="font-bold text-sm text-neutral-950">{step.title}</h5>
+                      <p className="text-[11px] text-neutral-600 font-medium mt-1">{step.duration}</p>
+                    </div>
+
+                    <div className="mt-3 pt-2 border-t border-neutral-200">
+                      <span className="font-anton text-xl text-neutral-950 block">
+                        {step.fee}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Certification CTA */}
+            <div className="mt-6 text-center">
+              <a
+                href={certificationWaHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-md bg-amber-500 hover:bg-amber-600 text-neutral-950 font-extrabold text-[11px] uppercase tracking-wider transition-all active:scale-[0.98] shadow-sm shadow-amber-500/20"
+              >
+                <span>Enquire about certification</span>
+                <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.5]" />
+              </a>
+              <p className="text-xs text-neutral-600 font-medium mt-2">
+                Placement test available · Prior experience considered · Batches fill fast
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Waitlist footer link */}
+        <div className="text-center mt-6">
+          <button
+            type="button"
+            onClick={() => handleOpenWaitlist('Upcoming Certification Courses (Kathak, Contemporary, etc.)')}
+            className="text-xs text-neutral-700 hover:text-black font-semibold transition-colors inline-flex items-center gap-1 group cursor-pointer"
+          >
+            <span>More certification programmes coming soon —</span>
+            <span className="text-[#0284c7] font-bold underline underline-offset-4 group-hover:text-black">
+              Join the waitlist →
+            </span>
+          </button>
+        </div>
+      </div>
+
+      {/* ── TRUST BADGES STRIP ── */}
+      <div className="mt-12 rounded-md border-2 border-neutral-200 bg-neutral-50 py-4 px-6 flex flex-wrap items-center justify-around gap-4 text-xs font-bold text-neutral-800 shadow-2xs">
+        <div className="flex items-center gap-2">
+          <ShieldCheck className="w-4 h-4 text-emerald-700" />
+          <span>7-day money-back guarantee</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <Award className="w-4 h-4 text-amber-700" />
+          <span>IAO Accredited since 2014</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <Users className="w-4 h-4 text-[#0284c7]" />
+          <span>5,000+ students trained</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <MapPin className="w-4 h-4 text-rose-600" />
+          <span>Neredmet X Road, Secunderabad</span>
+        </div>
+      </div>
+
+      {/* ── MATCHMAKER / WHATSAPP CONSULTATION BANNER ── */}
+      <div className="mt-6 rounded-md border-2 border-emerald-300 bg-emerald-50 p-6 sm:p-7 flex flex-col sm:flex-row items-center justify-between gap-5 shadow-2xs">
+        <div>
+          <h4 className="font-bold text-base sm:text-lg text-emerald-950">
+            Not sure which plan fits you?
+          </h4>
+          <p className="text-xs sm:text-sm text-emerald-900 font-medium mt-1">
+            Message us — we&apos;ll match you to the right programme and batch in under 5 minutes.
+          </p>
+        </div>
+
+        <a
+          href={matchmakerWaHref}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="shrink-0 px-6 py-3 rounded-md bg-[#25D366] hover:bg-[#20bd5a] text-black font-extrabold text-[11px] uppercase tracking-wider flex items-center gap-2 transition-all active:scale-[0.98] border border-emerald-600/30 shadow-xs whitespace-nowrap"
+        >
+          <WhatsAppIcon className="w-4 h-4 shrink-0 fill-current" />
+          <span>WhatsApp Us Now</span>
+        </a>
+      </div>
+
+      {/* ── FOOTER DISCLAIMER ── */}
+      <p className="text-xs text-neutral-600 font-medium text-center mt-8 pb-2 leading-relaxed">
+        Fees due by 7th of each month. · No-questions-asked 7-day refund on your first plan · All prices include studio access · Gear available separately
+      </p>
+
+      {/* ── REAL INTERACTIVE WAITLIST MODAL ── */}
+      <WaitlistModal
+        isOpen={waitlistOpen}
+        onClose={() => setWaitlistOpen(false)}
+        defaultProgramme={waitlistTrack}
+      />
     </section>
   );
 }

@@ -9,22 +9,22 @@ const OFFER_DETAILS: Record<string, { name: string; description: string }> = {
   'kids-dance': {
     name: 'Kids Dance Programme',
     description:
-      'Bollywood, Hip Hop, Contemporary and Performance Training for children aged 5 and above. Led by Deepak. Monday to Wednesday 5 to 7 PM.',
+      'Bollywood, Hip Hop, Contemporary and Performance Training for children aged 3.5 to 12 years. Monday to Wednesday 5 to 7 PM.',
   },
   'adults-dance': {
     name: 'Adults Dance Programme',
     description:
-      'Bollywood, Contemporary, Hip Hop and Choreography for adults aged 16 and above. Led by Nitish. Monday to Wednesday 7 to 9 PM.',
+      'Bollywood, Contemporary, Hip Hop and Choreography for adults aged 13 and above. Monday to Wednesday 7 to 9 PM.',
   },
   'mind-body-fitness': {
     name: 'Mind and Body Fitness',
     description:
-      'Zumba, Yoga, Pilates, HIIT, Strength Training, Tabata, Core and Mobility. Led by Shailaja. Monday to Friday, 9:30 to 10:30 AM.',
+      'Zumba, Yoga, Pilates, HIIT, Strength Training, Tabata, Core and Mobility. Monday to Friday, 9:30 to 10:30 AM.',
   },
   kuchipudi: {
     name: 'Kuchipudi Classical Dance',
     description:
-      'Level-based certified Kuchipudi programme taught by Srusti. Foundation through Advanced. Friday and Saturday 6:30 to 7:30 PM.',
+      'Level-based certified Kuchipudi programme. Foundation through Advanced. Friday and Saturday 6:30 to 7:30 PM.',
   },
 };
 

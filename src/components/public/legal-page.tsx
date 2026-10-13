@@ -17,9 +17,11 @@ export function LegalPage({
 }) {
   return (
     <PublicPage>
-      <PublicPageTitle eyebrow={eyebrow} title={title} description={description} />
+      <PublicPageTitle eyebrow={eyebrow} title={title} description={description} align="center" />
       <HomepageSection className={sectionPadAfterTitle}>
-        <div className="max-w-3xl space-y-6 text-sm text-ink-2 leading-relaxed">{children}</div>
+        <div className="max-w-4xl mx-auto space-y-8 text-sm text-ink-2 leading-relaxed">
+          {children}
+        </div>
       </HomepageSection>
     </PublicPage>
   );
@@ -27,9 +29,13 @@ export function LegalPage({
 
 export function LegalSection({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <section className="space-y-2">
-      <h2 className="font-anton text-xl uppercase tracking-tight text-ink">{title}</h2>
-      {children}
+    <section className="space-y-3 rounded-md border border-line bg-surface p-6 sm:p-7 shadow-xs">
+      <h2 className="font-anton text-xl sm:text-2xl uppercase tracking-tight text-ink border-b border-line pb-2.5">
+        {title}
+      </h2>
+      <div className="text-ink-2 space-y-3 leading-relaxed">
+        {children}
+      </div>
     </section>
   );
 }

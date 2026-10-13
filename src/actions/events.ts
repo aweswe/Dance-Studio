@@ -5,7 +5,17 @@ import { isAdmin } from '@/lib/supabase/guards';
 import { eventSchema, type EventFormData } from '@/lib/validators/event';
 import { revalidatePath } from 'next/cache';
 
-export async function createEvent(data: EventFormData) {
+import { WHATSAPP_TEMPLATES } from '@/lib/whatsapp/templates';
+
+export interface EventBroadcastOptions {
+  enabled: boolean;
+  channel: 'in_app' | 'whatsapp' | 'both';
+  message?: string;
+  scope?: 'all' | 'programme' | 'batch';
+  scopeId?: string | null;
+}
+
+export async function createEvent(data: EventFormData, broadcast?: EventBroadcastOptions) {
   const supabase = await createServerSupabase();
   if (!(await isAdmin(supabase))) return { success: false, error: 'Not authorized' };
 
@@ -37,10 +47,88 @@ export async function createEvent(data: EventFormData) {
 
   if (error) return { success: false, error: error.message };
 
+  let broadcastResult: {
+    broadcasted: boolean;
+    channel?: string;
+    recipientsCount?: number;
+    inAppLogged?: boolean;
+  } = { broadcasted: false };
+
+  // Handle Automatic Event Broadcast if requested
+  if (broadcast?.enabled && inserted) {
+    const formattedDate = new Date(d.startsAt).toLocaleDateString('en-IN', {
+      weekday: 'short',
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    });
+    const defaultMsg = `New Studio Event: "${d.title}"! Date: ${formattedDate} at ${d.venue}. View event details & RSVP in the student portal!`;
+    const broadcastMsg = broadcast.message?.trim() || defaultMsg;
+
+    let totalRecipients = 0;
+
+    // Fetch active students if WhatsApp delivery is needed
+    if (broadcast.channel === 'whatsapp' || broadcast.channel === 'both') {
+      try {
+        let query = admin.from('students').select('id, name, phone').eq('status', 'active');
+        if (broadcast.scope === 'programme' && broadcast.scopeId) {
+          query = query.eq('programme_id', broadcast.scopeId);
+        } else if (broadcast.scope === 'batch' && broadcast.scopeId) {
+          query = query.eq('batch_id', broadcast.scopeId);
+        }
+        const { data: students } = await query;
+        const validPhones = (students || []).filter((s: any) => s.phone);
+        totalRecipients = validPhones.length;
+
+        if (totalRecipients > 0) {
+          const queueRows = validPhones.map((s: any) => ({
+            recipient_phone: s.phone,
+            template_name: WHATSAPP_TEMPLATES.broadcast.name,
+            variables: WHATSAPP_TEMPLATES.broadcast.variables({ message: broadcastMsg }),
+          }));
+          await admin.from('broadcast_queue').insert(queueRows);
+        }
+      } catch (err) {
+        console.error('Error queueing event WhatsApp broadcast:', err);
+      }
+    }
+
+    // Insert into broadcast_logs for In-App Notice or Both
+    if (broadcast.channel === 'in_app' || broadcast.channel === 'both') {
+      try {
+        await admin.from('broadcast_logs').insert({
+          message: broadcastMsg,
+          template_name: 'event_announcement',
+          recipients: {
+            scope: broadcast.scope ?? 'all',
+            scopeId: broadcast.scopeId ?? null,
+            event_id: inserted.id,
+            event_slug: d.slug,
+          },
+          recipient_count: totalRecipients,
+          sent_at: new Date().toISOString(),
+        } as any);
+      } catch (err) {
+        console.error('Error logging in-app event notice:', err);
+      }
+    }
+
+    broadcastResult = {
+      broadcasted: true,
+      channel: broadcast.channel,
+      recipientsCount: totalRecipients,
+      inAppLogged: broadcast.channel === 'in_app' || broadcast.channel === 'both',
+    };
+
+    revalidatePath('/student/notices');
+    revalidatePath('/student');
+    revalidatePath('/admin/broadcast');
+  }
+
   revalidatePath('/admin/events');
   revalidatePath('/events');
   revalidatePath(`/events/${d.slug}`);
-  return { success: true, event: inserted };
+  return { success: true, event: inserted, broadcastResult };
 }
 
 export async function updateEvent(id: string, data: EventFormData) {

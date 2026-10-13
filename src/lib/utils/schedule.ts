@@ -8,10 +8,10 @@ const DAY_ORDER = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Satu
 
 // Reference defaults, used when Supabase has no matching batch (or is unconfigured).
 export const FALLBACK_SCHEDULES: Record<string, { days: string; time: string; instructor: string }> = {
-  'kids-dance': { days: 'Mon – Wed', time: '5:00 PM – 7:00 PM', instructor: 'Deepak' },
-  'adults-dance': { days: 'Mon – Wed', time: '7:00 PM – 9:00 PM', instructor: 'Nitish' },
-  'mind-body-fitness': { days: 'Mon – Fri', time: '9:30 AM – 10:30 AM', instructor: 'Shailaja' },
-  'kuchipudi': { days: 'Fri · Sat', time: '6:30 PM – 7:30 PM', instructor: 'Srusti' },
+  'kids-dance': { days: 'Mon – Wed', time: '5:00 PM – 7:00 PM', instructor: 'Academy Faculty' },
+  'adults-dance': { days: 'Mon – Wed', time: '7:00 PM – 9:00 PM', instructor: 'Academy Faculty' },
+  'mind-body-fitness': { days: 'Mon – Fri', time: '9:30 AM – 10:30 AM', instructor: 'Fitness Faculty' },
+  'kuchipudi': { days: 'Fri · Sat', time: '6:30 PM – 7:30 PM', instructor: 'Classical Faculty' },
 };
 
 /** "Mon · Wed" for scattered days, "Mon – Wed" for a consecutive run. */

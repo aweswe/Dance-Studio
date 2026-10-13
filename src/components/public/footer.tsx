@@ -71,7 +71,8 @@ export function Footer() {
             title="Important links"
             links={[
               { href: ROUTES.privacy, label: 'Privacy policy' },
-              { href: ROUTES.terms, label: 'Terms & conditions' },
+              { href: ROUTES.terms, label: 'Student & Studio Terms' },
+              { href: ROUTES.instructorTerms, label: 'Instructor T&C' },
               { href: ROUTES.refund, label: 'Refund policy' },
               { href: ROUTES.shipping, label: 'Shipping & delivery' },
             ]}

@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import { cn } from '@/lib/utils/cn';
 
 interface EventRow {
   id: string;
@@ -66,6 +67,9 @@ export function EventsManager({ initialEvents }: { initialEvents: EventRow[] }) 
   const [feedback, setFeedback] = useState<{ ok: boolean; text: string } | null>(null);
   const [pendingDelete, setPendingDelete] = useState<EventRow | null>(null);
   const [slugTouched, setSlugTouched] = useState(false);
+  const [autoBroadcast, setAutoBroadcast] = useState(true);
+  const [broadcastChannel, setBroadcastChannel] = useState<'in_app' | 'whatsapp' | 'both'>('both');
+  const [broadcastMessage, setBroadcastMessage] = useState('');
 
   const coverFileRef = useRef<HTMLInputElement>(null);
   const galleryFilesRef = useRef<HTMLInputElement>(null);
@@ -170,7 +174,11 @@ export function EventsManager({ initialEvents }: { initialEvents: EventRow[] }) 
 
     const res = editingId
       ? await updateEvent(editingId, form)
-      : await createEvent(form);
+      : await createEvent(form, {
+          enabled: autoBroadcast,
+          channel: broadcastChannel,
+          message: broadcastMessage || undefined,
+        });
 
     setBusy(false);
     if (!res.success) {
@@ -180,7 +188,12 @@ export function EventsManager({ initialEvents }: { initialEvents: EventRow[] }) 
 
     setForm(null);
     setEditingId(null);
-    setFeedback({ ok: true, text: editingId ? 'Event updated' : 'Event created' });
+    const feedbackText = editingId
+      ? 'Event updated'
+      : autoBroadcast
+      ? `Event created & broadcasted to students (${broadcastChannel === 'both' ? 'In-App Dashboard + WhatsApp' : broadcastChannel === 'in_app' ? 'In-App Dashboard' : 'WhatsApp'})!`
+      : 'Event created';
+    setFeedback({ ok: true, text: feedbackText });
     router.refresh();
   };
 
@@ -439,6 +452,66 @@ export function EventsManager({ initialEvents }: { initialEvents: EventRow[] }) 
               Published <span className="text-ink-3 font-normal">(visible publicly at /events/{form.slug || '…'})</span>
             </span>
           </label>
+
+          {/* Broadcast Announcement to Students */}
+          {!editingId && (
+            <div className="rounded-md border border-line bg-canvas-muted p-4 space-y-3">
+              <label className="flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-ink cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={autoBroadcast}
+                  onChange={(e) => setAutoBroadcast(e.target.checked)}
+                  className="rounded border-line text-bl focus:ring-bl"
+                />
+                <span>📢 Automatically broadcast to students upon creation</span>
+              </label>
+
+              {autoBroadcast && (
+                <div className="space-y-3 pt-2 border-t border-line/60">
+                  <div>
+                    <span className="block text-[11px] font-bold uppercase tracking-wider text-ink-2 mb-1.5">
+                      Delivery Channels:
+                    </span>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                      {[
+                        { id: 'both', label: '🚀 Both (Dashboard + WhatsApp)', desc: 'Recommended: max reach' },
+                        { id: 'in_app', label: '📱 In-App Dashboard Only', desc: 'Notice in student portal' },
+                        { id: 'whatsapp', label: '💬 WhatsApp Only', desc: 'Direct WhatsApp queue' },
+                      ].map((ch) => (
+                        <button
+                          key={ch.id}
+                          type="button"
+                          onClick={() => setBroadcastChannel(ch.id as any)}
+                          className={cn(
+                            'p-2.5 rounded-md border text-left transition-all cursor-pointer flex flex-col justify-between',
+                            broadcastChannel === ch.id
+                              ? 'border-bl bg-bl/10 text-bl font-bold shadow-2xs'
+                              : 'border-line bg-surface text-ink hover:border-line-strong font-medium'
+                          )}
+                        >
+                          <span className="text-xs">{ch.label}</span>
+                          <span className="text-[10px] text-ink-3 mt-0.5">{ch.desc}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-bold uppercase tracking-wider text-ink-2 mb-1">
+                      Custom Message (Optional · auto-generated if left blank):
+                    </label>
+                    <input
+                      type="text"
+                      placeholder={`New Studio Event: "${form.title || 'Event'}"! Date: ${form.startsAt || 'upcoming'} at ${form.venue || 'Rhythmzz Studio'}. Check portal for details!`}
+                      value={broadcastMessage}
+                      onChange={(e) => setBroadcastMessage(e.target.value)}
+                      className="w-full px-3 py-2 text-xs rounded-md border border-line bg-surface text-ink focus:outline-hidden focus:ring-1 focus:ring-bl"
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
 
           <div className="flex gap-2 pt-2 border-t border-line">
             <Button type="button" onClick={submit} disabled={busy || uploadingCover || uploadingGallery}>

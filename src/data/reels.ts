@@ -32,12 +32,19 @@ export async function getHomepageReels(limit = 6): Promise<PublicReel[]> {
 
     if (error || !data?.length) return FALLBACK_REELS;
 
-    return data.map((row) => ({
-      id: row.id,
-      title: row.title,
-      videoSrc: row.video_url,
-      href: row.href || ACADEMY.socials.instagram,
-    }));
+    return data.map((row, idx) => {
+      let videoSrc = row.video_url;
+      // Safeguard: Never stream raw MP4s from Supabase Storage CDN to prevent quota breach
+      if (videoSrc && videoSrc.includes('supabase.co/storage/v1/object/public/reels/')) {
+        videoSrc = `/reels/r${(idx % 6) + 1}.mp4`;
+      }
+      return {
+        id: row.id,
+        title: row.title,
+        videoSrc: videoSrc || `/reels/r${(idx % 6) + 1}.mp4`,
+        href: row.href || ACADEMY.socials.instagram,
+      };
+    });
   } catch {
     return FALLBACK_REELS;
   }

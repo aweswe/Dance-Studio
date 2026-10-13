@@ -30,6 +30,59 @@ export async function prepareHomepageReelUpload() {
   return { success: true, path: data.path, token: data.token };
 }
 
+/** Add a homepage reel directly from an Instagram link (Zero storage/egress usage) */
+export async function createInstagramHomepageReel(input: {
+  title: string;
+  instagramUrl: string;
+}) {
+  const supabase = await createServerSupabase();
+  if (!(await isAdmin(supabase))) return { success: false, error: 'Not authorized' };
+
+  const title = input.title.trim();
+  const href = input.instagramUrl.trim();
+
+  if (!title) return { success: false, error: 'Title is required' };
+  if (!href) return { success: false, error: 'Instagram URL is required' };
+
+  const admin = createAdminSupabase();
+  const { count } = await admin.from('homepage_reels').select('*', { count: 'exact', head: true });
+
+  if ((count ?? 0) >= MAX_HOMEPAGE_REELS) {
+    return { success: false, error: `Maximum ${MAX_HOMEPAGE_REELS} reels — delete one before adding a new one` };
+  }
+
+  const { data: last } = await admin
+    .from('homepage_reels')
+    .select('sort_order')
+    .order('sort_order', { ascending: false })
+    .limit(1);
+
+  const sortOrder = ((last?.[0] as { sort_order: number } | undefined)?.sort_order ?? 0) + 1;
+
+  const { data: inserted, error: insertErr } = await admin
+    .from('homepage_reels')
+    .insert({
+      title,
+      video_url: '', // Zero video upload to Supabase
+      storage_path: null,
+      href,
+      sort_order: sortOrder,
+      is_visible: true,
+      width: 1080,
+      height: 1920,
+    })
+    .select()
+    .single();
+
+  if (insertErr) {
+    return { success: false, error: insertErr.message };
+  }
+
+  revalidatePath('/admin/reels');
+  revalidatePath('/');
+  return { success: true, item: inserted };
+}
+
 /** Step 2: after the browser uploads to Supabase Storage, register the reel row. */
 export async function finalizeHomepageReelUpload(input: {
   storagePath: string;

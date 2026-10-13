@@ -100,40 +100,75 @@ async function sendViaInterakt(params: SendTemplateParams): Promise<SendResult> 
 
 async function sendViaWati(params: SendTemplateParams): Promise<SendResult> {
   const apiKey = process.env.WHATSAPP_API_KEY!;
-  const apiUrl = process.env.WHATSAPP_API_URL!;
+  const baseUrl = (process.env.WHATSAPP_API_URL || "https://live-mt-server.wati.io").replace(/\/+$/, "");
   const phone = params.phone.replace(/\D/g, "").replace(/^(\+?91)?/, "91");
-  const watiParams = Object.entries(params.variables).map(([name, value]) => ({
-    name,
-    value,
-  }));
+
+  // Construct custom_params supporting both named variables (student_name) and positional (1, 2, 3...)
+  const customParams: Array<{ name: string; value: string }> = [];
+  const entries = Object.entries(params.variables);
+  entries.forEach(([name, value], index) => {
+    customParams.push({ name, value: String(value) });
+    customParams.push({ name: String(index + 1), value: String(value) });
+  });
 
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 12_000);
 
   try {
-    const response = await fetch(
-      `${apiUrl}/api/v2/sendTemplateMessage?whatsappNumber=${phone}`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          template_name: params.templateName,
-          broadcast_name: `auto_${Date.now()}`,
-          parameters: watiParams,
-        }),
-        signal: controller.signal,
+    // WATI V3 API uses /api/ext/v3/messageTemplates/send
+    const isV3 = baseUrl.includes("live-mt-server") || baseUrl.includes("/api/ext/v3") || !baseUrl.includes("/api/v");
+    let targetUrl: string;
+    let requestBody: string;
+
+    if (isV3) {
+      targetUrl = baseUrl.includes("/api/ext/v3/messageTemplates/send")
+        ? baseUrl
+        : `${baseUrl}/api/ext/v3/messageTemplates/send`;
+
+      requestBody = JSON.stringify({
+        template_name: params.templateName,
+        broadcast_name: `auto_${Date.now()}`,
+        recipients: [
+          {
+            phone_number: phone,
+            custom_params: customParams,
+          },
+        ],
+      });
+    } else {
+      // Legacy V1 / V2 fallback
+      targetUrl = `${baseUrl}/api/v2/sendTemplateMessage?whatsappNumber=${phone}`;
+      requestBody = JSON.stringify({
+        template_name: params.templateName,
+        broadcast_name: `auto_${Date.now()}`,
+        parameters: customParams,
+      });
+    }
+
+    const response = await fetch(targetUrl, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+        accept: "application/json",
       },
-    );
+      body: requestBody,
+      signal: controller.signal,
+    });
 
     if (!response.ok) {
       const text = await response.text();
       return { success: false, error: `WATI API error: ${response.status} ${text}` };
     }
+
+    const resJson = await response.json().catch(() => ({}));
+    if (resJson && resJson.success === false) {
+      return { success: false, error: resJson.message || "WATI rejected message" };
+    }
+
     return { success: true };
   } finally {
     clearTimeout(timer);
   }
 }
+

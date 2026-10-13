@@ -27,6 +27,9 @@ interface EnrolFormProps {
   programmes?: any[];
   batches?: any[];
   defaultProgramme?: string;
+  defaultPlan?: string;
+  defaultFee?: string;
+  defaultBatch?: string;
   intent?: EnrolIntent;
 }
 
@@ -44,6 +47,9 @@ export function EnrolForm({
   programmes = [],
   batches = [],
   defaultProgramme,
+  defaultPlan,
+  defaultFee,
+  defaultBatch,
   intent = 'trial',
 }: EnrolFormProps) {
   const bookingMode: EnrolIntent = intent;
@@ -56,15 +62,25 @@ export function EnrolForm({
     (b) => b.programme?.slug === selectedProgramme?.slug || b.programme_id === selectedProgramme?.id,
   );
 
-  const [selectedBatchId, setSelectedBatchId] = useState<string>(() => filteredBatches[0]?.id ?? '');
+  const initialBatch = defaultBatch
+    ? batches.find((b) => b.id === defaultBatch)
+    : filteredBatches[0];
+
+  const [selectedBatchId, setSelectedBatchId] = useState<string>(() => initialBatch?.id ?? filteredBatches[0]?.id ?? '');
   const selectedBatch = batches.find((b) => b.id === selectedBatchId) || filteredBatches[0];
+
+  const initialPlan = (defaultPlan === 'quarterly' || defaultPlan === 'half-yearly' || defaultPlan === 'annual' || defaultPlan === 'drop-in')
+    ? defaultPlan
+    : 'monthly';
+
+  const [plan, setPlan] = useState<string>(initialPlan);
+  const [showProgrammeSelector, setShowProgrammeSelector] = useState(!defaultProgramme);
 
   const [childName, setChildName] = useState('');
   const [parentName, setParentName] = useState('');
   const [age, setAge] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
-  const [plan, setPlan] = useState<'monthly' | 'quarterly'>('monthly');
 
   const [status, setStatus] = useState<FormStatus>('editing');
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -74,9 +90,18 @@ export function EnrolForm({
   const normalizedPhone = normalizeIndianPhone(phone);
   const isPay = bookingMode === 'pay';
 
-  const fee = plan === 'quarterly'
-    ? (selectedProgramme?.fees_quarterly || (selectedProgramme?.fees_monthly ?? 2000) * 3)
-    : (selectedProgramme?.fees_monthly ?? 2000);
+  const customFeeNum = defaultFee ? Number(defaultFee) : null;
+  const fee = customFeeNum || (
+    plan === 'quarterly'
+      ? (selectedProgramme?.fees_quarterly || (selectedProgramme?.fees_monthly ?? 2000) * 3)
+      : plan === 'half-yearly'
+      ? Math.round((selectedProgramme?.fees_monthly ?? 2000) * 6 * 0.85)
+      : plan === 'annual'
+      ? Math.round((selectedProgramme?.fees_monthly ?? 2000) * 12 * 0.75)
+      : plan === 'drop-in'
+      ? 500
+      : (selectedProgramme?.fees_monthly ?? 2000)
+  );
 
   const waMessage = [
     isPay
@@ -87,7 +112,7 @@ export function EnrolForm({
     age ? `Age: ${age}` : null,
     `Programme: ${selectedProgramme?.name ?? ''}`,
     `Batch: ${batchLabel(selectedBatch)}`,
-    isPay ? `Plan: ${plan === 'quarterly' ? 'Quarterly' : 'Monthly'} (${formatCurrency(fee)})` : null,
+    isPay ? `Plan: ${plan.toUpperCase()} (${formatCurrency(fee)})` : null,
     `Phone: ${normalizedPhone}`,
   ].filter(Boolean).join('\n');
 
@@ -313,38 +338,79 @@ export function EnrolForm({
       </div>
 
       <form onSubmit={handleEnrolSubmit} className="space-y-5" noValidate>
-        <div className="space-y-2">
-          <label className="text-xs font-mono font-bold uppercase tracking-wider text-ink flex items-center justify-between">
-            <span>1. Choose programme</span>
-            {isPay && selectedProgramme && (
-              <span className="text-bl font-semibold">
-                {formatCurrency(selectedProgramme.fees_monthly)}/month
+        {!showProgrammeSelector && selectedProgramme ? (
+          <div className="p-4 rounded-md border-2 border-bl/40 bg-bl/5 space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-bl flex items-center gap-1.5">
+                <CheckCircle2 size={13} className="text-bl" /> Selected Programme &amp; Plan
               </span>
-            )}
-          </label>
-          <div className="grid grid-cols-2 gap-2.5">
-            {programmes.map((p) => {
-              const isSelected = p.id === (selectedProgrammeId || selectedProgramme?.id);
-              return (
-                <button
-                  key={p.id}
-                  type="button"
-                  onClick={() => handleSelectProgramme(p.id)}
-                  className={cn(
-                    "p-3 rounded-md border text-left transition-all flex flex-col justify-between cursor-pointer",
-                    isSelected ? "border-bl bg-bl/10 shadow-sm" : "border-line bg-canvas hover:border-line-strong"
-                  )}
-                >
-                  <p className={cn("text-xs font-bold leading-tight", isSelected ? "text-bl" : "text-ink")}>{p.name}</p>
-                  <p className="text-[10px] text-ink-2 mt-0.5">{p.age_group || 'Ask the desk'}</p>
-                  {isPay && (
-                    <p className="text-[11px] font-mono font-bold text-ink mt-2">{formatCurrency(p.fees_monthly)}</p>
-                  )}
-                </button>
-              );
-            })}
+              <button
+                type="button"
+                onClick={() => setShowProgrammeSelector(true)}
+                className="text-[11px] font-bold text-bl hover:underline cursor-pointer"
+              >
+                Change
+              </button>
+            </div>
+            <div className="flex items-baseline justify-between gap-2">
+              <div>
+                <h4 className="font-anton text-lg sm:text-xl text-ink uppercase tracking-tight">
+                  {selectedProgramme.name}
+                </h4>
+                <p className="text-xs text-ink-2 font-medium capitalize mt-0.5">
+                  {plan.replace('-', ' ')} Plan · {selectedProgramme.age_group || 'All levels'}
+                </p>
+              </div>
+              {isPay && (
+                <div className="text-right">
+                  <span className="font-anton text-2xl text-ink">
+                    {formatCurrency(fee)}
+                  </span>
+                  <span className="block text-[10px] text-ink-3 uppercase font-mono">
+                    {plan.replace('-', ' ')}
+                  </span>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="space-y-2">
+            <label className="text-xs font-mono font-bold uppercase tracking-wider text-ink flex items-center justify-between">
+              <span>1. Choose programme</span>
+              {defaultProgramme && (
+                <button
+                  type="button"
+                  onClick={() => setShowProgrammeSelector(false)}
+                  className="text-[11px] font-bold text-bl hover:underline cursor-pointer"
+                >
+                  Keep selected
+                </button>
+              )}
+            </label>
+            <div className="grid grid-cols-2 gap-2.5">
+              {programmes.map((p) => {
+                const isSelected = p.id === (selectedProgrammeId || selectedProgramme?.id);
+                return (
+                  <button
+                    key={p.id}
+                    type="button"
+                    onClick={() => handleSelectProgramme(p.id)}
+                    className={cn(
+                      "p-3 rounded-md border text-left transition-all flex flex-col justify-between cursor-pointer",
+                      isSelected ? "border-bl bg-bl/10 shadow-sm" : "border-line bg-canvas hover:border-line-strong"
+                    )}
+                  >
+                    <p className={cn("text-xs font-bold leading-tight", isSelected ? "text-bl" : "text-ink")}>{p.name}</p>
+                    <p className="text-[10px] text-ink-2 mt-0.5">{p.age_group || 'Ask the desk'}</p>
+                    {isPay && (
+                      <p className="text-[11px] font-mono font-bold text-ink mt-2">{formatCurrency(p.fees_monthly)}</p>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         <div className="space-y-1.5">
           <label className="text-xs font-bold uppercase tracking-wider text-ink flex items-center gap-1.5">
@@ -431,18 +497,24 @@ export function EnrolForm({
         </div>
 
         {isPay && (
-          <div className="flex gap-2">
-            {(['monthly', 'quarterly'] as const).map((p) => (
+          <div className="flex gap-2 flex-wrap">
+            {[
+              { id: 'monthly', label: 'Monthly' },
+              { id: 'quarterly', label: 'Quarterly' },
+              ...(plan === 'half-yearly' ? [{ id: 'half-yearly', label: '6-Month Plan' }] : []),
+              ...(plan === 'annual' ? [{ id: 'annual', label: 'Annual Plan' }] : []),
+              ...(plan === 'drop-in' ? [{ id: 'drop-in', label: 'Drop-in' }] : []),
+            ].map((p) => (
               <button
-                key={p}
+                key={p.id}
                 type="button"
-                onClick={() => setPlan(p)}
+                onClick={() => setPlan(p.id)}
                 className={cn(
-                  'flex-1 py-2 rounded-md text-[11px] font-bold uppercase tracking-wider border',
-                  plan === p ? 'border-bl bg-bl/10 text-bl' : 'border-line text-ink-2'
+                  'flex-1 min-w-[100px] py-2 px-2.5 rounded-md text-[11px] font-bold uppercase tracking-wider border transition-colors cursor-pointer',
+                  plan === p.id ? 'border-bl bg-bl/10 text-bl shadow-2xs' : 'border-line text-ink-2 hover:border-line-strong'
                 )}
               >
-                {p === 'monthly' ? 'Monthly' : 'Quarterly'}
+                {p.label}
               </button>
             ))}
           </div>

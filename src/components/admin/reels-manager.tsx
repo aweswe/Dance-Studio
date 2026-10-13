@@ -46,80 +46,31 @@ export function ReelsManager({ initialItems }: { initialItems: HomepageReelRow[]
 
   const slotsLeft = MAX_HOMEPAGE_REELS - items.length;
 
-  const onPickFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    e.target.value = '';
-    if (!file) return;
-    setFeedback(null);
-
-    if (file.type !== 'video/mp4') {
-      setFeedback({ ok: false, text: 'Only MP4 portrait videos are allowed' });
-      return;
-    }
-    if (file.size > 20 * 1024 * 1024) {
-      setFeedback({ ok: false, text: 'Video must be 20 MB or smaller' });
-      return;
-    }
-
-    try {
-      const { width, height } = await probePortrait(file);
-      if (width >= height) {
-        setFeedback({ ok: false, text: `Portrait only — this file is ${width}×${height} (landscape or square)` });
-        return;
-      }
-      setSelectedFile(file);
-      if (!uploadTitle) setUploadTitle(file.name.replace(/\.mp4$/i, '').slice(0, 60));
-    } catch {
-      setFeedback({ ok: false, text: 'Could not read video — try another file' });
-    }
-  };
-
-  const doUpload = async () => {
-    if (!selectedFile || !uploadTitle.trim()) return;
+  const doAddInstagramReel = async () => {
+    if (!uploadTitle.trim() || !uploadHref.trim()) return;
     setBusy(true);
     setFeedback(null);
 
     try {
-      const { width, height } = await probePortrait(selectedFile);
-
-      const prep = await prepareHomepageReelUpload();
-      if (!prep.success || !prep.path || !prep.token) {
-        setFeedback({ ok: false, text: prep.error ?? 'Could not start upload' });
-        return;
-      }
-
-      const supabase = createClient();
-      const { error: uploadErr } = await supabase.storage
-        .from('reels')
-        .uploadToSignedUrl(prep.path, prep.token, selectedFile, { contentType: 'video/mp4' });
-
-      if (uploadErr) {
-        setFeedback({ ok: false, text: uploadErr.message || 'Storage upload failed' });
-        return;
-      }
-
-      const res = await finalizeHomepageReelUpload({
-        storagePath: prep.path,
+      const { createInstagramHomepageReel } = await import('@/actions/reels');
+      const res = await createInstagramHomepageReel({
         title: uploadTitle.trim(),
-        href: uploadHref.trim(),
-        width,
-        height,
-        fileSize: selectedFile.size,
+        instagramUrl: uploadHref.trim(),
       });
 
       if (!res.success) {
-        setFeedback({ ok: false, text: res.error ?? 'Upload failed' });
+        setFeedback({ ok: false, text: res.error ?? 'Failed to add reel' });
         return;
       }
 
-      setSelectedFile(null);
       setUploadTitle('');
-      setFeedback({ ok: true, text: 'Reel uploaded — visible on homepage after refresh' });
+      setUploadHref('');
+      setFeedback({ ok: true, text: 'Instagram Reel added — visible on homepage' });
       router.refresh();
     } catch (err) {
       setFeedback({
         ok: false,
-        text: err instanceof Error ? err.message : 'Upload failed — try a smaller MP4 (under 20 MB)',
+        text: err instanceof Error ? err.message : 'Could not add reel link',
       });
     } finally {
       setBusy(false);
@@ -164,9 +115,9 @@ export function ReelsManager({ initialItems }: { initialItems: HomepageReelRow[]
       <div className="rounded-md border border-line bg-surface p-6 space-y-4">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h3 className="font-display text-lg text-ink">Upload reel</h3>
+            <h3 className="font-display text-lg text-ink">Add Instagram Reel</h3>
             <p className="text-sm text-ink-2 mt-1">
-              Portrait MP4 only · max 20 MB · uploads go direct to storage (not through Vercel)
+              Provide an Instagram Reel link · Streamed via Instagram embed with zero Supabase storage usage
             </p>
           </div>
           <span className="text-xs font-mono uppercase tracking-wider text-ink-3 shrink-0">
@@ -175,34 +126,27 @@ export function ReelsManager({ initialItems }: { initialItems: HomepageReelRow[]
         </div>
 
         {slotsLeft <= 0 ? (
-          <p className="text-sm text-gold">All {MAX_HOMEPAGE_REELS} slots full — delete a reel to upload a new one.</p>
+          <p className="text-sm text-gold">All {MAX_HOMEPAGE_REELS} slots full — delete a reel to add a new one.</p>
         ) : (
           <div className="grid gap-3 sm:grid-cols-2">
             <Input
-              placeholder="Reel title (shown on card)"
+              placeholder="Reel title (e.g. VIP walk — Divya choreo)"
               value={uploadTitle}
               onChange={(e) => setUploadTitle(e.target.value)}
             />
             <Input
-              placeholder="Link on click (Instagram URL)"
+              placeholder="Instagram Reel URL (e.g. https://www.instagram.com/reel/C8...)"
               value={uploadHref}
               onChange={(e) => setUploadHref(e.target.value)}
             />
             <div className="sm:col-span-2 flex flex-wrap gap-3 items-center">
-              <input
-                ref={fileRef}
-                type="file"
-                accept="video/mp4"
-                className="hidden"
-                onChange={onPickFile}
-              />
-              <Button type="button" variant="secondary" onClick={() => fileRef.current?.click()} disabled={busy}>
-                <Upload size={16} className="mr-2" />
-                {selectedFile ? selectedFile.name.slice(0, 40) : 'Choose portrait MP4'}
-              </Button>
-              <Button type="button" onClick={doUpload} disabled={busy || !selectedFile || !uploadTitle.trim()}>
+              <Button
+                type="button"
+                onClick={doAddInstagramReel}
+                disabled={busy || !uploadTitle.trim() || !uploadHref.trim()}
+              >
                 {busy ? <Loader2 size={16} className="animate-spin mr-2" /> : null}
-                Upload
+                Add Instagram Reel
               </Button>
             </div>
           </div>

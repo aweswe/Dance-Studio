@@ -19,6 +19,8 @@ import {
   Home,
   Layers,
   Loader2,
+  ShieldCheck,
+  FileText,
 } from "lucide-react";
 import { useState } from "react";
 import { ROUTES } from "@/lib/utils/constants";
@@ -42,8 +44,9 @@ const STUDENT_NAV = [
   { name: "Attendance", href: `${ROUTES.student}/attendance`, icon: CheckSquare },
   { name: "Fees", href: `${ROUTES.student}/fees`, icon: CreditCard },
   { name: "Notices", href: `${ROUTES.student}/notices`, icon: Bell },
-  { name: "Leave Academy", href: `${ROUTES.student}/leave`, icon: LogOut },
+  { name: "Terms & Rules", href: `${ROUTES.student}/terms`, icon: ShieldCheck },
   { name: "Profile", href: `${ROUTES.student}/profile`, icon: User },
+  { name: "Leave Academy", href: `${ROUTES.student}/leave`, icon: LogOut },
 ];
 
 const INSTRUCTOR_NAV = [
@@ -51,6 +54,7 @@ const INSTRUCTOR_NAV = [
   { name: "Classes", href: `${ROUTES.instructor}/classes`, icon: BookOpen },
   { name: "Roster", href: `${ROUTES.instructor}/attendance`, icon: CheckSquare },
   { name: "Students", href: `${ROUTES.instructor}/students`, icon: Users },
+  { name: "Terms & Policy", href: `${ROUTES.instructor}/terms`, icon: FileText },
 ];
 
 function getPageLabel(pathname: string, role: PortalRole): string {
@@ -58,6 +62,7 @@ function getPageLabel(pathname: string, role: PortalRole): string {
     if (pathname.includes("/classes")) return "Classes";
     if (pathname.includes("/attendance")) return "Roster";
     if (pathname.includes("/students")) return "Students";
+    if (pathname.includes("/terms")) return "Terms & Policy";
     return "Today";
   }
   if (pathname === ROUTES.student || pathname === `${ROUTES.student}/`) return "Today";
@@ -67,6 +72,7 @@ function getPageLabel(pathname: string, role: PortalRole): string {
   if (pathname.startsWith(`${ROUTES.student}/attendance`)) return "Attendance";
   if (pathname.startsWith(`${ROUTES.student}/fees`)) return "Fees";
   if (pathname.startsWith(`${ROUTES.student}/notices`)) return "Notices";
+  if (pathname.startsWith(`${ROUTES.student}/terms`)) return "Terms & Rules";
   if (pathname.startsWith(`${ROUTES.student}/leave`)) return "Leave Academy";
   if (pathname.startsWith(`${ROUTES.student}/profile`)) return "Profile";
   return "Today";

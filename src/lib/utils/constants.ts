@@ -55,11 +55,20 @@ export function parseEnrolIntent(value?: string | null): EnrolIntent {
   return value === "pay" ? "pay" : "trial";
 }
 
-/** Build /enrol with programme + intent. Omit intent to default to the WhatsApp trial path. */
-export function enrolHref(opts?: { programme?: string | null; intent?: EnrolIntent }) {
+/** Build /enrol with programme, intent, plan, and fee. */
+export function enrolHref(opts?: {
+  programme?: string | null;
+  intent?: EnrolIntent;
+  plan?: string | null;
+  batch?: string | null;
+  fee?: number | string | null;
+}) {
   const params = new URLSearchParams();
   if (opts?.intent) params.set("intent", opts.intent);
   if (opts?.programme) params.set("programme", opts.programme);
+  if (opts?.plan) params.set("plan", opts.plan);
+  if (opts?.batch) params.set("batch", opts.batch);
+  if (opts?.fee !== undefined && opts?.fee !== null) params.set("fee", String(opts.fee));
   const query = params.toString();
   return query ? `/enrol?${query}` : "/enrol";
 }
@@ -84,6 +93,8 @@ export const ROUTES = {
   syllabusKathak: "/syllabus/kathak",
   privacy: "/privacy",
   terms: "/terms",
+  instructorTerms: "/instructor-terms",
+  studentTerms: "/terms#student-portal",
   refund: "/refund",
   shipping: "/shipping",
   // Auth

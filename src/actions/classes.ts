@@ -214,3 +214,63 @@ export async function updateBatchSchedule(
   return { success: true }
 }
 
+export async function createInstructorBatch(data: {
+  name: string
+  programmeId: string
+  days: string[]
+  timeStart: string
+  timeEnd: string
+  capacity?: number
+}) {
+  const supabase = await createServerSupabase()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { success: false, error: 'Not authenticated' }
+
+  const { getLinkedInstructor } = await import('@/lib/auth/instructor')
+  const instructor = await getLinkedInstructor(supabase, user)
+  if (!instructor) {
+    return { success: false, error: 'Unauthorized: No instructor profile linked to your account' }
+  }
+
+  if (!data.name || data.name.trim().length < 2) {
+    return { success: false, error: 'Please enter a valid batch name' }
+  }
+  if (!data.programmeId) {
+    return { success: false, error: 'Please select a programme for this class' }
+  }
+  if (!data.days || data.days.length === 0) {
+    return { success: false, error: 'Please select at least one day' }
+  }
+
+  const { createAdminSupabase } = await import('@/lib/supabase/server')
+  const admin = createAdminSupabase()
+
+  const { data: inserted, error } = await admin
+    .from('batches')
+    .insert({
+      programme_id: data.programmeId,
+      instructor_id: instructor.id,
+      name: data.name.trim(),
+      days: data.days,
+      time_start: data.timeStart || '17:00:00',
+      time_end: data.timeEnd || '18:30:00',
+      capacity: data.capacity || 25,
+      enrolled_count: 0,
+      status: 'active',
+    })
+    .select()
+    .single()
+
+  if (error) {
+    console.error('createInstructorBatch failed:', error)
+    return { success: false, error: error.message }
+  }
+
+  revalidatePath('/instructor')
+  revalidatePath('/instructor/classes')
+  revalidatePath('/schedule')
+  revalidatePath('/programmes')
+  revalidatePath('/')
+  return { success: true, batch: inserted }
+}
+

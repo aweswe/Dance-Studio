@@ -14,7 +14,7 @@ export const homepageMediaRadius = homepageRadius;
 export const homepageMediaFrame =
   'overflow-hidden rounded-md border border-line bg-surface shadow-sm';
 
-const homepageCtaBase =
+export const homepageCtaBase =
   'inline-flex items-center justify-center gap-1.5 box-border min-h-[44px] h-11 px-5 rounded-md text-[10px] font-bold uppercase tracking-[0.1em] transition-colors active:scale-[0.98] touch-manipulation whitespace-nowrap';
 
 export const homepageCtaPrimary = [

@@ -59,19 +59,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 const PROGRAMME_NOTES: Record<string, string> = {
   'commercial-expressive':
-    'Monday to Wednesday. Kids 5–14 from 5 to 7 with Deepak and Kajal. Adults 15+ from 7 to 9 with Nitish and Pranith. Bollywood, hip-hop, contemporary, Tollywood.',
+    'Monday to Wednesday. Kids 3.5–12 years from 5 to 7 PM. Adults 13+ years from 7 to 9 PM. Bollywood, hip-hop, contemporary, Tollywood.',
   'mind-body-fitness':
-    'Shailaja, weekday mornings 9:30 to 10:30. Zumba, yoga, pilates, HIIT. Bring a bottle. The room is cold.',
+    'Weekday mornings 9:30 to 10:30 AM. Zumba, yoga, pilates, HIIT. Bring a bottle. The room is cold.',
   'classical-dance':
-    'Srusti takes Kuchipudi on Friday and Saturday, 6:30 to 7:30. Poonam teaches Kathak — see /syllabus/kathak for the level plan, or WhatsApp the desk for her batch.',
+    'Kuchipudi on Friday and Saturday, 6:30 to 7:30 PM. Kathak — see /syllabus/kathak for the level plan, or WhatsApp the desk for batch schedule.',
   'kids-dance':
-    'Kids, 5 to 14, Monday to Wednesday 5 to 7. Bollywood, hip-hop, contemporary, and gymnastics when the room can take it.',
+    'Kids 3.5 to 12 years, Monday to Wednesday 5 to 7 PM. Bollywood, hip-hop, contemporary, and gymnastics progression.',
   'adults-dance':
-    'Adults from 15, Monday to Wednesday 7 to 9. Same styles as the kids batch, faster music, longer phrases.',
+    'Adults 13+ years, Monday to Wednesday 7 to 9 PM. Same styles as the kids batch, faster music, longer phrases.',
   kuchipudi:
-    'Kuchipudi with Srusti, Friday and Saturday 6:30 to 7:30. Ten-year foundation or six-year certificate. You sit the exam when she says you are ready.',
+    'Kuchipudi classical training, Friday and Saturday 6:30 to 7:30 PM. Ten-year foundation or six-year certificate.',
   kathak:
-    'Kathak with Poonam. Five levels from foundation to masterclass — full syllabus at /syllabus/kathak. WhatsApp the desk for batch days and fees.',
+    'Kathak classes. Five levels from foundation to masterclass — full syllabus at /syllabus/kathak. WhatsApp the desk for batch days and fees.',
 };
 
 const PROGRAMME_HERO_IMAGES: Record<string, { src: string; alt: string }> = {
