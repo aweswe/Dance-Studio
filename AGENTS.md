@@ -52,6 +52,13 @@ Over the course of development and production optimization for Rhythmzz Academy 
 8. **Automated Event Broadcasting (In-App Dashboard, WhatsApp, or Both)**:
    * Upgraded event creation in `EventsManager` to include a multi-channel broadcast engine dispatching to student portal notices (`broadcast_logs`) and active WhatsApp subscribers (`broadcast_queue`).
 
+9. **In-App Billing & Invoice Confirmation Architecture (Zero WhatsApp Hijack)**:
+   * *Problem:* Pricing board cards (Drop-in, Sibling Plan, Annual Plan, All-Access, Family Plan) previously navigated to external WhatsApp chat URLs instead of the in-app billing checkout. Furthermore, `/enrol` defaulted to "Free Trial Class / WhatsApp" when `intent=pay` wasn't explicitly passed, and the form forcibly opened WhatsApp via `window.open` when offline gateway mode was active.
+   * *Solution:* 
+     - Converted all pricing cards to deep-link to `/enrol` with `intent=pay`, `plan=...`, and `fee=...`.
+     - Upgraded `parseEnrolIntent` and `enrolHref` to automatically infer paid enrolment intent when any plan or fee parameter is present.
+     - Redesigned `EnrolForm` so checkout and confirmation remain 100% in-app, presenting an official **Enrolment Invoice & Confirmation Card** (`Total Billed`, student timetable, UPI pay option, direct student portal sign-in) with WhatsApp demoted to an optional receipt share action.
+
 ---
 
 ## 2. Key Architecture & Code Implementation Details

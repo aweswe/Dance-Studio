@@ -652,11 +652,14 @@ export function ProgrammePricingBoard() {
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {/* Sibling Card */}
-          <a
-            href={siblingWaHref}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="rounded-md border border-neutral-200 bg-white hover:border-neutral-400 p-4 sm:p-5 flex items-center justify-between gap-4 transition-all shadow-xs hover:shadow-sm group"
+          <Link
+            href={enrolHref({
+              programme: activeProgramme.slug,
+              intent: 'pay',
+              plan: 'sibling',
+              fee: 3500,
+            })}
+            className="rounded-md border border-neutral-200 bg-white hover:border-neutral-400 p-4 sm:p-5 flex items-center justify-between gap-4 transition-all shadow-xs hover:shadow-sm group cursor-pointer"
           >
             <div>
               <div className="flex items-center gap-2">
@@ -678,14 +681,17 @@ export function ProgrammePricingBoard() {
                 Save ₹500/mo
               </span>
             </div>
-          </a>
+          </Link>
 
           {/* Annual Card */}
-          <a
-            href={annualWaHref}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="rounded-md border border-neutral-200 bg-white hover:border-neutral-400 p-4 sm:p-5 flex items-center justify-between gap-4 transition-all shadow-xs hover:shadow-sm group"
+          <Link
+            href={enrolHref({
+              programme: activeProgramme.slug,
+              intent: 'pay',
+              plan: 'annual',
+              fee: 18000,
+            })}
+            className="rounded-md border border-neutral-200 bg-white hover:border-neutral-400 p-4 sm:p-5 flex items-center justify-between gap-4 transition-all shadow-xs hover:shadow-sm group cursor-pointer"
           >
             <div>
               <div className="flex items-center gap-2">
@@ -707,7 +713,7 @@ export function ProgrammePricingBoard() {
                 Save ₹6,000 vs monthly
               </span>
             </div>
-          </a>
+          </Link>
         </div>
       </div>
 
@@ -718,11 +724,14 @@ export function ProgrammePricingBoard() {
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {/* All-Access */}
-          <a
-            href={allAccessWaHref}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="rounded-md border border-neutral-200 bg-white hover:border-neutral-400 p-4 sm:p-5 flex items-center justify-between gap-4 transition-all shadow-xs hover:shadow-sm group"
+          <Link
+            href={enrolHref({
+              programme: 'commercial-expressive',
+              intent: 'pay',
+              plan: 'all-access',
+              fee: 5500,
+            })}
+            className="rounded-md border border-neutral-200 bg-white hover:border-neutral-400 p-4 sm:p-5 flex items-center justify-between gap-4 transition-all shadow-xs hover:shadow-sm group cursor-pointer"
           >
             <div>
               <div className="flex items-center gap-2">
@@ -742,14 +751,17 @@ export function ProgrammePricingBoard() {
               </span>
               <span className="text-[11px] text-neutral-600 font-bold">/month</span>
             </div>
-          </a>
+          </Link>
 
           {/* Family Plan */}
-          <a
-            href={familyWaHref}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="rounded-md border border-neutral-200 bg-white hover:border-neutral-400 p-4 sm:p-5 flex items-center justify-between gap-4 transition-all shadow-xs hover:shadow-sm group"
+          <Link
+            href={enrolHref({
+              programme: 'commercial-expressive',
+              intent: 'pay',
+              plan: 'family',
+              fee: 6000,
+            })}
+            className="rounded-md border border-neutral-200 bg-white hover:border-neutral-400 p-4 sm:p-5 flex items-center justify-between gap-4 transition-all shadow-xs hover:shadow-sm group cursor-pointer"
           >
             <div>
               <div className="flex items-center gap-2">
@@ -769,7 +781,7 @@ export function ProgrammePricingBoard() {
               </span>
               <span className="text-[11px] text-neutral-600 font-bold">/month</span>
             </div>
-          </a>
+          </Link>
         </div>
       </div>
 
@@ -887,7 +899,12 @@ export function ProgrammePricingBoard() {
 
                   <div className="space-y-2 pt-2">
                     <Link
-                      href={enrolHref({ programme: KUCHIPUDI_DATA.slug, intent: 'pay' })}
+                      href={enrolHref({
+                        programme: KUCHIPUDI_DATA.slug,
+                        intent: 'pay',
+                        plan: tier.id,
+                        fee: tier.price,
+                      })}
                       className={
                         isQuarterly
                           ? 'w-full min-h-[44px] h-11 px-4 rounded-md bg-[#0284c7] hover:bg-[#0369a1] text-white text-[10px] font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-sm active:scale-[0.98]'

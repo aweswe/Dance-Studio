@@ -51,8 +51,15 @@ export const HOURS = {
 /** How a visitor reached /enrol. Pricing surfaces force pay; everything else is a free trial. */
 export type EnrolIntent = "pay" | "trial";
 
-export function parseEnrolIntent(value?: string | null): EnrolIntent {
-  return value === "pay" ? "pay" : "trial";
+export function parseEnrolIntent(
+  value?: string | null,
+  plan?: string | null,
+  fee?: string | number | null
+): EnrolIntent {
+  if (value === "pay" || Boolean(plan) || (fee !== undefined && fee !== null && fee !== "")) {
+    return "pay";
+  }
+  return "trial";
 }
 
 /** Build /enrol with programme, intent, plan, and fee. */
@@ -64,7 +71,8 @@ export function enrolHref(opts?: {
   fee?: number | string | null;
 }) {
   const params = new URLSearchParams();
-  if (opts?.intent) params.set("intent", opts.intent);
+  const effectiveIntent = opts?.intent ?? (opts?.plan || opts?.fee !== undefined ? "pay" : undefined);
+  if (effectiveIntent) params.set("intent", effectiveIntent);
   if (opts?.programme) params.set("programme", opts.programme);
   if (opts?.plan) params.set("plan", opts.plan);
   if (opts?.batch) params.set("batch", opts.batch);

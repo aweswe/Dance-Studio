@@ -15,8 +15,8 @@ export async function generateMetadata({
 }: {
   searchParams: Promise<{ programme?: string; intent?: string; plan?: string; fee?: string; batch?: string }>;
 }): Promise<Metadata> {
-  const { intent } = await searchParams;
-  const isPay = parseEnrolIntent(intent) === 'pay';
+  const params = await searchParams;
+  const isPay = parseEnrolIntent(params.intent, params.plan, params.fee) === 'pay';
   return {
     title: isPay ? 'Enrol & Pay | Rhythmzz Academy' : 'Enrol — Free Trial Class | Rhythmzz Academy',
     description: isPay
@@ -36,7 +36,7 @@ export default async function EnrolPage({
     getBatches(),
     searchParams,
   ]);
-  const intent = parseEnrolIntent(params.intent);
+  const intent = parseEnrolIntent(params.intent, params.plan, params.fee);
   const isPay = intent === 'pay';
 
   return (

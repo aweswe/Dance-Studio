@@ -86,6 +86,7 @@ describe('enrolHref', () => {
     expect(parseEnrolIntent('pay')).toBe('pay');
     expect(parseEnrolIntent('trial')).toBe('trial');
     expect(parseEnrolIntent('other')).toBe('trial');
+    expect(parseEnrolIntent(undefined, 'quarterly', 5000)).toBe('pay');
   });
 
   it('sends pricing visitors to pay and other CTAs to a plain enrol URL', () => {

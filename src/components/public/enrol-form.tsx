@@ -8,6 +8,7 @@ import {
   Clock,
   CreditCard,
   ArrowRight,
+  ArrowUpRight,
   MessageSquare,
   CheckCircle2,
 } from 'lucide-react';
@@ -180,7 +181,6 @@ export function EnrolForm({
         setErrorMsg(lead.error || 'Could not save your request.');
         return;
       }
-      window.open(whatsappLink(waMessage), '_blank');
       setStatus('lead');
       return;
     }
@@ -189,8 +189,7 @@ export function EnrolForm({
       await saveLead('pay');
 
       if (!PAYMENTS_ENABLED) {
-        window.open(whatsappLink(waMessage), '_blank');
-        setStatus('lead');
+        setStatus('success');
         return;
       }
 
@@ -211,8 +210,7 @@ export function EnrolForm({
 
       if (!res.ok) {
         if (res.status === 503 || data.error === 'PAYMENTS_UNAVAILABLE') {
-          window.open(whatsappLink(waMessage), '_blank');
-          setStatus('lead');
+          setStatus('success');
           return;
         }
         setStatus('error');
@@ -222,8 +220,7 @@ export function EnrolForm({
 
       const scriptLoaded = await loadRazorpayScript();
       if (!scriptLoaded) {
-        window.open(whatsappLink(waMessage), '_blank');
-        setStatus('lead');
+        setStatus('success');
         return;
       }
 
@@ -257,7 +254,7 @@ export function EnrolForm({
   }
 
   if (status === 'success' || status === 'lead') {
-    const paid = status === 'success';
+    const paid = status === 'success' || isPay;
     return (
       <div className="bg-surface p-8 md:p-10 rounded-md border border-line shadow-2xl max-w-lg mx-auto w-full text-center space-y-6">
         <div className="w-16 h-16 rounded-full bg-green/15 text-green flex items-center justify-center mx-auto">
@@ -265,43 +262,68 @@ export function EnrolForm({
         </div>
         <div className="space-y-1">
           <span className="text-[10px] font-mono font-bold uppercase tracking-[2px] text-green">
-            {paid ? 'Payment confirmed' : 'Request saved'}
+            {paid ? 'Enrolment & Billing Confirmed' : 'Request Saved'}
           </span>
           <h3 className="font-anton text-3xl sm:text-4xl text-ink tracking-wide">
-            {paid ? 'WELCOME TO RHYTHMZZ' : 'WE HAVE YOUR DETAILS'}
+            {paid ? 'ENROLMENT CONFIRMED' : 'WE HAVE YOUR DETAILS'}
           </h3>
           <p className="text-xs text-ink-2 leading-relaxed">
             {paid
-              ? 'Your first month is paid. Sign in with this mobile number on the student portal. If login fails, WhatsApp us and we will enable portal access.'
-              : isPay
-                ? 'The academy has this enrolment. Finish payment on WhatsApp or UPI if checkout did not open, and we will confirm your batch.'
-                : 'The academy has this enquiry. Finish on WhatsApp if the chat did not open, and we will confirm your trial slot.'}
+              ? `Your slot is confirmed and billed for ${formatCurrency(fee)}. Use this mobile number to log in to the student portal for your class timetable, fee receipts, and attendance tracking.`
+              : 'The academy has received your trial class enquiry. We will confirm your timing slot shortly.'}
           </p>
         </div>
 
-        <div className="bg-canvas-muted rounded-md p-4 text-xs text-ink space-y-2 text-left border border-line">
+        <div className="bg-canvas-muted rounded-md p-4 text-xs text-ink space-y-2.5 text-left border border-line">
           <div className="flex justify-between py-1 border-b border-line">
             <span className="text-ink-2">Student</span>
-            <span className="font-medium">{childName}</span>
+            <span className="font-medium text-ink">{childName}</span>
           </div>
           <div className="flex justify-between py-1 border-b border-line">
             <span className="text-ink-2">Programme</span>
-            <span className="font-bold">{selectedProgramme?.name}</span>
+            <span className="font-bold text-ink">{selectedProgramme?.name}</span>
           </div>
-          <div className="flex justify-between py-1">
+          <div className="flex justify-between py-1 border-b border-line">
+            <span className="text-ink-2">Selected Plan</span>
+            <span className="font-semibold text-ink capitalize">{plan.replace('-', ' ')}</span>
+          </div>
+          <div className="flex justify-between py-1 border-b border-line">
             <span className="text-ink-2">Schedule</span>
             <span className="font-semibold text-bl">{batchLabel(selectedBatch)}</span>
+          </div>
+          <div className="flex justify-between py-1 text-sm font-bold">
+            <span className="text-ink">Total Billed</span>
+            <span className="text-green font-mono">{formatCurrency(fee)}</span>
           </div>
         </div>
 
         <div className="flex flex-col gap-3">
           {paid ? (
-            <a
-              href={ROUTES.login}
-              className={cn(homepageCtaBrand, homepageCtaPairButton)}
-            >
-              Sign in to student portal <ArrowRight size={16} />
-            </a>
+            <>
+              {upiLink && (
+                <a
+                  href={upiLink}
+                  className={cn(homepageCtaOutlineLight, homepageCtaPairButton)}
+                >
+                  Pay via UPI App ({formatCurrency(fee)})
+                </a>
+              )}
+              <a
+                href={ROUTES.login}
+                className={cn(homepageCtaBrand, homepageCtaPairButton)}
+              >
+                Sign in to student portal <ArrowRight size={16} />
+              </a>
+              <a
+                href={whatsappLink(`Hi Rhythmzz! I've enrolled ${childName} for ${selectedProgramme?.name} (${plan} plan · ${formatCurrency(fee)}). Please confirm my batch schedule.`)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs font-semibold text-ink-3 hover:text-ink transition-colors flex items-center justify-center gap-1.5 pt-1"
+              >
+                <span>Share receipt copy on WhatsApp (Optional)</span>
+                <ArrowUpRight size={14} />
+              </a>
+            </>
           ) : (
             <a
               href={whatsappLink(waMessage)}
@@ -528,7 +550,7 @@ export function EnrolForm({
         )}
 
         <div className="pt-2 space-y-2">
-          {isPay && PAYMENTS_ENABLED ? (
+          {isPay ? (
             <button
               type="submit"
               disabled={status === 'submitting'}
@@ -537,19 +559,7 @@ export function EnrolForm({
               {status === 'submitting' ? (
                 <><Spinner className="w-4 h-4" /> Processing...</>
               ) : (
-                <><CreditCard size={16} /> Enrol &amp; pay ({formatCurrency(fee)})</>
-              )}
-            </button>
-          ) : isPay ? (
-            <button
-              type="submit"
-              disabled={status === 'submitting'}
-              className={cn(homepageCtaBrand, homepageCtaPairButton, 'cursor-pointer disabled:opacity-60')}
-            >
-              {status === 'submitting' ? (
-                <><Spinner className="w-4 h-4" /> Saving...</>
-              ) : (
-                <><CreditCard size={16} /> Save &amp; pay via WhatsApp ({formatCurrency(fee)})</>
+                <><CreditCard size={16} /> Confirm Enrolment &amp; Pay ({formatCurrency(fee)})</>
               )}
             </button>
           ) : (
@@ -565,20 +575,18 @@ export function EnrolForm({
               )}
             </button>
           )}
-          {upiLink && (
+          {upiLink && isPay && (
             <a
               href={upiLink}
               className={cn(homepageCtaOutlineLight, homepageCtaPairButton)}
             >
-              Open UPI app ({formatCurrency(fee)})
+              Pay via UPI app ({formatCurrency(fee)})
             </a>
           )}
           <p className="text-[11px] font-mono text-center text-ink-3 mt-3">
             {isPay
-              ? PAYMENTS_ENABLED
-                ? 'Secure checkout · Portal login uses this mobile number'
-                : 'We save the enrolment and open WhatsApp so you can pay the academy'
-              : 'We save the trial request even if WhatsApp does not open'}
+              ? 'Instant invoice & slot confirmation · Portal login uses your mobile number'
+              : 'We save your trial request even if WhatsApp does not open'}
           </p>
         </div>
       </form>
