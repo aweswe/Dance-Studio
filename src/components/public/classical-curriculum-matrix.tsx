@@ -29,7 +29,7 @@ export function ClassicalCurriculumMatrix() {
               Kuchipudi syllabus
             </p>
             <h2 className="font-anton text-3xl sm:text-4xl md:text-5xl text-ink tracking-wide uppercase">
-              Year by year with Srusti
+              Year-by-year classical curriculum
             </h2>
             <p className="text-ink-2 text-xs sm:text-sm md:text-base max-w-2xl mt-2 leading-relaxed">
               This is the Kuchipudi plan we actually teach — Friday and Saturday, 6:30 to 7:30. Pick the 10-year track if you are starting young, or the 6-year track if you already have some classical work.

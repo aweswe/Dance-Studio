@@ -326,7 +326,7 @@ export default async function ProgrammeDetailPage({ params }: Props) {
           <HomepageSectionHeading
             eyebrow="Syllabus"
             title="Kuchipudi, year by year"
-            description="Srusti. Friday and Saturday. The full list lives on the syllabus page — not here."
+            description="Friday and Saturday, 6:30 to 7:30 PM. The full curriculum lives on the syllabus page — not here."
           />
           <Link href={ROUTES.syllabusKuchipudi} className={homepageCtaBrand}>
             Open syllabus

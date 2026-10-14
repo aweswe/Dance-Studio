@@ -241,6 +241,25 @@ erDiagram
 
 ---
 
+---
+
+### F. Kuchipudi Master Curriculum, Margam Repertoire & High-Contrast Hardening
+
+1. **Curriculum & Repertoire Architecture (`/syllabus/kuchipudi`)**:
+   * Integrated comprehensive 10-Year Foundation and 6-Year Accelerated Master Curriculum with interactive year-by-year syllabus (`SyllabusYears`), age pathways, and four classical pillars (Nritta, Nritya, Natya, Abhinaya).
+   * Embedded the sacred **Margam Performance Repertoire** suite (`REPERTOIRE_ITEMS`): Poorvarangam (Invocation), Jatiswaram (Pure Nritta), Shabdam (Narrative Verse & Mime), Vinayaka Kauthuvam (Rhythmic Hymn), Keerthana (Devotional Masterpiece), Tarangam (Brass Plate Rhythmic Balance), and Thillana & Mangalam (Climax & Benediction).
+   * Fully optimized classical photography assets: Added `loading="lazy"`, responsive `sizes`, and eliminated unconfigured quality warnings.
+
+2. **Universal Trainer Name Sanitization & Age Standardization**:
+   * Audited and sanitized all remaining hardcoded faculty names across certification tracks (`src/data/certification-tracks.ts`), classical matrix (`classical-curriculum-matrix.tsx`), upcoming classes (`upcoming-classes.tsx`), syllabus index (`/syllabus`), and programmes route (`/programmes/[slug]`).
+   * Standardized all age representations academy-wide to **Kids: 3.5 – 12 years** and **Adults: 13+ years**.
+
+3. **Executive High-Contrast Typography & Surface Elevation**:
+   * Hardened deep portal surfaces including official payment receipts (`/receipt/[id]`) and student billing history (`payment-history.tsx`) with 2px borders, high-contrast Slate-950 headings, Slate-800 text labels, and clean print media styles.
+   * Eliminated washed-out text on high-DPI and OLED mobile screens by standardizing on `--ink-2: #1E293B` and `--ink-3: #334155`.
+
+---
+
 ## 4. Verification, Testing & Quality Audit Checklist
 
 * [x] **Vitest Unit & Integration Tests**: 4 test suites, 35 tests, **100% passing**.
@@ -249,6 +268,8 @@ erDiagram
   - `/terms`: Confirmed centered layout (`terms_page_centered_1791897119556.png`).
   - `/#pricing`: Verified interactive waitlist modal (`waitlist_modal_open_1791897176108.png`).
   - `/enrol?programme=kids-dance&plan=quarterly&fee=5000`: Verified pre-selected plan summary card (`enrol_preselected_card_1791897180590.png`).
+  - `/syllabus/kuchipudi`: Verified Hero, Philosophy, Roadmap, Interactive Syllabus, Margam Repertoire Suite, and Rangapravesham (`kuchipudi_hero_top_1791972654799.png`, `kuchipudi_margam_suite_1791972698719.png`).
+  - `/syllabus`: Verified high-contrast index cards and sanitized faculty notes (`syllabus_index_1791972753983.png`).
 * [x] **Age Bracket Universal Accuracy**: Kids = `3.5 – 12 years`, Adults = `13+ years`.
-* [x] **Zero Trainer Names**: Verified zero trainer names in pricing cards, schedule fallbacks, or marketing blurbs.
+* [x] **Zero Trainer Names**: Verified zero trainer names in public schedules, syllabus, certification tracks, and upcoming class cards.
 * [x] **Supabase Quota Safety**: Zero video uploads to Supabase storage; reels rendered via Instagram iframe URLs.

@@ -108,7 +108,7 @@ const ROADMAP_STEPS: RoadmapStep[] = [
       'Consecration as an independent performing Kuchipudi artiste',
     ],
     outcome:
-      'The sacred graduation from disciple to master exponent, blessed by Guru Srusti.',
+      'The sacred graduation from disciple to master exponent, endorsed by our senior classical faculty.',
   },
 ];
 
@@ -427,7 +427,7 @@ const KUCHIPUDI_FAQS: FaqItem[] = [
   {
     tag: 'Rangapravesham',
     q: 'What is a Rangapravesham, and when can a student perform it?',
-    a: 'A Rangapravesham (literally "ascending the stage") is the traditional full-length solo debut marking a disciple’s graduation to an independent classical exponent. It requires mastering a 2.5-hour Margam repertoire performed with a full live Carnatic orchestra. Students typically undertake this milestone after completing their advanced 8th to 10th year of training with Guru Srusti’s endorsement.',
+    a: 'A Rangapravesham (literally "ascending the stage") is the traditional full-length solo debut marking a disciple’s graduation to an independent classical exponent. It requires mastering a 2.5-hour Margam repertoire performed with a full live Carnatic orchestra. Students typically undertake this milestone after completing their advanced 8th to 10th year of training with senior classical faculty endorsement.',
   },
   {
     tag: 'Attire',
@@ -442,7 +442,7 @@ const KUCHIPUDI_FAQS: FaqItem[] = [
   {
     tag: 'Schedule',
     q: 'What are the batch timings, class size, and trial policy?',
-    a: 'Kuchipudi batches run on Fridays and Saturdays from 6:30 PM to 7:30 PM at our Neredmet X Road studio in Secunderabad. We maintain strictly capped batch sizes so Guru Srusti can provide individual postural correction, eye-level alignment, and personal guidance. Complimentary trial classes are available upon prior booking.',
+    a: 'Kuchipudi batches run on Fridays and Saturdays from 6:30 PM to 7:30 PM at our Neredmet X Road studio in Secunderabad. We maintain strictly capped batch sizes so senior classical faculty can provide individual postural correction, eye-level alignment, and personal guidance. Complimentary trial classes are available upon prior booking.',
   },
 ];
 

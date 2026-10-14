@@ -17,13 +17,13 @@ const STYLES = [
   {
     href: '/syllabus/kuchipudi',
     name: 'Kuchipudi',
-    note: 'Srusti · Fri & Sat 6:30',
+    note: 'Classical Faculty · Fri & Sat 6:30',
     status: 'On the site',
   },
   {
     href: '/syllabus/kathak',
     name: 'Kathak',
-    note: 'Poonam · five levels',
+    note: 'Kathak Faculty · Five Levels',
     status: 'On the site',
   },
 ] as const;

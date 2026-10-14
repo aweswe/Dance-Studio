@@ -27,41 +27,41 @@ interface PaymentHistoryProps {
 
 export function PaymentHistory({ payments }: PaymentHistoryProps) {
   return (
-    <Card className="overflow-x-auto">
+    <Card className="overflow-x-auto border-2 border-slate-200">
       <table className="w-full text-left text-sm">
         <thead>
-          <tr className="border-b border-line">
-            <th className="pb-3 font-semibold text-ink-2">Date</th>
-            <th className="pb-3 font-semibold text-ink-2">Month</th>
-            <th className="pb-3 font-semibold text-ink-2">Amount</th>
-            <th className="pb-3 font-semibold text-ink-2">Method</th>
-            <th className="pb-3 font-semibold text-ink-2">Receipt</th>
+          <tr className="border-b-2 border-slate-200 bg-slate-50/70">
+            <th className="py-3.5 px-4 font-bold text-slate-900 uppercase text-xs tracking-wider">Date</th>
+            <th className="py-3.5 px-4 font-bold text-slate-900 uppercase text-xs tracking-wider">Month</th>
+            <th className="py-3.5 px-4 font-bold text-slate-900 uppercase text-xs tracking-wider">Amount</th>
+            <th className="py-3.5 px-4 font-bold text-slate-900 uppercase text-xs tracking-wider">Method</th>
+            <th className="py-3.5 px-4 font-bold text-slate-900 uppercase text-xs tracking-wider">Receipt</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className="divide-y divide-slate-100">
           {payments.length === 0 ? (
             <tr>
-              <td colSpan={5} className="py-6 text-center text-ink-2">No payment history found.</td>
+              <td colSpan={5} className="py-8 text-center text-slate-700 font-medium">No payment history found.</td>
             </tr>
           ) : (
             payments.map((payment) => (
-              <tr key={payment.id} className="border-b border-line-subtle last:border-0 hover:bg-canvas-muted transition-colors">
-                <td className="py-4 font-medium">{formatDate(payment.paid_at)}</td>
-                <td className="py-4">{monthLabel(payment.for_month, payment.paid_at)}</td>
-                <td className="py-4">₹{payment.amount}</td>
-                <td className="py-4 capitalize">{payment.source}</td>
-                <td className="py-4">
+              <tr key={payment.id} className="hover:bg-slate-50 transition-colors">
+                <td className="py-4 px-4 font-bold text-slate-950">{formatDate(payment.paid_at)}</td>
+                <td className="py-4 px-4 font-semibold text-slate-800">{monthLabel(payment.for_month, payment.paid_at)}</td>
+                <td className="py-4 px-4 font-black text-slate-950">₹{payment.amount}</td>
+                <td className="py-4 px-4 font-medium text-slate-800 capitalize">{payment.source}</td>
+                <td className="py-4 px-4">
                   {payment.id ? (
                     <a
                       href={/^https?:\/\//.test(payment.receipt_url ?? "") ? payment.receipt_url! : `/receipt/${payment.id}`}
                       target="_blank"
                       rel="noreferrer"
-                      className="text-bl-ink flex items-center gap-1 hover:underline focus-visible:focus-ring active:scale-[0.98]"
+                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-sky-50 border border-sky-300 text-sky-950 text-xs font-bold hover:bg-sky-100 hover:border-sky-400 focus-visible:focus-ring active:scale-[0.98] transition-all shadow-xs"
                     >
-                      <Download size={14} /> Receipt
+                      <Download size={13} /> View Receipt
                     </a>
                   ) : (
-                    <span className="text-ink-2">N/A</span>
+                    <span className="text-slate-500 font-medium">—</span>
                   )}
                 </td>
               </tr>

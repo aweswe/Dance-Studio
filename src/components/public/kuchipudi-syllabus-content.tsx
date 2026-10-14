@@ -137,6 +137,65 @@ const PILLARS = [
   },
 ];
 
+const REPERTOIRE_ITEMS = [
+  {
+    id: '01',
+    name: 'Poorvarangam',
+    type: 'Invocation & Sanctification',
+    focus: 'Shlokam & Pushpanjali',
+    description:
+      'The sacred ritual opening. Dancers sprinkle scented water, offer flowers to Lord Nataraja and Rangadevatha, and offer prayers for artistic auspiciousness.',
+  },
+  {
+    id: '02',
+    name: 'Jatiswaram',
+    type: 'Pure Technical Nritta',
+    focus: 'Swaras & Sculptural Geometry',
+    description:
+      'Weaving melodic Carnatic Swaras with crisp Jathi footwork patterns. Void of abhinaya, celebrating rhythmic precision and aesthetic body lines.',
+  },
+  {
+    id: '03',
+    name: 'Shabdam',
+    type: 'Narrative Verse & Mime',
+    focus: 'Bhakti Poetry & Rhythms',
+    description:
+      'The bridge between pure dance and narrative theatre. Verses praising deities or historical patron kings, alternating with brisk Jathi sequences.',
+  },
+  {
+    id: '04',
+    name: 'Vinayaka Kauthuvam',
+    type: 'Rhythmic Hymn',
+    focus: 'Solkattu Mnemonics',
+    description:
+      'Ancient temple hymn blending recited rhythmic syllables (Sollukattus) with devotional obeisance to Lord Ganesha, remover of obstacles.',
+  },
+  {
+    id: '05',
+    name: 'Keerthana',
+    type: 'Devotional Masterpiece',
+    focus: 'Sanchari Bhavas & Abhinaya',
+    description:
+      'Rich devotional composition composed by Saint Thyagaraja or Annamacharya. Dancers interpret complex mythological episodes through nuanced facial mime.',
+  },
+  {
+    id: '06',
+    name: 'Tarangam',
+    type: 'The Pinnacle Hallmark',
+    focus: 'Brass Plate Rhythmic Balance',
+    description:
+      'Kuchipudi’s most famous virtuoso showcase. The dancer executes intricate rhythmic footwork while balancing upon the raised rim of a brass plate, accompanied by live Mridangam.',
+  },
+  {
+    id: '07',
+    name: 'Thillana & Mangalam',
+    type: 'Climax & Benediction',
+    focus: 'Dynamic Laya & Gratitude',
+    description:
+      'A joyous technical crescendo of sculpturesque postures and brisk footwork, concluding with the Mangalam prayer thanking the Guru, musicians, and spectators.',
+  },
+];
+
 const CLASS_STEPS = [
   { n: 1, title: 'Warm-up & Body Conditioning', body: 'Spine articulation, foot stretching, and posture alignment.' },
   { n: 2, title: 'Adavus & Technique', body: 'Sequential footwork units with strict teacher corrections.' },
@@ -561,8 +620,9 @@ export function KuchipudiSyllabusContent() {
                     src="/images/kuchipudi/kuchipudi-natyarambham-posture.jpg"
                     alt="Kuchipudi Natyarambham posture"
                     fill
+                    loading="lazy"
+                    sizes="(max-width: 1024px) 100vw, 300px"
                     className="object-cover"
-                    sizes="300px"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-transparent flex items-end p-4">
                     <p className="text-xs font-mono font-semibold text-white">Natyarambham posture &amp; body alignment</p>
@@ -574,8 +634,9 @@ export function KuchipudiSyllabusContent() {
                     src="/images/kuchipudi/kuchipudi-abhinaya-mudra.jpg"
                     alt="Kuchipudi abhinaya mudra"
                     fill
+                    loading="lazy"
+                    sizes="(max-width: 1024px) 100vw, 300px"
                     className="object-cover"
-                    sizes="300px"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-transparent flex items-end p-4">
                     <p className="text-xs font-mono font-semibold text-white">Asamyukta &amp; Samyukta Hastas (hand gestures)</p>
@@ -688,6 +749,7 @@ export function KuchipudiSyllabusContent() {
               src={item.src}
               alt={item.label}
               fill
+              loading="lazy"
               className="object-cover group-hover:scale-105 transition-transform duration-500"
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
             />
@@ -699,7 +761,58 @@ export function KuchipudiSyllabusContent() {
       </div>
 
       {/* ═══════════════════════════════════════════════════════════════════════
-          9. RANGAPRAVESHAM — A Defining Milestone
+          9. TRADITIONAL PERFORMANCE REPERTOIRE (The Classical Margam Suite)
+      ═══════════════════════════════════════════════════════════════════════ */}
+      <SectionRule />
+      <HomepageSection>
+        <ContentSection>
+          <Reveal>
+            <div className="text-center max-w-2xl mx-auto mb-10">
+              <GoldEyebrow>Margam Performance Suite</GoldEyebrow>
+              <SectionH2 className="text-center">Traditional performance repertoire</SectionH2>
+              <p className="mt-3 text-sm sm:text-base text-slate-700 leading-relaxed font-medium">
+                The classical Kuchipudi Margam — a time-honoured sequential suite progressing from sacred invocations and geometric footwork to dramatic mime and the virtuoso Tarangam brass plate dance.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5">
+              {REPERTOIRE_ITEMS.map((item) => (
+                <div
+                  key={item.id}
+                  className="p-5 sm:p-6 rounded-xl border-2 border-slate-200 bg-white shadow-sm flex flex-col justify-between hover:border-slate-400 hover:shadow-md transition-all group"
+                >
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-2xl font-black font-anton tracking-wide uppercase text-slate-950">
+                        {item.id}
+                      </span>
+                      <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-slate-100 border border-slate-300 text-slate-800 font-bold uppercase tracking-wider">
+                        {item.focus}
+                      </span>
+                    </div>
+                    <h3 className="font-anton tracking-wide uppercase text-lg text-slate-950 mb-1 group-hover:text-sky-900 transition-colors">
+                      {item.name}
+                    </h3>
+                    <span className="text-[11px] font-mono uppercase tracking-wider text-amber-900 font-bold block mb-2.5">
+                      {item.type}
+                    </span>
+                    <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-medium">
+                      {item.description}
+                    </p>
+                  </div>
+                  <div className="mt-4 pt-3 border-t border-slate-200 flex items-center justify-between text-[10px] font-mono text-slate-600 font-semibold">
+                    <span>Margam Suite</span>
+                    <span className="text-sky-900 font-bold">Stage Classical</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Reveal>
+        </ContentSection>
+      </HomepageSection>
+
+      {/* ═══════════════════════════════════════════════════════════════════════
+          10. RANGAPRAVESHAM — A Defining Milestone
       ═══════════════════════════════════════════════════════════════════════ */}
       <HomepageSection>
         <ContentSection>
@@ -711,6 +824,7 @@ export function KuchipudiSyllabusContent() {
                   src="/images/kuchipudi/hero_kuchipudi_2.jpg"
                   alt="Kuchipudi dancer in Rangapravesham costume"
                   fill
+                  loading="lazy"
                   className="object-cover"
                   sizes="(max-width: 1024px) 100vw, 360px"
                 />
@@ -758,7 +872,7 @@ export function KuchipudiSyllabusContent() {
       </HomepageSection>
 
       {/* ═══════════════════════════════════════════════════════════════════════
-          10. CLASS STRUCTURE & THEORY
+          11. CLASS STRUCTURE & THEORY
       ═══════════════════════════════════════════════════════════════════════ */}
       <SectionRule />
       <HomepageSection className="bg-slate-50/60">
@@ -817,7 +931,7 @@ export function KuchipudiSyllabusContent() {
       </HomepageSection>
 
       {/* ═══════════════════════════════════════════════════════════════════════
-          11. FREQUENTLY ASKED QUESTIONS
+          12. FREQUENTLY ASKED QUESTIONS
       ═══════════════════════════════════════════════════════════════════════ */}
       <SectionRule />
       <HomepageSection>
@@ -848,13 +962,14 @@ export function KuchipudiSyllabusContent() {
       </HomepageSection>
 
       {/* ═══════════════════════════════════════════════════════════════════════
-          12. FINAL ENROLMENT CTA — Atmospheric Classical Banner
+          13. FINAL ENROLMENT CTA — Atmospheric Classical Banner
       ═══════════════════════════════════════════════════════════════════════ */}
       <div className="relative bg-[#160508] text-[#FAF6EE] overflow-hidden border-t border-[#D4AF37]/30">
         <Image
           src="/images/kuchipudi/kuchipudi-classical-07.jpg"
           alt="Kuchipudi dance performance finale"
           fill
+          loading="lazy"
           className="object-cover opacity-25"
           sizes="100vw"
         />
