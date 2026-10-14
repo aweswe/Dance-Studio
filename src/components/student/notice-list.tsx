@@ -66,8 +66,8 @@ export function NoticeList({
             onClick={() => setLang(l)}
             className={`text-[11px] uppercase tracking-wider px-3 py-1.5 rounded-md border transition-colors ${
               lang === l
-                ? "border-bl bg-bl text-white font-semibold shadow-sm"
-                : "border-line text-ink-2 bg-surface hover:border-bl/40 hover:text-ink"
+                ? "border-2 border-slate-950 bg-slate-950 text-white font-bold shadow-xs"
+                : "border-2 border-slate-200 text-slate-800 bg-white font-semibold hover:border-slate-400"
             }`}
           >
             {l === "en" ? "English" : l === "te" ? "తెలుగు" : "हिन्दी"}

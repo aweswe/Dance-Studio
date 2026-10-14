@@ -48,14 +48,14 @@ export function CreativeFamilySection() {
         </h2>
 
         {/* Subtitle statement */}
-        <p className="max-w-xl text-sm sm:text-base text-blk/75 mt-6 mb-8 leading-relaxed font-medium">
+        <p className="max-w-xl text-sm sm:text-base text-slate-800 mt-6 mb-8 leading-relaxed font-medium">
           People stay because the batch knows their name and the recital is on a real stage, not a school auditorium with folding chairs.
         </p>
 
         {/* Action Button */}
         <Link
           href={ROUTES.about}
-          className="inline-flex items-center gap-1 font-mono text-xs sm:text-sm font-extrabold uppercase tracking-[0.2em] text-bl hover:text-bl-ink py-2 px-4 rounded-md border border-bl/30 hover:border-bl hover:bg-bl/10 transition-all active:scale-95 group"
+          className="inline-flex items-center gap-1 font-mono text-xs sm:text-sm font-extrabold uppercase tracking-[0.2em] text-slate-950 hover:text-white py-2.5 px-5 rounded-md border-2 border-slate-950 hover:bg-slate-950 transition-all active:scale-95 shadow-2xs group"
         >
           <span className="mx-1 group-hover:underline underline-offset-4">LEARN MORE</span>
         </Link>

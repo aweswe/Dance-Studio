@@ -61,7 +61,7 @@ export function FeeStatusCard({ status, amountDue, dueDate }: FeeStatusCardProps
             {upiLink && (
               <a
                 href={upiLink}
-                className="inline-flex items-center justify-center min-h-11 bg-bl text-white text-sm font-semibold px-4 rounded-md hover:bg-bl-deep focus-visible:focus-ring active:scale-[0.96]"
+                className="inline-flex items-center justify-center min-h-11 bg-bl text-slate-950 text-sm font-bold px-4 rounded-md hover:bg-bl-deep hover:text-white focus-visible:focus-ring active:scale-[0.96]"
               >
                 Pay ₹{amountDue} with UPI
               </a>

@@ -571,11 +571,11 @@ export function ProgrammePricingBoard() {
                           <Check className="w-3 h-3 stroke-[3]" />
                         </span>
                       ) : (
-                        <span className="w-4 h-4 rounded-md bg-neutral-100 border border-neutral-200 text-neutral-400 flex items-center justify-center shrink-0">
+                        <span className="w-4 h-4 rounded-md bg-neutral-100 border border-neutral-300 text-neutral-500 flex items-center justify-center shrink-0">
                           <X className="w-3 h-3 stroke-[2]" />
                         </span>
                       )}
-                      <span className={feat.included ? 'text-neutral-900 font-medium' : 'text-neutral-400 line-through decoration-neutral-300 font-normal'}>
+                      <span className={feat.included ? 'text-neutral-900 font-medium' : 'text-neutral-500 line-through decoration-neutral-400 font-medium'}>
                         {feat.text}
                       </span>
                     </li>
@@ -800,7 +800,7 @@ export function ProgrammePricingBoard() {
         </div>
 
         {/* Kuchipudi Classical Box */}
-        <div className="rounded-md border-2 border-amber-300 bg-white p-6 sm:p-8 relative shadow-xs">
+        <div className="rounded-md border-2 border-neutral-900 bg-white p-6 sm:p-8 relative shadow-sm">
           {/* Box Header */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
             <div>
@@ -810,15 +810,15 @@ export function ProgrammePricingBoard() {
                   {KUCHIPUDI_DATA.name}
                 </h4>
                 <div className="flex items-center gap-1.5 ml-1">
-                  <span className="px-2.5 py-0.5 rounded-md bg-amber-100 border border-amber-300 text-amber-950 text-[10px] font-extrabold uppercase tracking-wider">
+                  <span className="px-2.5 py-0.5 rounded-md bg-neutral-950 text-white text-[10px] font-extrabold uppercase tracking-wider">
                     IAO ACCREDITED
                   </span>
-                  <span className="px-2.5 py-0.5 rounded-md bg-neutral-100 border border-neutral-300 text-neutral-800 text-[10px] font-bold uppercase tracking-wider">
+                  <span className="px-2.5 py-0.5 rounded-md bg-neutral-100 border border-neutral-300 text-neutral-900 text-[10px] font-bold uppercase tracking-wider">
                     CLASSICAL ART
                   </span>
                 </div>
               </div>
-              <p className="text-xs text-neutral-600 font-medium mt-1">
+              <p className="text-xs text-neutral-800 font-medium mt-1">
                 {KUCHIPUDI_DATA.subtext}
               </p>
             </div>
@@ -885,11 +885,11 @@ export function ProgrammePricingBoard() {
                               <Check className="w-2.5 h-2.5 stroke-[3]" />
                             </span>
                           ) : (
-                            <span className="w-3.5 h-3.5 rounded-md bg-neutral-100 border border-neutral-200 text-neutral-400 flex items-center justify-center shrink-0">
+                            <span className="w-3.5 h-3.5 rounded-md bg-neutral-100 border border-neutral-300 text-neutral-500 flex items-center justify-center shrink-0">
                               <X className="w-2.5 h-2.5 stroke-[2]" />
                             </span>
                           )}
-                          <span className={feat.included ? 'text-neutral-900 font-medium' : 'text-neutral-400 line-through decoration-neutral-300'}>
+                          <span className={feat.included ? 'text-neutral-900 font-medium' : 'text-neutral-500 line-through decoration-neutral-400 font-medium'}>
                             {feat.text}
                           </span>
                         </li>
@@ -935,7 +935,7 @@ export function ProgrammePricingBoard() {
               <span className="text-xs font-extrabold uppercase tracking-wider text-neutral-950">
                 CERTIFICATION PATHWAY
               </span>
-              <span className="px-2.5 py-0.5 rounded-md bg-amber-100 border border-amber-300 text-amber-950 text-[10px] font-extrabold uppercase tracking-wider">
+              <span className="px-2.5 py-0.5 rounded-md bg-neutral-950 text-white text-[10px] font-extrabold uppercase tracking-wider">
                 IAO CERTIFICATE INCLUDED
               </span>
             </div>
@@ -949,27 +949,27 @@ export function ProgrammePricingBoard() {
                     key={idx}
                     className={`rounded-md p-4 flex flex-col justify-between ${
                       isFull
-                        ? 'bg-amber-50 border-2 border-amber-400 shadow-2xs'
-                        : 'bg-neutral-50 border border-neutral-200'
+                        ? 'bg-neutral-950 text-white border-2 border-neutral-950 shadow-md'
+                        : 'bg-neutral-50 border-2 border-neutral-200 text-neutral-950'
                     }`}
                   >
                     <div>
                       <div className="flex items-center justify-between gap-1 mb-1">
-                        <span className="text-[10px] font-extrabold uppercase tracking-wider text-neutral-500">
+                        <span className={`text-[10px] font-extrabold uppercase tracking-wider ${isFull ? 'text-neutral-400' : 'text-neutral-500'}`}>
                           {step.level}
                         </span>
                         {step.badge && (
-                          <span className="px-2 py-0.5 rounded-md bg-amber-500 text-neutral-950 text-[9px] font-extrabold uppercase">
+                          <span className="px-2 py-0.5 rounded-md bg-[#D4AF37] text-neutral-950 text-[9px] font-black uppercase">
                             {step.badge}
                           </span>
                         )}
                       </div>
-                      <h5 className="font-bold text-sm text-neutral-950">{step.title}</h5>
-                      <p className="text-[11px] text-neutral-600 font-medium mt-1">{step.duration}</p>
+                      <h5 className={`font-bold text-sm ${isFull ? 'text-white' : 'text-neutral-950'}`}>{step.title}</h5>
+                      <p className={`text-[11px] font-medium mt-1 ${isFull ? 'text-neutral-300' : 'text-neutral-600'}`}>{step.duration}</p>
                     </div>
 
-                    <div className="mt-3 pt-2 border-t border-neutral-200">
-                      <span className="font-anton text-xl text-neutral-950 block">
+                    <div className={`mt-3 pt-2 border-t ${isFull ? 'border-neutral-800' : 'border-neutral-200'}`}>
+                      <span className={`font-anton text-xl block ${isFull ? 'text-white' : 'text-neutral-950'}`}>
                         {step.fee}
                       </span>
                     </div>

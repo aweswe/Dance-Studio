@@ -178,8 +178,8 @@ export function CreateInstructorBatchDialog({
                         onClick={() => toggleDay(day)}
                         className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all cursor-pointer border ${
                           active
-                            ? 'bg-bl text-white border-bl shadow-2xs'
-                            : 'bg-canvas border-line text-ink-2 hover:border-ink/40'
+                            ? 'bg-slate-950 text-white font-bold border-slate-950 shadow-2xs'
+                            : 'bg-white border-2 border-slate-200 text-slate-800 font-semibold hover:border-slate-400'
                         }`}
                       >
                         {day.slice(0, 3)}

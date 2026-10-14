@@ -15,13 +15,13 @@ export default function TermsPage() {
       title="Terms & conditions"
       description="Student Portal Agreement & Studio Operational Guidelines · Effective Date: 1st January 2025 · Last Updated: September 2026."
     >
-      <div className="p-4 rounded-md bg-amber-500/10 border border-amber-500/30 text-ink text-xs sm:text-sm space-y-2 mb-6">
-        <p className="font-bold text-amber-900 dark:text-amber-400">
-          Faculty, Instructors &amp; Guest Trainers:
+      <div className="p-5 rounded-lg bg-slate-950 text-white border-l-4 border-[#F5A623] space-y-2 mb-6 shadow-md">
+        <p className="font-bold text-[#FDE68A] text-xs font-mono uppercase tracking-wider">
+          Faculty, Instructors &amp; Guest Trainers
         </p>
-        <p className="text-ink-2">
+        <p className="text-slate-200 text-xs sm:text-sm font-medium leading-relaxed">
           If you are an instructor or trainer at Rhythmzz, please review the dedicated{' '}
-          <Link href={ROUTES.instructorTerms} className="font-bold text-bl underline hover:text-bl-deep">
+          <Link href={ROUTES.instructorTerms} className="font-bold text-[#FDE68A] underline hover:text-white">
             Instructor Terms &amp; Conditions &rarr;
           </Link>{' '}
           governing trainer onboarding, revenue tiers, attendance logging, and brand obligations.
@@ -55,8 +55,8 @@ export default function TermsPage() {
         </p>
         <p className="mt-2">
           2.4 If you suspect unauthorized access to your account, notify us immediately at{' '}
-          <a href={`mailto:${ACADEMY.email}`} className="text-bl underline">{ACADEMY.email}</a> or call{' '}
-          <a href={`tel:${ACADEMY.phone}`} className="text-bl underline">{ACADEMY.phoneDisplay}</a>.
+          <a href={`mailto:${ACADEMY.email}`} className="text-sky-900 font-bold underline hover:text-black">{ACADEMY.email}</a> or call{' '}
+          <a href={`tel:${ACADEMY.phone}`} className="text-sky-900 font-bold underline hover:text-black">{ACADEMY.phoneDisplay}</a>.
         </p>
       </LegalSection>
 
@@ -79,8 +79,8 @@ export default function TermsPage() {
         <p className="mt-2">
           4.2 <strong>Due Date:</strong> Monthly fees are due on or before the <strong>7th of each calendar month</strong>, without exception. Quarterly fees must be paid in full and in advance at the start of each quarterly term.
         </p>
-        <div className="mt-3 p-3.5 rounded-md bg-red-500/10 border border-red-500/30 text-xs sm:text-sm text-ink leading-relaxed">
-          <strong className="text-red-600 block mb-1">4.3 Strict Late Fee Policy:</strong>
+        <div className="mt-3 p-4 rounded-lg bg-red-50 border-2 border-red-300 text-xs sm:text-sm text-slate-900 leading-relaxed shadow-sm">
+          <strong className="text-red-900 font-bold block mb-1">4.3 Strict Late Fee Policy:</strong>
           If fees are not paid by the <strong>7th of the month</strong>, a late fee will be applied automatically to your account. This late fee is system-generated and <strong>cannot be waived, reversed, or reset under any circumstances</strong> once applied — regardless of the reason for delayed payment. No exceptions will be made.
         </div>
         <p className="mt-2">

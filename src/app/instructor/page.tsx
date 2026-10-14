@@ -103,7 +103,7 @@ export default async function InstructorDashboardPage() {
       <div className="flex flex-wrap gap-2">
         <Link
           href={`${ROUTES.instructor}/attendance`}
-          className="inline-flex items-center justify-center min-h-11 px-4 rounded-md bg-bl text-white text-sm font-medium hover:bg-bl/90 focus-visible:focus-ring active:scale-[0.96]"
+          className="inline-flex items-center justify-center min-h-11 px-4 rounded-md bg-bl text-slate-950 text-sm font-bold hover:bg-bl-deep hover:text-white focus-visible:focus-ring active:scale-[0.96]"
         >
           Mark attendance
         </Link>

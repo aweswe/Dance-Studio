@@ -12,13 +12,13 @@ export default function GlobalError({ reset }: { error: Error & { digest?: strin
       <body>
         <div className="min-h-screen flex flex-col items-center justify-center bg-light px-6 text-center">
           <h1 className="font-display text-4xl text-blk mb-3 tracking-[2px]">SOMETHING WENT WRONG</h1>
-          <p className="text-mu text-sm mb-8 max-w-md">
+          <p className="text-slate-700 font-medium text-sm mb-8 max-w-md">
             Rhythmzz Academy hit an unexpected error. Try again — if this keeps happening, reach
             out to the academy directly.
           </p>
           <button
             onClick={() => reset()}
-            className="text-[11px] font-semibold tracking-[2px] uppercase px-8 py-3 bg-bl text-white rounded transition-all focus-visible:focus-ring active:scale-[0.98]"
+            className="text-[11px] font-bold tracking-[2px] uppercase px-8 py-3 bg-slate-950 text-white hover:bg-black rounded transition-all focus-visible:focus-ring active:scale-[0.98]"
           >
             Try Again
           </button>

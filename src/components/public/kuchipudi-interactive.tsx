@@ -140,7 +140,7 @@ export function KuchipudiRoadmap() {
                 <span
                   className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-mono font-bold transition-colors ${
                     isActive
-                      ? 'bg-bl text-white'
+                      ? 'bg-slate-950 text-white font-bold'
                       : 'bg-canvas border border-line text-ink-2 group-hover:text-ink'
                   }`}
                 >

@@ -23,7 +23,7 @@ export function AnnouncementBanner({ banner }: { banner?: BannerContent | null }
     <>
       {banner.text}
       {banner.ctaLink && (
-        <Link href={banner.ctaLink} className="ml-2 underline underline-offset-2 hover:opacity-80">
+        <Link href={banner.ctaLink} className="ml-2 underline underline-offset-2 hover:opacity-80 font-black text-slate-950">
           Learn more
         </Link>
       )}
@@ -33,17 +33,17 @@ export function AnnouncementBanner({ banner }: { banner?: BannerContent | null }
   return (
     <div
       className={cn(
-        'bg-bl text-white text-[10px] sm:text-[11px] font-semibold tracking-wide sm:tracking-[1px] uppercase text-center relative z-[600] overflow-hidden transition-all duration-500 ease-out-snap px-11 sm:px-12 leading-snug',
+        'bg-bl text-slate-950 text-[10px] sm:text-[11px] font-black tracking-wide sm:tracking-[1px] uppercase text-center relative z-[600] overflow-hidden transition-all duration-500 ease-out-snap px-11 sm:px-12 leading-snug',
         dismissing ? 'max-h-0 py-0 opacity-0' : 'max-h-24 sm:max-h-12 py-2 sm:py-2.5 opacity-100',
       )}
     >
       {inner}
       <button
         onClick={handleDismiss}
-        className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 p-1.5 min-w-9 min-h-9 flex items-center justify-center rounded-md hover:opacity-70 transition-opacity focus-visible:focus-ring"
+        className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 p-1.5 min-w-9 min-h-9 flex items-center justify-center rounded-md text-slate-950 hover:bg-black/15 transition-colors focus-visible:focus-ring"
         aria-label="Dismiss banner"
       >
-        <X size={14} />
+        <X size={14} className="stroke-[2.5]" />
       </button>
     </div>
   );

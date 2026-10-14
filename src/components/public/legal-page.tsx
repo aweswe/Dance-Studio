@@ -29,11 +29,11 @@ export function LegalPage({
 
 export function LegalSection({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <section className="space-y-3 rounded-md border border-line bg-surface p-6 sm:p-7 shadow-xs">
-      <h2 className="font-anton text-xl sm:text-2xl uppercase tracking-tight text-ink border-b border-line pb-2.5">
+    <section className="space-y-3 rounded-lg border-2 border-slate-200 bg-white p-6 sm:p-8 shadow-sm">
+      <h2 className="font-anton text-xl sm:text-2xl uppercase tracking-tight text-slate-950 border-b-2 border-slate-200 pb-3">
         {title}
       </h2>
-      <div className="text-ink-2 space-y-3 leading-relaxed">
+      <div className="text-slate-800 space-y-3 leading-relaxed font-medium">
         {children}
       </div>
     </section>

@@ -103,7 +103,7 @@ export function AttendanceReport({ batches }: { batches: BatchOption[] }) {
               <p className="text-xs font-display tracking-[2px] text-ink-2 uppercase mt-1">Absent</p>
             </Card>
             <Card className="p-6 text-center">
-              <p className="font-display text-3xl text-gold">{report.counts.leave}</p>
+              <p className="font-display text-3xl text-amber-800 font-bold">{report.counts.leave}</p>
               <p className="text-xs font-display tracking-[2px] text-ink-2 uppercase mt-1">On Leave</p>
             </Card>
             <Card className="p-6 text-center">

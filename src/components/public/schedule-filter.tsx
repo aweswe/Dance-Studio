@@ -152,12 +152,12 @@ export function ScheduleFilter({ batches }: ScheduleFilterProps) {
 
                       {/* Actions with highlighted BOOK button */}
                       <div className="flex w-full sm:w-auto items-center justify-between sm:justify-end md:flex-col md:items-end gap-2 md:gap-1.5 pt-2 sm:pt-0 border-t border-line/40 sm:border-t-0">
-                        <span className="text-[10px] font-semibold tracking-[1px] uppercase text-bl-ink border border-bl/30 px-2 py-0.5 rounded-md whitespace-nowrap bg-bl/5">
+                        <span className="text-[10px] font-bold tracking-[1px] uppercase text-slate-800 border border-slate-300 px-2 py-0.5 rounded-md whitespace-nowrap bg-slate-100">
                           {slotsLeft > 0 ? `${slotsLeft} slots left` : 'Filling fast'}
                         </span>
                         <Link
                           href={`${ROUTES.enrol}?programme=${batch.programme?.slug ?? ''}`}
-                          className="text-[10px] font-bold tracking-[1.5px] uppercase px-4 py-1.5 bg-bl text-blk hover:bg-bl-deep transition-all rounded-md whitespace-nowrap shadow-sm focus-visible:focus-ring active:scale-[0.98]"
+                          className="text-[10px] font-bold tracking-[1.5px] uppercase px-4 py-1.5 bg-slate-950 text-white hover:bg-black transition-all rounded-md whitespace-nowrap shadow-sm focus-visible:focus-ring active:scale-[0.98]"
                         >
                           Book Trial
                         </Link>

@@ -48,7 +48,7 @@ export function EnquiryList({ initialEnquiries }: { initialEnquiries: Enquiry[] 
             key={f}
             onClick={() => setFilter(f)}
             className={`px-4 py-1.5 rounded-full text-xs font-medium border transition-colors focus-visible:focus-ring active:scale-[0.98] ${
-              filter === f ? 'bg-bl text-wh border-bl' : 'border-line-strong text-ink-2 hover:border-bl'
+              filter === f ? 'bg-slate-950 text-white font-bold border-slate-950 shadow-xs' : 'border-line-strong text-slate-800 font-medium hover:border-slate-950'
             }`}
           >
             {f.charAt(0).toUpperCase() + f.slice(1)}

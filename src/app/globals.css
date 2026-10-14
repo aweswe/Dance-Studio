@@ -115,20 +115,20 @@
   --shadow-pop: 0 8px 24px -12px rgb(17 17 17 / 0.18);
   --shadow-overlay: 0 24px 64px -16px rgb(17 17 17 / 0.35);
 
-  --ink: var(--blk);
-  --ink-2: var(--mu);
-  --ink-3: color-mix(in oklch, var(--mu) 55%, var(--wh));
+  --ink: #111111;
+  --ink-2: #1E293B; /* Slate-800: deep charcoal, 12.6:1 contrast on white */
+  --ink-3: #334155; /* Slate-700: crisp slate, 9.6:1 contrast on white */
 
-  --line: color-mix(in oklch, var(--blk) 7%, var(--wh));
-  --line-subtle: color-mix(in oklch, var(--blk) 5%, var(--wh));
-  --line-strong: color-mix(in oklch, var(--blk) 10%, var(--wh));
+  --line: #CBD5E1; /* Slate-300: crisp structural borders */
+  --line-subtle: #E2E8F0; /* Slate-200 */
+  --line-strong: #94A3B8; /* Slate-400 */
 
-  --bl-ink: color-mix(in oklch, var(--bl) 52%, var(--blk));
-  --gold-ink: color-mix(in oklch, var(--gold) 45%, var(--blk));
-  --green-ink: color-mix(in oklch, var(--green) 55%, var(--blk));
-  --bl-deep: color-mix(in oklch, var(--bl) 85%, var(--blk));
-  --danger: #ef4444;
-  --danger-deep: #dc2626;
+  --bl-ink: #0369A1; /* Deep ocean blue with 5.5:1 contrast on white */
+  --gold-ink: #92400E; /* Deep amber bronze with 6.2:1 contrast on white */
+  --green-ink: #15803D; /* Deep forest emerald with 5.2:1 contrast on white */
+  --bl-deep: #0C4A6E;
+  --danger: #DC2626;
+  --danger-deep: #B91C1C;
 }
 
 /* ── Cinema Stage (dark hero/about/CTA sections) ── */
@@ -141,6 +141,39 @@
 /* Thin brand-accent rule separates cinema-stage from the light sections below */
 .cinema-stage + * {
   border-top: 2px solid var(--bl);
+}
+
+/* ── Crisp, High-Contrast Typography Utilities ── */
+/* On light backgrounds, ensure blue and gold text achieve WCAG AA/AAA readability */
+body .text-bl:not(.cinema-stage .text-bl):not(.dark .text-bl):not([data-theme="dark"] .text-bl):not(.bg-blk .text-bl):not(.bg-black .text-bl):not(.bg-slate-950 .text-bl):not(.bg-slate-900 .text-bl):not(#hero .text-bl) {
+  color: #0369A1; /* Deep ocean blue with 5.5:1 contrast on white */
+}
+
+body .text-gold:not(.cinema-stage .text-gold):not(.dark .text-gold):not([data-theme="dark"] .text-gold):not(.bg-blk .text-gold):not(.bg-black .text-gold):not(.bg-slate-950 .text-gold):not(.bg-slate-900 .text-gold):not(#hero .text-gold) {
+  color: #92400E; /* Deep amber bronze with 6.2:1 contrast on white */
+}
+
+/* On dark containers, cinema-stage, and dark surfaces, use luminous brand shades */
+.cinema-stage .text-bl,
+[data-theme="dark"] .text-bl,
+.dark .text-bl,
+.bg-blk .text-bl,
+.bg-black .text-bl,
+.bg-slate-950 .text-bl,
+.bg-slate-900 .text-bl,
+#hero .text-bl {
+  color: var(--bl);
+}
+
+.cinema-stage .text-gold,
+[data-theme="dark"] .text-gold,
+.dark .text-gold,
+.bg-blk .text-gold,
+.bg-black .text-gold,
+.bg-slate-950 .text-gold,
+.bg-slate-900 .text-gold,
+#hero .text-gold {
+  color: var(--gold);
 }
 
 html {

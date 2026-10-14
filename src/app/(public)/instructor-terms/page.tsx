@@ -15,11 +15,11 @@ export default function InstructorTermsPage() {
       title="Instructor Terms & Conditions"
       description="Official Trainer Agreement & Engagement Policy · Effective Date: 1st November 2026 · Applicable to All Instructors, Trainers & Guest Faculty."
     >
-      <div className="p-4 rounded-md bg-sky-500/10 border border-sky-500/30 text-ink text-xs sm:text-sm space-y-2 mb-6">
-        <p className="font-bold text-sky-900 dark:text-sky-300">
-          Instructor Portal Integration:
+      <div className="p-5 rounded-lg bg-slate-950 text-white border-l-4 border-bl space-y-2 mb-6 shadow-md">
+        <p className="font-bold text-bl text-xs font-mono uppercase tracking-wider">
+          Instructor Portal Integration
         </p>
-        <p className="text-ink-2">
+        <p className="text-slate-200 text-xs sm:text-sm font-medium leading-relaxed">
           By signing the faculty agreement or clicking &ldquo;I Agree&rdquo; on the Rhythmzz Instructor Portal, you confirm that you have read, understood, and agreed to be bound by these Terms and Conditions in full. This document forms part of your formal engagement with Rhythmzz Academy of Dance.
         </p>
       </div>
@@ -54,7 +54,7 @@ export default function InstructorTermsPage() {
             <h4 className="font-bold text-ink text-sm sm:text-base">A2. Social Media & Brand Obligations</h4>
             <ul className="list-disc pl-5 mt-2 space-y-1.5 text-xs sm:text-sm text-ink-2">
               <li>
-                <strong>A2.1 Minimum Posting Requirement:</strong> All trainers are required to share a minimum of <strong>2 posts or 1 reel per week</strong> on social media highlighting their training work at Rhythmzz. All posts must tag <span className="font-mono text-bl">@rhythmzzdance.live</span>.
+                <strong>A2.1 Minimum Posting Requirement:</strong> All trainers are required to share a minimum of <strong>2 posts or 1 reel per week</strong> on social media highlighting their training work at Rhythmzz. All posts must tag <span className="font-mono text-slate-950 font-bold bg-slate-100 border border-slate-300 px-1.5 py-0.5 rounded">@rhythmzzdance.live</span>.
               </li>
               <li>
                 <strong>A2.2 Brand Standards:</strong> All public content in which a trainer identifies as a Rhythmzz instructor must reflect positively on the academy. Content deemed offensive, controversial, or contrary to studio values may result in formal warning or suspension.
@@ -118,40 +118,42 @@ export default function InstructorTermsPage() {
               Tiers are reviewed monthly based on verified active monthly student bookings. Upgrades take effect on the 1st of each month.
             </p>
 
-            <div className="overflow-x-auto rounded-md border border-line">
+            <div className="overflow-x-auto rounded-lg border-2 border-slate-200 shadow-sm">
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
-                  <tr className="bg-canvas-muted text-ink font-bold border-b border-line">
+                  <tr className="bg-slate-100 text-slate-950 font-bold border-b-2 border-slate-300">
                     <th className="p-3">Tier</th>
                     <th className="p-3">Monthly Bookings</th>
                     <th className="p-3">Revenue Split</th>
                     <th className="p-3">Key Benefits</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-line text-ink-2">
-                  <tr className="hover:bg-canvas-muted/40">
-                    <td className="p-3 font-bold text-ink">Starter</td>
+                <tbody className="divide-y divide-slate-200 text-slate-800 font-medium">
+                  <tr className="hover:bg-slate-50">
+                    <td className="p-3 font-bold text-slate-950">Starter</td>
                     <td className="p-3">11 to 25 bookings</td>
-                    <td className="p-3 font-semibold text-emerald-600">35%</td>
+                    <td className="p-3 font-extrabold text-emerald-800">35%</td>
                     <td className="p-3">Standard profile listing + dashboard access</td>
                   </tr>
-                  <tr className="hover:bg-canvas-muted/40">
-                    <td className="p-3 font-bold text-ink">Pro</td>
+                  <tr className="hover:bg-slate-50">
+                    <td className="p-3 font-bold text-slate-950">Pro</td>
                     <td className="p-3">26 to 40 bookings</td>
-                    <td className="p-3 font-semibold text-emerald-600">38%</td>
+                    <td className="p-3 font-extrabold text-emerald-800">38%</td>
                     <td className="p-3">Featured profile badge + early studio slot booking</td>
                   </tr>
-                  <tr className="hover:bg-canvas-muted/40">
-                    <td className="p-3 font-bold text-ink">Pro Plus</td>
+                  <tr className="hover:bg-slate-50">
+                    <td className="p-3 font-bold text-slate-950">Pro Plus</td>
                     <td className="p-3">41 to 59 bookings</td>
-                    <td className="p-3 font-semibold text-emerald-600">40%</td>
+                    <td className="p-3 font-extrabold text-emerald-800">40%</td>
                     <td className="p-3">Priority studio scheduling + prominent marketing spotlight</td>
                   </tr>
-                  <tr className="hover:bg-canvas-muted/40 bg-amber-500/5">
-                    <td className="p-3 font-bold text-amber-700 dark:text-amber-400">Elite</td>
-                    <td className="p-3 font-semibold">60+ bookings</td>
-                    <td className="p-3 font-bold text-emerald-600">45%</td>
-                    <td className="p-3">Co-branded content + gear sponsorship + 100% fee of 2 students</td>
+                  <tr className="bg-slate-900 text-white border-t-2 border-slate-950">
+                    <td className="p-3 font-black text-[#FDE68A] flex items-center gap-1.5">
+                      <span className="px-2 py-0.5 rounded bg-white/15 text-[#FDE68A] text-[10px] font-black uppercase">Elite</span>
+                    </td>
+                    <td className="p-3 font-bold text-white">60+ bookings</td>
+                    <td className="p-3 font-black text-emerald-400">45%</td>
+                    <td className="p-3 font-medium text-slate-200">Co-branded content + gear sponsorship + 100% fee of 2 students</td>
                   </tr>
                 </tbody>
               </table>

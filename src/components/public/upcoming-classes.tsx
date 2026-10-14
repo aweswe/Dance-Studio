@@ -114,7 +114,7 @@ export function UpcomingClasses() {
                     item.statusType === 'urgent'
                       ? 'bg-bl text-blk'
                       : item.statusType === 'new'
-                      ? 'bg-bl text-white'
+                      ? 'bg-slate-950 text-white font-bold'
                       : 'bg-white/90 text-blk'
                   }`}
                 >

@@ -139,7 +139,7 @@ export function PortalShell({ role, name, isKuchipudi, unreadNotices, children }
                 <Icon size={16} strokeWidth={isActive ? 2 : 1.5} className={isActive ? "text-bl" : "text-ink-3"} />
                 {item.name}
                 {item.name === "Notices" && unreadNotices ? (
-                  <span className="ml-auto text-[10px] font-semibold bg-bl text-white rounded-md px-1.5 py-0.5">
+                  <span className="ml-auto text-[10px] font-bold bg-slate-950 text-white rounded-md px-1.5 py-0.5">
                     {unreadNotices}
                   </span>
                 ) : null}

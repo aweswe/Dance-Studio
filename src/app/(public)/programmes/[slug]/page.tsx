@@ -43,9 +43,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   
   if (slug === 'kuchipudi') {
     return {
-      title: 'Kuchipudi Dance Classes for Kids & Adults | Rhythmzz Academy',
+      title: 'Kuchipudi Dance Classes for Kids & Adults | Rhythmzz Academy of Dance',
       description:
-        'Learn Kuchipudi dance from age 5 to professional performance. Structured year-wise curriculum, expert guidance, and flexible batches now enrolling at Rhythmzz Academy.',
+        'Structured Kuchipudi training from age 5 to Rangapravesham. Year-wise curriculum, expert guidance, and batches now open at Rhythmzz Academy of Dance.',
       alternates: { canonical: `${SITE_URL}/programmes/kuchipudi` },
     };
   }

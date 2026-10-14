@@ -20,8 +20,8 @@ export function WhoOwes({ students }: { students: WhoOwesStudent[] }) {
   const [state, setState] = useState<Record<string, string>>({})
 
   return (
-    <div className="bg-surface rounded-card border border-line overflow-hidden">
-      <div className="p-4 border-b border-gold/30 bg-gold/10 flex items-center justify-between">
+    <div className="bg-surface rounded-card border-2 border-slate-200 overflow-hidden shadow-2xs">
+      <div className="p-4 border-b-2 border-slate-200 bg-slate-50 flex items-center justify-between">
         <div>
           <h3 className="font-display text-lg text-ink tracking-wide">Who Owes This Month</h3>
           <p className="text-sm text-ink-2 mt-0.5">

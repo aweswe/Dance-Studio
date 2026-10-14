@@ -14,7 +14,7 @@ export function KuchipudiShowcase() {
       <PublicPageTitle
         eyebrow="Classical · Fri & Sat"
         title="Kuchipudi"
-        description="Srusti, 6:30 to 7:30. From age 5. Exam when she says you are ready — not before."
+        description="Friday and Saturday, 6:30 to 7:30. From age 5. You sit the exam when faculty assesses readiness — not before."
       />
 
       <HomepageSection className={sectionPadAfterTitleLg}>

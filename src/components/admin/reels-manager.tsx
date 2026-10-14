@@ -126,7 +126,7 @@ export function ReelsManager({ initialItems }: { initialItems: HomepageReelRow[]
         </div>
 
         {slotsLeft <= 0 ? (
-          <p className="text-sm text-gold">All {MAX_HOMEPAGE_REELS} slots full — delete a reel to add a new one.</p>
+          <p className="text-sm text-amber-800 font-bold">All {MAX_HOMEPAGE_REELS} slots full — delete a reel to add a new one.</p>
         ) : (
           <div className="grid gap-3 sm:grid-cols-2">
             <Input

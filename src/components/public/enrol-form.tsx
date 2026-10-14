@@ -361,34 +361,34 @@ export function EnrolForm({
 
       <form onSubmit={handleEnrolSubmit} className="space-y-5" noValidate>
         {!showProgrammeSelector && selectedProgramme ? (
-          <div className="p-4 rounded-md border-2 border-bl/40 bg-bl/5 space-y-2">
+          <div className="p-4 rounded-md border-2 border-slate-900 bg-white space-y-2 shadow-sm">
             <div className="flex items-center justify-between">
-              <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-bl flex items-center gap-1.5">
-                <CheckCircle2 size={13} className="text-bl" /> Selected Programme &amp; Plan
+              <span className="text-[10px] font-mono font-black uppercase tracking-wider text-slate-950 flex items-center gap-1.5">
+                <CheckCircle2 size={14} className="text-emerald-700" /> Selected Programme &amp; Plan
               </span>
               <button
                 type="button"
                 onClick={() => setShowProgrammeSelector(true)}
-                className="text-[11px] font-bold text-bl hover:underline cursor-pointer"
+                className="text-[11px] font-bold text-sky-900 hover:text-black underline cursor-pointer"
               >
                 Change
               </button>
             </div>
             <div className="flex items-baseline justify-between gap-2">
               <div>
-                <h4 className="font-anton text-lg sm:text-xl text-ink uppercase tracking-tight">
+                <h4 className="font-anton text-lg sm:text-xl text-slate-950 uppercase tracking-tight">
                   {selectedProgramme.name}
                 </h4>
-                <p className="text-xs text-ink-2 font-medium capitalize mt-0.5">
+                <p className="text-xs text-slate-700 font-medium capitalize mt-0.5">
                   {plan.replace('-', ' ')} Plan · {selectedProgramme.age_group || 'All levels'}
                 </p>
               </div>
               {isPay && (
                 <div className="text-right">
-                  <span className="font-anton text-2xl text-ink">
+                  <span className="font-anton text-2xl text-slate-950">
                     {formatCurrency(fee)}
                   </span>
-                  <span className="block text-[10px] text-ink-3 uppercase font-mono">
+                  <span className="block text-[10px] text-slate-600 uppercase font-mono font-bold">
                     {plan.replace('-', ' ')}
                   </span>
                 </div>
@@ -418,14 +418,14 @@ export function EnrolForm({
                     type="button"
                     onClick={() => handleSelectProgramme(p.id)}
                     className={cn(
-                      "p-3 rounded-md border text-left transition-all flex flex-col justify-between cursor-pointer",
-                      isSelected ? "border-bl bg-bl/10 shadow-sm" : "border-line bg-canvas hover:border-line-strong"
+                      "p-3 rounded-md border-2 text-left transition-all flex flex-col justify-between cursor-pointer",
+                      isSelected ? "border-slate-950 bg-slate-950 text-white shadow-sm" : "border-slate-200 bg-white hover:border-slate-400 text-slate-900"
                     )}
                   >
-                    <p className={cn("text-xs font-bold leading-tight", isSelected ? "text-bl" : "text-ink")}>{p.name}</p>
-                    <p className="text-[10px] text-ink-2 mt-0.5">{p.age_group || 'Ask the desk'}</p>
+                    <p className={cn("text-xs font-bold leading-tight", isSelected ? "text-white" : "text-slate-950")}>{p.name}</p>
+                    <p className={cn("text-[10px] mt-0.5", isSelected ? "text-slate-300" : "text-slate-600 font-medium")}>{p.age_group || 'Ask the desk'}</p>
                     {isPay && (
-                      <p className="text-[11px] font-mono font-bold text-ink mt-2">{formatCurrency(p.fees_monthly)}</p>
+                      <p className={cn("text-[11px] font-mono font-bold mt-2", isSelected ? "text-[#FDE68A]" : "text-slate-950")}>{formatCurrency(p.fees_monthly)}</p>
                     )}
                   </button>
                 );
@@ -533,7 +533,7 @@ export function EnrolForm({
                 onClick={() => setPlan(p.id)}
                 className={cn(
                   'flex-1 min-w-[100px] py-2 px-2.5 rounded-md text-[11px] font-bold uppercase tracking-wider border transition-colors cursor-pointer',
-                  plan === p.id ? 'border-bl bg-bl/10 text-bl shadow-2xs' : 'border-line text-ink-2 hover:border-line-strong'
+                  plan === p.id ? 'border-2 border-slate-950 bg-slate-950 text-white shadow-sm' : 'border-2 border-slate-200 bg-white text-slate-800 font-bold hover:border-slate-400'
                 )}
               >
                 {p.label}

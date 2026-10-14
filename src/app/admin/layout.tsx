@@ -11,9 +11,9 @@ export default async function AdminLayout({ children }: { children: ReactNode })
   const initial = (email[0] ?? 'A').toUpperCase()
 
   const banner = !process.env.WHATSAPP_API_KEY ? (
-    <div className="bg-gold/15 border-b border-gold/40 text-gold px-6 py-2 text-xs font-medium">
+    <div className="bg-amber-100 border-b border-amber-300 text-amber-950 px-6 py-2 text-xs font-bold">
       WhatsApp messaging is in TEST MODE — messages are logged, not sent. Add
-      <code className="mx-1 bg-gold/10 px-1.5 py-0.5 rounded">WHATSAPP_API_KEY</code>
+      <code className="mx-1 bg-amber-200 text-amber-950 font-black px-1.5 py-0.5 rounded border border-amber-400">WHATSAPP_API_KEY</code>
       to go live.
     </div>
   ) : null

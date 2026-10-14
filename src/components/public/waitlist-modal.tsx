@@ -156,8 +156,8 @@ export function WaitlistModal({
           /* FORM STATE */
           <form onSubmit={handleSubmit} className="space-y-4">
             <header className="pr-8">
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-amber-100 text-amber-900 text-[10px] font-extrabold uppercase tracking-wider mb-1.5">
-                <Clock className="w-3 h-3" />
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-neutral-950 text-white text-[10px] font-extrabold uppercase tracking-wider mb-1.5">
+                <Clock className="w-3 h-3 text-[#FDE68A]" />
                 <span>Batch Priority Queue</span>
               </div>
               <h3
@@ -166,7 +166,7 @@ export function WaitlistModal({
               >
                 Join Programme Waitlist
               </h3>
-              <p className="text-xs text-neutral-600 font-medium mt-1 leading-relaxed">
+              <p className="text-xs text-neutral-800 font-medium mt-1 leading-relaxed">
                 When full batches open new spots or upcoming certification cohorts launch, waitlist applicants receive first-priority enrolment notices.
               </p>
             </header>
@@ -209,7 +209,7 @@ export function WaitlistModal({
 
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-neutral-800 mb-1">
-                    Email Address <span className="text-neutral-400 font-normal">(Optional)</span>
+                    Email Address <span className="text-neutral-600 font-medium normal-case">(Optional)</span>
                   </label>
                   <input
                     type="email"
@@ -257,7 +257,7 @@ export function WaitlistModal({
 
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-neutral-800 mb-1">
-                  Additional Notes or Questions <span className="text-neutral-400 font-normal">(Optional)</span>
+                  Additional Notes or Questions <span className="text-neutral-600 font-medium normal-case">(Optional)</span>
                 </label>
                 <textarea
                   rows={2}

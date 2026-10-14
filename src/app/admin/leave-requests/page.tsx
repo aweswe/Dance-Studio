@@ -78,7 +78,7 @@ function LeaveCard({ row, showActions }: { row: any; showActions: boolean }) {
             </Link>
             <span className={`text-[11px] font-medium px-1.5 py-0.5 rounded capitalize ${
               row.status === "pending"
-                ? "bg-gold/15 text-gold"
+                ? "bg-amber-100 text-amber-950 font-bold border border-amber-300"
                 : row.status === "approved"
                   ? "bg-danger/10 text-danger"
                   : "bg-canvas-muted text-ink-3"

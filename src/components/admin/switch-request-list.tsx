@@ -89,8 +89,8 @@ export function SwitchRequestList({ initialRequests }: { initialRequests: Switch
                   <p className="text-[10px] uppercase tracking-wider text-ink-3 mb-1">Current</p>
                   <p className="text-ink">{batchSummary(r.current_batch)}</p>
                 </div>
-                <div className="rounded-md border border-bl/30 px-3 py-2 bg-bl/5">
-                  <p className="text-[10px] uppercase tracking-wider text-ink-3 mb-1">Requested</p>
+                <div className="rounded-md border-2 border-slate-900 px-3 py-2 bg-white shadow-2xs">
+                  <p className="text-[10px] uppercase tracking-wider text-slate-950 font-bold mb-1">Requested</p>
                   <p className="text-ink">{batchSummary(r.requested_batch, r.requested_batch?.programme?.name)}</p>
                 </div>
               </div>

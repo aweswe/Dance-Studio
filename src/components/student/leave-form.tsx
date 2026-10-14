@@ -19,13 +19,13 @@ export function LeaveAcademyForm({ existingPendingDate }: PlatformLeaveFormProps
 
   if (existingPendingDate || submitted) {
     return (
-      <div className="rounded-xl border border-gold/40 bg-gold/5 p-6 text-center space-y-2">
-        <p className="text-sm font-semibold text-ink">Your withdrawal request is pending</p>
-        <p className="text-sm text-ink-2">
+      <div className="rounded-xl border-2 border-slate-900 bg-white p-6 text-center space-y-2 shadow-sm">
+        <p className="text-sm font-bold text-slate-950">Your withdrawal request is pending</p>
+        <p className="text-sm text-slate-700 font-medium leading-relaxed">
           The team has been notified and will reach out to you soon. If you change your mind, please contact the academy directly.
         </p>
         {existingPendingDate && (
-          <p className="text-[11px] text-ink-3">Submitted on {existingPendingDate}</p>
+          <p className="text-[11px] text-slate-600 font-mono font-medium">Submitted on {existingPendingDate}</p>
         )}
       </div>
     );

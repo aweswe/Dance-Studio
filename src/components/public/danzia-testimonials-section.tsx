@@ -187,10 +187,10 @@ export function DanziaTestimonialsSection({
             className={`relative ${homepageCardRadius} bg-surface border border-line p-8 sm:p-10 md:p-12 flex-1 flex flex-col justify-between`}
           >
             <div className="flex items-center justify-between mb-6 sm:mb-8">
-              <span className="text-[10px] font-bold uppercase tracking-[0.1em] text-bl bg-bl/10 px-3 py-1.5 rounded-md border border-bl/20">
+              <span className="text-[10px] font-mono font-bold uppercase tracking-[0.12em] text-slate-900 bg-slate-100 px-3 py-1.5 rounded-md border border-slate-300">
                 {current.highlight}
               </span>
-              <Quote size={24} className="text-bl/40 rotate-180" />
+              <Quote size={24} className="text-slate-400 rotate-180" />
             </div>
 
             <blockquote className="text-lg sm:text-xl md:text-2xl text-ink font-serif italic leading-relaxed mb-8 sm:mb-10">
