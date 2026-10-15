@@ -20,6 +20,9 @@ CREATE TABLE IF NOT EXISTS public.products (
 -- Enable RLS
 ALTER TABLE public.products ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "public_read_active_products" ON public.products;
+DROP POLICY IF EXISTS "admin_manage_products" ON public.products;
+
 -- Public can view active products
 CREATE POLICY "public_read_active_products" ON public.products
   FOR SELECT
@@ -30,18 +33,22 @@ CREATE POLICY "admin_manage_products" ON public.products
   FOR ALL
   TO authenticated
   USING (
-    EXISTS (
-      SELECT 1 FROM public.instructors
-      WHERE instructors.user_id = auth.uid()
-      AND instructors.is_admin = true
+    public.get_user_role() = 'admin'
+    OR EXISTS (
+      SELECT 1 FROM public.users
+      WHERE users.id = auth.uid()
+      AND users.role = 'admin'
     )
+    OR (auth.jwt() ->> 'role') = 'service_role'
   )
   WITH CHECK (
-    EXISTS (
-      SELECT 1 FROM public.instructors
-      WHERE instructors.user_id = auth.uid()
-      AND instructors.is_admin = true
+    public.get_user_role() = 'admin'
+    OR EXISTS (
+      SELECT 1 FROM public.users
+      WHERE users.id = auth.uid()
+      AND users.role = 'admin'
     )
+    OR (auth.jwt() ->> 'role') = 'service_role'
   );
 
 -- Index for public storefront queries
