@@ -29,30 +29,61 @@ INSERT INTO public.users (id, role) VALUES ('<paste-auth-uid>', 'admin')
 ON CONFLICT (id) DO UPDATE SET role = 'admin';
 ```
 
-## 2. Vercel
+## 2. Vercel Deployment Strategy (New Free Account & Size Reduction)
 
-1. Import the repo, framework preset Next.js (auto-detected), root directory default.
-2. Add **Environment Variables** (Production — and Preview if wanted):
+> [!IMPORTANT]
+> **Production Launch Policy**: For official production rollout, create and link a **brand new free Vercel account**. This grants a fresh 10 GB deployment storage quota and 100 GB Fast Data Transfer bandwidth, completely unencumbered by historical testing deployments.
 
-   | Variable | Required | Notes |
+### A. Deployment Size Reduction & Bandwidth Protection (Pre-Deployment Checklist)
+
+To prevent hitting Vercel's 10 GB deployment storage limit and 100 GB bandwidth cap:
+
+1. **Strict Media Size Cap**:
+   - **`public/` directory must stay below 120 MB** (currently reduced from 341 MB down to **102 MB**).
+   - Never commit raw uncompressed `.mp4` video files or camera-raw photos (>2 MB) into the repository.
+   - All videos in `public/videos/` must be web-optimized using `ffmpeg` (`-crf 26`, web resolution, and `-movflags +faststart` for instant streaming).
+   - High-resolution e-commerce and gallery photos are served via edge CDNs (Unsplash / Supabase Storage / Vercel Blob) rather than git bundle storage.
+
+2. **Prevent Deployment Storage Bloat on Vercel**:
+   - By default, Vercel creates and preserves a deployment for every commit and preview branch.
+   - In project settings (**Settings → Git**), restrict Preview Deployments to only pull requests, or disable preview deployments for draft branches.
+   - Periodically prune stale preview deployments using the Vercel CLI:
+     ```bash
+     # Safely deletes old preview deployments without touching the production domain
+     npx vercel rm <project-name> --safe --yes
+     ```
+
+### B. Deploying to the New Free Vercel Account (Step-by-Step)
+
+1. **Sign Up / Switch Account**:
+   - Create a fresh Vercel Hobby account (e.g. using the studio administrative email or GitHub org).
+2. **Import Repository**:
+   - In the new Vercel account, click **Add New... → Project**.
+   - Import `aweswe/Dance-Studio`.
+   - Framework Preset: **Next.js** (auto-detected).
+   - Root Directory: `./` (default).
+3. **Add Environment Variables**:
+
+   | Variable | Required | Description |
    |---|---|---|
-   | `NEXT_PUBLIC_SUPABASE_URL` | ✅ | Project URL, `https://…supabase.co` |
-   | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | ✅ | Publishable anon key (safe for browser) |
-   | `SUPABASE_SERVICE_ROLE_KEY` | ✅ | Server-only; never prefix with `NEXT_PUBLIC_` |
-   | `NEXT_PUBLIC_SITE_URL` | optional | Defaults to `https://rhythmzz.in` in code |
-   | `NEXT_PUBLIC_RAZORPAY_KEY_ID` | Phase 3 | Enables payments + "Pay now" everywhere |
-   | `RAZORPAY_KEY_ID` / `RAZORPAY_KEY_SECRET` | Phase 3 | Server-side order creation |
-   | `RAZORPAY_WEBHOOK_SECRET` | Phase 3 | Webhook signature verification |
-   | `WHATSAPP_API_URL` / `WHATSAPP_API_KEY` / `WHATSAPP_PROVIDER` | Phase 7 | WATI/Interakt; absent → mock mode |
-   | `NEXT_PUBLIC_UPI_ID` | optional | UPI VPA shown when Razorpay is off |
-   | `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` | optional | Durable rate limits |
-   | `CRON_SECRET` | Phase 7 | Guards `/api/cron/*` (`Authorization: Bearer`) |
+   | `NEXT_PUBLIC_SUPABASE_URL` | ✅ | `https://pndbazmwnbqzkwwmmgaf.supabase.co` |
+   | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | ✅ | Supabase anonymous public key |
+   | `SUPABASE_SERVICE_ROLE_KEY` | ✅ | Supabase secret service role key (server only) |
+   | `DATABASE_URL` | ✅ | Supabase transaction pooler connection string |
+   | `NEXT_PUBLIC_SITE_URL` | ✅ | `https://rhythmzz.in` (or production domain) |
+   | `NEXT_PUBLIC_RAZORPAY_KEY_ID` | Phase 3 | Razorpay Key ID |
+   | `RAZORPAY_KEY_ID` | Phase 3 | Razorpay Secret Key ID |
+   | `RAZORPAY_KEY_SECRET` | Phase 3 | Razorpay Secret |
+   | `RAZORPAY_WEBHOOK_SECRET` | Phase 3 | Razorpay Webhook Secret |
+   | `CRON_SECRET` | ✅ | Secret token protecting cron endpoints (`/api/cron/*`) |
+   | `BLOB_READ_WRITE_TOKEN` | Optional | Generated under Vercel Storage → Blob for admin uploads |
 
-3. **Background crons** use GitHub Actions (`.github/workflows/cron.yml`), not Vercel — Hobby tier does not support Vercel crons. In the repo: **Settings → Secrets → Actions**, add `CRON_SECRET` (same string as Vercel). Optional `SITE_URL` if not `https://rhythmzz.in`.
-4. **Custom domain**: Settings → Domains → add `rhythmzz.in` and `www.rhythmzz.in` (redirect to apex).
-   - DNS at the registrar: apex `A 76.76.21.21`, `www CNAME cname.vercel-dns.com` (or use Vercel's nameservers).
-   - After DNS resolves: HTTPS cert is issued automatically; enable "Force HTTPS".
-5. Deploy and smoke-test: homepage canonicals/OG use `https://rhythmzz.in`, login works, admin works.
+4. **Background Crons**:
+   - GitHub Actions (`.github/workflows/cron.yml`) triggers background jobs. Add `CRON_SECRET` in **GitHub Repo → Settings → Secrets and variables → Actions**.
+5. **Custom Domain**:
+   - In Vercel Project **Settings → Domains**, add `rhythmzz.in` and `www.rhythmzz.in`.
+   - DNS at registrar: Apex `A 76.76.21.21`, Subdomain `CNAME cname.vercel-dns.com`.
+   - Enable "Force HTTPS" once SSL certificates issue.
 
 ## 3. Supabase Auth (dashboard → Authentication → URL Configuration)
 
