@@ -19,6 +19,17 @@ export interface Product {
 
 export const MAX_CATALOG_PRODUCTS = 10;
 
+export function resolveProductImageUrl(url?: string | null, fallbackSvg: string = '/gear/dance-tee.svg'): string {
+  if (!url || typeof url !== 'string') return fallbackSvg;
+  const trimmed = url.trim();
+  if (!trimmed) return fallbackSvg;
+  // If a legacy .webp path was saved that does not exist on disk, map it to .svg
+  if (trimmed.startsWith('/gear/') && trimmed.endsWith('.webp')) {
+    return trimmed.replace('.webp', '.svg');
+  }
+  return trimmed;
+}
+
 /** Default launch catalog of 10 academy merchandise items */
 export const DEFAULT_PRODUCTS: Product[] = [
   {
@@ -29,7 +40,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     tag: 'TEEN',
     price: 599,
     sizes: ['XS', 'S', 'M', 'L'],
-    imageUrl: '/gear/dance-tee.svg',
+    imageUrl: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=800&q=80',
     description: 'Signature lightweight, moisture-wicking studio tee with subtle Rhythmzz crest on the chest.',
     isActive: true,
     sortOrder: 1,
@@ -42,7 +53,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     tag: 'TEEN',
     price: 549,
     sizes: ['XS', 'S', 'M', 'L'],
-    imageUrl: '/gear/dance-shorts.svg',
+    imageUrl: 'https://images.unsplash.com/photo-1591195853828-11db59a44f6b?auto=format&fit=crop&w=800&q=80',
     description: 'Ultra-stretch performance shorts built for high-kicks, floor work, and energetic rehearsals.',
     isActive: true,
     sortOrder: 2,
@@ -55,7 +66,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     tag: 'WOMEN',
     price: 699,
     sizes: ['XS', 'S', 'M', 'L', 'XL'],
-    imageUrl: '/gear/sports-bra.svg',
+    imageUrl: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=800&q=80',
     description: 'Medium-impact compression bra with reinforced cross-back straps and breathable mesh panel.',
     isActive: true,
     sortOrder: 3,
@@ -68,7 +79,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     tag: 'WOMEN',
     price: 1299,
     sizes: ['S', 'M', 'L', 'XL'],
-    imageUrl: '/gear/dance-jacket.svg',
+    imageUrl: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=800&q=80',
     description: 'Raglan-sleeve zipped track jacket with high collar and brushed fleece lining for warmups.',
     isActive: true,
     sortOrder: 4,
@@ -81,7 +92,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     tag: 'WOMEN',
     price: 649,
     sizes: ['XS', 'S', 'M', 'L'],
-    imageUrl: '/gear/active-shorts.svg',
+    imageUrl: 'https://images.unsplash.com/photo-1506629082955-511b1aa562c8?auto=format&fit=crop&w=800&q=80',
     description: 'High-waisted compression shorts with anti-ride silicone hem and hidden locker key pocket.',
     isActive: true,
     sortOrder: 5,
@@ -94,7 +105,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     tag: 'MEN',
     price: 649,
     sizes: ['S', 'M', 'L', 'XL', 'XXL'],
-    imageUrl: '/gear/track-tee.svg',
+    imageUrl: 'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?auto=format&fit=crop&w=800&q=80',
     description: 'Athletic-cut breathable jersey tee with drop-tail hem and reflective Rhythmzz typography.',
     isActive: true,
     sortOrder: 6,
@@ -107,7 +118,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     tag: 'MEN',
     price: 899,
     sizes: ['S', 'M', 'L', 'XL', 'XXL'],
-    imageUrl: '/gear/track-pants.svg',
+    imageUrl: 'https://images.unsplash.com/photo-1552902865-b72c031ac5ea?auto=format&fit=crop&w=800&q=80',
     description: 'Tapered rehearsal track pants with ankle zips, deep zippered side pockets, and drawstring waist.',
     isActive: true,
     sortOrder: 7,
@@ -120,7 +131,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     tag: 'MEN',
     price: 1499,
     sizes: ['S', 'M', 'L', 'XL'],
-    imageUrl: '/gear/studio-hoodie.svg',
+    imageUrl: 'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=800&q=80',
     description: 'Heavyweight 380 GSM organic cotton fleece pullover hoodie with kangaroo pouch and ribbed cuffs.',
     isActive: true,
     sortOrder: 8,
@@ -133,7 +144,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     tag: 'UNISEX',
     price: 499,
     sizes: ['FREE SIZE'],
-    imageUrl: '/gear/studio-cap.svg',
+    imageUrl: 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&w=800&q=80',
     description: 'Structured 6-panel cotton twill snapback cap featuring 3D embroidered Rhythmzz emblem.',
     isActive: true,
     sortOrder: 9,
@@ -146,7 +157,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     tag: 'UNISEX',
     price: 799,
     sizes: ['STANDARD'],
-    imageUrl: '/gear/duffle-bag.svg',
+    imageUrl: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=800&q=80',
     description: 'Spacious 35L water-repellent canvas dance duffle with dedicated shoe tunnel and shoulder strap.',
     isActive: true,
     sortOrder: 10,
@@ -206,7 +217,7 @@ export async function getProducts(category?: string): Promise<Product[]> {
       tag: item.tag || 'GEAR',
       price: item.price,
       sizes: Array.isArray(item.sizes) && item.sizes.length > 0 ? item.sizes : ['M'],
-      imageUrl: item.image_url || '/gear/dance-tee.webp',
+      imageUrl: resolveProductImageUrl(item.image_url, '/gear/dance-tee.svg'),
       description: item.description || '',
       isActive: item.is_active,
       sortOrder: item.sort_order,

@@ -20,9 +20,18 @@ describe('Rhythmzz Gear & Merch Catalog', () => {
       expect(p.price).toBeGreaterThan(0);
       expect(['teen', 'women', 'men', 'accessories']).toContain(p.category);
       expect(p.sizes.length).toBeGreaterThan(0);
-      expect(p.imageUrl).toMatch(/^\/gear\/.*\.svg$/);
+      expect(p.imageUrl).toMatch(/^(https?:\/\/|\/gear\/).*/);
       expect(p.isActive).toBe(true);
     }
+  });
+
+  it('correctly resolves legacy .webp paths to working .svg and preserves external URLs', async () => {
+    const { resolveProductImageUrl } = await import('@/data/products');
+    expect(resolveProductImageUrl('/gear/dance-tee.webp')).toBe('/gear/dance-tee.svg');
+    expect(resolveProductImageUrl('/gear/studio-hoodie.webp')).toBe('/gear/studio-hoodie.svg');
+    expect(resolveProductImageUrl('https://images.unsplash.com/photo-123')).toBe('https://images.unsplash.com/photo-123');
+    expect(resolveProductImageUrl('')).toBe('/gear/dance-tee.svg');
+    expect(resolveProductImageUrl(null)).toBe('/gear/dance-tee.svg');
   });
 
   it('correctly constructs automated WhatsApp message with pre-filled details', () => {

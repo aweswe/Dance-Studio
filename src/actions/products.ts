@@ -3,7 +3,7 @@
 import { createServerSupabase, createAdminSupabase } from '@/lib/supabase/server';
 import { isAdmin } from '@/lib/supabase/guards';
 import { revalidatePath } from 'next/cache';
-import { DEFAULT_PRODUCTS, MAX_CATALOG_PRODUCTS, type Product } from '@/data/products';
+import { DEFAULT_PRODUCTS, MAX_CATALOG_PRODUCTS, resolveProductImageUrl, type Product } from '@/data/products';
 
 import type { Database } from '@/lib/supabase/types';
 
@@ -52,7 +52,7 @@ export async function getAdminProducts(): Promise<{
     tag: item.tag || 'GEAR',
     price: item.price,
     sizes: Array.isArray(item.sizes) && item.sizes.length > 0 ? item.sizes : ['M'],
-    imageUrl: item.image_url || '/gear/dance-tee.webp',
+    imageUrl: resolveProductImageUrl(item.image_url, '/gear/dance-tee.svg'),
     description: item.description || '',
     isActive: item.is_active,
     sortOrder: item.sort_order,

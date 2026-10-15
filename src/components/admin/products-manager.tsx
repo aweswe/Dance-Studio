@@ -17,7 +17,7 @@ import {
   Loader2,
   Upload,
 } from 'lucide-react';
-import { type Product, MAX_CATALOG_PRODUCTS, buildWhatsAppOrderLink } from '@/data/products';
+import { type Product, MAX_CATALOG_PRODUCTS, buildWhatsAppOrderLink, resolveProductImageUrl } from '@/data/products';
 import { updateProduct, createProduct, toggleProductActive, type ProductInput } from '@/actions/products';
 import { cn } from '@/lib/utils/cn';
 
@@ -339,7 +339,7 @@ export function ProductsManager({ initialProducts }: ProductsManagerProps) {
                       <div className="flex items-center gap-3">
                         <div className="w-12 h-14 rounded border border-line bg-canvas p-1 relative overflow-hidden shrink-0 flex items-center justify-center">
                           <Image
-                            src={item.imageUrl}
+                            src={resolveProductImageUrl(item.imageUrl, '/gear/dance-tee.svg')}
                             alt={item.name}
                             width={48}
                             height={56}
@@ -574,7 +574,7 @@ export function ProductsManager({ initialProducts }: ProductsManagerProps) {
                   </button>
                   <div className="w-10 h-10 rounded border border-line bg-surface shrink-0 overflow-hidden flex items-center justify-center p-1">
                     <Image
-                      src={formData.imageUrl || '/gear/dance-tee.svg'}
+                      src={resolveProductImageUrl(formData.imageUrl, '/gear/dance-tee.svg')}
                       alt="Preview"
                       width={32}
                       height={32}

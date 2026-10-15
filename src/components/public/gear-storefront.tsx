@@ -19,6 +19,34 @@ const CATEGORIES: { id: ProductCategory; label: string }[] = [
   { id: 'accessories', label: 'Accessories' },
 ];
 
+function ProductCardImage({
+  src,
+  alt,
+  fallbackSrc = '/gear/dance-tee.svg',
+}: {
+  src: string;
+  alt: string;
+  fallbackSrc?: string;
+}) {
+  const [imgSrc, setImgSrc] = useState(src);
+
+  return (
+    <Image
+      src={imgSrc}
+      alt={alt}
+      width={320}
+      height={400}
+      className="w-full h-full object-contain drop-shadow-md"
+      loading="lazy"
+      onError={() => {
+        if (imgSrc !== fallbackSrc) {
+          setImgSrc(fallbackSrc);
+        }
+      }}
+    />
+  );
+}
+
 export function GearStorefront({ initialProducts, embedded = false }: GearStorefrontProps) {
   const [activeCategory, setActiveCategory] = useState<ProductCategory>('all');
   const [selectedSizes, setSelectedSizes] = useState<Record<string, string>>(() => {
@@ -149,13 +177,9 @@ export function GearStorefront({ initialProducts, embedded = false }: GearStoref
 
                   {/* Artwork / Mockup */}
                   <div className="relative w-full h-full flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
-                    <Image
+                    <ProductCardImage
                       src={product.imageUrl}
                       alt={product.name}
-                      width={320}
-                      height={400}
-                      className="w-full h-full object-contain drop-shadow-md"
-                      loading="lazy"
                     />
                   </div>
                 </div>

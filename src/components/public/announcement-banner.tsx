@@ -6,6 +6,28 @@ import { X } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import type { BannerContent } from '@/data/content';
 
+function sanitizeBannerLink(raw?: string | null): string | null {
+  if (!raw) return null;
+  const trimmed = raw.trim();
+  if (!trimmed) return null;
+  if (
+    trimmed.startsWith('/') ||
+    trimmed.startsWith('http://') ||
+    trimmed.startsWith('https://') ||
+    trimmed.startsWith('#') ||
+    trimmed.startsWith('mailto:') ||
+    trimmed.startsWith('tel:')
+  ) {
+    return trimmed;
+  }
+  const lower = trimmed.toLowerCase();
+  if (lower.includes('contact')) return '/contact';
+  if (lower.includes('enrol') || lower.includes('enroll') || lower.includes('register')) return '/enrol';
+  if (lower.includes('pricing') || lower.includes('fee')) return '/#pricing';
+  if (lower.includes('gear') || lower.includes('merch') || lower.includes('shop')) return '/gear';
+  return `/${trimmed.replace(/^\/+/, '')}`;
+}
+
 export function AnnouncementBanner({ banner }: { banner?: BannerContent | null }) {
   const [isVisible, setIsVisible] = useState(true);
   const [dismissing, setDismissing] = useState(false);
@@ -19,11 +41,13 @@ export function AnnouncementBanner({ banner }: { banner?: BannerContent | null }
 
   if (!isVisible) return null;
 
+  const cleanLink = sanitizeBannerLink(banner.ctaLink);
+
   const inner = (
     <>
       {banner.text}
-      {banner.ctaLink && (
-        <Link href={banner.ctaLink} className="ml-2 underline underline-offset-2 hover:opacity-80 font-black text-slate-950">
+      {cleanLink && (
+        <Link href={cleanLink} className="ml-2 underline underline-offset-2 hover:opacity-80 font-black text-slate-950">
           Learn more
         </Link>
       )}
