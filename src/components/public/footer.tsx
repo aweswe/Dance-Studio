@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { BrandLogo } from '@/components/shared/brand-logo';
 import { HomepageSection } from '@/components/public/homepage-section';
 import { ROUTES, ACADEMY } from '@/lib/utils/constants';
@@ -43,12 +44,29 @@ export function Footer() {
             >
               <BrandLogo className="h-16 sm:h-20 md:h-24 lg:h-28 w-auto max-w-full" />
             </Link>
-            <p className="mt-2 text-[10px] font-bold uppercase tracking-[0.25em] text-bl select-none">
-              FEEL THE BEAT
-            </p>
-            <div className="mt-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded border border-white/15 bg-white/5 text-[9px] font-mono uppercase tracking-wider text-white/70">
-              <span className="w-1.5 h-1.5 rounded-full bg-bl" />
-              IAO Accredited Studio (USA)
+            <div className="mt-3">
+              <Image
+                src="/images/branding/feel-the-beat.png"
+                alt="Feel The Beat — Tagline"
+                width={170}
+                height={34}
+                className="h-6 sm:h-7 w-auto object-contain opacity-90 select-none drop-shadow-sm"
+              />
+            </div>
+            <div className="mt-4 inline-flex items-center gap-2.5 px-3 py-1.5 rounded-md border border-white/15 bg-white/5">
+              <div className="relative h-8 w-8 rounded-full bg-white p-0.5 shrink-0 overflow-hidden flex items-center justify-center">
+                <Image
+                  src="/images/branding/iao-logo.png"
+                  alt="IAO USA Accreditation Logo"
+                  width={30}
+                  height={30}
+                  className="object-contain"
+                />
+              </div>
+              <div className="text-left leading-tight">
+                <span className="block text-[11px] font-bold uppercase tracking-wider text-white">IAO Accredited</span>
+                <span className="block text-[9px] font-mono text-white/60 uppercase">USA Standard · Est. 2014</span>
+              </div>
             </div>
           </div>
 
@@ -81,6 +99,7 @@ export function Footer() {
           <FooterColumn
             title="Services"
             links={[
+              { href: ROUTES.gear, label: 'Rhythmzz Gear' },
               { href: ROUTES.schedule, label: 'Schedule' },
               { href: ROUTES.studioRental, label: 'Studio Rental' },
               { href: ROUTES.programmes, label: 'Programmes' },

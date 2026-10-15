@@ -48,8 +48,8 @@ export default async function InstructorTermsPortalPage() {
           </span>
         </div>
 
-        <div className="overflow-x-auto rounded-lg border-2 border-slate-200 bg-white shadow-sm">
-          <table className="w-full text-left text-xs border-collapse">
+        <div className="w-full overflow-x-auto rounded-lg border-2 border-slate-200 bg-white shadow-sm scrollbar-thin">
+          <table className="w-full min-w-[500px] text-left text-xs border-collapse">
             <thead>
               <tr className="bg-slate-100 text-slate-950 font-bold border-b-2 border-slate-300">
                 <th className="p-3">Tier</th>

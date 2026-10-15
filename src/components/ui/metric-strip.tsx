@@ -42,7 +42,7 @@ export function MetricStrip({ items, className }: { items: MetricItem[]; classNa
           <dt className="text-[10px] sm:text-[11px] text-ink-3 uppercase tracking-wider truncate">{item.label}</dt>
           <dd
             className={cn(
-              "mt-1 text-ink tracking-tight truncate",
+              "mt-1 text-ink tracking-wide truncate",
               item.variant === "text"
                 ? "text-xs sm:text-base font-medium leading-snug"
                 : n === 3

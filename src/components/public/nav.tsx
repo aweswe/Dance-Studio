@@ -46,6 +46,7 @@ type NavLink = { name: string; href: string; hint?: string };
 const PRIMARY_LINKS: NavLink[] = [
   { name: 'Programmes', href: ROUTES.programmes },
   { name: 'Schedule', href: ROUTES.schedule },
+  { name: 'Gear', href: ROUTES.gear },
   { name: 'Studio Rental', href: ROUTES.studioRental },
   { name: 'Contact', href: ROUTES.contact },
 ];
@@ -73,6 +74,7 @@ const DISCOVER_GROUPS: { label: string; links: NavLink[] }[] = [
     label: 'Academy',
     links: [
       { name: 'About', href: ROUTES.about, hint: 'Our story & team' },
+      { name: 'Gear Store', href: ROUTES.gear, hint: 'Official studio dancewear' },
       { name: 'Gallery', href: ROUTES.gallery, hint: 'Stage & studio archive' },
       { name: 'Teach With Us', href: '/teach-with-us', hint: 'Join our faculty roster' },
       { name: 'Blog', href: ROUTES.blog, hint: 'News & stories' },
@@ -96,6 +98,7 @@ const MOBILE_SECTIONS: { id: string; title: string; links: NavLink[] }[] = [
     id: 'studio',
     title: 'Studio & Contact',
     links: [
+      { name: 'Rhythmzz Gear', href: ROUTES.gear, hint: 'Wear the brand' },
       { name: 'Studio Rental', href: ROUTES.studioRental, hint: 'Book the space' },
       { name: 'Schedule', href: ROUTES.schedule, hint: 'Weekly timetable' },
       { name: 'Contact', href: ROUTES.contact, hint: 'Visit or call us' },
@@ -488,8 +491,8 @@ export function Nav() {
       className={cn(
         'sticky top-0 w-full z-50 transition-all duration-200',
         scrolled
-          ? 'bg-white/98 backdrop-blur-md border-b border-line shadow-sm py-2'
-          : 'bg-white/95 backdrop-blur-md border-b border-line shadow-[0_1px_3px_rgba(0,0,0,0.04)] py-2 sm:py-2.5',
+          ? 'bg-white/98 backdrop-blur-md border-b border-line shadow-sm py-1.5'
+          : 'bg-white/95 backdrop-blur-md border-b border-line shadow-[0_1px_3px_rgba(0,0,0,0.04)] py-1.5 sm:py-2',
       )}
     >
       <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-6 md:px-10">
@@ -499,7 +502,7 @@ export function Nav() {
             className="group flex items-center min-w-0 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl shrink-0 lg:col-start-1 touch-manipulation"
             aria-label="Rhythmzz Academy of Dance — home"
           >
-            <BrandLogo priority className="h-9 sm:h-10 w-auto object-contain group-hover:opacity-90 transition-opacity" />
+            <BrandLogo priority className="h-11 sm:h-12 w-auto object-contain group-hover:opacity-90 transition-opacity" />
           </Link>
 
           <nav className="hidden lg:flex items-center justify-center gap-5 xl:gap-6 min-w-0" aria-label="Main navigation">

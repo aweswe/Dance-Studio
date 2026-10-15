@@ -10,14 +10,14 @@ interface ProgrammeCardProps {
 }
 
 const PROGRAMME_IMAGES: Record<string, string> = {
-  'commercial-expressive': '/images/studio-training/contemporary-conditioning.jpg',
+  'commercial-expressive': '/images/programmes/kids-programme-cover.jpg',
   'mind-body-fitness': '/images/studio-training/floorwork-stretch.jpg',
-  'classical-dance': '/images/classical-certification-dancer.png',
-  'kids-dance': '/images/studio-training/group-circle-drill.jpg',
-  'adults-dance': '/images/studio-training/contemporary-conditioning.jpg',
-  kuchipudi: '/images/classical-certification-dancer.png',
-  gymnastics: '/images/srikanth-gymnastics.png',
-  gymnastic: '/images/srikanth-gymnastics.png',
+  'classical-dance': '/images/programmes/kuchipudi-programme-cover.jpg',
+  'kids-dance': '/images/programmes/kids-programme-cover.jpg',
+  'adults-dance': '/images/programmes/adults-programme-cover.jpg',
+  kuchipudi: '/images/programmes/kuchipudi-programme-cover.jpg',
+  gymnastics: '/images/team/srikanth-sree.jpg',
+  gymnastic: '/images/team/srikanth-sree.jpg',
 };
 
 export function ProgrammeCard({ programme, schedule }: ProgrammeCardProps) {

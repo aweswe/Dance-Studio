@@ -87,15 +87,15 @@ export function StudentTable({ initialData }: StudentTableProps) {
         </div>
       )}
 
-      <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse">
+      <div className="w-full overflow-x-auto scrollbar-thin">
+        <table className="w-full min-w-[680px] text-left border-collapse">
           <thead>
             <tr className="bg-canvas-muted border-b border-line">
-              <th className="px-6 py-4 text-xs font-display tracking-[2px] text-ink-2 uppercase">Name</th>
-              <th className="px-6 py-4 text-xs font-display tracking-[2px] text-ink-2 uppercase">Phone</th>
-              <th className="px-6 py-4 text-xs font-display tracking-[2px] text-ink-2 uppercase">Programme & Batch</th>
-              <th className="px-6 py-4 text-xs font-display tracking-[2px] text-ink-2 uppercase">Join Date</th>
-              <th className="px-6 py-4 text-xs font-display tracking-[2px] text-ink-2 uppercase">Status</th>
+              <th className="px-3 sm:px-6 py-3 sm:py-4 text-xs font-display tracking-[1.5px] sm:tracking-[2px] text-ink-2 uppercase">Name</th>
+              <th className="px-3 sm:px-6 py-3 sm:py-4 text-xs font-display tracking-[1.5px] sm:tracking-[2px] text-ink-2 uppercase">Phone</th>
+              <th className="px-3 sm:px-6 py-3 sm:py-4 text-xs font-display tracking-[1.5px] sm:tracking-[2px] text-ink-2 uppercase">Programme & Batch</th>
+              <th className="px-3 sm:px-6 py-3 sm:py-4 text-xs font-display tracking-[1.5px] sm:tracking-[2px] text-ink-2 uppercase">Join Date</th>
+              <th className="px-3 sm:px-6 py-3 sm:py-4 text-xs font-display tracking-[1.5px] sm:tracking-[2px] text-ink-2 uppercase">Status</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-line-subtle">
@@ -105,7 +105,7 @@ export function StudentTable({ initialData }: StudentTableProps) {
                 className="hover:bg-canvas-muted transition-colors cursor-pointer"
                 onClick={() => router.push(`/admin/students/${student.id}`)}
               >
-                <td className="px-6 py-4">
+                <td className="px-3 sm:px-6 py-3 sm:py-4">
                   <div className="font-medium text-ink flex items-center gap-2">
                     {student.name}
                     {student.auth_id && (
@@ -113,7 +113,7 @@ export function StudentTable({ initialData }: StudentTableProps) {
                     )}
                   </div>
                 </td>
-                <td className="px-6 py-4 text-sm text-ink-2">
+                <td className="px-3 sm:px-6 py-3 sm:py-4 text-sm text-ink-2">
                   <div className="flex items-center gap-1">
                     <span>{student.phone ? formatPhone(student.phone) : '—'}</span>
                     {/* Click-to-call / WhatsApp — stop propagation so the row nav doesn't fire */}
@@ -141,7 +141,7 @@ export function StudentTable({ initialData }: StudentTableProps) {
                     ) : null}
                   </div>
                 </td>
-                <td className="px-6 py-4">
+                <td className="px-3 sm:px-6 py-3 sm:py-4">
                   {student.batch ? (
                     <div>
                       <div className="text-sm font-medium text-ink">{student.batch.programme?.name}</div>
@@ -153,10 +153,10 @@ export function StudentTable({ initialData }: StudentTableProps) {
                     <span className="text-sm text-ink-2 italic">No batch</span>
                   )}
                 </td>
-                <td className="px-6 py-4 text-sm text-ink-2">
+                <td className="px-3 sm:px-6 py-3 sm:py-4 text-sm text-ink-2">
                   {formatDate(student.created_at)}
                 </td>
-                <td className="px-6 py-4">
+                <td className="px-3 sm:px-6 py-3 sm:py-4">
                   <Badge variant={student.status === 'active' ? 'green' : 'default'}>
                     {student.status.toUpperCase()}
                   </Badge>

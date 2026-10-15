@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad7" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#141E28" />
+      <stop offset="100%" stop-color="#0A0F14" />
+    </linearGradient>
+    <linearGradient id="pantsGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1E293B" />
+      <stop offset="100%" stop-color="#090D16" />
+    </linearGradient>
+  </defs>
+  <rect width="400" height="500" rx="12" fill="url(#bgGrad7)" />
+  <circle cx="200" cy="250" r="140" fill="#2BB4D8" opacity="0.04" />
+  
+  <!-- Track Pants Graphic -->
+  <g transform="translate(85, 40)">
+    <!-- Waistband -->
+    <rect x="35" y="30" width="160" height="22" rx="4" fill="#0B132B" stroke="#2BB4D8" stroke-width="1.5" />
+    <!-- Drawstrings -->
+    <path d="M110 52 C105 70 95 85 90 95" stroke="#FFFFFF" stroke-width="2" fill="none" stroke-linecap="round" />
+    <path d="M120 52 C125 70 135 85 140 95" stroke="#FFFFFF" stroke-width="2" fill="none" stroke-linecap="round" />
+    <!-- Legs -->
+    <path d="M35 52 L50 370 L95 370 L115 170 L135 370 L180 370 L195 52 Z" 
+          fill="url(#pantsGrad)" stroke="#334155" stroke-width="2" />
+    <!-- Ankle Cuffs -->
+    <rect x="50" y="370" width="45" height="16" rx="2" fill="#0B132B" stroke="#2BB4D8" stroke-width="1.5" />
+    <rect x="135" y="370" width="45" height="16" rx="2" fill="#0B132B" stroke="#2BB4D8" stroke-width="1.5" />
+    <!-- Side Accent Line -->
+    <line x1="38" y1="60" x2="52" y2="365" stroke="#2BB4D8" stroke-width="2" opacity="0.8" />
+    <line x1="192" y1="60" x2="178" y2="365" stroke="#2BB4D8" stroke-width="2" opacity="0.8" />
+  </g>
+</svg>

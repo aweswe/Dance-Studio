@@ -42,7 +42,7 @@ export function EnquiryList({ initialEnquiries }: { initialEnquiries: Enquiry[] 
 
   return (
     <div className="space-y-4">
-      <div className="flex gap-2">
+      <div className="flex flex-wrap gap-2">
         {(['all', 'new', 'contacted', 'closed'] as const).map((f) => (
           <button
             key={f}

@@ -64,7 +64,7 @@ export function SyllabusYears() {
                   {String(item.year).padStart(2, '0')}
                 </span>
                 <div className="flex-1 min-w-0">
-                  <span className="font-anton text-lg sm:text-xl uppercase tracking-tight text-slate-950 block">
+                  <span className="font-anton text-lg sm:text-xl uppercase tracking-wide text-slate-950 block">
                     {item.stageName}
                   </span>
                   <span className="text-xs text-slate-700 font-semibold">
@@ -77,7 +77,7 @@ export function SyllabusYears() {
                 />
               </button>
               {isOpen && (
-                <div className="pl-12 pr-4 pb-6 pt-2 space-y-4">
+                <div className="pl-3 sm:pl-12 pr-2 sm:pr-4 pb-6 pt-2 space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {item.practical && item.practical.length > 0 && (
                       <div className="p-4 rounded-lg bg-slate-50 border-2 border-slate-200">

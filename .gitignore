@@ -50,3 +50,4 @@ supabase/.branches/
 !public/videos/
 !public/videos/**
 kuchipudi /
+extracted_assets/

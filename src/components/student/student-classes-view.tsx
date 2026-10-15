@@ -247,7 +247,7 @@ export function StudentClassesView({ currentStudent, feePaid, programmes, pendin
                 {feePaid ? 'Fees paid' : 'Fees due'}
               </Badge>
             </div>
-            <h2 className="font-anton text-2xl md:text-3xl text-ink tracking-tight">{activeProgramme.name}</h2>
+            <h2 className="font-anton text-2xl md:text-3xl text-ink tracking-wide">{activeProgramme.name}</h2>
             <div className="flex flex-wrap items-center gap-4 text-sm text-ink-2 pt-1">
               <span className="flex items-center gap-1.5 text-ink">
                 <Calendar className="w-3.5 h-3.5 text-bl" strokeWidth={1.5} />
@@ -290,7 +290,7 @@ export function StudentClassesView({ currentStudent, feePaid, programmes, pendin
       {isEnrolled && !pendingSwitch && (
         <Card className="space-y-4">
           <div>
-            <h3 className="font-anton text-lg text-ink tracking-tight">Request a batch switch</h3>
+            <h3 className="font-anton text-lg text-ink tracking-wide">Request a batch switch</h3>
             <p className="text-sm text-ink-2 mt-1">
               Already enrolled? Pick a new batch and send a request — the studio will approve the move.
             </p>
@@ -334,7 +334,7 @@ export function StudentClassesView({ currentStudent, feePaid, programmes, pendin
       )}
 
       <div>
-        <h3 className="font-anton text-xl text-ink tracking-tight">
+        <h3 className="font-anton text-xl text-ink tracking-wide">
           {isEnrolled ? 'Other programmes & batches' : 'Programmes'}
         </h3>
         <p className="text-[12px] text-ink-3 mt-1">
@@ -376,7 +376,7 @@ export function StudentClassesView({ currentStudent, feePaid, programmes, pendin
                     </span>
                   </div>
                   <div className="absolute bottom-3 left-3 right-3">
-                    <p className="font-anton text-xl text-white tracking-tight">{prog.name}</p>
+                    <p className="font-anton text-xl text-white tracking-wide">{prog.name}</p>
                   </div>
                 </div>
               </button>

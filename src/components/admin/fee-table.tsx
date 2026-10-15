@@ -132,39 +132,39 @@ export function FeeTable({
         <p className={`px-4 pt-3 text-sm ${feedback.ok ? 'text-green-ink' : 'text-danger'}`}>{feedback.text}</p>
       )}
 
-      <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse">
+      <div className="w-full overflow-x-auto scrollbar-thin">
+        <table className="w-full min-w-[640px] text-left border-collapse">
           <thead>
             <tr className="bg-canvas-muted border-b border-line">
-              <th scope="col" className="px-6 py-4 text-xs font-display tracking-[2px] text-ink-2 uppercase">Date</th>
-              <th scope="col" className="px-6 py-4 text-xs font-display tracking-[2px] text-ink-2 uppercase">Month</th>
-              <th scope="col" className="px-6 py-4 text-xs font-display tracking-[2px] text-ink-2 uppercase">Student</th>
-              <th scope="col" className="px-6 py-4 text-xs font-display tracking-[2px] text-ink-2 uppercase">Amount</th>
-              <th scope="col" className="px-6 py-4 text-xs font-display tracking-[2px] text-ink-2 uppercase">Method</th>
-              <th scope="col" className="px-6 py-4 text-xs font-display tracking-[2px] text-ink-2 uppercase">Status</th>
-              <th scope="col" className="px-6 py-4 text-xs font-display tracking-[2px] text-ink-2 uppercase">Notes</th>
+              <th scope="col" className="px-3 sm:px-6 py-3 sm:py-4 text-xs font-display tracking-[1.5px] sm:tracking-[2px] text-ink-2 uppercase">Date</th>
+              <th scope="col" className="px-3 sm:px-6 py-3 sm:py-4 text-xs font-display tracking-[1.5px] sm:tracking-[2px] text-ink-2 uppercase">Month</th>
+              <th scope="col" className="px-3 sm:px-6 py-3 sm:py-4 text-xs font-display tracking-[1.5px] sm:tracking-[2px] text-ink-2 uppercase">Student</th>
+              <th scope="col" className="px-3 sm:px-6 py-3 sm:py-4 text-xs font-display tracking-[1.5px] sm:tracking-[2px] text-ink-2 uppercase">Amount</th>
+              <th scope="col" className="px-3 sm:px-6 py-3 sm:py-4 text-xs font-display tracking-[1.5px] sm:tracking-[2px] text-ink-2 uppercase">Method</th>
+              <th scope="col" className="px-3 sm:px-6 py-3 sm:py-4 text-xs font-display tracking-[1.5px] sm:tracking-[2px] text-ink-2 uppercase">Status</th>
+              <th scope="col" className="px-3 sm:px-6 py-3 sm:py-4 text-xs font-display tracking-[1.5px] sm:tracking-[2px] text-ink-2 uppercase">Notes</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-line-subtle">
             {visible.length === 0 ? (
               <tr>
-                <td colSpan={7} className="px-6 py-12 text-center text-ink-2">
+                <td colSpan={7} className="px-3 sm:px-6 py-12 text-center text-ink-2">
                   No payment records found.
                 </td>
               </tr>
             ) : (
               visible.map((p) => (
                 <tr key={p.id} className="hover:bg-canvas-muted transition-colors">
-                  <td className="px-6 py-4 text-sm text-ink-2">{formatDate(p.paid_at)}</td>
-                  <td className="px-6 py-4 text-sm text-ink-2">{monthLabel(p.for_month, p.paid_at)}</td>
-                  <td className="px-6 py-4 font-medium text-ink">{p.student?.name || '—'}</td>
-                  <td className="px-6 py-4 font-medium">{formatCurrency(p.amount)}</td>
-                  <td className="px-6 py-4">
+                  <td className="px-3 sm:px-6 py-3 sm:py-4 text-sm text-ink-2">{formatDate(p.paid_at)}</td>
+                  <td className="px-3 sm:px-6 py-3 sm:py-4 text-sm text-ink-2">{monthLabel(p.for_month, p.paid_at)}</td>
+                  <td className="px-3 sm:px-6 py-3 sm:py-4 font-medium text-ink">{p.student?.name || '—'}</td>
+                  <td className="px-3 sm:px-6 py-3 sm:py-4 font-medium tabular-nums">{formatCurrency(p.amount)}</td>
+                  <td className="px-3 sm:px-6 py-3 sm:py-4">
                     <Badge variant={p.source === 'razorpay' ? 'green' : p.source === 'upi_offline' ? 'blue' : 'default'}>
                       {p.source === 'upi_offline' ? 'UPI' : p.source.toUpperCase()}
                     </Badge>
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-3 sm:px-6 py-3 sm:py-4">
                     <div className="flex flex-col gap-2">
                       <span className="text-xs uppercase tracking-wider text-ink-2">{p.status || 'confirmed'}</span>
                       {p.receipt_number && <span className="text-[10px] text-ink-3">{p.receipt_number}</span>}

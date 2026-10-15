@@ -76,7 +76,7 @@ const PROGRAMME_NOTES: Record<string, string> = {
 
 const PROGRAMME_HERO_IMAGES: Record<string, { src: string; alt: string }> = {
   'commercial-expressive': {
-    src: '/images/studio-training/contemporary-conditioning.jpg',
+    src: '/images/programmes/kids-programme-cover.jpg',
     alt: 'Commercial and Expressive Style dance training at Rhythmzz Academy',
   },
   'mind-body-fitness': {
@@ -84,23 +84,23 @@ const PROGRAMME_HERO_IMAGES: Record<string, { src: string; alt: string }> = {
     alt: 'Mind and body fitness, yoga and conditioning at Rhythmzz',
   },
   'classical-dance': {
-    src: '/images/classical-certification-dancer.png',
+    src: '/images/programmes/kuchipudi-programme-cover.jpg',
     alt: 'Structured level-based classical dance certification',
   },
   'kids-dance': {
-    src: '/images/studio-training/group-circle-drill.jpg',
-    alt: 'Kids and youth dance training at Rhythmzz Academy',
+    src: '/images/programmes/kids-programme-cover.jpg',
+    alt: 'Kids dance foundation and choreography batch at Rhythmzz Academy',
   },
   'adults-dance': {
-    src: '/images/studio-training/contemporary-conditioning.jpg',
-    alt: 'Adults dance batch and contemporary training',
+    src: '/images/programmes/adults-programme-cover.jpg',
+    alt: 'Adults dance batch and contemporary training at Rhythmzz Academy',
   },
   kuchipudi: {
-    src: '/images/classical-certification-dancer.png',
-    alt: 'Kuchipudi classical dance posture and hastas',
+    src: '/images/programmes/kuchipudi-programme-cover.jpg',
+    alt: 'Kuchipudi classical dance recital and stage performance',
   },
   kathak: {
-    src: '/images/classical-certification-dancer.png',
+    src: '/images/programmes/kuchipudi-programme-cover.jpg',
     alt: 'Classical class at Rhythmzz Academy',
   },
 };
@@ -219,27 +219,15 @@ export default async function ProgrammeDetailPage({ params }: Props) {
                             {formatTime(batch.time_start)} – {formatTime(batch.time_end)}
                           </div>
                         </div>
-                        {batch.instructor && (
-                          <div className="flex items-center gap-3">
-                            {batch.instructor.photo_url ? (
-                              <Image
-                                src={batch.instructor.photo_url}
-                                alt={batch.instructor.name}
-                                width={40}
-                                height={40}
-                                className="rounded-full object-cover border border-line"
-                              />
-                            ) : (
-                              <div className="w-10 h-10 rounded-full bg-ink text-bl flex items-center justify-center text-xs font-bold">
-                                {batch.instructor.name?.charAt(0) || 'I'}
-                              </div>
-                            )}
-                            <div className="text-sm">
-                              <div className="text-[10px] text-ink-3 uppercase tracking-wider">Coach</div>
-                              <div className="font-bold text-xs text-ink">{batch.instructor.name}</div>
-                            </div>
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-full bg-ink text-bl flex items-center justify-center text-xs font-bold shrink-0">
+                            CF
                           </div>
-                        )}
+                          <div className="text-sm min-w-0">
+                            <div className="text-[10px] text-ink-3 uppercase tracking-wider">Faculty</div>
+                            <div className="font-bold text-xs text-ink">Certified Studio Lead</div>
+                          </div>
+                        </div>
                       </div>
                     ),
                   )}

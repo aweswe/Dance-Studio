@@ -32,6 +32,9 @@ const FILES = [
   '0014_broadcast_queue.sql',
   '0015_integrity.sql',
   '0016_admin_attendance.sql',
+  '0017_homepage_reels.sql',
+  '0018_batch_switch_requests.sql',
+  '0019_gear_products.sql',
 ];
 
 // Postgres has no IF NOT EXISTS for triggers or policies.

@@ -15,7 +15,7 @@ export function PageHeader({ label, title, description, actions, className }: Pa
         {label && (
           <p className="text-[11px] font-medium text-ink-3 mb-1">{label}</p>
         )}
-        <h1 className="font-anton text-3xl sm:text-4xl text-ink tracking-tight text-balance">{title}</h1>
+        <h1 className="font-anton text-3xl sm:text-4xl text-ink tracking-wide text-balance">{title}</h1>
         {description && <p className="mt-2 text-sm text-ink-2 max-w-2xl text-pretty">{description}</p>}
       </div>
       {actions && <div className="flex items-center gap-2 sm:gap-3 shrink-0 flex-wrap">{actions}</div>}

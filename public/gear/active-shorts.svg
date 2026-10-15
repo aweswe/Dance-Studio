@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad5" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#141E28" />
+      <stop offset="100%" stop-color="#0A0F14" />
+    </linearGradient>
+    <linearGradient id="actShortGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#242E3D" />
+      <stop offset="100%" stop-color="#111827" />
+    </linearGradient>
+  </defs>
+  <rect width="400" height="500" rx="12" fill="url(#bgGrad5)" />
+  <circle cx="200" cy="250" r="130" fill="#2BB4D8" opacity="0.04" />
+  
+  <!-- Active Shorts Graphic -->
+  <g transform="translate(65, 110)">
+    <!-- High Waist -->
+    <path d="M50 40 C90 35 180 35 220 40 L215 90 L55 90 Z" fill="#1E293B" stroke="#2BB4D8" stroke-width="1.5" />
+    <!-- Shorts Body -->
+    <path d="M55 90 L35 230 L125 230 L135 140 L145 230 L235 230 L215 90 Z" 
+          fill="url(#actShortGrad)" stroke="#334155" stroke-width="2" />
+    <!-- Curved Contour Seams -->
+    <path d="M55 90 C70 150 90 200 125 230" stroke="#2BB4D8" stroke-width="1.5" fill="none" opacity="0.6" />
+    <path d="M215 90 C200 150 180 200 145 230" stroke="#2BB4D8" stroke-width="1.5" fill="none" opacity="0.6" />
+    <!-- Logo -->
+    <text x="135" y="65" text-anchor="middle" font-family="monospace" font-size="8" font-weight="700" fill="#B8E4F0" letter-spacing="2">ACTIVE FIT</text>
+  </g>
+</svg>

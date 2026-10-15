@@ -40,7 +40,7 @@ export default async function ProgressPage() {
   return (
     <div className="space-y-6 max-w-4xl">
       <div>
-        <h1 className="font-anton text-2xl sm:text-3xl uppercase tracking-tight text-ink">
+        <h1 className="font-anton text-2xl sm:text-3xl uppercase tracking-wide text-ink">
           Performance &amp; Progress
         </h1>
         <p className="text-sm text-ink-2 mt-1">
@@ -61,7 +61,7 @@ export default async function ProgressPage() {
                 </span>
                 <Award size={16} className="text-bl" />
               </div>
-              <p className="font-anton text-2xl uppercase tracking-tight text-ink mt-2">
+              <p className="font-anton text-2xl uppercase tracking-wide text-ink mt-2">
                 Foundation · Stage 1
               </p>
               <p className="text-xs text-ink-2 mt-1">
@@ -76,7 +76,7 @@ export default async function ProgressPage() {
                 </span>
                 <Flame size={16} className="text-orange-500" />
               </div>
-              <p className="font-anton text-2xl uppercase tracking-tight text-ink mt-2">
+              <p className="font-anton text-2xl uppercase tracking-wide text-ink mt-2">
                 {attendanceRate}% Consistency
               </p>
               <p className="text-xs text-ink-2 mt-1">
@@ -91,7 +91,7 @@ export default async function ProgressPage() {
                 </span>
                 <Sparkles size={16} className="text-bl" />
               </div>
-              <p className="font-anton text-2xl uppercase tracking-tight text-ink mt-2">
+              <p className="font-anton text-2xl uppercase tracking-wide text-ink mt-2">
                 Annual Recital
               </p>
               <p className="text-xs text-ink-2 mt-1">
@@ -102,7 +102,7 @@ export default async function ProgressPage() {
 
           {/* Skill Competency Breakdown */}
           <div className="rounded-md border border-line bg-surface p-6 space-y-4">
-            <h2 className="font-anton text-lg uppercase tracking-tight text-ink">
+            <h2 className="font-anton text-lg uppercase tracking-wide text-ink">
               Core Competencies &amp; Evaluation
             </h2>
             <div className="space-y-3.5">

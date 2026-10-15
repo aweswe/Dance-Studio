@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import Image from 'next/image';
 import { CheckCircle2 } from 'lucide-react';
 import { StudioRentalForm } from '@/components/public/studio-rental-form';
+import { StudioGallery } from '@/components/public/studio-gallery';
 import { HomepageSection, HomepageSectionHeading } from '@/components/public/homepage-section';
 import { PublicBookTrialCta } from '@/components/public/public-book-trial-cta';
 import { PublicPage } from '@/components/public/public-page';
@@ -40,7 +41,7 @@ export default function StudioRentalPage() {
           ].map((feature) => (
             <div
               key={feature}
-              className="rounded-md border border-line bg-surface p-3.5 text-center flex flex-col items-center justify-center gap-1.5 shadow-sm"
+              className="rounded-md border border-line bg-surface p-3.5 text-center flex flex-col items-center justify-center gap-1.5 shadow-sm last:col-span-2 sm:last:col-span-1"
             >
               <CheckCircle2 size={16} className="text-bl shrink-0" />
               <span className="text-[11px] font-bold uppercase tracking-wider text-ink leading-tight">
@@ -55,19 +56,19 @@ export default function StudioRentalPage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
           <div className={cn('lg:col-span-7 flex flex-col', sectionGap)}>
             <div className="grid grid-cols-2 gap-3 sm:gap-4">
-              <div className="relative h-60 sm:h-72 rounded-md overflow-hidden border border-line">
+              <div className="relative aspect-[4/3] rounded-md overflow-hidden border border-line bg-surface">
                 <Image
-                  src="/images/studio-training/studio-practice-mirrors.jpg"
-                  alt="Mirrored rehearsal hall"
+                  src="/images/studio-rental/studio-floor-wide.jpg"
+                  alt="Full view of Rhythmzz dance studio with Marley floor and mirrors"
                   fill
                   sizes="(max-width: 768px) 50vw, 30vw"
                   className="object-cover"
                 />
               </div>
-              <div className="relative h-60 sm:h-72 rounded-md overflow-hidden border border-line">
+              <div className="relative aspect-[4/3] rounded-md overflow-hidden border border-line bg-surface">
                 <Image
-                  src="/images/studio-training/floorwork-stretch.jpg"
-                  alt="Sprung floor mobility area"
+                  src="/images/studio-rental/studio-floor-mirror.jpg"
+                  alt="Mirrored studio rehearsal space with ballet barre"
                   fill
                   sizes="(max-width: 768px) 50vw, 30vw"
                   className="object-cover"
@@ -117,6 +118,16 @@ export default function StudioRentalPage() {
         </div>
       </HomepageSection>
 
+      <HomepageSection className={sectionPadLg} id="studio-gallery" ariaLabel="Studio photo gallery">
+        <HomepageSectionHeading
+          eyebrow="Inside the space"
+          title="Studio"
+          accent="Gallery"
+          description="Explore our Secunderabad facility — featuring sprung Marley flooring, full-length mirror wall, ambient mood lighting, and audio equipment."
+        />
+        <StudioGallery />
+      </HomepageSection>
+
       <PublicBookTrialCta
         eyebrow="Studio hire"
         title="Need the"
@@ -128,3 +139,4 @@ export default function StudioRentalPage() {
     </PublicPage>
   );
 }
+

@@ -105,6 +105,7 @@ export const ROUTES = {
   studentTerms: "/terms#student-portal",
   refund: "/refund",
   shipping: "/shipping",
+  gear: "/gear",
   // Auth
   login: "/login",
   adminLogin: "/admin-login",

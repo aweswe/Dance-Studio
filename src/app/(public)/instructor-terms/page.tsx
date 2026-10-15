@@ -118,8 +118,8 @@ export default function InstructorTermsPage() {
               Tiers are reviewed monthly based on verified active monthly student bookings. Upgrades take effect on the 1st of each month.
             </p>
 
-            <div className="overflow-x-auto rounded-lg border-2 border-slate-200 shadow-sm">
-              <table className="w-full text-left text-xs border-collapse">
+            <div className="w-full overflow-x-auto rounded-lg border-2 border-slate-200 shadow-sm scrollbar-thin">
+              <table className="w-full min-w-[500px] text-left text-xs border-collapse">
                 <thead>
                   <tr className="bg-slate-100 text-slate-950 font-bold border-b-2 border-slate-300">
                     <th className="p-3">Tier</th>

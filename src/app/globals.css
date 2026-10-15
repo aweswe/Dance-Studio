@@ -209,15 +209,15 @@ h5,
 h6 {
   font-family: var(--font-dm-sans), sans-serif;
   font-weight: 700;
-  line-height: 1.12;
-  letter-spacing: -0.025em;
+  line-height: 1.15;
+  letter-spacing: -0.005em;
 }
 
 /* Hero + explicit font-anton beat global h1 DM Sans */
 h1.font-anton {
   font-family: var(--font-anton), sans-serif;
   font-weight: 400;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.035em;
 }
 
 p {
@@ -235,14 +235,25 @@ p + p {
 .font-display {
   font-family: var(--font-anton), sans-serif;
   font-weight: 400;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.035em;
+  text-transform: uppercase;
 }
 
 .font-anton {
   font-family: var(--font-anton), sans-serif;
   font-weight: 400;
   text-transform: uppercase;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.035em;
+}
+
+/* Ensure Anton and display fonts maintain clear breathing room even if tracking-tight utility is applied */
+.font-anton.tracking-tight,
+.font-display.tracking-tight,
+h1.font-anton.tracking-tight,
+h2.font-anton.tracking-tight,
+h3.font-anton.tracking-tight,
+h4.font-anton.tracking-tight {
+  letter-spacing: 0.015em;
 }
 
 .font-mono {

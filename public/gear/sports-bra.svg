@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#141E28" />
+      <stop offset="100%" stop-color="#0A0F14" />
+    </linearGradient>
+    <linearGradient id="braGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2D3748" />
+      <stop offset="60%" stop-color="#1A202C" />
+      <stop offset="100%" stop-color="#0F172A" />
+    </linearGradient>
+  </defs>
+  <rect width="400" height="500" rx="12" fill="url(#bgGrad3)" />
+  <circle cx="200" cy="250" r="130" fill="#2BB4D8" opacity="0.04" />
+  
+  <!-- Sports Bra Graphic -->
+  <g transform="translate(65, 110)">
+    <!-- Straps & Cups -->
+    <path d="M70 40 L100 40 L125 100 C130 90 140 90 145 100 L170 40 L200 40 L220 190 L50 190 Z" 
+          fill="url(#braGrad)" stroke="#4A5568" stroke-width="2" />
+    <!-- Center keyhole accent -->
+    <path d="M125 100 C130 115 140 115 145 100 Z" fill="#141E28" />
+    <!-- Bottom Elastic Band -->
+    <rect x="50" y="190" width="170" height="26" rx="3" fill="#0B132B" stroke="#2BB4D8" stroke-width="1.5" />
+    <text x="135" y="207" text-anchor="middle" font-family="monospace" font-size="8" font-weight="700" fill="#2BB4D8" letter-spacing="3">RHYTHMZZ PRO</text>
+  </g>
+</svg>

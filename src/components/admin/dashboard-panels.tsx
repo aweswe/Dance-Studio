@@ -118,7 +118,7 @@ export function DashboardPanels({
   return (
     <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 sm:gap-6">
       <Card className="p-4 sm:p-6 xl:col-span-2 overflow-hidden">
-        <h3 className="font-anton text-xl text-ink tracking-tight">Fees, last six months</h3>
+        <h3 className="font-anton text-xl text-ink tracking-wide">Fees, last six months</h3>
         <p className="text-[12px] text-ink-3 mt-1 mb-5">Online and desk collections</p>
 
         <div className="w-full overflow-x-auto overflow-y-hidden pb-1">
@@ -180,7 +180,7 @@ export function DashboardPanels({
       </Card>
 
       <Card className="p-4 sm:p-6">
-        <h3 className="font-anton text-xl text-ink tracking-tight">Desk</h3>
+        <h3 className="font-anton text-xl text-ink tracking-wide">Desk</h3>
         <p className="text-[12px] text-ink-3 mt-1 mb-5">Waiting on you</p>
 
         <div className="space-y-2">
@@ -235,7 +235,7 @@ export function DashboardPanels({
       </Card>
 
       <Card className="p-4 sm:p-6 xl:col-span-3">
-        <h3 className="font-anton text-xl text-ink tracking-tight">Attendance this month</h3>
+        <h3 className="font-anton text-xl text-ink tracking-wide">Attendance this month</h3>
         <p className="text-[12px] text-ink-3 mt-1 mb-5">Present ÷ marks recorded</p>
 
         {batchAttendance.length === 0 ? (

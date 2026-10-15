@@ -17,6 +17,8 @@ import { ReelsStrip } from '@/components/public/reels-strip';
 import { getHomepageReels } from '@/data/reels';
 // import { GoogleProofStrip } from '@/components/public/google-proof-strip';
 import { FAQSection } from '@/components/public/faq-section';
+import { GearStorefront } from '@/components/public/gear-storefront';
+import { getProducts } from '@/data/products';
 import { StructuredData } from '@/components/shared/structured-data';
 
 export const metadata: Metadata = {
@@ -28,11 +30,12 @@ export const revalidate = 3600;
 export default async function HomePage() {
   const { getFAQs, getTestimonials } = await import('@/data/content');
   const { getStats } = await import('@/data/content');
-  const [faqs, testimonials, reels, stats] = await Promise.all([
+  const [faqs, testimonials, reels, stats, products] = await Promise.all([
     getFAQs(),
     getTestimonials(),
     getHomepageReels(),
     getStats(),
+    getProducts(),
   ]);
 
   return (
@@ -49,6 +52,7 @@ export default async function HomePage() {
       <DanziaGallerySection />
       <HomepageAboutSection stats={stats} />
       <DanziaTestimonialsSection quotes={Array.isArray(testimonials) ? testimonials : []} />
+      <GearStorefront initialProducts={products} embedded={true} />
       <FAQSection faqs={Array.isArray(faqs) ? faqs : []} />
       <DanziaCTASection />
       <ReelsStrip reels={reels} />

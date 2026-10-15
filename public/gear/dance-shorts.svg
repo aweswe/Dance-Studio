@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#141E28" />
+      <stop offset="100%" stop-color="#0A0F14" />
+    </linearGradient>
+    <linearGradient id="shortGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1E293B" />
+      <stop offset="100%" stop-color="#0F172A" />
+    </linearGradient>
+  </defs>
+  <rect width="400" height="500" rx="12" fill="url(#bgGrad2)" />
+  <circle cx="200" cy="250" r="130" fill="#2BB4D8" opacity="0.04" />
+  
+  <!-- Shorts Graphic -->
+  <g transform="translate(60, 110)">
+    <!-- Waistband -->
+    <rect x="50" y="40" width="180" height="26" rx="4" fill="#0B132B" stroke="#2BB4D8" stroke-width="1.5" />
+    <line x1="140" y1="46" x2="140" y2="60" stroke="#2BB4D8" stroke-width="2" />
+    
+    <!-- Left & Right leg -->
+    <path d="M50 66 L30 230 L130 230 L140 130 L150 230 L250 230 L230 66 Z" 
+          fill="url(#shortGrad)" stroke="#334155" stroke-width="2" />
+    
+    <!-- Accent Stripes -->
+    <line x1="30" y1="222" x2="130" y2="222" stroke="#2BB4D8" stroke-width="3" opacity="0.8" />
+    <line x1="150" y1="222" x2="250" y2="222" stroke="#2BB4D8" stroke-width="3" opacity="0.8" />
+    
+    <!-- Logo on thigh -->
+    <circle cx="75" cy="180" r="9" fill="#2BB4D8" opacity="0.2" />
+    <path d="M72 176 L78 176 L77 180 L73 180 L74 184 L80 184" stroke="#2BB4D8" stroke-width="1.8" stroke-linecap="round" fill="none" />
+  </g>
+</svg>

@@ -59,6 +59,19 @@ Over the course of development and production optimization for Rhythmzz Academy 
      - Upgraded `parseEnrolIntent` and `enrolHref` to automatically infer paid enrolment intent when any plan or fee parameter is present.
      - Redesigned `EnrolForm` so checkout and confirmation remain 100% in-app, presenting an official **Enrolment Invoice & Confirmation Card** (`Total Billed`, student timetable, UPI pay option, direct student portal sign-in) with WhatsApp demoted to an optional receipt share action.
 
+10. **Rhythmzz Merch & Gear Storefront (`/gear` & `/admin/gear`)**:
+    * Full e-commerce showcase for official academy merchandise, dance wear, practice apparel, footwear, and classical dance accessories (ghungroos, sarees, hair accessories, customized hoodies, tees, dance grip socks).
+    * Integrated with category filters, size and color selectors, real-time stock indicators, and instant WhatsApp cart checkout.
+    * Added full administrative catalog management (`/admin/gear`) with create, edit, image management, pricing, stock adjustments, and active toggling.
+
+11. **Studio Rental Interactive Showcase (`/studio-rental`)**:
+    * Overhauled the studio rental experience with a visual photography gallery (`studio-gallery.tsx`) featuring sprung wooden dance floors, acoustic wall treatment, full-height mirror array, client lounge, and ambient DMX club lighting.
+    * Package tier cards (Rehearsal at ₹700/hr, Video Shoot at ₹1,200/hr, Workshops at ₹1,800/hr) with direct WhatsApp slot reservation.
+
+12. **Real Production Asset Optimization & Media Pipeline**:
+    * Replaced all stock and placeholder assets with authentic academy photography, official vector/PNG branding (`/images/branding/`), authentic instructor & leadership portraits (`/images/team/`), verified studio photography (`/images/studio-rental/`), and real workshop event posters.
+    * Compressed large spotlight hero video (`spotlight-3.mp4`) down to 66 MB to satisfy git and production bandwidth standards without perceptual quality loss.
+
 ---
 
 ## 2. Key Architecture & Code Implementation Details
@@ -232,14 +245,14 @@ erDiagram
     ENQUIRIES ||--o{ BATCH_WAITLIST : originates
     EVENTS ||--o{ BROADCAST_LOGS : triggers
     BROADCAST_LOGS ||--o{ BROADCAST_QUEUE : dispatches
+    GEAR_PRODUCTS ||--o{ GEAR_ORDERS : orders
 ```
 
 * **`enquiries`**: Central repository for contact forms, free trials, enrolments, and waitlists (`source: 'waitlist' | 'enrol' | 'trial' | 'contact_form'`).
 * **`batch_waitlist`**: Batch-specific waiting lists for capacity-constrained classes.
 * **`broadcast_logs`**: Student portal notification history consumed by `/student/notices`.
 * **`broadcast_queue`**: Asynchronous outgoing WhatsApp dispatch queue processed by cron `/api/cron/broadcast`.
-
----
+* **`gear_products`**: Product catalog for academy merchandise, dance wear, and classical accessories.
 
 ---
 
@@ -260,16 +273,69 @@ erDiagram
 
 ---
 
+### G. Rhythmzz Gear & Merch Storefront Architecture
+
+1. **Database Schema & Migration**:
+   * Migration `supabase/migrations/0019_gear_products.sql` & updated `supabase/setup.sql`.
+   * Table `gear_products` supporting `id`, `name`, `slug`, `category`, `price`, `compare_at_price`, `stock_quantity`, `is_featured`, `is_active`, `sizes`, `colors`, `badge`, `images`, `created_at`, `updated_at`.
+   * Row-Level Security (RLS) configured: Public read access for active products; authenticated admin full CRUD privileges.
+
+2. **Public Storefront (`src/app/(public)/gear/page.tsx` & `src/components/public/gear-storefront.tsx`)**:
+   * Filterable by category (`all`, `apparel`, `footwear`, `accessories`, `classical_gear`).
+   * Interactive modal with size picker, color picker, quantity counter, and price calculations with discount percentages.
+   * Direct WhatsApp checkout payload generator pre-formatting product details, chosen size/color, quantity, total price, and customer note.
+
+3. **Admin Catalog Management (`src/app/admin/gear/page.tsx` & `src/components/admin/products-manager.tsx`)**:
+   * Full inventory manager with search, category filtering, stock adjustments, active/inactive toggling, and deletion.
+   * Server Actions in `src/actions/products.ts` (`createProduct`, `updateProduct`, `deleteProduct`, `toggleProductActive`) with Zod validation and cache revalidation on `/gear` and `/admin/gear`.
+
+4. **Product Utilities & Unit Test Suite (`src/lib/products.test.ts`)**:
+   * 5 comprehensive unit tests covering currency formatting in INR, discount calculations, category labels, stock boundary checks, and WhatsApp URL generation.
+
+---
+
+### H. Studio Rental Interactive Showcase & High-Res Photography
+
+1. **Interactive Gallery (`src/components/public/studio-gallery.tsx`)**:
+   * Interactive visual showcase with category filters (All, Main Dance Floor, Lighting & Ambiance, Amenities & Lounge).
+   * Fullscreen modal viewer with keyboard navigation (`ArrowLeft`, `ArrowRight`, `Escape`).
+2. **Technical Specifications & Rate Card**:
+   * Clear display of floor specs (sprung wooden flooring, 45 ft mirror array, professional sound system, ambient club lighting).
+   * Hourly tier booking cards with instant WhatsApp booking trigger.
+
+---
+
+### I. Production Media Integration & Asset Optimization
+
+1. **Asset Migration**:
+   * Official Academy Logos (`/images/branding/logo.png`, `logo-white.png`, `badge.png`).
+   * High-Resolution Studio Rental Photography (`/images/studio-rental/`).
+   * Verified Dance Faculty and Team Visuals (`/images/team/`).
+   * Programme promotional posters (`/images/programmes/` and Canada workshop visual).
+2. **Hero Video Compression**:
+   * Replaced uncompressed `spotlight-3.mp4` with a high-efficiency optimized version (66 MB), maintaining frame quality while staying safely within repository hosting limits.
+
+---
+
 ## 4. Verification, Testing & Quality Audit Checklist
 
-* [x] **Vitest Unit & Integration Tests**: 4 test suites, 35 tests, **100% passing**.
+* [x] **Vitest Unit & Integration Tests**: 5 test suites, 40 tests, **100% passing**.
+  - `src/lib/utils/csv.test.ts` (5 tests)
+  - `src/lib/fees/ledger.test.ts` (10 tests)
+  - `src/lib/rate-limit.test.ts` (7 tests)
+  - `src/lib/products.test.ts` (5 tests)
+  - `src/lib/validators/validators.test.ts` (13 tests)
 * [x] **TypeScript Strict Typing**: `npx tsc --noEmit` returns **0 errors**.
+* [x] **Gear Storefront & Admin Portal**: Verified public browsing, WhatsApp checkout generation, and admin CRUD actions.
+* [x] **Studio Rental Gallery**: Verified interactive filter, lightroom modal, and tiered rate cards.
 * [x] **Browser Visual Verification**:
-  - `/terms`: Confirmed centered layout (`terms_page_centered_1791897119556.png`).
-  - `/#pricing`: Verified interactive waitlist modal (`waitlist_modal_open_1791897176108.png`).
-  - `/enrol?programme=kids-dance&plan=quarterly&fee=5000`: Verified pre-selected plan summary card (`enrol_preselected_card_1791897180590.png`).
-  - `/syllabus/kuchipudi`: Verified Hero, Philosophy, Roadmap, Interactive Syllabus, Margam Repertoire Suite, and Rangapravesham (`kuchipudi_hero_top_1791972654799.png`, `kuchipudi_margam_suite_1791972698719.png`).
-  - `/syllabus`: Verified high-contrast index cards and sanitized faculty notes (`syllabus_index_1791972753983.png`).
+  - `/terms`: Confirmed centered layout.
+  - `/#pricing`: Verified interactive waitlist modal.
+  - `/enrol?programme=kids-dance&plan=quarterly&fee=5000`: Verified pre-selected plan summary card.
+  - `/syllabus/kuchipudi`: Verified Hero, Philosophy, Roadmap, Interactive Syllabus, Margam Repertoire Suite, and Rangapravesham.
+  - `/syllabus`: Verified high-contrast index cards and sanitized faculty notes.
+  - `/gear`: Verified product catalog, filters, modal, and cart builder.
+  - `/studio-rental`: Verified studio photo gallery and booking CTA.
 * [x] **Age Bracket Universal Accuracy**: Kids = `3.5 – 12 years`, Adults = `13+ years`.
 * [x] **Zero Trainer Names**: Verified zero trainer names in public schedules, syllabus, certification tracks, and upcoming class cards.
 * [x] **Supabase Quota Safety**: Zero video uploads to Supabase storage; reels rendered via Instagram iframe URLs.

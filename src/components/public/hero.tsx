@@ -44,10 +44,10 @@ export function Hero({ stats }: HeroProps) {
             </div>
 
             <h1 className="font-anton uppercase text-ink w-full max-w-[11ch] flex flex-col gap-1.5 sm:gap-2">
-              <span className="block leading-none tracking-[0.02em] sm:tracking-[0.035em] text-[clamp(3.45rem,16.5cqw,7.25rem)] text-ink">
+              <span className="block leading-none tracking-[0.02em] sm:tracking-[0.035em] text-[clamp(2.75rem,14cqw,7.25rem)] text-ink">
                 Move
               </span>
-              <span className="block leading-none tracking-[0.02em] sm:tracking-[0.035em] text-[clamp(4.15rem,22cqw,9.65rem)] text-bl">
+              <span className="block leading-none tracking-[0.02em] sm:tracking-[0.035em] text-[clamp(2.75rem,17cqw,9.65rem)] text-bl">
                 Different
               </span>
             </h1>

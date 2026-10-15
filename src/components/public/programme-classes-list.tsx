@@ -68,13 +68,13 @@ function ClassRow({ slot }: { slot: DaySchedule['slots'][number] }) {
         <ArrowUpRight size={12} strokeWidth={2.5} />
       </span>
 
-      <div className="sm:hidden col-span-2 flex items-center justify-between gap-3 pt-1 border-t border-line/60">
-        <p className="text-[11px] text-ink-2">
+      <div className="sm:hidden col-span-2 flex items-center justify-between gap-3 pt-1.5 border-t border-line/60">
+        <p className="text-[11px] font-medium text-ink-2 truncate">
           {slot.instructor} · {slot.duration}
         </p>
-        <span className="inline-flex items-center justify-center gap-1 text-[10px] font-bold uppercase tracking-[0.12em] px-3 py-1 rounded-md bg-bl text-blk hover:bg-bl-deep shadow-sm transition-all">
+        <span className="inline-flex items-center justify-center gap-1 text-[11px] font-bold uppercase tracking-[0.1em] px-3.5 py-1.5 min-h-[36px] rounded-md bg-bl text-blk hover:bg-bl-deep shadow-xs transition-all shrink-0">
           {bookLabel}
-          <ArrowUpRight size={12} strokeWidth={2.5} />
+          <ArrowUpRight size={13} strokeWidth={2.5} />
         </span>
       </div>
     </Link>

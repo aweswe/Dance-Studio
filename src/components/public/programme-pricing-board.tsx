@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   ArrowUpRight,
   ArrowRight,
@@ -41,6 +42,7 @@ interface ProgrammeTab {
   tabLabel: string;
   tabIcon: string;
   slug: string;
+  image?: string;
   headline: string;
   tags: { label: string; highlight?: boolean }[];
   schedule: string;
@@ -55,6 +57,7 @@ const PROGRAMMES: ProgrammeTab[] = [
     tabLabel: 'Kids Dance',
     tabIcon: '🕺',
     slug: 'kids-dance',
+    image: '/images/programmes/kids-programme-cover.jpg',
     headline: 'KIDS DANCE PROGRAMME',
     tags: [
       { label: 'BOLLYWOOD' },
@@ -119,6 +122,7 @@ const PROGRAMMES: ProgrammeTab[] = [
     tabLabel: 'Adults Dance',
     tabIcon: '💃',
     slug: 'adults-dance',
+    image: '/images/programmes/adults-programme-cover.jpg',
     headline: 'ADULTS DANCE PROGRAMME',
     tags: [
       { label: 'BOLLYWOOD' },
@@ -183,6 +187,7 @@ const PROGRAMMES: ProgrammeTab[] = [
     tabLabel: 'Mind & Body Fitness',
     tabIcon: '🔥',
     slug: 'mind-body-fitness',
+    image: '/images/studio-training/floorwork-stretch.jpg',
     headline: 'MIND & BODY FITNESS PROGRAMME',
     tags: [
       { label: 'YOGA' },
@@ -247,6 +252,7 @@ const PROGRAMMES: ProgrammeTab[] = [
     tabLabel: 'Gymnastics',
     tabIcon: '🤸',
     slug: 'gymnastics',
+    image: '/images/team/srikanth-sree.jpg',
     headline: 'GYMNASTICS & TUMBLING PROGRAMME',
     tags: [
       { label: 'TUMBLING' },
@@ -311,6 +317,7 @@ const KUCHIPUDI_DATA = {
   name: 'KUCHIPUDI CLASSICAL DANCE',
   subtext: 'IAO-Accredited Classical Academy · Fri & Sat · 6:30 - 7:30 PM',
   slug: 'kuchipudi',
+  image: '/images/programmes/kuchipudi-programme-cover.jpg',
   tiers: [
     {
       id: 'monthly',
@@ -445,13 +452,13 @@ export function ProgrammePricingBoard() {
           Quarterly saves most · Annual locks in the best rate · First class always free
         </p>
 
-        {/* First class is free pill */}
+        {/* First class is on us pill */}
         <div className="mt-4 inline-flex items-center gap-2 px-4 py-1.5 rounded-md bg-emerald-50 border border-emerald-300 text-emerald-900 text-xs font-bold shadow-2xs">
           <span className="relative flex h-2 w-2">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75" />
             <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-600" />
           </span>
-          <span>First class is FREE — no credit card, no commitment</span>
+          <span>First class is on us — no credit card, no commitment</span>
         </div>
       </header>
 
@@ -484,23 +491,36 @@ export function ProgrammePricingBoard() {
 
       {/* ── ACTIVE PROGRAMME HEADER BAR ── */}
       <div className="rounded-md border-2 border-neutral-200 bg-neutral-50 px-5 sm:px-6 py-4 flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 shadow-2xs">
-        <div className="flex flex-col sm:flex-row sm:items-center gap-2.5 sm:gap-3 flex-wrap">
-          <h3 className="font-anton text-lg sm:text-xl uppercase tracking-wide text-neutral-950">
-            {activeProgramme.headline}
-          </h3>
-          <div className="flex flex-wrap items-center gap-1.5">
-            {activeProgramme.tags.map((tag, idx) => (
-              <span
-                key={idx}
-                className={`px-2.5 py-1 rounded-md text-[10px] font-extrabold tracking-wider uppercase border ${
-                  tag.highlight
-                    ? 'bg-sky-50 border-sky-400 text-sky-900'
-                    : 'bg-white border-neutral-300 text-neutral-800'
-                }`}
-              >
-                {tag.label}
-              </span>
-            ))}
+        <div className="flex items-center gap-4">
+          {activeProgramme.image && (
+            <div className="relative h-14 w-20 sm:h-16 sm:w-24 rounded-md overflow-hidden border border-neutral-300 shadow-2xs shrink-0 bg-neutral-200">
+              <Image
+                src={activeProgramme.image}
+                alt={activeProgramme.name}
+                fill
+                sizes="(max-width: 640px) 80px, 96px"
+                className="object-cover"
+              />
+            </div>
+          )}
+          <div className="flex flex-col gap-1.5">
+            <h3 className="font-anton text-lg sm:text-xl uppercase tracking-wide text-neutral-950">
+              {activeProgramme.headline}
+            </h3>
+            <div className="flex flex-wrap items-center gap-1.5">
+              {activeProgramme.tags.map((tag, idx) => (
+                <span
+                  key={idx}
+                  className={`px-2.5 py-0.5 rounded-md text-[10px] font-extrabold tracking-wider uppercase border ${
+                    tag.highlight
+                      ? 'bg-sky-50 border-sky-400 text-sky-900'
+                      : 'bg-white border-neutral-300 text-neutral-800'
+                  }`}
+                >
+                  {tag.label}
+                </span>
+              ))}
+            </div>
           </div>
         </div>
 
@@ -802,25 +822,35 @@ export function ProgrammePricingBoard() {
         {/* Kuchipudi Classical Box */}
         <div className="rounded-md border-2 border-neutral-900 bg-white p-6 sm:p-8 relative shadow-sm">
           {/* Box Header */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
-            <div>
-              <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-lg">💃</span>
-                <h4 className="font-anton text-xl sm:text-2xl uppercase tracking-wide text-neutral-950">
-                  {KUCHIPUDI_DATA.name}
-                </h4>
-                <div className="flex items-center gap-1.5 ml-1">
-                  <span className="px-2.5 py-0.5 rounded-md bg-neutral-950 text-white text-[10px] font-extrabold uppercase tracking-wider">
-                    IAO ACCREDITED
-                  </span>
-                  <span className="px-2.5 py-0.5 rounded-md bg-neutral-100 border border-neutral-300 text-neutral-900 text-[10px] font-bold uppercase tracking-wider">
-                    CLASSICAL ART
-                  </span>
-                </div>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+            <div className="flex items-center gap-4">
+              <div className="relative h-14 w-20 sm:h-16 sm:w-24 rounded-md overflow-hidden border border-neutral-300 shadow-2xs shrink-0 bg-neutral-200">
+                <Image
+                  src={KUCHIPUDI_DATA.image}
+                  alt={KUCHIPUDI_DATA.name}
+                  fill
+                  sizes="(max-width: 640px) 80px, 96px"
+                  className="object-cover"
+                />
               </div>
-              <p className="text-xs text-neutral-800 font-medium mt-1">
-                {KUCHIPUDI_DATA.subtext}
-              </p>
+              <div>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h4 className="font-anton text-xl sm:text-2xl uppercase tracking-wide text-neutral-950">
+                    {KUCHIPUDI_DATA.name}
+                  </h4>
+                  <div className="flex items-center gap-1.5 ml-1">
+                    <span className="px-2.5 py-0.5 rounded-md bg-neutral-950 text-white text-[10px] font-extrabold uppercase tracking-wider">
+                      IAO ACCREDITED
+                    </span>
+                    <span className="px-2.5 py-0.5 rounded-md bg-neutral-100 border border-neutral-300 text-neutral-900 text-[10px] font-bold uppercase tracking-wider">
+                      CLASSICAL ART
+                    </span>
+                  </div>
+                </div>
+                <p className="text-xs text-neutral-800 font-medium mt-1">
+                  {KUCHIPUDI_DATA.subtext}
+                </p>
+              </div>
             </div>
           </div>
 

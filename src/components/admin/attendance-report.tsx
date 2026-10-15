@@ -116,8 +116,8 @@ export function AttendanceReport({ batches }: { batches: BatchOption[] }) {
             <h3 className="font-display text-xl text-ink mb-4 flex items-center gap-2">
               <UserMinus size={18} className="text-bl" /> Roster
             </h3>
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
+            <div className="w-full overflow-x-auto scrollbar-thin">
+              <table className="w-full min-w-[500px] text-left border-collapse">
                 <thead>
                   <tr className="bg-canvas-muted border-b border-line">
                     <th scope="col" className="px-6 py-4 text-xs font-display tracking-[2px] text-ink-2 uppercase">Student</th>

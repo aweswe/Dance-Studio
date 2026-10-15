@@ -14,8 +14,8 @@ export const HERO_SPOTLIGHT_VIDEOS = [
   },
   {
     id: 'spotlight-3',
-    label: 'Kids foundation',
-    poster: '/images/class-1.jpg',
+    label: 'Canada workshop',
+    poster: '/images/canada-workshop-poster.jpg',
     src: '/videos/spotlight-3.mp4',
   },
 ] as const;

@@ -27,8 +27,8 @@ interface PaymentHistoryProps {
 
 export function PaymentHistory({ payments }: PaymentHistoryProps) {
   return (
-    <Card className="overflow-x-auto border-2 border-slate-200">
-      <table className="w-full text-left text-sm">
+    <Card className="w-full overflow-x-auto border-2 border-slate-200 scrollbar-thin">
+      <table className="w-full min-w-[560px] text-left text-sm">
         <thead>
           <tr className="border-b-2 border-slate-200 bg-slate-50/70">
             <th className="py-3.5 px-4 font-bold text-slate-900 uppercase text-xs tracking-wider">Date</th>

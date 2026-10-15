@@ -34,8 +34,8 @@ export function StudentList({ students }: { students: StudentProps[] }) {
         />
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="w-full text-left text-sm">
+      <div className="w-full overflow-x-auto scrollbar-thin">
+        <table className="w-full min-w-[500px] text-left text-sm">
           <thead>
             <tr className="border-b border-line">
               <th className="pb-3 font-semibold text-ink-2">Student</th>

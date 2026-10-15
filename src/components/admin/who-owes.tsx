@@ -33,29 +33,29 @@ export function WhoOwes({ students }: { students: WhoOwesStudent[] }) {
       </div>
 
       {students.length > 0 && (
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+        <div className="w-full overflow-x-auto scrollbar-thin">
+          <table className="w-full min-w-[560px] text-left border-collapse">
             <thead>
               <tr className="bg-canvas-muted border-b border-line-strong">
-                <th className="px-6 py-3 text-xs font-display tracking-[2px] text-ink-2 uppercase">Student</th>
-                <th className="px-6 py-3 text-xs font-display tracking-[2px] text-ink-2 uppercase">Programme</th>
-                <th className="px-6 py-3 text-xs font-display tracking-[2px] text-ink-2 uppercase">Amount</th>
-                <th className="px-6 py-3 text-xs font-display tracking-[2px] text-ink-2 uppercase">Contact</th>
+                <th className="px-3 sm:px-6 py-2.5 sm:py-3 text-xs font-display tracking-[1.5px] sm:tracking-[2px] text-ink-2 uppercase">Student</th>
+                <th className="px-3 sm:px-6 py-2.5 sm:py-3 text-xs font-display tracking-[1.5px] sm:tracking-[2px] text-ink-2 uppercase">Programme</th>
+                <th className="px-3 sm:px-6 py-2.5 sm:py-3 text-xs font-display tracking-[1.5px] sm:tracking-[2px] text-ink-2 uppercase">Amount</th>
+                <th className="px-3 sm:px-6 py-2.5 sm:py-3 text-xs font-display tracking-[1.5px] sm:tracking-[2px] text-ink-2 uppercase">Contact</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-line-subtle">
               {students.map((s) => (
                 <tr key={s.id} className="hover:bg-canvas-muted transition-colors">
-                  <td className="px-6 py-3 font-medium text-ink">{s.name}</td>
-                  <td className="px-6 py-3 text-sm text-ink-2">{s.programmeName}</td>
-                  <td className="px-6 py-3 font-medium text-ink">{formatCurrency(s.amount)}</td>
-                  <td className="px-6 py-3">
+                  <td className="px-3 sm:px-6 py-2.5 sm:py-3 font-medium text-ink">{s.name}</td>
+                  <td className="px-3 sm:px-6 py-2.5 sm:py-3 text-sm text-ink-2">{s.programmeName}</td>
+                  <td className="px-3 sm:px-6 py-2.5 sm:py-3 font-medium text-ink tabular-nums">{formatCurrency(s.amount)}</td>
+                  <td className="px-3 sm:px-6 py-2.5 sm:py-3">
                     <div className="flex items-center gap-2">
                       <a
                         href={telLink(s.phone)}
-                        className="inline-flex items-center gap-1.5 text-xs font-semibold text-bl hover:underline"
+                        className="inline-flex items-center gap-1 text-xs font-semibold text-bl hover:underline whitespace-nowrap"
                       >
-                        <Phone size={14} /> {s.phone}
+                        <Phone size={13} /> {s.phone}
                       </a>
                       <Button
                         variant="outline"

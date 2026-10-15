@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad9" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#141E28" />
+      <stop offset="100%" stop-color="#0A0F14" />
+    </linearGradient>
+    <linearGradient id="capGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2D3748" />
+      <stop offset="50%" stop-color="#1A202C" />
+      <stop offset="100%" stop-color="#0F172A" />
+    </linearGradient>
+  </defs>
+  <rect width="400" height="500" rx="12" fill="url(#bgGrad9)" />
+  <circle cx="200" cy="250" r="140" fill="#2BB4D8" opacity="0.04" />
+  
+  <!-- Snapback Cap Graphic -->
+  <g transform="translate(60, 110)">
+    <!-- Crown Dome -->
+    <path d="M60 190 C60 70 220 70 220 190 Z" fill="url(#capGrad)" stroke="#4A5568" stroke-width="2" />
+    <!-- Top Button -->
+    <circle cx="140" cy="74" r="7" fill="#2BB4D8" />
+    <!-- Visor / Brim -->
+    <path d="M40 190 C40 170 240 170 240 190 C255 210 25 210 40 190 Z" fill="#0B132B" stroke="#2BB4D8" stroke-width="2" />
+    <!-- 3D Embroidered R Emblem -->
+    <circle cx="140" cy="130" r="18" fill="#2BB4D8" opacity="0.15" />
+    <path d="M133 120 L145 120 C149 120 152 123 152 127 C152 131 149 134 145 134 L133 134 M133 134 L133 142 M144 134 L152 142" 
+          stroke="#2BB4D8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+    <!-- Text -->
+    <text x="140" y="240" text-anchor="middle" font-family="monospace" font-size="9" font-weight="700" fill="#94A3B8" letter-spacing="3">SNAPBACK · ONE SIZE</text>
+  </g>
+</svg>

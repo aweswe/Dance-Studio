@@ -22,6 +22,7 @@ import {
   Clapperboard,
   ExternalLink,
   DoorOpen,
+  ShoppingBag,
 } from 'lucide-react'
 import { useState } from 'react'
 import { triggerActionLoader } from '@/components/shared/navigation-progress'
@@ -55,6 +56,7 @@ const navGroups = [
   {
     label: 'Site',
     items: [
+      { name: 'Gear Store', href: '/admin/gear', icon: ShoppingBag },
       { name: 'Gallery', href: '/admin/gallery', icon: ImageIcon },
       { name: 'Reels', href: '/admin/reels', icon: Clapperboard },
       { name: 'Blog', href: '/admin/blog', icon: FileText },

@@ -71,7 +71,7 @@ export function ClassicalCurriculumMatrix() {
           </div>
 
           <p className="text-xs font-mono text-ink-2 bg-canvas px-4 py-2.5 rounded-md border border-line">
-            Lineage: Dr. Vempati Chinna Satyam · Guru Srushti
+            Lineage: Dr. Vempati Chinna Satyam · Senior Classical Faculty
           </p>
         </div>
       </div>

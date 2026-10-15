@@ -58,7 +58,7 @@ export function KuchipudiCurriculum() {
             <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-bl mb-2">
               Official master syllabus
             </p>
-            <h2 className="font-anton text-2xl sm:text-3xl md:text-[2.25rem] text-ink tracking-tight uppercase leading-[0.95]">
+            <h2 className="font-anton text-2xl sm:text-3xl md:text-[2.25rem] text-ink tracking-wide uppercase leading-tight">
               Year-wise master curriculum
             </h2>
             <p className="text-ink-2 text-xs sm:text-sm md:text-base max-w-2xl mt-2 leading-relaxed">

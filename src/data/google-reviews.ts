@@ -7,7 +7,7 @@ export const GOOGLE_REVIEW_SNIPPETS = [
   },
   {
     author: 'Rahul K.',
-    text: 'Nitish sir’s energy is unmatched. Hip-hop classes are structured and fun.',
+    text: 'The lead instructor’s energy is unmatched. Hip-hop classes are structured and fun.',
     tag: 'Adults Dance',
   },
   {

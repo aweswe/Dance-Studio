@@ -84,7 +84,7 @@ export default async function StudentDashboardPage() {
         <Card className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <p className="text-[11px] text-ink-3">Fees</p>
-            <p className="font-anton text-2xl text-ink tracking-tight">
+            <p className="font-anton text-2xl text-ink tracking-wide">
               {dueAmount ? `₹${dueAmount} due` : "Due this month"}
             </p>
           </div>

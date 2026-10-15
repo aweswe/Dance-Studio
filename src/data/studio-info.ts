@@ -100,32 +100,36 @@ export const STUDIO_INFO = {
       name: "Pranith Nair",
       role: "Senior Instructor — Hip Hop & Bolly-Hop",
       bio: "Senior instructor at Rhythmzz since 2015. Trained under Nitish Kumar and Ajeesh Balakrishnan. Represented India as part of Rhythmzz at the NATANDA International Dance Festival in Sri Lanka.",
-      specialty: "Hip Hop, Bolly-Hop, Contemporary"
+      specialty: "Hip Hop, Bolly-Hop, Contemporary",
+      photo: "/images/team/pranith-nair.jpg"
     },
     {
       name: "Kajal Devi",
       role: "Instructor — Bollywood & Kids Batch",
       bio: "Joined Rhythmzz in 2014. Known affectionately as the 'Elastic Girl' for extraordinary flexibility. Leads the Kids Foundation Batches.",
-      specialty: "Bollywood, Flexibility, Kids Dance"
+      specialty: "Bollywood, Flexibility, Kids Dance",
+      photo: "/images/team/kajal-devi.jpg"
     },
     {
       name: "Deepak Rao",
       role: "Instructor — Bollywood, Tollywood & Dance Fitness",
       bio: "Joined in 2013 as a student and evolved into a core instructor. Known for highly energetic, jovial, and interactive sessions.",
-      specialty: "Bollywood, Tollywood, Dance Fitness"
+      specialty: "Bollywood, Tollywood, Dance Fitness",
+      photo: "/images/team/deepak-rao.jpg"
     },
     {
       name: "Srikanth",
       role: "Gymnastics & Acrobatics Trainer",
       bio: "Certified gymnastics, tumbling, and martial movement coach. Builds core agility, aerial flips, flexibility, and tumbling for kids and commercial dance routines.",
       specialty: "Gymnastics, Acrobatics, Tumbling, Martial Arts",
-      photo: "/images/srikanth-gymnastics.png"
+      photo: "/images/team/srikanth-sree.jpg"
     },
     {
       name: "Srushti Nidhi",
       role: "Instructor — Freestyle & Bollywood",
       bio: "Began dancing at age 5 with 10 years of intensive Kuchipudi classical training, blending classical precision with contemporary and commercial Bollywood.",
-      specialty: "Freestyle, Bollywood, Kuchipudi"
+      specialty: "Freestyle, Bollywood, Kuchipudi",
+      photo: "/images/team/srushti-nidhi.jpg"
     },
     {
       name: "Poonam Nayak Jamwale",
