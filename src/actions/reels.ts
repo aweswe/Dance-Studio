@@ -187,6 +187,88 @@ export async function reorderHomepageReels(items: { id: string; sort_order: numb
   return { success: true };
 }
 
+/**
+ * Register a reel uploaded to Vercel Blob with FIFO auto-deletion.
+ * When the 7th reel is added, the oldest reel is automatically purged
+ * from both Vercel Blob CDN storage and the database.
+ */
+export async function registerVercelBlobReelWithFIFO(input: {
+  title: string;
+  videoUrl: string;
+  href?: string;
+  width?: number;
+  height?: number;
+}) {
+  const supabase = await createServerSupabase();
+  if (!(await isAdmin(supabase))) return { success: false, error: 'Not authorized' };
+
+  const title = input.title.trim();
+  const videoUrl = input.videoUrl.trim();
+  const href = input.href?.trim() || 'https://www.instagram.com/rhythmzzdance.live';
+
+  if (!title) return { success: false, error: 'Title is required' };
+  if (!videoUrl) return { success: false, error: 'Video URL is required' };
+
+  const admin = createAdminSupabase();
+
+  // FIFO Buffer Check: Check current reels count
+  const { data: existingReels } = await admin
+    .from('homepage_reels')
+    .select('id, video_url, storage_path, sort_order')
+    .order('sort_order', { ascending: true });
+
+  if (existingReels && existingReels.length >= MAX_HOMEPAGE_REELS) {
+    // Purge excess oldest reels to maintain max 6 capacity
+    const excess = existingReels.length - MAX_HOMEPAGE_REELS + 1;
+    const toDelete = existingReels.slice(0, excess);
+
+    for (const old of toDelete) {
+      if (old.video_url && old.video_url.includes('blob.vercel-storage.com')) {
+        try {
+          const { del } = await import('@vercel/blob');
+          await del(old.video_url);
+        } catch (e) {
+          console.warn('Vercel Blob auto-delete failed:', e);
+        }
+      } else if (old.storage_path) {
+        await admin.storage.from('reels').remove([old.storage_path]);
+      }
+      await admin.from('homepage_reels').delete().eq('id', old.id);
+    }
+  }
+
+  const { data: last } = await admin
+    .from('homepage_reels')
+    .select('sort_order')
+    .order('sort_order', { ascending: false })
+    .limit(1);
+
+  const sortOrder = ((last?.[0] as { sort_order: number } | undefined)?.sort_order ?? 0) + 1;
+
+  const { data: inserted, error: insertErr } = await admin
+    .from('homepage_reels')
+    .insert({
+      title,
+      video_url: videoUrl,
+      storage_path: null,
+      href,
+      sort_order: sortOrder,
+      is_visible: true,
+      width: input.width || 1080,
+      height: input.height || 1920,
+    })
+    .select()
+    .single();
+
+  if (insertErr) {
+    return { success: false, error: insertErr.message };
+  }
+
+  revalidatePath('/admin/reels');
+  revalidatePath('/');
+  return { success: true, item: inserted };
+}
+
 export async function deleteHomepageReel(id: string) {
   const supabase = await createServerSupabase();
   if (!(await isAdmin(supabase))) return { success: false, error: 'Not authorized' };
@@ -198,7 +280,14 @@ export async function deleteHomepageReel(id: string) {
     .eq('id', id)
     .maybeSingle();
 
-  if (row?.storage_path) {
+  if (row?.video_url && row.video_url.includes('blob.vercel-storage.com')) {
+    try {
+      const { del } = await import('@vercel/blob');
+      await del(row.video_url);
+    } catch (e) {
+      console.warn('Vercel Blob delete warning:', e);
+    }
+  } else if (row?.storage_path) {
     await admin.storage.from('reels').remove([row.storage_path]);
   } else if (row?.video_url) {
     const path = extractStoragePath(row.video_url);

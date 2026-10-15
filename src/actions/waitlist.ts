@@ -57,15 +57,17 @@ export async function submitWaitlistRequest(data: WaitlistSubmissionData) {
     // Don't fail completely if table is temporarily constrained, try to notify
   }
 
-  // 2. Count existing waitlist entries for this programme to give an authentic queue number
-  let queuePosition = 4;
+  // 2. Count existing waitlist entries specifically for this programme track
+  let queuePosition = 1;
   try {
+    const programmeFilter = data.programme ? `%${data.programme.trim()}%` : '%';
     const { count } = await admin
       .from('enquiries')
       .select('id', { count: 'exact', head: true })
-      .eq('source', 'waitlist');
+      .eq('source', 'waitlist')
+      .ilike('message', programmeFilter);
     if (count !== null && count !== undefined) {
-      queuePosition = count + 1;
+      queuePosition = Math.max(1, count);
     }
   } catch {}
 

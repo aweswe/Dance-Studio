@@ -4,6 +4,8 @@ import {
   coveredMonthKeys,
   isMonthCovered,
   isDue,
+  isOverdue,
+  getFeeDueDate,
   monthlyAmount,
   quarterlyAmount,
   coverageMonths,
@@ -11,7 +13,7 @@ import {
   trailingMonths,
 } from './ledger';
 
-const p = (for_month: string | null, paid_at: string, status?: string) => ({
+const p = (for_month: string | null, paid_at: string, status: string = 'confirmed') => ({
   for_month,
   paid_at,
   status,
@@ -24,11 +26,11 @@ describe('monthKey', () => {
   });
 });
 
-describe('coveredMonthKeys / isMonthCovered / isDue', () => {
-  it('prefers for_month and falls back to the paid_at month', () => {
+describe('coveredMonthKeys / isMonthCovered / isDue / isOverdue', () => {
+  it('prefers for_month and falls back to the paid_at month for confirmed payments', () => {
     const payments = [
-      p('2026-08-01', '2026-09-05T10:00:00Z'),
-      p(null, '2026-06-10T10:00:00Z'),
+      p('2026-08-01', '2026-09-05T10:00:00Z', 'confirmed'),
+      p(null, '2026-06-10T10:00:00Z', 'confirmed'),
     ];
     const covered = coveredMonthKeys(payments);
     expect(covered.has('2026-08')).toBe(true);
@@ -36,9 +38,11 @@ describe('coveredMonthKeys / isMonthCovered / isDue', () => {
     expect(covered.has('2026-06')).toBe(true);
   });
 
-  it('ignores pending UPI claims', () => {
+  it('strictly ignores pending, rejected, and unconfirmed payments', () => {
     const now = new Date(2026, 7, 25);
     expect(isDue([p('2026-08-01', '2026-08-05', 'pending')], now)).toBe(true);
+    expect(isDue([p('2026-08-01', '2026-08-05', 'rejected')], now)).toBe(true);
+    expect(isDue([{ for_month: '2026-08-01', paid_at: '2026-08-05', status: undefined as any }], now)).toBe(true);
     expect(isDue([p('2026-08-01', '2026-08-05', 'confirmed')], now)).toBe(false);
   });
 
@@ -47,6 +51,15 @@ describe('coveredMonthKeys / isMonthCovered / isDue', () => {
     expect(isDue([p('2026-07-01', '2026-07-01')], now)).toBe(true);
     expect(isDue([p('2026-08-01', '2026-08-05')], now)).toBe(false);
     expect(isDue([], now)).toBe(true);
+  });
+
+  it('isOverdue triggers only after the 7th of the month for uncovered fees', () => {
+    const beforeDue = new Date(2026, 7, 5); // Aug 5th
+    const afterDue = new Date(2026, 7, 12); // Aug 12th
+
+    expect(isOverdue([], beforeDue)).toBe(false);
+    expect(isOverdue([], afterDue)).toBe(true);
+    expect(isOverdue([p('2026-08-01', '2026-08-01')], afterDue)).toBe(false);
   });
 
   it('isMonthCovered works across year boundaries', () => {

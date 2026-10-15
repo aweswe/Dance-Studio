@@ -84,6 +84,7 @@ export function EnrolForm({
   const [email, setEmail] = useState('');
 
   const [status, setStatus] = useState<FormStatus>('editing');
+  const [isPaidOnline, setIsPaidOnline] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [errorMsg, setErrorMsg] = useState('');
   const settledRef = useRef(false);
@@ -181,6 +182,7 @@ export function EnrolForm({
         setErrorMsg(lead.error || 'Could not save your request.');
         return;
       }
+      setIsPaidOnline(false);
       setStatus('lead');
       return;
     }
@@ -189,6 +191,7 @@ export function EnrolForm({
       await saveLead('pay');
 
       if (!PAYMENTS_ENABLED) {
+        setIsPaidOnline(false);
         setStatus('success');
         return;
       }
@@ -210,6 +213,7 @@ export function EnrolForm({
 
       if (!res.ok) {
         if (res.status === 503 || data.error === 'PAYMENTS_UNAVAILABLE') {
+          setIsPaidOnline(false);
           setStatus('success');
           return;
         }
@@ -220,6 +224,7 @@ export function EnrolForm({
 
       const scriptLoaded = await loadRazorpayScript();
       if (!scriptLoaded) {
+        setIsPaidOnline(false);
         setStatus('success');
         return;
       }
@@ -236,6 +241,7 @@ export function EnrolForm({
         },
         onSuccess: () => {
           settledRef.current = true;
+          setIsPaidOnline(true);
           setStatus('success');
         },
         onFailure: (message) => {
@@ -254,22 +260,56 @@ export function EnrolForm({
   }
 
   if (status === 'success' || status === 'lead') {
-    const paid = status === 'success' || isPay;
     return (
       <div className="bg-surface p-8 md:p-10 rounded-md border border-line shadow-2xl max-w-lg mx-auto w-full text-center space-y-6">
-        <div className="w-16 h-16 rounded-full bg-green/15 text-green flex items-center justify-center mx-auto">
-          {paid ? <CheckCircle2 size={32} /> : <MessageSquare size={28} />}
+        <div
+          className={cn(
+            'w-16 h-16 rounded-full flex items-center justify-center mx-auto',
+            isPaidOnline
+              ? 'bg-green/15 text-green'
+              : isPay
+              ? 'bg-amber-500/15 text-amber-600 dark:text-amber-400'
+              : 'bg-bl/15 text-bl',
+          )}
+        >
+          {isPaidOnline ? (
+            <CheckCircle2 size={32} />
+          ) : isPay ? (
+            <CreditCard size={30} />
+          ) : (
+            <MessageSquare size={28} />
+          )}
         </div>
+
         <div className="space-y-1">
-          <span className="text-[10px] font-mono font-bold uppercase tracking-[2px] text-green">
-            {paid ? 'Enrolment & Billing Confirmed' : 'Request Saved'}
+          <span
+            className={cn(
+              'text-[10px] font-mono font-bold uppercase tracking-[2px]',
+              isPaidOnline
+                ? 'text-green'
+                : isPay
+                ? 'text-amber-600 dark:text-amber-400'
+                : 'text-bl',
+            )}
+          >
+            {isPaidOnline
+              ? 'Enrolment & Payment Confirmed'
+              : isPay
+              ? 'Application Received · Awaiting Payment'
+              : 'Request Saved'}
           </span>
           <h3 className="font-anton text-3xl sm:text-4xl text-ink tracking-wide">
-            {paid ? 'ENROLMENT CONFIRMED' : 'WE HAVE YOUR DETAILS'}
+            {isPaidOnline
+              ? 'PAYMENT & ENROLMENT CONFIRMED'
+              : isPay
+              ? 'ENROLMENT APPLICATION RECEIVED'
+              : 'WE HAVE YOUR DETAILS'}
           </h3>
           <p className="text-xs text-ink-2 leading-relaxed">
-            {paid
-              ? `Your slot is confirmed and billed for ${formatCurrency(fee)}. Use this mobile number to log in to the student portal for your class timetable, fee receipts, and attendance tracking.`
+            {isPaidOnline
+              ? `Your payment of ${formatCurrency(fee)} is confirmed! An official receipt has been issued. Use this mobile number (${normalizedPhone}) to sign in to the student portal for your class timetable, fee receipts, and attendance tracking.`
+              : isPay
+              ? `We have received your enrolment application for ${selectedProgramme?.name}. To confirm your admission and reserve your slot, please complete the payment of ${formatCurrency(fee)} via UPI or at the studio front desk.`
               : 'The academy has received your trial class enquiry. We will confirm your timing slot shortly.'}
           </p>
         </div>
@@ -291,23 +331,32 @@ export function EnrolForm({
             <span className="text-ink-2">Schedule</span>
             <span className="font-semibold text-bl">{batchLabel(selectedBatch)}</span>
           </div>
-          <div className="flex justify-between py-1 text-sm font-bold">
-            <span className="text-ink">Total Billed</span>
-            <span className="text-green font-mono">{formatCurrency(fee)}</span>
-          </div>
+          {isPay && (
+            <div className="flex justify-between py-1 text-sm font-bold">
+              <span className="text-ink">{isPaidOnline ? 'Total Paid' : 'Total Payable'}</span>
+              <span
+                className={cn(
+                  'font-mono',
+                  isPaidOnline ? 'text-green' : 'text-amber-600 dark:text-amber-400',
+                )}
+              >
+                {formatCurrency(fee)}
+              </span>
+            </div>
+          )}
         </div>
 
+        {isPay && !isPaidOnline && (
+          <div className="p-3 bg-amber-500/10 border border-amber-500/30 rounded-md text-left">
+            <p className="text-[11px] leading-relaxed text-amber-900 dark:text-amber-200">
+              <strong className="font-bold">Next Steps:</strong> Complete payment below via UPI app or at the studio desk. Once studio staff verifies your payment, your student portal credentials and official receipt will be active.
+            </p>
+          </div>
+        )}
+
         <div className="flex flex-col gap-3">
-          {paid ? (
+          {isPaidOnline ? (
             <>
-              {upiLink && (
-                <a
-                  href={upiLink}
-                  className={cn(homepageCtaOutlineLight, homepageCtaPairButton)}
-                >
-                  Pay via UPI App ({formatCurrency(fee)})
-                </a>
-              )}
               <a
                 href={ROUTES.login}
                 className={cn(homepageCtaBrand, homepageCtaPairButton)}
@@ -315,13 +364,36 @@ export function EnrolForm({
                 Sign in to student portal <ArrowRight size={16} />
               </a>
               <a
-                href={whatsappLink(`Hi Rhythmzz! I've enrolled ${childName} for ${selectedProgramme?.name} (${plan} plan · ${formatCurrency(fee)}). Please confirm my batch schedule.`)}
+                href={whatsappLink(
+                  `Hi Rhythmzz! I've enrolled ${childName} for ${selectedProgramme?.name} (${plan} plan · ${formatCurrency(fee)}). Please confirm my batch schedule.`,
+                )}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-xs font-semibold text-ink-3 hover:text-ink transition-colors flex items-center justify-center gap-1.5 pt-1"
               >
                 <span>Share receipt copy on WhatsApp (Optional)</span>
                 <ArrowUpRight size={14} />
+              </a>
+            </>
+          ) : isPay ? (
+            <>
+              {upiLink && (
+                <a
+                  href={upiLink}
+                  className={cn(homepageCtaBrand, homepageCtaPairButton)}
+                >
+                  Pay via UPI App ({formatCurrency(fee)})
+                </a>
+              )}
+              <a
+                href={whatsappLink(
+                  `Hi Rhythmzz! I've submitted an enrolment application for ${childName} (${selectedProgramme?.name} · ${plan.replace('-', ' ')} plan · ${formatCurrency(fee)}). Please confirm batch availability and my UPI payment status.`,
+                )}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={cn(homepageCtaWhatsApp, homepageCtaPairButton)}
+              >
+                Confirm Payment / Send UTR on WhatsApp
               </a>
             </>
           ) : (

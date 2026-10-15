@@ -191,6 +191,40 @@ export async function updateBatchSchedule(
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { success: false, error: 'Not authenticated' }
 
+  const { getUserRole } = await import('@/lib/supabase/guards')
+  const role = await getUserRole(supabase)
+
+  // Strict authorization: Admin can update any batch. Instructor can ONLY update batches assigned directly to them!
+  if (role !== 'admin') {
+    if (role !== 'instructor') {
+      return { success: false, error: 'Unauthorized: Only instructors and admins can set up class schedules' }
+    }
+
+    const { getLinkedInstructor } = await import('@/lib/auth/instructor')
+    const instructor = await getLinkedInstructor(supabase, user)
+    if (!instructor) {
+      return { success: false, error: 'Instructor profile not found' }
+    }
+
+    // Verify this batch is actually assigned to this instructor
+    const { data: batch } = await supabase
+      .from('batches')
+      .select('id, instructor_id')
+      .eq('id', batchId)
+      .maybeSingle()
+
+    if (!batch) {
+      return { success: false, error: 'Batch not found' }
+    }
+
+    if (batch.instructor_id !== instructor.id) {
+      return {
+        success: false,
+        error: 'Unauthorized: You can only configure class timings for your own assigned batches',
+      }
+    }
+  }
+
   const { createAdminSupabase } = await import('@/lib/supabase/server')
   const admin = createAdminSupabase()
 
@@ -214,63 +248,14 @@ export async function updateBatchSchedule(
   return { success: true }
 }
 
-export async function createInstructorBatch(data: {
-  name: string
-  programmeId: string
-  days: string[]
-  timeStart: string
-  timeEnd: string
-  capacity?: number
-}) {
-  const supabase = await createServerSupabase()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return { success: false, error: 'Not authenticated' }
-
-  const { getLinkedInstructor } = await import('@/lib/auth/instructor')
-  const instructor = await getLinkedInstructor(supabase, user)
-  if (!instructor) {
-    return { success: false, error: 'Unauthorized: No instructor profile linked to your account' }
+/**
+ * Batches are strictly created by Studio Administrators.
+ * Instructors cannot create batches — they can only configure class timings for batches assigned to them.
+ */
+export async function createInstructorBatch(_data?: unknown) {
+  return {
+    success: false,
+    error: 'Batches can only be created by studio administration. Instructors are only authorized to configure class timings for batches assigned to them.',
   }
-
-  if (!data.name || data.name.trim().length < 2) {
-    return { success: false, error: 'Please enter a valid batch name' }
-  }
-  if (!data.programmeId) {
-    return { success: false, error: 'Please select a programme for this class' }
-  }
-  if (!data.days || data.days.length === 0) {
-    return { success: false, error: 'Please select at least one day' }
-  }
-
-  const { createAdminSupabase } = await import('@/lib/supabase/server')
-  const admin = createAdminSupabase()
-
-  const { data: inserted, error } = await admin
-    .from('batches')
-    .insert({
-      programme_id: data.programmeId,
-      instructor_id: instructor.id,
-      name: data.name.trim(),
-      days: data.days,
-      time_start: data.timeStart || '17:00:00',
-      time_end: data.timeEnd || '18:30:00',
-      capacity: data.capacity || 25,
-      enrolled_count: 0,
-      status: 'active',
-    })
-    .select()
-    .single()
-
-  if (error) {
-    console.error('createInstructorBatch failed:', error)
-    return { success: false, error: error.message }
-  }
-
-  revalidatePath('/instructor')
-  revalidatePath('/instructor/classes')
-  revalidatePath('/schedule')
-  revalidatePath('/programmes')
-  revalidatePath('/')
-  return { success: true, batch: inserted }
 }
 

@@ -37,8 +37,11 @@ export function coverageMonths(plan: 'monthly' | 'quarterly', from: Date = new D
   return months;
 }
 
-function isConfirmed(p: LedgerPayment): boolean {
-  return !p.status || p.status === 'confirmed';
+export const FEE_DUE_DAY = 7;
+
+export function isConfirmed(p: LedgerPayment): boolean {
+  // Strictly require confirmed status. Pending and rejected payments NEVER count as confirmed.
+  return p.status === 'confirmed';
 }
 
 /** Month keys covered by the given payments. */
@@ -60,6 +63,21 @@ export function isMonthCovered(payments: LedgerPayment[], date: Date): boolean {
 /** True when the current month is uncovered. */
 export function isDue(payments: LedgerPayment[], now: Date = new Date()): boolean {
   return !isMonthCovered(payments, now);
+}
+
+/** True when the fee for the current month is uncovered AND today is past the 7th. */
+export function isOverdue(payments: LedgerPayment[], now: Date = new Date()): boolean {
+  return isDue(payments, now) && now.getDate() > FEE_DUE_DAY;
+}
+
+/** Resolves standardized fee due date and overdue status. */
+export function getFeeDueDate(now: Date = new Date()): { dueDateStr: string; isPastDue: boolean } {
+  const monthName = now.toLocaleDateString('en-IN', { month: 'short' });
+  const year = now.getFullYear();
+  return {
+    dueDateStr: `7 ${monthName} ${year}`,
+    isPastDue: now.getDate() > FEE_DUE_DAY,
+  };
 }
 
 /** Monthly fee with the app's fallback when a programme has none set. */

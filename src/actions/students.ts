@@ -136,6 +136,12 @@ export async function createStudent(data: CreateStudentData & { name: string; ph
     portal = { ok: res.success };
   }
 
+  if (d.batchId) {
+    const admin = createAdminSupabase();
+    const { syncBatchCount } = await import('@/actions/enrollment');
+    await syncBatchCount(admin, d.batchId);
+  }
+
   revalidatePath('/admin/students');
   return { success: true, id: inserted?.id ?? null, portalEnabled: d.enablePortal && portal.ok };
 }
@@ -157,6 +163,12 @@ export async function deactivateStudent(studentId: string) {
       .update({ status: 'inactive' })
       .eq('id', studentId);
     if (error) return { success: false, error: error.message };
+
+    if (student.batch_id) {
+      const admin = createAdminSupabase();
+      const { syncBatchCount } = await import('@/actions/enrollment');
+      await syncBatchCount(admin, student.batch_id);
+    }
   }
   revalidatePath('/admin/students');
   return { success: true };
@@ -179,6 +191,12 @@ export async function reactivateStudent(studentId: string) {
       .update({ status: 'active' })
       .eq('id', studentId);
     if (error) return { success: false, error: error.message };
+
+    if (student.batch_id) {
+      const admin = createAdminSupabase();
+      const { syncBatchCount } = await import('@/actions/enrollment');
+      await syncBatchCount(admin, student.batch_id);
+    }
   }
   revalidatePath('/admin/students');
   return { success: true };
@@ -228,6 +246,20 @@ export async function updateStudent(studentId: string, data: UpdateStudentData) 
     .update(payload as any)
     .eq('id', studentId);
   if (error) return { success: false, error: error.message };
+
+  const admin = createAdminSupabase();
+  const { syncBatchCount } = await import('@/actions/enrollment');
+  const oldBatchId = (current as any)?.batch_id;
+  const newBatchId = d.batchId ?? null;
+
+  if (oldBatchId !== newBatchId) {
+    await Promise.all([
+      syncBatchCount(admin, oldBatchId),
+      syncBatchCount(admin, newBatchId),
+    ]);
+  } else if (newBatchId) {
+    await syncBatchCount(admin, newBatchId);
+  }
 
   revalidatePath('/admin/students');
   revalidatePath('/admin/students/' + studentId);

@@ -31,7 +31,10 @@ export async function GET(request: Request) {
         .select('id, name, phone, programme_id')
         .eq('status', 'active')
         .not('phone', 'is', null),
-      supabase.from('fee_payments').select('student_id, paid_at, for_month'),
+      supabase
+        .from('fee_payments')
+        .select('student_id, paid_at, for_month, status')
+        .eq('status', 'confirmed'),
       supabase.from('programmes').select('id, fees_monthly'),
       supabase
         .from('broadcast_queue')
@@ -40,11 +43,11 @@ export async function GET(request: Request) {
         .gte('created_at', monthStart),
     ]);
 
-  // Covered students: any payment whose (for_month ?? paid_at) falls in this month.
+  // Covered students: only CONFIRMED payments whose (for_month ?? paid_at) falls in this month.
   const covered = new Set(
     (payments ?? [])
-      .map((p) => p as { student_id: string; paid_at: string; for_month: string | null })
-      .filter((p) => (p.for_month ?? p.paid_at).slice(0, 7) === monthKey)
+      .map((p) => p as { student_id: string; paid_at: string; for_month: string | null; status?: string })
+      .filter((p) => p.status === 'confirmed' && (p.for_month ?? p.paid_at).slice(0, 7) === monthKey)
       .map((p) => p.student_id),
   );
 
@@ -70,14 +73,14 @@ export async function GET(request: Request) {
     })
     .map((s) => {
       const amount = String(feeByProgramme.get(s.programme_id!) ?? 0);
-      const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+      const monthName = now.toLocaleDateString('en-IN', { month: 'short' });
       return {
         recipient_phone: s.phone,
         template_name: WHATSAPP_TEMPLATES.feeReminder.name,
         variables: WHATSAPP_TEMPLATES.feeReminder.variables({
           studentName: s.name,
           amount,
-          dueDate: lastDay.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }),
+          dueDate: `7th ${monthName}`,
           paymentLink: `https://rhythmzz.in/student/fees`,
         }),
       };

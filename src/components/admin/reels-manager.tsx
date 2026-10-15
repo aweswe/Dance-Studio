@@ -44,7 +44,62 @@ export function ReelsManager({ initialItems }: { initialItems: HomepageReelRow[]
   const [uploadHref, setUploadHref] = useState('https://www.instagram.com/rhythmzzdance.live');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-  const slotsLeft = MAX_HOMEPAGE_REELS - items.length;
+  const [activeTab, setActiveTab] = useState<'video' | 'instagram'>('video');
+  const [uploadProgress, setUploadProgress] = useState<string | null>(null);
+
+  const doUploadVideoToVercel = async () => {
+    if (!uploadTitle.trim() || !selectedFile) return;
+    setBusy(true);
+    setFeedback(null);
+    setUploadProgress('Analyzing video...');
+
+    try {
+      const meta = await probePortrait(selectedFile);
+      setUploadProgress('Uploading to Vercel Blob CDN...');
+
+      const { upload } = await import('@vercel/blob/client');
+      const blob = await upload(
+        `reels/${Date.now()}-${selectedFile.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`,
+        selectedFile,
+        {
+          access: 'public',
+          handleUploadUrl: '/api/blob/upload',
+        },
+      );
+
+      setUploadProgress('Applying rolling FIFO & saving...');
+      const { registerVercelBlobReelWithFIFO } = await import('@/actions/reels');
+      const res = await registerVercelBlobReelWithFIFO({
+        title: uploadTitle.trim(),
+        videoUrl: blob.url,
+        href: uploadHref.trim() || undefined,
+        width: meta.width,
+        height: meta.height,
+      });
+
+      if (!res.success) {
+        setFeedback({ ok: false, text: res.error ?? 'Failed to register reel' });
+        return;
+      }
+
+      setUploadTitle('');
+      setSelectedFile(null);
+      if (fileRef.current) fileRef.current.value = '';
+      setFeedback({
+        ok: true,
+        text: 'Video uploaded to Vercel Blob successfully (rolling FIFO auto-rotation active)!',
+      });
+      router.refresh();
+    } catch (err) {
+      setFeedback({
+        ok: false,
+        text: err instanceof Error ? err.message : 'Could not upload video to Vercel',
+      });
+    } finally {
+      setBusy(false);
+      setUploadProgress(null);
+    }
+  };
 
   const doAddInstagramReel = async () => {
     if (!uploadTitle.trim() || !uploadHref.trim()) return;
@@ -113,20 +168,88 @@ export function ReelsManager({ initialItems }: { initialItems: HomepageReelRow[]
   return (
     <div className="space-y-8">
       <div className="rounded-md border border-line bg-surface p-6 space-y-4">
-        <div className="flex items-start justify-between gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
           <div>
-            <h3 className="font-display text-lg text-ink">Add Instagram Reel</h3>
+            <h3 className="font-display text-lg text-ink">Add Showcase Reel</h3>
             <p className="text-sm text-ink-2 mt-1">
-              Provide an Instagram Reel link · Streamed via Instagram embed with zero Supabase storage usage
+              Host videos directly on Vercel with rolling FIFO auto-deletion (max 6 videos)
             </p>
           </div>
-          <span className="text-xs font-mono uppercase tracking-wider text-ink-3 shrink-0">
-            {items.length}/{MAX_HOMEPAGE_REELS} used
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-mono uppercase tracking-wider text-ink-3 shrink-0">
+              {items.length}/{MAX_HOMEPAGE_REELS} used
+            </span>
+            {items.length >= MAX_HOMEPAGE_REELS && (
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/10 text-amber-600 border border-amber-500/20 font-bold uppercase">
+                FIFO Rotation Ready
+              </span>
+            )}
+          </div>
         </div>
 
-        {slotsLeft <= 0 ? (
-          <p className="text-sm text-amber-800 font-bold">All {MAX_HOMEPAGE_REELS} slots full — delete a reel to add a new one.</p>
+        {/* Tab Selector */}
+        <div className="flex border-b border-line gap-4 text-xs font-mono uppercase tracking-wider font-bold">
+          <button
+            type="button"
+            onClick={() => setActiveTab('video')}
+            className={`pb-2.5 transition-colors border-b-2 cursor-pointer ${
+              activeTab === 'video'
+                ? 'border-bl text-bl font-bold'
+                : 'border-transparent text-ink-3 hover:text-ink'
+            }`}
+          >
+            Upload Video (Vercel Blob)
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab('instagram')}
+            className={`pb-2.5 transition-colors border-b-2 cursor-pointer ${
+              activeTab === 'instagram'
+                ? 'border-bl text-bl font-bold'
+                : 'border-transparent text-ink-3 hover:text-ink'
+            }`}
+          >
+            Instagram Reel Link
+          </button>
+        </div>
+
+        {activeTab === 'video' ? (
+          <div className="space-y-3">
+            <div className="grid gap-3 sm:grid-cols-2">
+              <Input
+                placeholder="Reel title (e.g. VIP walk — Divya choreo)"
+                value={uploadTitle}
+                onChange={(e) => setUploadTitle(e.target.value)}
+              />
+              <Input
+                placeholder="Instagram profile or reel link (optional)"
+                value={uploadHref}
+                onChange={(e) => setUploadHref(e.target.value)}
+              />
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
+              <input
+                ref={fileRef}
+                type="file"
+                accept="video/mp4,video/quicktime,video/webm"
+                onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
+                className="text-xs text-ink-2 file:mr-3 file:py-2 file:px-3 file:rounded file:border file:border-line file:text-xs file:font-semibold file:bg-canvas file:text-ink hover:file:border-bl cursor-pointer"
+              />
+              <Button
+                type="button"
+                onClick={doUploadVideoToVercel}
+                disabled={busy || !uploadTitle.trim() || !selectedFile}
+              >
+                {busy ? <Loader2 size={16} className="animate-spin mr-2" /> : <Upload size={16} className="mr-2" />}
+                {uploadProgress || 'Upload to Vercel'}
+              </Button>
+            </div>
+
+            <p className="text-[11px] text-ink-3">
+              ⚡ <strong>FIFO Engine:</strong> When 6 reels exist, uploading a new video automatically purges the oldest video from Vercel CDN storage and database so your storage never grows.
+            </p>
+          </div>
         ) : (
           <div className="grid gap-3 sm:grid-cols-2">
             <Input

@@ -77,7 +77,7 @@ export async function sendFeeReminder(studentId: string) {
     variables: WHATSAPP_TEMPLATES.feeReminder.variables({
       studentName: student.name,
       amount: formatCurrency(feeAmount),
-      dueDate: '5th of this month',
+      dueDate: '7th of this month',
       paymentLink: `${SITE_URL}/student/fees`,
     }),
   });

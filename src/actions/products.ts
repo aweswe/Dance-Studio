@@ -84,7 +84,22 @@ export async function updateProduct(
   if (input.category !== undefined) updatePayload.category = input.category;
   if (input.tag !== undefined) updatePayload.tag = input.tag.trim();
   if (input.sizes !== undefined) updatePayload.sizes = input.sizes;
-  if (input.image_url !== undefined) updatePayload.image_url = input.image_url.trim();
+  if (input.image_url !== undefined) {
+    const newUrl = input.image_url.trim();
+    updatePayload.image_url = newUrl;
+
+    // Purge old image from Vercel Blob if it was replaced
+    const { data: current } = await admin.from('products').select('image_url').eq('id', id).maybeSingle();
+    const oldUrl = (current as any)?.image_url;
+    if (oldUrl && oldUrl !== newUrl && oldUrl.includes('blob.vercel-storage.com')) {
+      try {
+        const { del } = await import('@vercel/blob');
+        await del(oldUrl);
+      } catch (e) {
+        console.warn('Vercel Blob old product image cleanup warning:', e);
+      }
+    }
+  }
   if (input.description !== undefined) updatePayload.description = input.description.trim();
   if (input.is_active !== undefined) updatePayload.is_active = input.is_active;
   if (input.sort_order !== undefined) updatePayload.sort_order = input.sort_order;
@@ -194,6 +209,19 @@ export async function deleteProduct(id: string): Promise<{ success: boolean; err
   }
 
   const admin = createAdminSupabase();
+
+  // Purge image from Vercel Blob if stored there
+  const { data: current } = await admin.from('products').select('image_url').eq('id', id).maybeSingle();
+  const imageUrl = (current as any)?.image_url;
+  if (imageUrl && imageUrl.includes('blob.vercel-storage.com')) {
+    try {
+      const { del } = await import('@vercel/blob');
+      await del(imageUrl);
+    } catch (e) {
+      console.warn('Vercel Blob product image delete warning:', e);
+    }
+  }
+
   const { error } = await admin.from('products').delete().eq('id', id);
 
   if (error) {

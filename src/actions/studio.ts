@@ -126,20 +126,23 @@ export async function reviewLeaveRequest(id: string, status: 'approved' | 'decli
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { success: false, error: 'Not signed in' };
 
+  const admin = createAdminSupabase();
+  const { data: leaveReq } = await (admin as any)
+    .from('leave_requests')
+    .select('id, student_id, batch_id, date, status')
+    .eq('id', id)
+    .maybeSingle();
+
+  if (!leaveReq) return { success: false, error: 'Request not found' };
+
   const adminOk = await isAdmin(supabase);
   if (!adminOk) {
     const instructor = await getLinkedInstructor(supabase, user);
     if (!instructor) return { success: false, error: 'Not authorized' };
-    const { data: leave } = await supabase
-      .from('leave_requests')
-      .select('id, batch_id')
-      .eq('id', id)
-      .maybeSingle();
-    if (!leave?.batch_id) return { success: false, error: 'Request not found' };
     const { data: batch } = await supabase
       .from('batches')
       .select('instructor_id')
-      .eq('id', leave.batch_id)
+      .eq('id', leaveReq.batch_id)
       .maybeSingle();
     if (batch?.instructor_id !== instructor.id) {
       return { success: false, error: 'Not authorized' };
@@ -148,6 +151,24 @@ export async function reviewLeaveRequest(id: string, status: 'approved' | 'decli
 
   const { error } = await supabase.from('leave_requests').update({ status } as any).eq('id', id);
   if (error) return { success: false, error: error.message };
+
+  // Sync approved leave directly into attendance table so the instructor roster marks 'leave'
+  if (status === 'approved' && leaveReq.student_id && leaveReq.batch_id && leaveReq.date) {
+    await (admin as any).from('attendance').upsert(
+      {
+        batch_id: leaveReq.batch_id,
+        student_id: leaveReq.student_id,
+        date: leaveReq.date,
+        status: 'leave',
+        notes: 'Approved leave request',
+      },
+      {
+        onConflict: 'student_id,batch_id,date',
+        ignoreDuplicates: false,
+      },
+    );
+  }
+
   revalidatePath('/instructor/attendance');
   revalidatePath('/instructor/students');
   revalidatePath('/admin/attendance');

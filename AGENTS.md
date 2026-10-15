@@ -46,8 +46,10 @@ Over the course of development and production optimization for Rhythmzz Academy 
 6. **Real Database-Backed "Join Waitlist" Engine**:
    * Replaced static placeholder links with a real modal (`WaitlistModal`) and backend server action (`submitWaitlistRequest`), capturing applicant details, logging into `enquiries` and `batch_waitlist`, computing queue numbers, and triggering WhatsApp alerts.
 
-7. **Instructor Self-Service Batch & Class Scheduling**:
-   * Added `createInstructorBatch` server action and `CreateInstructorBatchDialog` to the instructor portal, enabling instructors to schedule and activate their own classes.
+7. **Instructor Scope & Strict Batch Assignment Enforcement**:
+   * *Architecture Rule:* Batches are strictly created and assigned to instructors by the Academy Administration (`/admin/classes`). Instructors CANNOT create batches.
+   * *Instructor Capability:* Instructors can ONLY set up and manage class schedule timings (time, days) for batches explicitly assigned to them (`batch.instructor_id === instructor.id`).
+   * *Zero Unassigned Privileges:* If an instructor is not attached to any batch, all options to create batches or mark attendance are hidden, replaced by clear informational banners explaining that the studio administration assigns batches.
 
 8. **Automated Event Broadcasting (In-App Dashboard, WhatsApp, or Both)**:
    * Upgraded event creation in `EventsManager` to include a multi-channel broadcast engine dispatching to student portal notices (`broadcast_logs`) and active WhatsApp subscribers (`broadcast_queue`).
@@ -182,18 +184,11 @@ export function enrolHref(opts?: {
 
 ---
 
-### C. Instructor Self-Service Batch Management
-
-#### 1. Server Action: `createInstructorBatch`
-* **File:** `src/actions/classes.ts`
-* Securely retrieves instructor record linked to authenticated user.
-* Validates inputs (name length, valid programme ID, at least one weekday).
-* Inserts new batch with `instructor_id: instructor.id` and revalidates relevant paths.
-
-#### 2. Instructor UI: `CreateInstructorBatchDialog`
-* **File:** `src/components/instructor/create-batch-dialog.tsx`
-* Integrated into `/instructor/classes`.
-* Provides interactive weekday selection pills (Mon-Sun), start/end time pickers, and capacity config.
+### C. Instructor Scope & Strict Batch Assignment Enforcement
+* **File:** `src/actions/classes.ts`, `src/app/instructor/classes/page.tsx`
+* **Batches vs Classes:** Batches are institutional entities created exclusively by Academy Admins (`/admin/classes`). Instructors cannot create batches (`createInstructorBatch` returns an explicit restriction error).
+* **Strict Assignment Authorization:** `updateBatchSchedule(batchId, updates)` validates that the calling instructor is directly assigned to the target batch (`batch.instructor_id === instructor.id`). Unauthorized updates across other batches are blocked with a 403 response.
+* **Unassigned State:** If an instructor has zero batches assigned, the portal gracefully hides batch creation controls and attendance triggers, displaying clear status cards informing them to contact studio administration.
 
 ---
 
@@ -317,11 +312,45 @@ erDiagram
 
 ---
 
+### J. Backend Logic Hardening & System Integrity Architecture
+
+1. **Strict Payment Status & Confirmation Engine (`src/lib/fees/ledger.ts`)**:
+   * Previously, `isConfirmed(p)` evaluated `!p.status || p.status === 'confirmed'`, allowing missing `status` fields, unverified UPI submissions, and rejected payments to be treated as active fee coverage.
+   * Hardened `isConfirmed(p)` to strictly mandate `p.status === 'confirmed'`. Any pending, rejected, or missing status is treated as unconfirmed.
+   * Standardized fee due date logic to the **7th of the current month** (`FEE_DUE_DAY = 7`), adding `isOverdue` and `getFeeDueDate`. Unpaid fees after the 7th transition into an explicit `"Overdue"` state rather than rolling forward to next month.
+
+2. **Student Fees Dashboard & Automated Fee Reminders (`src/app/student/fees/page.tsx`, `src/app/api/cron/fee-reminders/route.ts`)**:
+   * Fixed query omission of `status` column in `fee_payments` query.
+   * Integrated dedicated UI badges for `"Pending Verification"` and `"Overdue"`.
+   * Cron reminders explicitly exclude pending/unconfirmed payments when computing delinquent student rosters.
+
+3. **Batch Switch Request & Capacity Synchronization (`src/actions/enrollment.ts`, `src/actions/students.ts`, `src/lib/payments/fulfill-order.ts`)**:
+   * Created `syncBatchCount(admin, batchId)` to dynamically query and update `batches.enrolled_count` against verified active students.
+   * In `resolveBatchSwitchRequest`, added real-time capacity checks (`enrolled_count >= max_capacity`), atomic synchronization of both old and new batches upon approval, and automatic fee difference tracking when switching across tracks with differing monthly fees.
+   * Integrated `syncBatchCount` across student creation, updates, deactivations, reactivations, and online payment provisioning.
+
+4. **Attendance Synchronization for Approved Student Leaves (`src/actions/studio.ts`)**:
+   * When an admin or assigned instructor approves a student leave request, an attendance record is atomically upserted with `status: 'leave'`, eliminating false-positive absence streak alerts on instructor rosters.
+
+5. **Waitlist Queue Segmentation (`src/actions/waitlist.ts`)**:
+   * Filtered queue position calculation by specific programme track (`programme_id`) rather than counting all historical studio enquiries.
+
+6. **Public Enrolment Payment Separation (`src/components/public/enrol-form.tsx`)**:
+   * Differentiated verified online payments (`isPaidOnline: true`) from manual UPI or offline desk applications.
+   * Offline / UPI submissions display *"Application Received — Awaiting Payment Confirmation"* with actionable UPI and WhatsApp submission triggers instead of premature *"Enrolment Confirmed"* confirmations.
+
+7. **Instructor Scope & Batch Creation Lock (`src/actions/classes.ts`, `src/app/instructor/classes/page.tsx`)**:
+   * Batches are institutional entities created exclusively by Academy Admins (`/admin/classes`). Instructors cannot create batches (`createInstructorBatch` returns an explicit restriction error).
+   * Instructors can only configure class timings for batches explicitly assigned to them (`batch.instructor_id === instructor.id`).
+   * When unassigned, all batch creation controls and attendance triggers are safely suppressed.
+
+---
+
 ## 4. Verification, Testing & Quality Audit Checklist
 
-* [x] **Vitest Unit & Integration Tests**: 5 test suites, 40 tests, **100% passing**.
+* [x] **Vitest Unit & Integration Tests**: 5 test suites, 41 tests, **100% passing**.
   - `src/lib/utils/csv.test.ts` (5 tests)
-  - `src/lib/fees/ledger.test.ts` (10 tests)
+  - `src/lib/fees/ledger.test.ts` (11 tests)
   - `src/lib/rate-limit.test.ts` (7 tests)
   - `src/lib/products.test.ts` (5 tests)
   - `src/lib/validators/validators.test.ts` (13 tests)
@@ -339,3 +368,4 @@ erDiagram
 * [x] **Age Bracket Universal Accuracy**: Kids = `3.5 – 12 years`, Adults = `13+ years`.
 * [x] **Zero Trainer Names**: Verified zero trainer names in public schedules, syllabus, certification tracks, and upcoming class cards.
 * [x] **Supabase Quota Safety**: Zero video uploads to Supabase storage; reels rendered via Instagram iframe URLs.
+

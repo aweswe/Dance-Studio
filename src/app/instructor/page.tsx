@@ -95,23 +95,36 @@ export default async function InstructorDashboardPage() {
           </ul>
         ) : (
           <Card>
-            <p className="text-sm text-ink-2">No class today.</p>
+            <p className="text-sm text-ink-2">
+              {batches.length > 0
+                ? "No class scheduled for today."
+                : "No batches assigned to your account yet. Contact studio administration to assign your batches."}
+            </p>
           </Card>
         )}
       </section>
 
       <div className="flex flex-wrap gap-2">
-        <Link
-          href={`${ROUTES.instructor}/attendance`}
-          className="inline-flex items-center justify-center min-h-11 px-4 rounded-md bg-bl text-slate-950 text-sm font-bold hover:bg-bl-deep hover:text-white focus-visible:focus-ring active:scale-[0.96]"
-        >
-          Mark attendance
-        </Link>
+        {batches.length > 0 ? (
+          <Link
+            href={`${ROUTES.instructor}/attendance`}
+            className="inline-flex items-center justify-center min-h-11 px-4 rounded-md bg-bl text-slate-950 text-sm font-bold hover:bg-bl-deep hover:text-white focus-visible:focus-ring active:scale-[0.96]"
+          >
+            Mark attendance
+          </Link>
+        ) : (
+          <span
+            className="inline-flex items-center justify-center min-h-11 px-4 rounded-md bg-canvas-muted text-ink-3 text-sm font-medium border border-line cursor-not-allowed opacity-60"
+            title="Assigned batches required to mark attendance"
+          >
+            Mark attendance (No batches assigned)
+          </span>
+        )}
         <Link
           href={`${ROUTES.instructor}/classes`}
           className="inline-flex items-center justify-center min-h-11 px-4 rounded-md border border-line-strong text-sm font-medium text-ink hover:bg-canvas-muted focus-visible:focus-ring active:scale-[0.96]"
         >
-          All classes
+          My classes
         </Link>
         <Link
           href={`${ROUTES.instructor}/students`}

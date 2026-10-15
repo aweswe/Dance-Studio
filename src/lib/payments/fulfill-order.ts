@@ -126,6 +126,11 @@ export async function provisionStudentFromOrder(
     student = newStudent;
   }
 
+  if (order.batch_id) {
+    const { syncBatchCount } = await import('@/actions/enrollment');
+    await syncBatchCount(supabase, order.batch_id);
+  }
+
   if (student) {
     const perMonth = Math.round(Number(order.amount) / months.length);
     for (const for_month of months) {

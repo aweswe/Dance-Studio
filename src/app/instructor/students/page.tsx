@@ -45,28 +45,39 @@ export default async function StudentsPage() {
 
   return (
     <div className="space-y-8">
-      <p className="text-sm text-ink-2">Students in your batches.</p>
-
-      <StudentList students={(students || []) as any} />
-
-      <div>
-        <h2 className="text-[11px] text-ink-3 mb-3">Leave &amp; makeup</h2>
-        <LeaveReviewList requests={(leaves || []) as any} />
-      </div>
-
-      {kuchipudi.length > 0 && (
-        <div className="space-y-4">
-          <h2 className="text-[11px] text-ink-3">Kuchipudi marking</h2>
-          {kuchipudi.map((s) => (
-            <div key={s.id}>
-              <p className="text-sm font-semibold mb-2">{s.name}</p>
-              <KuchipudiAdmin
-                studentId={s.id}
-                initialProgress={Array.isArray(s.kuchipudi_progress) ? s.kuchipudi_progress[0] : s.kuchipudi_progress}
-              />
-            </div>
-          ))}
+      {batchIds.length === 0 ? (
+        <div className="p-8 rounded-md border border-line bg-surface text-center space-y-2">
+          <h3 className="font-anton text-lg uppercase tracking-tight text-ink">
+            No Batches Assigned
+          </h3>
+          <p className="text-sm text-ink-2 max-w-md mx-auto">
+            You currently have no batches assigned to your instructor account. Once the studio administration assigns you to a batch, your enrolled students will appear on this roster.
+          </p>
         </div>
+      ) : (
+        <>
+          <StudentList students={(students || []) as any} />
+
+          <div>
+            <h2 className="text-[11px] text-ink-3 mb-3">Leave &amp; makeup</h2>
+            <LeaveReviewList requests={(leaves || []) as any} />
+          </div>
+
+          {kuchipudi.length > 0 && (
+            <div className="space-y-4">
+              <h2 className="text-[11px] text-ink-3">Kuchipudi marking</h2>
+              {kuchipudi.map((s) => (
+                <div key={s.id}>
+                  <p className="text-sm font-semibold mb-2">{s.name}</p>
+                  <KuchipudiAdmin
+                    studentId={s.id}
+                    initialProgress={Array.isArray(s.kuchipudi_progress) ? s.kuchipudi_progress[0] : s.kuchipudi_progress}
+                  />
+                </div>
+              ))}
+            </div>
+          )}
+        </>
       )}
     </div>
   );

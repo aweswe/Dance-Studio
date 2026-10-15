@@ -117,6 +117,38 @@ async function assertAdmin() {
   return { ok: true as const };
 }
 
+export async function syncBatchCount(admin: any, batchId: string | null | undefined) {
+  if (!batchId) return;
+  try {
+    const { count } = await admin
+      .from('students')
+      .select('id', { count: 'exact', head: true })
+      .eq('batch_id', batchId)
+      .eq('status', 'active');
+
+    const enrolled = count ?? 0;
+    const { data: batch } = await admin
+      .from('batches')
+      .select('capacity, status')
+      .eq('id', batchId)
+      .maybeSingle();
+
+    if (batch) {
+      const isFull = batch.capacity > 0 && enrolled >= batch.capacity;
+      const nextStatus = isFull ? 'full' : (batch.status === 'full' ? 'active' : batch.status);
+      await admin
+        .from('batches')
+        .update({
+          enrolled_count: enrolled,
+          status: nextStatus,
+        })
+        .eq('id', batchId);
+    }
+  } catch (err) {
+    console.error('syncBatchCount error for batch:', batchId, err);
+  }
+}
+
 export async function resolveBatchSwitchRequest(
   requestId: string,
   decision: 'approved' | 'declined',
@@ -142,8 +174,37 @@ export async function resolveBatchSwitchRequest(
   if (decision === 'approved') {
     const target = row.requested;
     if (!target) return { success: false, error: 'Target batch not found.' };
-    if (target.status === 'full' || (target.capacity > 0 && target.enrolled_count >= target.capacity)) {
-      return { success: false, error: 'Target batch is full. Decline or pick another batch manually.' };
+
+    // Accurate live capacity check against current active students
+    const { count: liveEnrolled } = await admin
+      .from('students')
+      .select('id', { count: 'exact', head: true })
+      .eq('batch_id', target.id)
+      .eq('status', 'active');
+
+    if (target.capacity > 0 && (liveEnrolled ?? 0) >= target.capacity) {
+      return { success: false, error: 'Target batch is already at full capacity. Decline or choose another batch.' };
+    }
+
+    // Check pricing difference between old and new programme
+    const { data: studentBefore } = await admin
+      .from('students')
+      .select('programme_id, programme:programmes(name, fees_monthly)')
+      .eq('id', row.student_id)
+      .maybeSingle();
+
+    const { data: targetProg } = await admin
+      .from('programmes')
+      .select('name, fees_monthly')
+      .eq('id', target.programme_id)
+      .maybeSingle();
+
+    let feeNote = '';
+    const oldFee = (studentBefore as any)?.programme?.fees_monthly ?? 0;
+    const newFee = (targetProg as any)?.fees_monthly ?? 0;
+    if (newFee > oldFee && oldFee > 0) {
+      const diff = newFee - oldFee;
+      feeNote = `[Programme Upgrade: ${(studentBefore as any)?.programme?.name || 'Old Track'} (₹${oldFee}) → ${(targetProg as any)?.name || 'New Track'} (₹${newFee}). Fee difference of ₹${diff}/mo applicable]`;
     }
 
     const { error: studentErr } = await admin
@@ -156,6 +217,16 @@ export async function resolveBatchSwitchRequest(
       .eq('id', row.student_id);
 
     if (studentErr) return { success: false, error: studentErr.message };
+
+    // Sync old and new batch counters atomically
+    await Promise.all([
+      syncBatchCount(admin, row.current_batch_id),
+      syncBatchCount(admin, target.id),
+    ]);
+
+    if (feeNote) {
+      adminNote = adminNote ? `${adminNote.trim()} · ${feeNote}` : feeNote;
+    }
   }
 
   const { error: updateErr } = await admin

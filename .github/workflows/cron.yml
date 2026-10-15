@@ -1,0 +1,53 @@
+name: Scheduled Supabase Keep-Alive & Academy Crons
+
+on:
+  schedule:
+    # Runs daily at 03:30 UTC (09:00 AM IST) - keeps Supabase active & triggers reminders
+    - cron: '30 3 * * *'
+  workflow_dispatch: # Allows manual trigger from GitHub Actions tab
+
+jobs:
+  keepalive:
+    name: Supabase Ping & Cron Sweeps
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Health Endpoint (Keep-Alive)
+        env:
+          APP_URL: ${{ secrets.NEXT_PUBLIC_APP_URL || secrets.APP_URL || 'https://rhythmzz.in' }}
+        run: |
+          echo "Pinging health endpoint at ${APP_URL}/api/health..."
+          curl -s -f -m 15 "${APP_URL}/api/health" || echo "Health check returned non-200 or timed out (expected if not deployed yet)"
+
+      - name: Direct Supabase REST API Touch (Fallback Keep-Alive)
+        if: env.SUPABASE_URL != '' && env.SUPABASE_ANON_KEY != ''
+        env:
+          SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || secrets.SUPABASE_ANON_KEY }}
+        run: |
+          echo "Sending lightweight PostgREST ping directly to Supabase..."
+          curl -s -f -m 10 \
+            -H "apikey: ${SUPABASE_ANON_KEY}" \
+            -H "Authorization: Bearer ${SUPABASE_ANON_KEY}" \
+            "${SUPABASE_URL}/rest/v1/programmes?select=id&limit=1" || echo "Direct ping skipped or failed"
+
+      - name: Trigger Daily Fee Reminders
+        if: env.CRON_SECRET != ''
+        env:
+          APP_URL: ${{ secrets.NEXT_PUBLIC_APP_URL || secrets.APP_URL || 'https://rhythmzz.in' }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          echo "Triggering fee reminder sweep..."
+          curl -s -f -m 30 -X GET \
+            -H "Authorization: Bearer ${CRON_SECRET}" \
+            "${APP_URL}/api/cron/fee-reminders" || echo "Fee reminder sweep skipped or failed"
+
+      - name: Drain Broadcast Queue
+        if: env.CRON_SECRET != ''
+        env:
+          APP_URL: ${{ secrets.NEXT_PUBLIC_APP_URL || secrets.APP_URL || 'https://rhythmzz.in' }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          echo "Draining broadcast queue..."
+          curl -s -f -m 30 -X GET \
+            -H "Authorization: Bearer ${CRON_SECRET}" \
+            "${APP_URL}/api/cron/broadcast" || echo "Broadcast drain skipped or failed"

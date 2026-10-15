@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import {
@@ -15,6 +15,7 @@ import {
   EyeOff,
   AlertCircle,
   Loader2,
+  Upload,
 } from 'lucide-react';
 import { type Product, MAX_CATALOG_PRODUCTS, buildWhatsAppOrderLink } from '@/data/products';
 import { updateProduct, createProduct, toggleProductActive, type ProductInput } from '@/actions/products';
@@ -54,6 +55,37 @@ export function ProductsManager({ initialProducts }: ProductsManagerProps) {
 
   const activeCount = products.filter((p) => p.isActive).length;
   const isCatalogFull = products.length >= MAX_CATALOG_PRODUCTS;
+
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const imageFileRef = useRef<HTMLInputElement>(null);
+
+  const handleProductImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setIsUploadingImage(true);
+    setStatusMessage(null);
+
+    try {
+      const { upload } = await import('@vercel/blob/client');
+      const blob = await upload(
+        `products/${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`,
+        file,
+        {
+          access: 'public',
+          handleUploadUrl: '/api/blob/upload',
+        },
+      );
+      setFormData((prev) => ({ ...prev, imageUrl: blob.url }));
+      setStatusMessage({ text: 'Product photo uploaded to Vercel Blob successfully!', type: 'success' });
+    } catch (err) {
+      setStatusMessage({
+        text: err instanceof Error ? err.message : 'Could not upload image to Vercel',
+        type: 'error',
+      });
+    } finally {
+      setIsUploadingImage(false);
+    }
+  };
 
   const handleOpenEdit = (p: Product) => {
     setEditingProduct(p);
@@ -515,7 +547,7 @@ export function ProductsManager({ initialProducts }: ProductsManagerProps) {
                 <label className="block font-mono text-[11px] uppercase tracking-wider text-ink-3 mb-1 font-bold">
                   Image URL / Asset Path *
                 </label>
-                <div className="flex gap-2">
+                <div className="flex gap-2 items-center">
                   <input
                     type="text"
                     required
@@ -524,6 +556,22 @@ export function ProductsManager({ initialProducts }: ProductsManagerProps) {
                     placeholder="/gear/dance-tee.svg or https://..."
                     className="flex-1 h-10 px-3 rounded-md border border-line bg-surface text-ink text-xs focus:outline-none focus:border-bl"
                   />
+                  <input
+                    ref={imageFileRef}
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp,image/svg+xml"
+                    className="hidden"
+                    onChange={handleProductImageUpload}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => imageFileRef.current?.click()}
+                    disabled={isUploadingImage}
+                    className="h-10 px-3 rounded-md border border-line bg-surface hover:border-bl text-ink text-xs font-mono font-bold flex items-center gap-1.5 transition-colors cursor-pointer shrink-0"
+                  >
+                    {isUploadingImage ? <Loader2 size={14} className="animate-spin" /> : <Upload size={14} />}
+                    <span>{isUploadingImage ? 'Uploading...' : 'Upload to Vercel'}</span>
+                  </button>
                   <div className="w-10 h-10 rounded border border-line bg-surface shrink-0 overflow-hidden flex items-center justify-center p-1">
                     <Image
                       src={formData.imageUrl || '/gear/dance-tee.svg'}

@@ -6,7 +6,15 @@ import { FeeStatusCard } from "@/components/student/fee-status-card";
 import { PaymentHistory } from "@/components/student/payment-history";
 import { FeeCalendar, FeeMonth } from "@/components/student/fee-calendar";
 import { Card } from "@/components/ui/card";
-import { coveredMonthKeys, isDue, monthlyAmount, monthKey, trailingMonths } from "@/lib/fees/ledger";
+import {
+  coveredMonthKeys,
+  isDue,
+  isOverdue,
+  getFeeDueDate,
+  monthlyAmount,
+  monthKey,
+  trailingMonths,
+} from "@/lib/fees/ledger";
 import Link from "next/link";
 
 export const metadata = {
@@ -21,29 +29,42 @@ export default async function FeesPage() {
 
   const hasBatch = Boolean(student.batch_id || student.programme_id || student.batch || student.programme);
 
+  // Strictly select status so pending/rejected payments are never treated as confirmed
   const { data: payments } = await supabase
     .from("fee_payments")
-    .select("id, amount, source, receipt_url, paid_at, for_month")
+    .select("id, amount, source, receipt_url, paid_at, for_month, status, notes")
     .eq("student_id", student.id)
     .order("paid_at", { ascending: false });
 
   const ledgerPayments = (payments || []) as any[];
   const now = new Date();
+  const currentKey = monthKey(now);
   const covered = coveredMonthKeys(ledgerPayments);
-  const status = isDue(ledgerPayments, now) ? "Due" : "Paid";
-  const amountDue = monthlyAmount(student.programme?.fees_monthly);
 
-  // Due on the 5th of the current month — already past it? Next month's 5th.
-  const dueMonth = now.getDate() > 5 ? now.getMonth() + 1 : now.getMonth();
-  const dueDate = new Date(now.getFullYear(), dueMonth, 5).toLocaleDateString("en-IN", {
-    day: "numeric", month: "short", year: "numeric"
-  });
+  const isCurrentMonthCovered = covered.has(currentKey);
+  const isCurrentMonthPending = ledgerPayments.some(
+    (p) => p.status === 'pending' && (p.for_month ? monthKey(p.for_month) === currentKey : monthKey(p.paid_at) === currentKey)
+  );
+
+  const overdue = isOverdue(ledgerPayments, now);
+  const { dueDateStr } = getFeeDueDate(now);
+
+  const status: "Paid" | "Due" | "Overdue" | "Pending Verification" = isCurrentMonthCovered
+    ? "Paid"
+    : isCurrentMonthPending
+    ? "Pending Verification"
+    : overdue
+    ? "Overdue"
+    : "Due";
+
+  const amountDue = monthlyAmount(student.programme?.fees_monthly);
+  const dueDate = dueDateStr;
 
   const months: FeeMonth[] = trailingMonths(now, 12).map((m) => ({
     key: monthKey(m),
     label: m.toLocaleDateString("en-IN", { month: "short", year: "2-digit" }),
     covered: covered.has(monthKey(m)),
-    isCurrent: monthKey(m) === monthKey(now),
+    isCurrent: monthKey(m) === currentKey,
   }));
 
   return (
@@ -71,6 +92,7 @@ export default async function FeesPage() {
             status={status}
             amountDue={amountDue}
             dueDate={dueDate}
+            hasPending={isCurrentMonthPending}
           />
           <FeeCalendar months={months} />
         </>

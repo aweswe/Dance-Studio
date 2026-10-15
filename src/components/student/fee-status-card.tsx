@@ -12,13 +12,14 @@ import { ACADEMY } from "@/lib/utils/constants";
 const PAYMENTS_ENABLED = Boolean(process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID);
 
 interface FeeStatusCardProps {
-  status: "Paid" | "Due";
+  status: "Paid" | "Due" | "Overdue" | "Pending Verification";
   amountDue: number;
   dueDate: string;
+  hasPending?: boolean;
 }
 
-export function FeeStatusCard({ status, amountDue, dueDate }: FeeStatusCardProps) {
-  const payMessage = `Hi Rhythmzz Academy! I would like to pay my fee of ₹${amountDue} (due ${dueDate}). Please share the payment link.`;
+export function FeeStatusCard({ status, amountDue, dueDate, hasPending }: FeeStatusCardProps) {
+  const payMessage = `Hi Rhythmzz Academy! I would like to pay my fee of ₹${amountDue} (${status === 'Overdue' ? 'OVERDUE' : `due ${dueDate}`}). Please share the payment details.`;
   const [upiBusy, setUpiBusy] = useState(false);
   const [upiMsg, setUpiMsg] = useState("");
 
@@ -29,31 +30,55 @@ export function FeeStatusCard({ status, amountDue, dueDate }: FeeStatusCardProps
   async function markPaid() {
     setUpiBusy(true);
     const res = await reportUpiPayment(amountDue);
-    setUpiMsg(res.success ? "Marked as paid — waiting for academy confirmation." : res.error || "Could not record");
+    setUpiMsg(res.success ? "Payment reported — pending academy staff verification." : res.error || "Could not record");
     setUpiBusy(false);
   }
+
+  const isPaid = status === "Paid";
+  const isPendingVerif = status === "Pending Verification" || hasPending;
+  const isOverdueState = status === "Overdue";
 
   return (
     <Card className="flex flex-col md:flex-row md:items-center justify-between gap-5">
       <div>
         <p className="text-[11px] text-ink-3 mb-1">This month</p>
-        {status === "Paid" ? (
+        {isPaid ? (
           <div className="flex items-center gap-2">
             <h2 className="font-anton text-3xl text-ink tracking-tight">Paid</h2>
             <Badge variant="green">Covered</Badge>
           </div>
+        ) : isPendingVerif ? (
+          <div className="flex items-center gap-2">
+            <h2 className="font-anton text-3xl text-ink tracking-tight">₹{amountDue}</h2>
+            <Badge variant="blue" className="bg-amber-500/10 text-amber-700 border-amber-500/30">
+              Under Verification
+            </Badge>
+          </div>
+        ) : isOverdueState ? (
+          <div className="flex items-center gap-2">
+            <h2 className="font-anton text-3xl text-danger tracking-tight">₹{amountDue}</h2>
+            <Badge variant="outline" className="border-danger bg-danger/10 text-danger font-bold">
+              Overdue
+            </Badge>
+          </div>
         ) : (
           <div className="flex items-center gap-2">
             <h2 className="font-anton text-3xl text-ink tracking-tight">₹{amountDue}</h2>
-            <Badge variant="outline" className="border-danger text-danger">Due</Badge>
+            <Badge variant="outline" className="border-line-strong text-ink">Due</Badge>
           </div>
         )}
         <p className="text-sm text-ink-2 mt-2">
-          {status === "Paid" ? "This month is covered." : `Due ${dueDate}`}
+          {isPaid
+            ? "This month is covered."
+            : isPendingVerif
+            ? "Payment reported via UPI — awaiting academy staff verification and official receipt generation."
+            : isOverdueState
+            ? `Overdue since ${dueDate}. Please clear dues to prevent class suspension.`
+            : `Due by ${dueDate}`}
         </p>
       </div>
 
-      {status === "Due" && (
+      {!isPaid && !isPendingVerif && (
         PAYMENTS_ENABLED ? (
           <PayNowButton amount={amountDue} />
         ) : (

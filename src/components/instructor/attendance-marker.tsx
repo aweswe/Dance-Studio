@@ -146,7 +146,16 @@ export function AttendanceMarker({ batches, initialBatchId }: AttendanceMarkerPr
   };
 
   if (batches.length === 0) {
-    return <Card><p className="text-ink-2">No batches found. Create a class first.</p></Card>;
+    return (
+      <Card className="p-8 text-center space-y-2">
+        <h3 className="font-anton text-lg uppercase tracking-tight text-ink">
+          No Batches Assigned
+        </h3>
+        <p className="text-sm text-ink-2 max-w-md mx-auto">
+          You currently have no batches assigned to your instructor profile. Once the studio administration assigns you to a batch, you can mark student attendance here.
+        </p>
+      </Card>
+    );
   }
 
   return (
