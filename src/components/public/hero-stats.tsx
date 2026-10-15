@@ -48,15 +48,15 @@ export function HeroStats({ stats }: { stats: { key: string; value: string }[] }
   }, {});
 
   return (
-    <dl className="grid grid-cols-2 xs:grid-cols-3 sm:flex sm:items-start sm:justify-between gap-y-3.5 gap-x-3 w-full">
+    <dl className="grid grid-cols-2 sm:flex sm:items-start sm:justify-between gap-y-3.5 gap-x-3 w-full">
       {/* Google Review */}
-      <div className="col-span-2 xs:col-span-1 flex min-w-0 flex-col gap-1 sm:gap-1.5">
+      <div className="col-span-2 sm:col-span-1 flex min-w-0 flex-col gap-1 sm:gap-1.5 pb-2.5 sm:pb-0 border-b border-line sm:border-b-0">
         <a
           href={ACADEMY.mapLink}
           target="_blank"
           rel="noopener noreferrer"
           aria-label={`${ACADEMY.googleRating} stars on Google, ${ACADEMY.googleReviewCount}+ reviews`}
-          className="flex flex-col gap-1 sm:gap-1.5 rounded-md transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl focus-visible:ring-offset-2 focus-visible:ring-offset-canvas"
+          className="flex sm:flex-col items-center sm:items-start justify-between sm:justify-start gap-1 sm:gap-1.5 rounded-md transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl focus-visible:ring-offset-2 focus-visible:ring-offset-canvas"
         >
           <dt className="m-0 flex h-6 sm:h-[1.875rem] items-center gap-1.5">
             <span
@@ -65,13 +65,13 @@ export function HeroStats({ stats }: { stats: { key: string; value: string }[] }
             >
               <GoogleMark className="h-3 w-3 sm:h-4 sm:w-4" />
             </span>
-            <span className="flex items-center gap-1 sm:gap-1.5">
+            <span className="inline-flex items-center gap-1 sm:gap-1.5">
               <span className="font-anton text-sm sm:text-[clamp(1.25rem,3.25vw,1.875rem)] leading-none tracking-tight text-ink">
                 {ACADEMY.googleRating}
               </span>
-              <span className="flex shrink-0 items-center gap-px text-gold" aria-hidden>
-                <Star size={10} className="fill-gold sm:hidden" strokeWidth={0} />
-                <span className="hidden sm:flex items-center gap-px">
+              <span className="inline-flex shrink-0 items-center self-center gap-px text-gold" aria-hidden>
+                <Star size={11} className="fill-gold sm:hidden self-center" strokeWidth={0} />
+                <span className="hidden sm:inline-flex items-center self-center gap-px">
                   {Array.from({ length: 5 }).map((_, i) => (
                     <Star key={i} size={11} fill="currentColor" strokeWidth={0} />
                   ))}
@@ -79,16 +79,25 @@ export function HeroStats({ stats }: { stats: { key: string; value: string }[] }
               </span>
             </span>
           </dt>
-          <dd className="m-0 text-[9px] sm:text-[10px] font-semibold uppercase tracking-wider leading-none text-ink-3 truncate">
+          <dd className="m-0 text-[9px] sm:text-[10px] font-semibold uppercase tracking-wider leading-none text-ink-3 truncate text-right sm:text-left">
             {ACADEMY.googleReviewCount}+ reviews
           </dd>
         </a>
       </div>
 
       {/* 4 Stats */}
-      {STAT_META.map((stat) => (
-        <div key={stat.key} className="flex min-w-0 flex-col gap-1 sm:gap-1.5">
-          <dt className="m-0 flex h-6 sm:h-[1.875rem] items-center">
+      {STAT_META.map((stat, i) => (
+        <div
+          key={stat.key}
+          className={`flex min-w-0 flex-col gap-1 sm:gap-1.5 ${
+            i % 2 === 1 ? 'items-end text-right sm:items-start sm:text-left' : 'items-start text-left'
+          }`}
+        >
+          <dt
+            className={`m-0 flex h-6 sm:h-[1.875rem] items-center ${
+              i % 2 === 1 ? 'justify-end sm:justify-start' : 'justify-start'
+            }`}
+          >
             <span className="font-anton text-sm sm:text-[clamp(1.25rem,3.25vw,1.875rem)] leading-none tracking-tight text-ink tabular-nums">
               <CountUp value={valueByKey[stat.key] || stat.fallback} />
             </span>

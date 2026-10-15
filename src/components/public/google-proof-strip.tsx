@@ -41,7 +41,7 @@ export function GoogleProofStrip() {
               <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-ink-3 mb-0.5">
                 Rated on Google · Neredmet
               </p>
-              <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+              <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
                 <span className="font-anton text-3xl sm:text-[2rem] leading-none text-ink tracking-tight">
                   {ACADEMY.googleRating}
                 </span>
