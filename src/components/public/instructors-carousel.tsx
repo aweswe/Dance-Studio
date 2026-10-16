@@ -31,22 +31,25 @@ export function InstructorsCarousel({ instructors }: { instructors: InstructorDi
   return (
     <HomepageSection id="faculty" className={sectionPad}>
       <div className={cn('flex flex-col', sectionGap)}>
-        <div className={cn('flex flex-wrap items-end justify-between', sectionGap)}>
-          <header className={cn('min-w-0 flex-1 max-w-2xl flex flex-col', sectionGap)}>
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 sm:gap-6">
+          <header className="min-w-0 flex-1 max-w-2xl flex flex-col gap-1.5 sm:gap-2">
             <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-bl">Faculty</p>
             <h2 className="font-anton text-2xl sm:text-3xl md:text-[2.25rem] uppercase leading-[0.95] tracking-tight text-ink">
               Who <span className="text-bl">teaches?</span>
             </h2>
-            <p className="text-sm text-ink-2 leading-relaxed">
+            <p className="text-xs sm:text-sm text-ink-2 leading-relaxed">
               Meet the coaches who train, guide, and perform with our students every day.
             </p>
           </header>
-          <div className="flex items-center shrink-0 gap-2">
-            <Link href={ROUTES.about} className={`${homepageCtaOutlineLight} hidden sm:inline-flex`}>
+          <div className="flex items-center justify-between sm:justify-end gap-2 shrink-0 w-full sm:w-auto pt-1 sm:pt-0">
+            <Link
+              href={ROUTES.about}
+              className={cn(homepageCtaOutlineLight, 'h-10 min-h-[40px] px-3.5 text-[10px]')}
+            >
               All faculty
               <ArrowUpRight size={13} strokeWidth={2.5} />
             </Link>
-            <div className="flex items-center gap-0.5">
+            <div className="flex items-center gap-1">
               <button
                 type="button"
                 onClick={() => scrollBy(-1)}
@@ -102,11 +105,6 @@ export function InstructorsCarousel({ instructors }: { instructors: InstructorDi
           ))}
         </div>
       </div>
-
-      <Link href={ROUTES.about} className={`${homepageCtaOutlineLight} sm:hidden mt-3 sm:mt-4 w-full`}>
-        All faculty
-        <ArrowUpRight size={13} strokeWidth={2.5} />
-      </Link>
     </HomepageSection>
   );
 }

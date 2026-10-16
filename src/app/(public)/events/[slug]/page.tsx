@@ -12,7 +12,7 @@ import { PublicPageTitle } from '@/components/public/public-page-title';
 import { homepageCtaWhatsApp } from '@/lib/ui/homepage-cta';
 import { sectionPadAfterTitle } from '@/lib/ui/section-layout';
 import { cn } from '@/lib/utils/cn';
-import { Calendar, MapPin, Sparkles } from 'lucide-react';
+import { Calendar, Camera, MapPin } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
@@ -94,7 +94,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
           {galleryImages.length > 0 ? (
             <div className="space-y-4 pt-2">
               <div className="flex items-center gap-2">
-                <Sparkles size={16} className="text-brand" />
+                <Camera size={16} className="text-brand" />
                 <h3 className="font-display text-xl text-ink">Photo Gallery</h3>
                 <span className="text-xs text-ink-3">({galleryImages.length})</span>
               </div>

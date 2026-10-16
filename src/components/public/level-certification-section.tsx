@@ -12,7 +12,6 @@ import {
   Flame,
   GraduationCap,
   ShieldCheck,
-  Sparkles,
   Users,
 } from 'lucide-react';
 import { HomepageSection, HomepageSectionHeading } from '@/components/public/homepage-section';
@@ -40,7 +39,7 @@ function getTrackIcon(id: CertificationTrackId) {
     case 'overview':
       return GraduationCap;
     case 'kuchipudi':
-      return Sparkles;
+      return Award;
     case 'kathak':
       return Flame;
     default:
@@ -99,11 +98,11 @@ export function LevelCertificationSection({
           className="mb-0 max-w-xl"
         />
 
-        {/* Modern Segmented Tab Bar */}
+        {/* Modern Segmented Tab Bar — Grid on mobile, inline pill on desktop */}
         <div
           role="tablist"
           aria-label="Certification programme tracks"
-          className="inline-flex p-1.5 rounded-full bg-canvas-muted/80 border border-line/80 shadow-sm backdrop-blur-sm self-start md:self-end flex-wrap gap-1"
+          className="w-full sm:w-auto grid grid-cols-3 sm:inline-flex p-1 sm:p-1.5 rounded-xl sm:rounded-full bg-canvas-muted/80 border border-line/80 shadow-sm backdrop-blur-sm self-stretch md:self-end gap-1"
         >
           {CERTIFICATION_TRACKS.map((item) => {
             const Icon = getTrackIcon(item.id);
@@ -117,7 +116,7 @@ export function LevelCertificationSection({
                 aria-controls={`certification-panel-${item.id}`}
                 onClick={() => handleTabChange(item.id)}
                 className={cn(
-                  'flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-full text-[11px] sm:text-xs font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer active:scale-[0.97]',
+                  'flex items-center justify-center sm:justify-start gap-1 sm:gap-2 px-2 sm:px-4 py-2 sm:py-2 rounded-lg sm:rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer active:scale-[0.97] text-center',
                   isActive
                     ? 'bg-ink text-white shadow-md shadow-ink/20 ring-1 ring-white/10'
                     : 'text-ink-2 hover:text-ink hover:bg-surface/80',
@@ -125,10 +124,10 @@ export function LevelCertificationSection({
               >
                 <Icon
                   size={14}
-                  className={cn('transition-colors', isActive ? 'text-bl' : 'text-ink-3')}
+                  className={cn('transition-colors shrink-0', isActive ? 'text-bl' : 'text-ink-3')}
                   strokeWidth={2.5}
                 />
-                <span>{item.label}</span>
+                <span className="truncate">{item.label}</span>
               </button>
             );
           })}
@@ -139,7 +138,7 @@ export function LevelCertificationSection({
       <div
         id={`certification-panel-${track.id}`}
         role="tabpanel"
-        className="relative rounded-2xl sm:rounded-3xl border border-line/80 bg-surface/90 shadow-xl shadow-slate-950/[0.03] backdrop-blur-sm overflow-hidden p-4 sm:p-7 lg:p-9"
+        className="relative rounded-2xl sm:rounded-3xl border border-line/80 bg-surface/90 shadow-xl shadow-slate-950/[0.03] backdrop-blur-sm overflow-hidden p-3.5 sm:p-7 lg:p-9"
       >
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-7 lg:gap-10 xl:gap-12 items-center">
           {/* Left Column: Master Image Showcase (Fitting 100% of photo without cut down) */}
@@ -152,21 +151,21 @@ export function LevelCertificationSection({
               />
 
               {/* Top Floating Bar: Accreditation Badge & Multi-Photo Switcher */}
-              <div className="relative z-10 p-3 sm:p-4 flex items-center justify-between gap-2">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-950/85 backdrop-blur-md border border-white/15 text-[11px] font-mono font-bold uppercase tracking-wider text-white shadow-lg">
-                  <ShieldCheck size={14} className="text-bl shrink-0" strokeWidth={2.5} />
+              <div className="relative z-10 p-2.5 sm:p-4 flex flex-wrap sm:flex-nowrap items-center justify-between gap-1.5 sm:gap-2">
+                <span className="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full bg-slate-950/85 backdrop-blur-md border border-white/15 text-[9px] sm:text-[11px] font-mono font-bold uppercase tracking-wider text-white shadow-lg shrink-0">
+                  <ShieldCheck size={13} className="text-bl shrink-0" strokeWidth={2.5} />
                   {track.imageBadge}
                 </span>
 
                 {gallery.length > 1 && (
-                  <div className="flex items-center gap-1 bg-slate-950/85 backdrop-blur-md border border-white/15 p-1 rounded-full shadow-lg">
+                  <div className="flex items-center gap-1 bg-slate-950/85 backdrop-blur-md border border-white/15 p-0.5 sm:p-1 rounded-full shadow-lg shrink-0">
                     {gallery.map((img, idx) => (
                       <button
                         key={img.src}
                         type="button"
                         onClick={() => setSelectedImageIndex(idx)}
                         className={cn(
-                          'px-2.5 py-1 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider transition-all cursor-pointer',
+                          'px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full text-[9px] sm:text-[10px] font-mono font-bold uppercase tracking-wider transition-all cursor-pointer',
                           selectedImageIndex === idx
                             ? 'bg-bl text-slate-950 shadow-sm'
                             : 'text-white/70 hover:text-white hover:bg-white/10',

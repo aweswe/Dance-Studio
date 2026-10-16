@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import Image from 'next/image';
-import { Award, Compass, HeartHandshake, ShieldCheck, Sparkles, Target } from 'lucide-react';
+import { Award, Compass, HeartHandshake, ShieldCheck, Target } from 'lucide-react';
 import { DanziaInstructorsSection } from '@/components/public/danzia-instructors-section';
 import { HomepageSection, HomepageSectionHeading } from '@/components/public/homepage-section';
 import { PublicBookTrialCta } from '@/components/public/public-book-trial-cta';

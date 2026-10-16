@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { ArrowUpRight, CheckCircle2, GraduationCap, Heart, Sparkles, Users } from 'lucide-react';
+import { ArrowUpRight, Award, CheckCircle2, GraduationCap, Heart, Users } from 'lucide-react';
 import { HomepageSection, HomepageSectionHeading } from '@/components/public/homepage-section';
 import { PublicPage } from '@/components/public/public-page';
 import { PublicPageTitle } from '@/components/public/public-page-title';
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 
 const PERKS = [
   {
-    icon: Sparkles,
+    icon: Award,
     title: 'Professional Floors',
     description: '1,200 sq. ft. rehearsal space with Marley dance floor, full mirrors, and acoustic sound.',
   },

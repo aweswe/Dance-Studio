@@ -476,7 +476,7 @@ export function ProgrammePricingBoard() {
               role="tab"
               aria-selected={isSelected}
               onClick={() => setActiveTabId(prog.id)}
-              className={`flex items-center gap-2 px-4.5 py-2.5 rounded-md text-xs sm:text-sm font-bold uppercase tracking-wider transition-all cursor-pointer min-h-[42px] ${
+              className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4.5 py-2 sm:py-2.5 rounded-md text-[11px] sm:text-sm font-bold uppercase tracking-wider transition-all cursor-pointer min-h-[40px] sm:min-h-[42px] ${
                 isSelected
                   ? 'bg-neutral-950 text-white border-2 border-neutral-950 shadow-sm'
                   : 'bg-white border-2 border-neutral-200 text-neutral-800 hover:border-neutral-900 hover:text-black shadow-2xs'
@@ -658,7 +658,7 @@ export function ProgrammePricingBoard() {
             plan: 'drop-in',
             fee: activeProgramme.dropInFee,
           })}
-          className="min-h-[44px] h-11 px-5 rounded-md bg-neutral-950 hover:bg-black text-white text-[10px] font-bold uppercase tracking-wider flex items-center gap-2 transition-all active:scale-[0.98] whitespace-nowrap shadow-xs"
+          className="w-full sm:w-auto justify-center min-h-[44px] h-11 px-5 rounded-md bg-neutral-950 hover:bg-black text-white text-[10px] font-bold uppercase tracking-wider flex items-center gap-2 transition-all active:scale-[0.98] whitespace-nowrap shadow-xs"
         >
           <span>Book Drop-in (₹{activeProgramme.dropInFee})</span>
           <ArrowRight className="w-3.5 h-3.5" />

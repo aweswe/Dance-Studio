@@ -17,7 +17,6 @@ import {
   LayoutDashboard,
   Menu,
   Phone,
-  Sparkles,
   User,
   X,
 } from 'lucide-react';
@@ -484,7 +483,7 @@ export function Nav() {
   const programmesActive = ALL_PROGRAMMES_LINKS.some((link) => isActive(link.href)) || isActive(ROUTES.programmes);
   const closeMobile = () => setIsOpen(false);
 
-  const mobileSectionIcons = [CalendarDays, GraduationCap, Sparkles] as const;
+  const mobileSectionIcons = [CalendarDays, GraduationCap, Compass] as const;
 
   return (
     <header

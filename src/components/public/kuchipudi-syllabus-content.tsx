@@ -17,7 +17,6 @@ import {
   IndianRupee,
   MapPin,
   Calendar,
-  Sparkles,
   CheckCircle2,
   ArrowRight,
   BookOpen,
@@ -309,7 +308,7 @@ export function KuchipudiSyllabusContent() {
             <div className="max-w-xl lg:max-w-2xl">
               {/* Brand Eyebrow Pill */}
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-bl/40 bg-bl/15 text-bl text-xs font-mono font-bold uppercase tracking-wider mb-5 backdrop-blur-sm">
-                <Sparkles size={13} className="text-bl" />
+                <Award size={13} className="text-bl" />
                 <span>Structured Classical Curriculum · Ages 5+</span>
               </div>
 

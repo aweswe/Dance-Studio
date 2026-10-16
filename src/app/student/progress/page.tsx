@@ -3,7 +3,7 @@ import { getCurrentStudent } from "@/lib/auth/student";
 import { redirect } from "next/navigation";
 import { ROUTES } from "@/lib/utils/constants";
 import { KuchipudiProgress } from "@/components/student/kuchipudi-progress";
-import { Award, CheckCircle2, Flame, Sparkles, TrendingUp } from "lucide-react";
+import { Award, CheckCircle2, Flame, Target, TrendingUp } from "lucide-react";
 
 export const metadata = {
   title: "Performance & Progress | Student Portal",
@@ -89,7 +89,7 @@ export default async function ProgressPage() {
                 <span className="text-[10px] font-semibold uppercase tracking-wider text-ink-3">
                   Next Milestone
                 </span>
-                <Sparkles size={16} className="text-bl" />
+                <Target size={16} className="text-bl" />
               </div>
               <p className="font-anton text-2xl uppercase tracking-wide text-ink mt-2">
                 Annual Recital

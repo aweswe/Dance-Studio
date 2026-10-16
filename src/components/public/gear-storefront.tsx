@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { Check, MessageCircle, Sparkles, ShieldCheck, Truck, RefreshCw } from 'lucide-react';
+import { Check, MessageCircle, ShoppingBag, ShieldCheck, Truck, RefreshCw } from 'lucide-react';
 import { type Product, type ProductCategory, buildWhatsAppOrderLink } from '@/data/products';
 import { cn } from '@/lib/utils/cn';
 
@@ -99,7 +99,7 @@ export function GearStorefront({ initialProducts, embedded = false }: GearStoref
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-10 border-b border-line">
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-bl/10 border border-bl/20 text-bl text-[11px] font-mono font-bold uppercase tracking-wider mb-3">
-              <Sparkles size={13} className="text-bl" />
+              <ShoppingBag size={13} className="text-bl" />
               <span>Rhythmzz Gear Collection</span>
             </div>
             <h2 className="font-anton text-4xl sm:text-5xl lg:text-6xl text-ink uppercase tracking-tight leading-none">
