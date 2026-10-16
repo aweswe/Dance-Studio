@@ -13,6 +13,7 @@ import {
   Users,
   MapPin,
   Calendar,
+  Sparkles,
 } from 'lucide-react';
 import { WhatsAppIcon } from '@/components/public/whatsapp-icon';
 import { enrolHref } from '@/lib/utils/constants';
@@ -151,9 +152,9 @@ const PROGRAMMES: ProgrammeTab[] = [
         id: 'quarterly',
         name: 'QUARTERLY',
         periodLabel: 'per 3 months',
-        price: 6500,
-        equivalentMonthly: 2167,
-        savings: 1000,
+        price: 6000,
+        equivalentMonthly: 2000,
+        savings: 1500,
         badge: 'MOST POPULAR',
         features: [
           { text: '36 classes over 3 months', included: true },
@@ -167,9 +168,9 @@ const PROGRAMMES: ProgrammeTab[] = [
         id: 'half-yearly',
         name: 'HALF-YEARLY',
         periodLabel: 'per 6 months',
-        price: 12000,
-        equivalentMonthly: 2000,
-        savings: 3000,
+        price: 11000,
+        equivalentMonthly: 1833,
+        savings: 4000,
         badge: 'BEST VALUE',
         features: [
           { text: '72 classes over 6 months', included: true },
@@ -208,7 +209,7 @@ const PROGRAMMES: ProgrammeTab[] = [
           { text: '20–22 classes per month (Mon-Fri)', included: true },
           { text: 'Cardio & stamina tracking', included: true },
           { text: 'Mobility & posture drills', included: true },
-          { text: '1-on-1 monthly check-in', included: false },
+          { text: '1-on-1 monthly check-in', included: true },
           { text: 'Monthly guest pass (1 friend)', included: false },
         ],
       },
@@ -216,25 +217,25 @@ const PROGRAMMES: ProgrammeTab[] = [
         id: 'quarterly',
         name: 'QUARTERLY',
         periodLabel: 'per 3 months',
-        price: 6500,
-        equivalentMonthly: 2167,
-        savings: 1000,
+        price: 6000,
+        equivalentMonthly: 2000,
+        savings: 1500,
         badge: 'MOST POPULAR',
         features: [
           { text: '60+ classes over 3 months', included: true },
           { text: 'Cardio & stamina tracking', included: true },
           { text: 'Mobility & posture drills', included: true },
           { text: '1-on-1 monthly check-in', included: true },
-          { text: 'Monthly guest pass (1 friend)', included: false },
+          { text: 'Monthly guest pass (1 friend)', included: true },
         ],
       },
       {
         id: 'half-yearly',
         name: 'HALF-YEARLY',
         periodLabel: 'per 6 months',
-        price: 12000,
-        equivalentMonthly: 2000,
-        savings: 3000,
+        price: 11000,
+        equivalentMonthly: 1833,
+        savings: 4000,
         badge: 'BEST VALUE',
         features: [
           { text: '120+ classes over 6 months', included: true },
@@ -252,7 +253,7 @@ const PROGRAMMES: ProgrammeTab[] = [
     tabLabel: 'Gymnastics',
     tabIcon: '🤸',
     slug: 'gymnastics',
-    image: '/images/team/srikanth-sree.jpg',
+    image: '/images/team/srikanth-gymnastics-2.jpg',
     headline: 'GYMNASTICS & TUMBLING PROGRAMME',
     tags: [
       { label: 'TUMBLING' },
@@ -268,7 +269,7 @@ const PROGRAMMES: ProgrammeTab[] = [
         id: 'monthly',
         name: 'MONTHLY',
         periodLabel: 'per month',
-        price: 1200,
+        price: 1000,
         features: [
           { text: '8 classes per month (Thu & Sat)', included: true },
           { text: 'Safety-certified tumbling mats', included: true },
@@ -281,9 +282,9 @@ const PROGRAMMES: ProgrammeTab[] = [
         id: 'quarterly',
         name: 'QUARTERLY',
         periodLabel: 'per 3 months',
-        price: 3000,
-        equivalentMonthly: 1000,
-        savings: 600,
+        price: 2500,
+        equivalentMonthly: 833,
+        savings: 500,
         badge: 'MOST POPULAR',
         features: [
           { text: '24 classes over 3 months', included: true },
@@ -297,9 +298,9 @@ const PROGRAMMES: ProgrammeTab[] = [
         id: 'half-yearly',
         name: 'HALF-YEARLY',
         periodLabel: 'per 6 months',
-        price: 5500,
-        equivalentMonthly: 916,
-        savings: 1700,
+        price: 4500,
+        equivalentMonthly: 750,
+        savings: 1500,
         badge: 'BEST VALUE',
         features: [
           { text: '48 classes over 6 months', included: true },
@@ -637,32 +638,86 @@ export function ProgrammePricingBoard() {
       </div>
 
       {/* ── DROP-IN SINGLE CLASS BAR ── */}
-      <div className="rounded-md border-2 border-neutral-200 bg-white p-5 sm:px-7 flex flex-col sm:flex-row items-center justify-between gap-4 mb-10 shadow-xs">
-        <div>
-          <h4 className="text-xs font-extrabold uppercase tracking-wider text-neutral-950">
-            DROP-IN · SINGLE CLASS
-          </h4>
-          <p className="text-xs text-neutral-600 font-medium mt-0.5">
-            Walk in any day — no booking needed
-          </p>
-        </div>
+      <div className="relative rounded-lg border-2 border-amber-400/90 bg-gradient-to-r from-amber-500/10 via-amber-50/40 to-white p-5 sm:p-6 lg:px-8 lg:py-6 mb-10 shadow-sm overflow-hidden">
+        {/* Subtle decorative glow */}
+        <div className="absolute -right-8 -top-8 w-40 h-40 rounded-full bg-amber-400/15 blur-2xl pointer-events-none" />
 
-        <div className="font-anton text-3xl sm:text-4xl text-neutral-950">
-          ₹{activeProgramme.dropInFee}
-        </div>
+        <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-5 lg:gap-8">
+          {/* Left: Badge + Title + Description */}
+          <div className="flex items-start sm:items-center gap-3.5 max-w-md xl:max-w-lg">
+            <div className="w-11 h-11 rounded-lg bg-amber-400 text-neutral-950 flex items-center justify-center shrink-0 shadow-xs">
+              <Sparkles className="w-5 h-5 text-neutral-950 fill-neutral-950" />
+            </div>
+            <div>
+              <div className="flex flex-wrap items-center gap-2 mb-1">
+                <span className="px-2 py-0.5 rounded-md bg-amber-400 text-neutral-950 text-[10px] font-extrabold uppercase tracking-wider">
+                  TRY A SINGLE CLASS
+                </span>
+                <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-neutral-600">
+                  DROP-IN · NO COMMITMENT
+                </span>
+              </div>
+              <h4 className="font-anton text-lg sm:text-xl text-neutral-950 uppercase tracking-tight">
+                Walk In Any Day · Just ₹{activeProgramme.dropInFee}
+              </h4>
+              <p className="text-xs text-neutral-700 font-medium mt-0.5 leading-relaxed">
+                Want to feel the energy before taking a plan? Join any active session today.
+              </p>
+            </div>
+          </div>
 
-        <Link
-          href={enrolHref({
-            programme: activeProgramme.slug,
-            intent: 'pay',
-            plan: 'drop-in',
-            fee: activeProgramme.dropInFee,
-          })}
-          className="w-full sm:w-auto justify-center min-h-[44px] h-11 px-5 rounded-md bg-neutral-950 hover:bg-black text-white text-[10px] font-bold uppercase tracking-wider flex items-center gap-2 transition-all active:scale-[0.98] whitespace-nowrap shadow-xs"
-        >
-          <span>Book Drop-in (₹{activeProgramme.dropInFee})</span>
-          <ArrowRight className="w-3.5 h-3.5" />
-        </Link>
+          {/* Middle: Desktop perks filling the whitespace */}
+          <div className="hidden md:flex flex-wrap lg:flex-nowrap items-center gap-4 text-xs font-semibold text-neutral-800 lg:border-x lg:border-amber-300/60 lg:px-6 lg:py-1">
+            <div className="flex items-center gap-1.5">
+              <span className="w-4 h-4 rounded-full bg-emerald-100 border border-emerald-300 text-emerald-800 flex items-center justify-center text-[10px] shrink-0">
+                <Check className="w-2.5 h-2.5 stroke-[3]" />
+              </span>
+              <span className="whitespace-nowrap">Valid for any batch</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="w-4 h-4 rounded-full bg-emerald-100 border border-emerald-300 text-emerald-800 flex items-center justify-center text-[10px] shrink-0">
+                <Check className="w-2.5 h-2.5 stroke-[3]" />
+              </span>
+              <span className="whitespace-nowrap">Beginner friendly</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="w-4 h-4 rounded-full bg-emerald-100 border border-emerald-300 text-emerald-800 flex items-center justify-center text-[10px] shrink-0">
+                <Check className="w-2.5 h-2.5 stroke-[3]" />
+              </span>
+              <span className="whitespace-nowrap">Fee credited if you enrol</span>
+            </div>
+          </div>
+
+          {/* Right: Price + Action Button */}
+          <div className="flex items-center justify-between lg:justify-end gap-5 shrink-0 pt-3 lg:pt-0 border-t lg:border-t-0 border-amber-200/80">
+            <div className="text-left lg:text-right">
+              <div className="flex items-baseline gap-1 lg:justify-end">
+                <span className="font-anton text-3xl sm:text-4xl text-neutral-950 tracking-tight leading-none">
+                  ₹{activeProgramme.dropInFee}
+                </span>
+                <span className="text-xs text-neutral-600 font-bold">
+                  / class
+                </span>
+              </div>
+              <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-amber-800 block mt-0.5">
+                Instant Studio Pass
+              </span>
+            </div>
+
+            <Link
+              href={enrolHref({
+                programme: activeProgramme.slug,
+                intent: 'pay',
+                plan: 'drop-in',
+                fee: activeProgramme.dropInFee,
+              })}
+              className="min-h-[46px] h-11 sm:h-12 px-6 rounded-md bg-neutral-950 hover:bg-black text-amber-300 hover:text-amber-200 text-[11px] font-extrabold uppercase tracking-wider flex items-center gap-2 transition-all shadow-md active:scale-[0.98] whitespace-nowrap group"
+            >
+              <span>Book Drop-In (₹{activeProgramme.dropInFee})</span>
+              <ArrowRight className="w-4 h-4 text-amber-400 group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </div>
+        </div>
       </div>
 
       {/* ── SIBLING & SPECIAL PLANS ── */}

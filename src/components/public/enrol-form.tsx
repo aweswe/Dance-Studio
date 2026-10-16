@@ -123,20 +123,26 @@ function computeProgrammeFee(
     if (planType === 'drop-in') return 300;
   }
 
-  // 3. Adults Dance, Mind & Body Fitness, Gymnastics
+  // 2.5 Gymnastics
+  if (slug === 'gymnastics' || slug.includes('gymnastic') || name.includes('gymnastic')) {
+    if (planType === 'monthly') return 1000;
+    if (planType === 'quarterly') return 2500;
+    if (planType === 'half-yearly') return 4500;
+    if (planType === 'drop-in') return 300;
+  }
+
+  // 3. Adults Dance & Mind & Body Fitness
   if (
     slug === 'adults-dance' ||
     slug === 'mind-body-fitness' ||
-    slug === 'gymnastics' ||
     slug.includes('adult') ||
     name.includes('adult') ||
-    name.includes('fitness') ||
-    name.includes('gymnastic')
+    name.includes('fitness')
   ) {
     if (planType === 'monthly') return 2500;
-    if (planType === 'quarterly') return 6500;
-    if (planType === 'half-yearly') return 12000;
-    if (planType === 'annual') return 22000;
+    if (planType === 'quarterly') return 6000;
+    if (planType === 'half-yearly') return 11000;
+    if (planType === 'annual') return 20000;
     if (planType === 'drop-in') return 300;
   }
 
