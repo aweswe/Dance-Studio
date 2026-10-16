@@ -115,7 +115,7 @@ const DEFAULT_INSTRUCTORS = [
     name: "Srikanth Sree",
     role: "Gymnastics Specialist",
     bio: "Specialist coach for gymnastics, acrobatics, tumbling, and athletic conditioning. Trains children and youth in spatial awareness, core control, and foundational agility.",
-    photo_url: "/images/team/srikanth-sree.jpg",
+    photo_url: "/images/team/srikanth-gymnastics-2.jpg",
     certifications: ["Gymnastics Specialist", "Tumbling Coach", "Acrobatics Coach"],
     is_active: true,
   },

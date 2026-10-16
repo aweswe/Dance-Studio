@@ -122,7 +122,7 @@ export const STUDIO_INFO = {
       role: "Gymnastics & Acrobatics Trainer",
       bio: "Certified gymnastics, tumbling, and martial movement coach. Builds core agility, aerial flips, flexibility, and tumbling for kids and commercial dance routines.",
       specialty: "Gymnastics, Acrobatics, Tumbling, Martial Arts",
-      photo: "/images/team/srikanth-sree.jpg"
+      photo: "/images/team/srikanth-gymnastics-2.jpg"
     },
     {
       name: "Srushti Nidhi",

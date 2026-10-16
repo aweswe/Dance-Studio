@@ -16,8 +16,8 @@ const PROGRAMME_IMAGES: Record<string, string> = {
   'kids-dance': '/images/programmes/kids-programme-cover.jpg',
   'adults-dance': '/images/programmes/adults-programme-cover.jpg',
   kuchipudi: '/images/programmes/kuchipudi-programme-cover.jpg',
-  gymnastics: '/images/team/srikanth-sree.jpg',
-  gymnastic: '/images/team/srikanth-sree.jpg',
+  gymnastics: '/images/team/srikanth-gymnastics-2.jpg',
+  gymnastic: '/images/team/srikanth-gymnastics-2.jpg',
 };
 
 export function ProgrammeCard({ programme, schedule }: ProgrammeCardProps) {
@@ -34,7 +34,11 @@ export function ProgrammeCard({ programme, schedule }: ProgrammeCardProps) {
           alt={programme.name}
           fill
           sizes="(max-width: 768px) 100vw, 33vw"
-          className="object-cover group-hover:scale-105 transition-transform duration-700 opacity-90"
+          className={`object-cover group-hover:scale-105 transition-transform duration-700 opacity-90 ${
+            programme.slug === 'gymnastics' || programme.slug === 'gymnastic'
+              ? 'object-top'
+              : 'object-center'
+          }`}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-canvas/80 to-transparent" />
       </div>

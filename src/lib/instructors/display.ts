@@ -19,7 +19,7 @@ export function resolveInstructorPhoto(name: string, photoUrl?: string | null): 
   if (n.includes('pranith')) return '/images/pranith-nair.png';
   if (n.includes('kajal')) return '/images/kajal-devi.png';
   if (n.includes('deepak')) return '/images/studio-training/contemporary-movement-1.jpg';
-  if (n.includes('srikanth')) return '/images/srikanth-gymnastics.png';
+  if (n.includes('srikanth')) return '/images/team/srikanth-gymnastics-2.jpg';
   if (n.includes('srushti')) return '/images/kuchipudi/kuchipudi-traditional-standing.jpg';
   if (n.includes('shailaja')) return '/images/studio-training/floorwork-stretch.jpg';
   if (n.includes('prerna')) return '/images/studio-training/alignment-drills-1.jpg';
