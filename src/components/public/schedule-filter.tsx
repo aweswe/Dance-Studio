@@ -139,8 +139,13 @@ export function ScheduleFilter({ batches }: ScheduleFilterProps) {
                               </span>
                             )}
                           </div>
-                          <p className="text-[10px] tracking-[1.5px] uppercase text-ink-2 mt-0.5">
-                            {Array.isArray(batch.days) ? batch.days.join(' · ') : batch.days}
+                          <p className="text-[10px] tracking-[1.5px] uppercase text-ink-2 mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5">
+                            <span>{Array.isArray(batch.days) ? batch.days.join(' · ') : batch.days}</span>
+                            {batch.instructor?.name && (
+                              <span className="text-bl font-bold normal-case tracking-normal">
+                                · Instructor: {batch.instructor.name}
+                              </span>
+                            )}
                           </p>
                         </div>
                       </div>

@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { MapPin, Phone, Clock } from 'lucide-react';
+import { MapPin, Phone, Clock, Navigation, Star, ArrowUpRight } from 'lucide-react';
 import { ACADEMY, HOURS, AREAS_SERVED, SITE_URL } from '@/lib/utils/constants';
 import { formatTime } from '@/lib/utils/format';
 import { EnquiryForm } from '@/components/public/enquiry-form';
@@ -114,10 +114,11 @@ export default function ContactPage() {
       </HomepageSection>
 
       <HomepageSection className={sectionPadLg}>
-        <div className="relative h-[420px] w-full overflow-hidden rounded-md border border-line">
+        <div className="relative h-[520px] sm:h-[580px] md:h-[620px] w-full overflow-hidden rounded-md border-2 border-slate-900 bg-slate-100 shadow-xl">
+          {/* Google Maps Embed with exact coordinates & pin location */}
           <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3806.0270505191834!2d78.50058347596005!3d17.4431478834533!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb9a6225a0a38b%3A0xc3e167389eefab2!2sRhythmzz%20Academy%20of%20Dance!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
-            title="Rhythmzz Academy of Dance on Google Maps"
+            src="https://maps.google.com/maps?q=Rhythmzz+Academy+of+Dance,+Plot+597,+3rd+Floor,+Above+Jawed+Habib,+Defence+Colony,+Jawahar+Nagar,+Behind+Neredmet+X+Road+Bus+Stop,+Secunderabad,+Telangana+500094&t=&z=16&ie=UTF8&iwloc=&output=embed"
+            title="Rhythmzz Academy of Dance location on Google Maps"
             width="100%"
             height="100%"
             style={{ border: 0 }}
@@ -126,6 +127,93 @@ export default function ContactPage() {
             referrerPolicy="no-referrer-when-downgrade"
             className="absolute inset-0 w-full h-full"
           />
+
+          {/* Overlapping Studio Component */}
+          <div className="absolute top-4 left-4 sm:top-6 sm:left-6 z-20 max-w-sm w-[calc(100%-2rem)] sm:w-[380px] rounded-md border-2 border-slate-900 bg-white/95 backdrop-blur-md p-5 sm:p-6 shadow-2xl space-y-4 pointer-events-auto">
+            {/* Header / Brand */}
+            <div>
+              <div className="flex items-center justify-between gap-2 mb-1.5">
+                <span className="inline-flex items-center gap-1.5 text-[10px] font-mono font-bold uppercase tracking-wider text-emerald-800 bg-emerald-100 border border-emerald-300 px-2 py-0.5 rounded">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75" />
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-600" />
+                  </span>
+                  Open Today · {HOURS.opens} – {HOURS.closes}
+                </span>
+                <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-600 bg-slate-100 border border-slate-300 px-2 py-0.5 rounded">
+                  Est. 2010
+                </span>
+              </div>
+              <h3 className="font-anton text-xl sm:text-2xl uppercase tracking-tight text-slate-950">
+                {ACADEMY.name}
+              </h3>
+              <p className="text-xs text-slate-600 font-semibold mt-0.5">
+                IAO Accredited Studio · Sprung Dance Floor
+              </p>
+            </div>
+
+            {/* Google Rating */}
+            <div className="flex items-center gap-2 p-2.5 rounded-md bg-amber-50 border border-amber-200 text-xs">
+              <div className="flex items-center text-amber-500">
+                <Star size={14} className="fill-amber-400 text-amber-500" />
+                <Star size={14} className="fill-amber-400 text-amber-500" />
+                <Star size={14} className="fill-amber-400 text-amber-500" />
+                <Star size={14} className="fill-amber-400 text-amber-500" />
+                <Star size={14} className="fill-amber-400 text-amber-500" />
+              </div>
+              <span className="font-bold text-slate-900">{ACADEMY.googleRating}</span>
+              <span className="text-slate-600 text-[11px]">({ACADEMY.googleReviewCount}+ verified Google reviews)</span>
+            </div>
+
+            {/* Address */}
+            <div className="space-y-1.5 text-xs text-slate-800 border-t border-slate-200 pt-3">
+              <div className="flex items-start gap-2">
+                <MapPin size={16} className="text-bl shrink-0 mt-0.5" />
+                <div className="leading-snug">
+                  <p className="font-bold text-slate-950">{ACADEMY.address.street}</p>
+                  <p className="text-slate-600">{ACADEMY.address.landmark}</p>
+                  <p className="text-slate-600">{ACADEMY.address.city}, {ACADEMY.address.state} {ACADEMY.address.pin}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* CTA Buttons */}
+            <div className="grid grid-cols-2 gap-2 pt-1">
+              <a
+                href={ACADEMY.mapLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-1.5 min-h-[40px] px-3 rounded-md bg-slate-950 text-white hover:bg-black font-bold uppercase text-[10px] tracking-wider transition-all shadow-sm active:scale-[0.98]"
+              >
+                <Navigation size={12} className="text-bl" />
+                <span>Directions</span>
+                <ArrowUpRight size={12} />
+              </a>
+              <a
+                href={`tel:${ACADEMY.phone}`}
+                className="flex items-center justify-center gap-1.5 min-h-[40px] px-3 rounded-md bg-bl text-slate-950 hover:bg-bl-deep font-bold uppercase text-[10px] tracking-wider transition-all shadow-sm active:scale-[0.98]"
+              >
+                <Phone size={12} />
+                <span>Call Studio</span>
+              </a>
+            </div>
+          </div>
+
+          {/* Location Pin inside the Map with Pulse Beacon */}
+          <div className="absolute top-4 right-4 sm:top-6 sm:right-6 z-20 hidden md:flex items-center gap-2.5 px-4 py-2.5 rounded-md bg-slate-950/95 backdrop-blur-md text-white border-2 border-bl shadow-2xl pointer-events-auto">
+            <div className="relative flex h-3 w-3 shrink-0">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-bl opacity-75" />
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-bl" />
+            </div>
+            <div className="text-left">
+              <span className="block text-xs font-anton tracking-wide text-white uppercase">
+                📍 Rhythmzz Studio Location
+              </span>
+              <span className="block text-[10px] text-slate-300 font-medium">
+                Plot 597, 3rd Floor Above Jawed Habib · Neredmet X Road
+              </span>
+            </div>
+          </div>
         </div>
       </HomepageSection>
 

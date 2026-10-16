@@ -74,6 +74,10 @@ function LoginForm() {
   // Google OAuth Login
   async function handleGoogleLogin() {
     setError("");
+    if (!agreedTerms) {
+      setError("Please accept the Terms and Conditions and Policies before signing in.");
+      return;
+    }
     setOauthLoading(true);
     try {
       const { error: authError } = await supabase.auth.signInWithOAuth({
@@ -92,6 +96,10 @@ function LoginForm() {
   async function handleSendPhoneOtp(e: React.FormEvent) {
     e.preventDefault();
     setError("");
+    if (!agreedTerms) {
+      setError("Please accept the Terms and Conditions and Policies before signing in.");
+      return;
+    }
     setIsLoading(true);
     const { normalizeIndianPhone } = await import("@/lib/utils/format");
     const cleaned = normalizeIndianPhone(phone);
@@ -142,6 +150,10 @@ function LoginForm() {
   async function handleSendEmailOtp(e: React.FormEvent) {
     e.preventDefault();
     setError("");
+    if (!agreedTerms) {
+      setError("Please accept the Terms and Conditions and Policies before signing in.");
+      return;
+    }
     setIsLoading(true);
 
     const cleanEmail = email.trim().toLowerCase();
@@ -303,20 +315,35 @@ function LoginForm() {
                       />
                     </div>
                   </div>
-                  <label className="flex items-start gap-2 pt-1 text-xs text-ink-2 cursor-pointer select-none">
+                  <label className="flex items-start gap-2.5 pt-1 text-xs text-ink-2 cursor-pointer select-none">
                     <input
                       type="checkbox"
                       checked={agreedTerms}
-                      onChange={(e) => setAgreedTerms(e.target.checked)}
-                      className="mt-0.5 rounded border-line text-bl focus:ring-bl accent-bl cursor-pointer"
+                      onChange={(e) => {
+                        setAgreedTerms(e.target.checked);
+                        if (e.target.checked) setError("");
+                      }}
+                      className="mt-0.5 h-4 w-4 rounded border border-line text-bl focus:ring-bl accent-bl cursor-pointer shrink-0"
                       required
                     />
-                    <span>
-                      I agree to the{" "}
-                      <Link href="/terms" target="_blank" className="text-bl-ink underline hover:text-ink">
-                        Terms &amp; Conditions
-                      </Link>{" "}
-                      and Studio Guidelines.
+                    <span className="leading-relaxed">
+                      I accept the{" "}
+                      <Link href="/terms" target="_blank" className="text-bl font-semibold underline hover:text-ink">
+                        Terms and Conditions
+                      </Link>
+                      ,{" "}
+                      <Link href="/terms#student-portal" target="_blank" className="text-bl font-semibold underline hover:text-ink">
+                        Student Policy
+                      </Link>
+                      ,{" "}
+                      <Link href="/instructor-terms" target="_blank" className="text-bl font-semibold underline hover:text-ink">
+                        Instructor Policy
+                      </Link>
+                      , and{" "}
+                      <Link href="/terms#studio-rules" target="_blank" className="text-bl font-semibold underline hover:text-ink">
+                        Studio Policy
+                      </Link>
+                      .
                     </span>
                   </label>
                   {error && <p className="text-xs text-danger leading-relaxed">{error}</p>}
@@ -354,6 +381,10 @@ function LoginForm() {
                     disabled={isDemoLoading}
                     onClick={() => {
                       setError("");
+                      if (!agreedTerms) {
+                        setError("Please accept the Terms and Conditions and Policies before accessing the demo.");
+                        return;
+                      }
                       startDemoTransition(async () => {
                         const result = await demoLogin("student");
                         if (result?.error) setError(result.error);
@@ -397,11 +428,43 @@ function LoginForm() {
 
             {step === "email" && (
               <div className="space-y-5">
+                <label className="flex items-start gap-2.5 pt-1 text-xs text-ink-2 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={agreedTerms}
+                    onChange={(e) => {
+                      setAgreedTerms(e.target.checked);
+                      if (e.target.checked) setError("");
+                    }}
+                    className="mt-0.5 h-4 w-4 rounded border border-line text-bl focus:ring-bl accent-bl cursor-pointer shrink-0"
+                    required
+                  />
+                  <span className="leading-relaxed">
+                    I accept the{" "}
+                    <Link href="/terms" target="_blank" className="text-bl font-semibold underline hover:text-ink">
+                      Terms and Conditions
+                    </Link>
+                    ,{" "}
+                    <Link href="/terms#student-portal" target="_blank" className="text-bl font-semibold underline hover:text-ink">
+                      Student Policy
+                    </Link>
+                    ,{" "}
+                    <Link href="/instructor-terms" target="_blank" className="text-bl font-semibold underline hover:text-ink">
+                      Instructor Policy
+                    </Link>
+                    , and{" "}
+                    <Link href="/terms#studio-rules" target="_blank" className="text-bl font-semibold underline hover:text-ink">
+                      Studio Policy
+                    </Link>
+                    .
+                  </span>
+                </label>
+
                 <button
                   type="button"
                   onClick={handleGoogleLogin}
-                  disabled={oauthLoading || isLoading}
-                  className="w-full min-h-11 bg-canvas-muted hover:bg-canvas-muted-2 border border-line text-ink text-sm font-medium py-2.5 px-4 rounded-md flex items-center justify-center gap-3 focus-visible:focus-ring active:scale-[0.96]"
+                  disabled={oauthLoading || isLoading || !agreedTerms}
+                  className="w-full min-h-11 bg-canvas-muted hover:bg-canvas-muted-2 border border-line text-ink text-sm font-medium py-2.5 px-4 rounded-md flex items-center justify-center gap-3 focus-visible:focus-ring active:scale-[0.96] disabled:opacity-50"
                 >
                   {oauthLoading ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
@@ -428,22 +491,6 @@ function LoginForm() {
                     required
                     autoFocus
                   />
-                  <label className="flex items-start gap-2 pt-1 text-xs text-ink-2 cursor-pointer select-none">
-                    <input
-                      type="checkbox"
-                      checked={agreedTerms}
-                      onChange={(e) => setAgreedTerms(e.target.checked)}
-                      className="mt-0.5 rounded border-line text-bl focus:ring-bl accent-bl cursor-pointer"
-                      required
-                    />
-                    <span>
-                      I agree to the{" "}
-                      <Link href="/terms" target="_blank" className="text-bl-ink underline hover:text-ink">
-                        Terms &amp; Conditions
-                      </Link>{" "}
-                      and Studio Guidelines.
-                    </span>
-                  </label>
                   {error && <p className="text-xs text-danger leading-relaxed">{error}</p>}
                   <Button type="submit" className="w-full" disabled={isLoading || !email.trim() || !agreedTerms} isLoading={isLoading}>
                     Send email code <ArrowRight className="w-3.5 h-3.5" />

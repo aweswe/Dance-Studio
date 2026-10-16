@@ -13,7 +13,7 @@ const DEFAULT_BATCHES = [
     status: 'active',
     name: 'Kids Bollywood & Freestyle (5–6 PM)',
     programme: { name: 'Kids Dance', slug: 'kids-dance', sort_order: 1 },
-    instructor: { name: 'Academy Faculty', photo_url: null },
+    instructor: { name: 'Deepak', photo_url: null },
   },
   {
     id: 'a1b2c3d4-4102-4000-8000-000000000002',
@@ -26,7 +26,7 @@ const DEFAULT_BATCHES = [
     status: 'active',
     name: 'Kids Bollywood & Freestyle (6–7 PM)',
     programme: { name: 'Kids Dance', slug: 'kids-dance', sort_order: 1 },
-    instructor: { name: 'Academy Faculty', photo_url: null },
+    instructor: { name: 'Kajal', photo_url: null },
   },
   {
     id: 'a1b2c3d4-4107-4000-8000-000000000007',
@@ -39,7 +39,7 @@ const DEFAULT_BATCHES = [
     status: 'active',
     name: 'Gymnastics & Tumbling (5:15–6:15 PM)',
     programme: { name: 'Gymnastic', slug: 'gymnastics', sort_order: 2 },
-    instructor: { name: 'Gymnastics Faculty', photo_url: null },
+    instructor: { name: 'Deepak & Nitish', photo_url: null },
   },
   {
     id: 'a1b2c3d4-4103-4000-8000-000000000003',
@@ -52,7 +52,7 @@ const DEFAULT_BATCHES = [
     status: 'active',
     name: 'Adults Bollywood (7–8 PM)',
     programme: { name: 'Adults Dance', slug: 'adults-dance', sort_order: 3 },
-    instructor: { name: 'Academy Faculty', photo_url: null },
+    instructor: { name: 'Nitish', photo_url: null },
   },
   {
     id: 'a1b2c3d4-4104-4000-8000-000000000004',
@@ -65,7 +65,7 @@ const DEFAULT_BATCHES = [
     status: 'active',
     name: 'Adults Contemporary (8–9 PM)',
     programme: { name: 'Adults Dance', slug: 'adults-dance', sort_order: 3 },
-    instructor: { name: 'Academy Faculty', photo_url: null },
+    instructor: { name: 'Pranith', photo_url: null },
   },
   {
     id: 'a1b2c3d4-4105-4000-8000-000000000005',
@@ -78,7 +78,7 @@ const DEFAULT_BATCHES = [
     status: 'active',
     name: 'Complete Fitness Combo Pack (8:30–9:15 AM)',
     programme: { name: 'Mind & Body Fitness', slug: 'mind-body-fitness', sort_order: 4 },
-    instructor: { name: 'Fitness Faculty', photo_url: null },
+    instructor: { name: 'Shailaja', photo_url: null },
   },
   {
     id: 'a1b2c3d4-4108-4000-8000-000000000008',
@@ -91,7 +91,7 @@ const DEFAULT_BATCHES = [
     status: 'active',
     name: 'Complete Fitness Combo Pack (9:30–10:20 AM)',
     programme: { name: 'Mind & Body Fitness', slug: 'mind-body-fitness', sort_order: 4 },
-    instructor: { name: 'Fitness Faculty', photo_url: null },
+    instructor: { name: 'Shailaja', photo_url: null },
   },
   {
     id: 'a1b2c3d4-4106-4000-8000-000000000006',
@@ -104,7 +104,7 @@ const DEFAULT_BATCHES = [
     status: 'active',
     name: 'Kuchipudi Classical (6:30–7:30 PM)',
     programme: { name: 'Kuchipudi Classical', slug: 'kuchipudi', sort_order: 5 },
-    instructor: { name: 'Classical Faculty', photo_url: null },
+    instructor: { name: 'Srusti', photo_url: null },
   },
 ];
 

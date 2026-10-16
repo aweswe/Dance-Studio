@@ -138,7 +138,7 @@ export function buildWeekScheduleFromBatches(batches: BatchLike[]): DaySchedule[
       const programmeName = batch.programme?.name || 'Studio batch';
       const batchLabel = batch.name || batch.batch_title || programmeName;
       const { title, detail } = splitBatchLabel(batchLabel);
-      const instructor = 'Certified Faculty';
+      const instructor = batch.instructor?.name || 'Academy Faculty';
 
       slots.push({
         batchId: batch.id ?? `${programmeSlug}-${batch.time_start}-${dayFull}`,
@@ -147,7 +147,7 @@ export function buildWeekScheduleFromBatches(batches: BatchLike[]): DaySchedule[
         name: title,
         subtitle: detail ?? programmeName,
         instructor,
-        instructorInitials: 'CF',
+        instructorInitials: instructorInitials(instructor),
         programmeSlug,
         programmeName,
         duration: durationLabel(batch.time_start, batch.time_end),

@@ -92,18 +92,70 @@ export function EnrolForm({
   const normalizedPhone = normalizeIndianPhone(phone);
   const isPay = bookingMode === 'pay';
 
-  const customFeeNum = defaultFee ? Number(defaultFee) : null;
-  const fee = customFeeNum || (
-    plan === 'quarterly'
-      ? (selectedProgramme?.fees_quarterly || (selectedProgramme?.fees_monthly ?? 2000) * 3)
-      : plan === 'half-yearly'
-      ? Math.round((selectedProgramme?.fees_monthly ?? 2000) * 6 * 0.85)
-      : plan === 'annual'
-      ? Math.round((selectedProgramme?.fees_monthly ?? 2000) * 12 * 0.75)
-      : plan === 'drop-in'
-      ? 500
-      : (selectedProgramme?.fees_monthly ?? 2000)
-  );
+function computeProgrammeFee(
+  prog: { slug?: string; name?: string; fees_monthly?: number; fees_quarterly?: number } | undefined,
+  planType: string
+): number {
+  const slug = prog?.slug || '';
+  const name = prog?.name?.toLowerCase() || '';
+
+  // 1. Kids Dance
+  if (slug === 'kids-dance' || slug.includes('kids') || name.includes('kids')) {
+    if (planType === 'monthly') return 2000;
+    if (planType === 'quarterly') return 5000;
+    if (planType === 'half-yearly') return 9500;
+    if (planType === 'annual') return 18000;
+    if (planType === 'drop-in') return 300;
+  }
+
+  // 2. Classical Dance (Kuchipudi / Kathak)
+  if (
+    slug === 'classical-dance' ||
+    slug.includes('kuchipudi') ||
+    slug.includes('kathak') ||
+    name.includes('kuchipudi') ||
+    name.includes('kathak')
+  ) {
+    if (planType === 'monthly') return 2000;
+    if (planType === 'quarterly') return 5000;
+    if (planType === 'half-yearly') return 9500;
+    if (planType === 'annual') return 18000;
+    if (planType === 'drop-in') return 300;
+  }
+
+  // 3. Adults Dance, Mind & Body Fitness, Gymnastics
+  if (
+    slug === 'adults-dance' ||
+    slug === 'mind-body-fitness' ||
+    slug === 'gymnastics' ||
+    slug.includes('adult') ||
+    name.includes('adult') ||
+    name.includes('fitness') ||
+    name.includes('gymnastic')
+  ) {
+    if (planType === 'monthly') return 2500;
+    if (planType === 'quarterly') return 6500;
+    if (planType === 'half-yearly') return 12000;
+    if (planType === 'annual') return 22000;
+    if (planType === 'drop-in') return 300;
+  }
+
+  // 4. Database fallback
+  const baseMonthly = prog?.fees_monthly ?? 2000;
+  const baseQuarterly = prog?.fees_quarterly ?? (baseMonthly * 3 > 5000 ? 5000 : baseMonthly * 3);
+  if (planType === 'quarterly') return baseQuarterly;
+  if (planType === 'half-yearly') return Math.round(baseQuarterly * 1.9);
+  if (planType === 'annual') return Math.round(baseQuarterly * 3.6);
+  if (planType === 'drop-in') return 300;
+  return baseMonthly;
+}
+
+  const isInitialPlanAndProg =
+    plan === defaultPlan &&
+    (!defaultProgramme || selectedProgramme?.slug === defaultProgramme);
+
+  const customFeeNum = isInitialPlanAndProg && defaultFee ? Number(defaultFee) : null;
+  const fee = customFeeNum || computeProgrammeFee(selectedProgramme, plan);
 
   const waMessage = [
     isPay
@@ -591,26 +643,40 @@ export function EnrolForm({
         </div>
 
         {isPay && (
-          <div className="flex gap-2 flex-wrap">
-            {[
-              { id: 'monthly', label: 'Monthly' },
-              { id: 'quarterly', label: 'Quarterly' },
-              ...(plan === 'half-yearly' ? [{ id: 'half-yearly', label: '6-Month Plan' }] : []),
-              ...(plan === 'annual' ? [{ id: 'annual', label: 'Annual Plan' }] : []),
-              ...(plan === 'drop-in' ? [{ id: 'drop-in', label: 'Drop-in' }] : []),
-            ].map((p) => (
-              <button
-                key={p.id}
-                type="button"
-                onClick={() => setPlan(p.id)}
-                className={cn(
-                  'flex-1 min-w-[100px] py-2 px-2.5 rounded-md text-[11px] font-bold uppercase tracking-wider border transition-colors cursor-pointer',
-                  plan === p.id ? 'border-2 border-slate-950 bg-slate-950 text-white shadow-sm' : 'border-2 border-slate-200 bg-white text-slate-800 font-bold hover:border-slate-400'
-                )}
-              >
-                {p.label}
-              </button>
-            ))}
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold uppercase tracking-wider text-ink block">
+              Payment Plan
+            </label>
+            <div className="flex gap-2 flex-wrap">
+              {[
+                { id: 'monthly', label: 'Monthly' },
+                { id: 'quarterly', label: 'Quarterly' },
+                { id: 'half-yearly', label: '6-Month Plan' },
+                ...(plan === 'annual' ? [{ id: 'annual', label: 'Annual Plan' }] : []),
+                ...(plan === 'drop-in' ? [{ id: 'drop-in', label: 'Drop-in' }] : []),
+              ].map((p) => {
+                const planFee = computeProgrammeFee(selectedProgramme, p.id);
+                const isSelected = plan === p.id;
+                return (
+                  <button
+                    key={p.id}
+                    type="button"
+                    onClick={() => setPlan(p.id)}
+                    className={cn(
+                      'flex-1 min-w-[110px] py-2 px-2.5 rounded-md text-[11px] font-bold uppercase tracking-wider border transition-all cursor-pointer flex flex-col items-center justify-center gap-0.5',
+                      isSelected
+                        ? 'border-2 border-slate-950 bg-slate-950 text-white shadow-sm'
+                        : 'border-2 border-slate-200 bg-white text-slate-800 font-bold hover:border-slate-400'
+                    )}
+                  >
+                    <span>{p.label}</span>
+                    <span className={cn('text-[10px] font-mono font-bold', isSelected ? 'text-amber-300' : 'text-slate-600')}>
+                      {formatCurrency(planFee)}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
         )}
 
