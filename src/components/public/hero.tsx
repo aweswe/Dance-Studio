@@ -30,9 +30,7 @@ export function Hero({ stats }: HeroProps) {
           <div className="@container min-w-0 w-full max-w-[36rem]">
             {/* Prominent Academy Hallmark / Logo Badge */}
             <div className="flex items-center gap-3.5 sm:gap-4 mb-4 sm:mb-5">
-              <div className="p-1.5 sm:p-2 rounded-md bg-surface border border-line shadow-xs shrink-0">
-                <BrandLogo priority className="h-12 sm:h-14 md:h-16 w-auto object-contain" />
-              </div>
+              <BrandLogo priority className="h-12 sm:h-14 md:h-16 w-auto object-contain shrink-0" />
               <div className="flex flex-col gap-0.5 min-w-0">
                 <p className="text-[11px] sm:text-xs font-bold uppercase tracking-[0.2em] text-bl leading-tight">
                   Secunderabad · Since 2010

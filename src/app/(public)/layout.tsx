@@ -5,6 +5,7 @@ import { WhatsappFloat } from '@/components/public/whatsapp-float';
 import { AnnouncementBanner } from '@/components/public/announcement-banner';
 import { getBanner } from '@/data/content';
 import { GsapProvider } from '@/components/motion/gsap-provider';
+import { SiteIntroLoader } from '@/components/public/site-intro-loader';
 
 // The banner fetch lives in its own suspending child: loading.tsx does not wrap
 // this layout, so awaiting getBanner() here would block the whole route shell.
@@ -16,6 +17,7 @@ async function BannerFetcher() {
 export default function PublicLayout({ children }: { children: ReactNode }) {
   return (
     <div className="flex flex-col min-h-screen bg-canvas text-ink font-body overflow-x-hidden">
+      <SiteIntroLoader />
       <a
         href="#main"
         className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[1000] focus:bg-blk focus:text-white focus:px-4 focus:py-2 focus:text-xs focus:uppercase focus:tracking-widest"
