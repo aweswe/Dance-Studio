@@ -3,7 +3,18 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowUpRight } from 'lucide-react';
+import {
+  ArrowUpRight,
+  Award,
+  BookOpen,
+  Calendar,
+  CheckCircle2,
+  Flame,
+  GraduationCap,
+  ShieldCheck,
+  Sparkles,
+  Users,
+} from 'lucide-react';
 import { HomepageSection, HomepageSectionHeading } from '@/components/public/homepage-section';
 import {
   CERTIFICATION_TRACKS,
@@ -14,8 +25,6 @@ import {
   homepageCtaPair,
   homepageCtaPairButton,
   homepageCtaPrimary,
-  homepageFilterPill,
-  homepageMediaFrame,
 } from '@/lib/ui/homepage-cta';
 import { sectionPad } from '@/lib/ui/section-layout';
 import { cn } from '@/lib/utils/cn';
@@ -26,126 +35,271 @@ interface LevelCertificationSectionProps {
   defaultTrack?: CertificationTrackId;
 }
 
-/** Shared vertical rhythm inside the copy column */
-const BLOCK_GAP = 'gap-4 sm:gap-5';
-const COL_GAP = 'gap-12 lg:gap-24 xl:gap-28';
+function getTrackIcon(id: CertificationTrackId) {
+  switch (id) {
+    case 'overview':
+      return GraduationCap;
+    case 'kuchipudi':
+      return Sparkles;
+    case 'kathak':
+      return Flame;
+    default:
+      return Award;
+  }
+}
+
+function getFeatureIcon(name: string) {
+  switch (name) {
+    case 'calendar':
+      return Calendar;
+    case 'users':
+      return Users;
+    case 'award':
+      return Award;
+    case 'book':
+    default:
+      return BookOpen;
+  }
+}
 
 export function LevelCertificationSection({
   className = '',
   defaultTrack = 'overview',
 }: LevelCertificationSectionProps) {
   const [activeId, setActiveId] = useState<CertificationTrackId>(defaultTrack);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+
   const track = CERTIFICATION_TRACKS.find((t) => t.id === activeId) ?? CERTIFICATION_TRACKS[0];
 
-  return (
-    <HomepageSection id="certification" className={cn(sectionPad, className)}>
-      <HomepageSectionHeading
-        eyebrow="Certification programmes"
-        title="Level-based"
-        accent="training."
-        description="Board exams, published syllabi, and stage milestones — pick a track below."
-        className="mb-8 sm:mb-10"
-      />
+  // Active image safely derived from track gallery or primary image
+  const gallery = track.gallery && track.gallery.length > 0 ? track.gallery : [];
+  const activeImage =
+    gallery[selectedImageIndex] ??
+    gallery[0] ?? {
+      src: track.image,
+      alt: track.imageAlt,
+      label: track.imageBadge,
+      shortLabel: 'Featured',
+    };
 
-      <div
-        className="mb-10 sm:mb-12 flex flex-wrap gap-2"
-        role="tablist"
-        aria-label="Certification programme tracks"
-      >
-        {CERTIFICATION_TRACKS.map((item) => (
-          <button
-            key={item.id}
-            type="button"
-            role="tab"
-            aria-selected={activeId === item.id}
-            aria-controls={`certification-panel-${item.id}`}
-            onClick={() => setActiveId(item.id)}
-            className={homepageFilterPill(activeId === item.id)}
-          >
-            {item.label}
-          </button>
-        ))}
+  const handleTabChange = (id: CertificationTrackId) => {
+    setActiveId(id);
+    setSelectedImageIndex(0);
+  };
+
+  return (
+    <HomepageSection id="certification" className={cn(sectionPad, 'border-t border-line/60', className)}>
+      {/* Top Header */}
+      <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-8 sm:mb-10">
+        <HomepageSectionHeading
+          eyebrow="Certification programmes"
+          title="Level-based"
+          accent="training."
+          description="Learn step-by-step with clear levels, yearly board exams, and certificates — choose your dance style below."
+          className="mb-0 max-w-xl"
+        />
+
+        {/* Modern Segmented Tab Bar */}
+        <div
+          role="tablist"
+          aria-label="Certification programme tracks"
+          className="inline-flex p-1.5 rounded-full bg-canvas-muted/80 border border-line/80 shadow-sm backdrop-blur-sm self-start md:self-end flex-wrap gap-1"
+        >
+          {CERTIFICATION_TRACKS.map((item) => {
+            const Icon = getTrackIcon(item.id);
+            const isActive = activeId === item.id;
+            return (
+              <button
+                key={item.id}
+                type="button"
+                role="tab"
+                aria-selected={isActive}
+                aria-controls={`certification-panel-${item.id}`}
+                onClick={() => handleTabChange(item.id)}
+                className={cn(
+                  'flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-full text-[11px] sm:text-xs font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer active:scale-[0.97]',
+                  isActive
+                    ? 'bg-ink text-white shadow-md shadow-ink/20 ring-1 ring-white/10'
+                    : 'text-ink-2 hover:text-ink hover:bg-surface/80',
+                )}
+              >
+                <Icon
+                  size={14}
+                  className={cn('transition-colors', isActive ? 'text-bl' : 'text-ink-3')}
+                  strokeWidth={2.5}
+                />
+                <span>{item.label}</span>
+              </button>
+            );
+          })}
+        </div>
       </div>
 
-      {/*
-        Reference layout: equal-width columns, equal outer inset (via HomepageSection),
-        image top ↔ title top, image bottom ↔ CTA bottom, uniform gaps between text blocks.
-      */}
+      {/* Main Elevated Showcase Card */}
       <div
         id={`certification-panel-${track.id}`}
         role="tabpanel"
-        className={cn('grid w-full grid-cols-1 lg:grid-cols-2 items-stretch', COL_GAP)}
+        className="relative rounded-2xl sm:rounded-3xl border border-line/80 bg-surface/90 shadow-xl shadow-slate-950/[0.03] backdrop-blur-sm overflow-hidden p-4 sm:p-7 lg:p-9"
       >
-        {/* Left — portrait, fills column width, height driven by row */}
-        <figure
-          className={cn(
-            'relative w-full aspect-[4/5] lg:aspect-auto lg:h-full lg:min-h-[26rem] xl:min-h-[28rem]',
-            homepageMediaFrame,
-          )}
-        >
-          <Image
-            key={track.id}
-            src={track.image}
-            alt={track.imageAlt}
-            fill
-            sizes="(max-width: 1024px) 100vw, 50vw"
-            className="object-cover object-center transition-opacity duration-500"
-            priority={track.id === 'overview'}
-          />
-          <figcaption className="absolute bottom-0 inset-x-0 z-[2] flex items-end pb-3 px-3 sm:px-4 pointer-events-none">
-            <p className="min-w-0 max-w-[85%] rounded-md bg-black/55 backdrop-blur-sm px-2.5 py-1 font-body text-[12px] sm:text-[13px] font-medium normal-case tracking-normal text-white/90 leading-snug line-clamp-3">
-              {track.imageBadge} · {track.imageTags}
-            </p>
-          </figcaption>
-        </figure>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-7 lg:gap-10 xl:gap-12 items-center">
+          {/* Left Column: Master Image Showcase (Fitting 100% of photo without cut down) */}
+          <div className="lg:col-span-6 w-full">
+            <figure className="relative w-full rounded-xl sm:rounded-2xl overflow-hidden bg-slate-950 border border-slate-800/80 shadow-2xl flex flex-col justify-between">
+              {/* Ambient Blurred Aura (Preserves aspect ratio while eliminating dead space) */}
+              <div
+                className="absolute inset-0 bg-cover bg-center filter blur-3xl opacity-35 scale-125 pointer-events-none transition-all duration-700"
+                style={{ backgroundImage: `url(${activeImage.src})` }}
+              />
 
-        {/* Right — single left edge, even spacing, stretched to match image height */}
-        <div className={cn('flex min-w-0 flex-col justify-between', BLOCK_GAP)}>
-          <header>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-bl mb-3">
-              {track.eyebrow}
-            </p>
-            <h3 className="font-anton text-[1.75rem] sm:text-3xl md:text-[2.35rem] text-ink tracking-tight uppercase leading-[0.94]">
-              {track.title}
-              {track.titleAccent ? (
-                <>
-                  {' '}
-                  <span className="text-bl">{track.titleAccent}</span>
-                </>
-              ) : null}
-            </h3>
-            <p className="mt-2.5 text-sm sm:text-[15px] text-ink-2 leading-[1.7]">
-              {track.summary}
-            </p>
-          </header>
+              {/* Top Floating Bar: Accreditation Badge & Multi-Photo Switcher */}
+              <div className="relative z-10 p-3 sm:p-4 flex items-center justify-between gap-2">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-950/85 backdrop-blur-md border border-white/15 text-[11px] font-mono font-bold uppercase tracking-wider text-white shadow-lg">
+                  <ShieldCheck size={14} className="text-bl shrink-0" strokeWidth={2.5} />
+                  {track.imageBadge}
+                </span>
 
-          <dl className="w-full border-y border-line divide-y divide-line">
-            {track.details.map(({ label, value }) => (
-              <div key={label} className="py-2.5 sm:py-3 flex flex-col gap-1">
-                <dt className="font-mono text-[11px] uppercase tracking-[0.2em] text-ink-3">
-                  {label}
-                </dt>
-                <dd className="text-sm sm:text-[15px] text-ink font-medium leading-relaxed">
-                  {value}
-                </dd>
+                {gallery.length > 1 && (
+                  <div className="flex items-center gap-1 bg-slate-950/85 backdrop-blur-md border border-white/15 p-1 rounded-full shadow-lg">
+                    {gallery.map((img, idx) => (
+                      <button
+                        key={img.src}
+                        type="button"
+                        onClick={() => setSelectedImageIndex(idx)}
+                        className={cn(
+                          'px-2.5 py-1 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider transition-all cursor-pointer',
+                          selectedImageIndex === idx
+                            ? 'bg-bl text-slate-950 shadow-sm'
+                            : 'text-white/70 hover:text-white hover:bg-white/10',
+                        )}
+                        title={img.label}
+                      >
+                        {img.shortLabel}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
-            ))}
-          </dl>
 
-          <div className={homepageCtaPair}>
-            <Link
-              href={enrolHref({ programme: track.enrolProgramme, intent: 'trial' })}
-              className={`${homepageCtaPrimary} ${homepageCtaPairButton}`}
-            >
-              {track.primaryCta}
-              <ArrowUpRight size={13} strokeWidth={2.5} />
-            </Link>
-            <Link
-              href={track.syllabusHref}
-              className={`${homepageCtaOutlineLight} ${homepageCtaPairButton}`}
-            >
-              {track.secondaryCta}
-            </Link>
+              {/* Main Image Frame with object-contain: NEVER cuts down heads, feet, or certificates */}
+              <div className="relative z-[2] w-full aspect-[16/10] sm:aspect-[4/3] lg:aspect-[16/11] flex items-center justify-center p-2 sm:p-4">
+                <Image
+                  key={activeImage.src}
+                  src={activeImage.src}
+                  alt={activeImage.alt}
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="object-contain transition-all duration-500 rounded-lg drop-shadow-2xl"
+                  priority={track.id === 'overview'}
+                />
+              </div>
+
+              {/* Bottom Information Ribbon */}
+              <figcaption className="relative z-10 p-3 sm:p-4 bg-gradient-to-t from-slate-950/95 via-slate-950/75 to-transparent flex flex-wrap items-center justify-between gap-2 text-xs">
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-bl animate-pulse shrink-0" />
+                  <span className="font-mono text-[11px] uppercase tracking-wider text-white/90">
+                    {track.imageTags}
+                  </span>
+                </div>
+                <span className="text-[11px] text-white/70 font-medium">
+                  {activeImage.label}
+                </span>
+              </figcaption>
+            </figure>
+          </div>
+
+          {/* Right Column: Curriculum & Accreditation Bento Architecture */}
+          <div className="lg:col-span-6 flex flex-col justify-between min-w-0">
+            <div>
+              {/* Track Eyebrow */}
+              <div className="flex items-center gap-2 mb-2.5">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-bl/10 border border-bl/25 text-[10px] font-mono font-bold uppercase tracking-widest text-bl">
+                  {track.eyebrow}
+                </span>
+                <span className="text-[11px] font-mono text-ink-3">
+                  • Certified Course
+                </span>
+              </div>
+
+              {/* Title & Punchy Display Typography */}
+              <h3 className="font-anton text-2xl sm:text-3xl lg:text-[2.65rem] text-ink uppercase tracking-tight leading-[0.96]">
+                {track.title}
+                {track.titleAccent ? (
+                  <>
+                    {' '}
+                    <span className="text-bl">{track.titleAccent}</span>
+                  </>
+                ) : null}
+              </h3>
+
+              {/* Summary Description */}
+              <p className="mt-3 text-sm sm:text-[15px] text-ink-2 leading-relaxed">
+                {track.summary}
+              </p>
+
+              {/* Bento Milestones Grid */}
+              <div className="my-5 sm:my-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
+                {track.features.map((feature) => {
+                  const Icon = getFeatureIcon(feature.iconName);
+                  return (
+                    <div
+                      key={feature.label}
+                      className="p-3.5 rounded-xl border border-line bg-canvas-muted/40 hover:border-bl/40 hover:bg-canvas-muted/70 transition-all flex flex-col justify-between gap-2.5 shadow-sm"
+                    >
+                      <div className="flex items-center gap-2">
+                        <div className="w-7 h-7 rounded-lg bg-bl/10 text-bl flex items-center justify-center shrink-0">
+                          <Icon size={14} strokeWidth={2.5} />
+                        </div>
+                        <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-ink-3">
+                          {feature.label}
+                        </span>
+                      </div>
+                      <div>
+                        <p className="text-xs sm:text-[13px] font-bold text-ink leading-snug">
+                          {feature.value}
+                        </p>
+                        {feature.subtext && (
+                          <p className="text-[11px] text-ink-3 mt-0.5 leading-normal">
+                            {feature.subtext}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Trust Guarantees Checklist */}
+              <div className="mb-6 flex flex-wrap items-center gap-y-2 gap-x-4 text-[12px] text-ink-2 font-medium">
+                {track.trustHighlights.map((highlight) => (
+                  <div key={highlight} className="flex items-center gap-1.5">
+                    <CheckCircle2 size={13} className="text-bl shrink-0" strokeWidth={2.5} />
+                    <span>{highlight}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* High-Impact CTA Pair */}
+            <div className={homepageCtaPair}>
+              <Link
+                href={enrolHref({ programme: track.enrolProgramme, intent: 'trial' })}
+                className={`${homepageCtaPrimary} ${homepageCtaPairButton} group`}
+              >
+                <span>{track.primaryCta}</span>
+                <ArrowUpRight
+                  size={13}
+                  strokeWidth={2.5}
+                  className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"
+                />
+              </Link>
+              <Link
+                href={track.syllabusHref}
+                className={`${homepageCtaOutlineLight} ${homepageCtaPairButton}`}
+              >
+                {track.secondaryCta}
+              </Link>
+            </div>
           </div>
         </div>
       </div>

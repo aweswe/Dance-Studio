@@ -449,7 +449,7 @@ export function ProgrammePricingBoard() {
           <span className="text-[#0284c7]">PAY YOUR WAY.</span>
         </h2>
         <p className="mt-3 text-sm sm:text-base text-neutral-700 font-medium max-w-xl mx-auto leading-relaxed">
-          Quarterly saves most · Annual locks in the best rate · First class always free
+          Quarterly saves most · Annual locks in the best rate · First class is on us
         </p>
 
         {/* First class is on us pill */}
@@ -628,7 +628,7 @@ export function ProgrammePricingBoard() {
                   href={enrolHref({ programme: activeProgramme.slug, intent: 'trial' })}
                   className="w-full min-h-[44px] h-11 px-5 rounded-md bg-white hover:bg-neutral-50 border-2 border-neutral-300 text-neutral-900 font-bold uppercase text-[10px] tracking-wider flex items-center justify-center transition-all active:scale-[0.98]"
                 >
-                  Try 1 class free
+                  First class is on us
                 </Link>
               </div>
             </div>
@@ -951,7 +951,7 @@ export function ProgrammePricingBoard() {
                       href={enrolHref({ programme: KUCHIPUDI_DATA.slug, intent: 'trial' })}
                       className="w-full min-h-[44px] h-11 px-4 rounded-md bg-white hover:bg-neutral-50 border-2 border-neutral-300 text-neutral-900 text-[10px] font-bold uppercase tracking-wider flex items-center justify-center transition-all active:scale-[0.98]"
                     >
-                      Try 1 class free
+                      First class is on us
                     </Link>
                   </div>
                 </div>

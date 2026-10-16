@@ -15,7 +15,7 @@ import { DanziaTestimonialsSection } from '@/components/public/danzia-testimonia
 import { DanziaCTASection } from '@/components/public/danzia-cta-section';
 import { ReelsStrip } from '@/components/public/reels-strip';
 import { getHomepageReels } from '@/data/reels';
-// import { GoogleProofStrip } from '@/components/public/google-proof-strip';
+import { CorporateCollaborationsStrip } from '@/components/public/corporate-collaborations-strip';
 import { FAQSection } from '@/components/public/faq-section';
 import { GearStorefront } from '@/components/public/gear-storefront';
 import { getProducts } from '@/data/products';
@@ -43,7 +43,6 @@ export default async function HomePage() {
       <StructuredData />
       <Hero stats={stats} />
       <HeroSpotlightVideos />
-      {/* <GoogleProofStrip /> */}
       <ProgrammePricingBoard />
       <StudioLocalitiesSection />
       <LevelCertificationSection />
@@ -52,6 +51,7 @@ export default async function HomePage() {
       <DanziaGallerySection />
       <HomepageAboutSection stats={stats} />
       <DanziaTestimonialsSection quotes={Array.isArray(testimonials) ? testimonials : []} />
+      <CorporateCollaborationsStrip />
       <GearStorefront initialProducts={products} embedded={true} />
       <FAQSection faqs={Array.isArray(faqs) ? faqs : []} />
       <DanziaCTASection />
