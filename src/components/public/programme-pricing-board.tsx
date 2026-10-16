@@ -415,11 +415,7 @@ export function ProgrammePricingBoard() {
   );
 
   const allAccessWaHref = whatsappLink(
-    `Hi Rhythmzz! I'd like to enquire about the All-Access Pass (Unlimited classes · ₹5,500/month).`,
-  );
-
-  const familyWaHref = whatsappLink(
-    `Hi Rhythmzz! I'd like to enquire about the Family Plan (Up to 3 members · ₹6,000/month).`,
+    `Hi Rhythmzz! I'd like to enquire about the All-Access Pass (Unlimited classes · ₹2,800/month).`,
   );
 
   const certificationWaHref = whatsappLink(
@@ -678,12 +674,12 @@ export function ProgrammePricingBoard() {
         </div>
       </div>
 
-      {/* ── SIBLING & SPECIAL PLANS ── */}
-      <div className="mb-8">
+      {/* ── SPECIAL & ALL-ACCESS PLANS ── */}
+      <div className="mb-14">
         <p className="text-[11px] font-extrabold uppercase tracking-[0.2em] text-neutral-900 mb-3">
-          SIBLING &amp; SPECIAL PLANS
+          SPECIAL &amp; ALL-ACCESS PLANS
         </p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Sibling Card */}
           <Link
             href={enrolHref({
@@ -716,6 +712,36 @@ export function ProgrammePricingBoard() {
             </div>
           </Link>
 
+          {/* All-Access Card */}
+          <Link
+            href={enrolHref({
+              programme: 'commercial-expressive',
+              intent: 'pay',
+              plan: 'all-access',
+              fee: 2800,
+            })}
+            className="rounded-md border border-neutral-200 bg-white hover:border-neutral-400 p-4 sm:p-5 flex items-center justify-between gap-4 transition-all shadow-xs hover:shadow-sm group cursor-pointer"
+          >
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-base">🎟️</span>
+                <span className="text-sm font-bold text-neutral-950 group-hover:text-bl transition-colors">
+                  All-Access Pass
+                </span>
+              </div>
+              <p className="text-xs text-neutral-600 font-medium mt-1">
+                Every programme, unlimited classes · Monthly
+              </p>
+            </div>
+
+            <div className="text-right shrink-0">
+              <span className="font-anton text-2xl text-neutral-950 block leading-tight">
+                ₹2,800
+              </span>
+              <span className="text-[11px] text-neutral-600 font-bold">/month</span>
+            </div>
+          </Link>
+
           {/* Annual Card */}
           <Link
             href={enrolHref({
@@ -743,76 +769,8 @@ export function ProgrammePricingBoard() {
                 ₹18,000
               </span>
               <span className="text-[10px] font-extrabold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 inline-block mt-0.5">
-                Save ₹6,000 vs monthly
+                Save ₹6,000
               </span>
-            </div>
-          </Link>
-        </div>
-      </div>
-
-      {/* ── ALL-ACCESS & FAMILY PLANS ── */}
-      <div className="mb-14">
-        <p className="text-[11px] font-extrabold uppercase tracking-[0.2em] text-neutral-900 mb-3">
-          ALL-ACCESS &amp; FAMILY PLANS
-        </p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {/* All-Access */}
-          <Link
-            href={enrolHref({
-              programme: 'commercial-expressive',
-              intent: 'pay',
-              plan: 'all-access',
-              fee: 5500,
-            })}
-            className="rounded-md border border-neutral-200 bg-white hover:border-neutral-400 p-4 sm:p-5 flex items-center justify-between gap-4 transition-all shadow-xs hover:shadow-sm group cursor-pointer"
-          >
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="text-base">🎟️</span>
-                <span className="text-sm font-bold text-neutral-950 group-hover:text-bl transition-colors">
-                  All-Access Pass
-                </span>
-              </div>
-              <p className="text-xs text-neutral-600 font-medium mt-1">
-                Every programme, unlimited classes · Monthly
-              </p>
-            </div>
-
-            <div className="text-right shrink-0">
-              <span className="font-anton text-2xl text-neutral-950 block leading-tight">
-                ₹5,500
-              </span>
-              <span className="text-[11px] text-neutral-600 font-bold">/month</span>
-            </div>
-          </Link>
-
-          {/* Family Plan */}
-          <Link
-            href={enrolHref({
-              programme: 'commercial-expressive',
-              intent: 'pay',
-              plan: 'family',
-              fee: 6000,
-            })}
-            className="rounded-md border border-neutral-200 bg-white hover:border-neutral-400 p-4 sm:p-5 flex items-center justify-between gap-4 transition-all shadow-xs hover:shadow-sm group cursor-pointer"
-          >
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="text-base">👨‍👩‍👦‍👦</span>
-                <span className="text-sm font-bold text-neutral-950 group-hover:text-bl transition-colors">
-                  Family Plan
-                </span>
-              </div>
-              <p className="text-xs text-neutral-600 font-medium mt-1">
-                Up to 3 family members · Any programmes · Monthly
-              </p>
-            </div>
-
-            <div className="text-right shrink-0">
-              <span className="font-anton text-2xl text-neutral-950 block leading-tight">
-                ₹6,000
-              </span>
-              <span className="text-[11px] text-neutral-600 font-bold">/month</span>
             </div>
           </Link>
         </div>

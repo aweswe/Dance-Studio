@@ -99,6 +99,10 @@ function computeProgrammeFee(
   const slug = prog?.slug || '';
   const name = prog?.name?.toLowerCase() || '';
 
+  // Special Studio Plans
+  if (planType === 'all-access') return 2800;
+  if (planType === 'sibling') return 3500;
+
   // 1. Kids Dance
   if (slug === 'kids-dance' || slug.includes('kids') || name.includes('kids')) {
     if (planType === 'monthly') return 2000;
