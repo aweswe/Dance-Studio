@@ -27,7 +27,7 @@ import { BrandLogo } from '@/components/shared/brand-logo';
 import { createClient } from '@/lib/supabase/client';
 
 const navActionButton =
-  'inline-flex items-center justify-center gap-1.5 box-border h-11 min-h-[44px] py-0 px-4 min-w-[9.75rem] rounded-md text-[10px] font-bold uppercase tracking-[0.1em] transition-colors active:scale-[0.98] touch-manipulation whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl focus-visible:ring-offset-2 focus-visible:ring-offset-canvas';
+  'inline-flex items-center justify-center gap-1.5 box-border h-11 min-h-[44px] py-0 px-3 xl:px-4 lg:min-w-[7.5rem] xl:min-w-[9.75rem] rounded-md text-[10px] font-bold uppercase tracking-[0.1em] transition-colors active:scale-[0.98] touch-manipulation whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl focus-visible:ring-offset-2 focus-visible:ring-offset-canvas';
 
 /** Login — resting state uses subtle surface border and hover fill */
 const navLoginButton = cn(
@@ -75,7 +75,6 @@ const DISCOVER_GROUPS: { label: string; links: NavLink[] }[] = [
       { name: 'About', href: ROUTES.about, hint: 'Our story & team' },
       { name: 'Gear Store', href: ROUTES.gear, hint: 'Official studio dancewear' },
       { name: 'Gallery', href: ROUTES.gallery, hint: 'Stage & studio archive' },
-      { name: 'Teach With Us', href: '/teach-with-us', hint: 'Join our faculty roster' },
       { name: 'Blog', href: ROUTES.blog, hint: 'News & stories' },
     ],
   },
@@ -495,7 +494,7 @@ export function Nav() {
       )}
     >
       <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-6 md:px-10">
-        <div className="px-0 sm:px-10 lg:px-12 xl:px-14 flex items-center justify-between lg:grid lg:grid-cols-[auto_minmax(0,1fr)_auto] lg:items-center lg:gap-x-3 xl:gap-x-5">
+        <div className="px-0 sm:px-10 lg:px-6 xl:px-12 flex items-center justify-between lg:grid lg:grid-cols-[auto_minmax(0,1fr)_auto] lg:items-center lg:gap-x-3 xl:gap-x-5">
           <Link
             href={ROUTES.home}
             className="group flex items-center min-w-0 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl shrink-0 lg:col-start-1 touch-manipulation"
@@ -504,7 +503,7 @@ export function Nav() {
             <BrandLogo priority className="h-11 sm:h-12 w-auto object-contain group-hover:opacity-90 transition-opacity" />
           </Link>
 
-          <nav className="hidden lg:flex items-center justify-center gap-5 xl:gap-6 min-w-0" aria-label="Main navigation">
+          <nav className="hidden lg:flex items-center justify-center gap-3.5 xl:gap-5 2xl:gap-6 min-w-0" aria-label="Main navigation">
             {/* Programmes dropdown */}
             <div className="relative shrink-0" ref={programmesRef}>
               <button
@@ -551,6 +550,24 @@ export function Nav() {
               )}
               {discoverOpen && <DiscoverPanel isActive={isActive} onNavigate={() => setDiscoverOpen(false)} />}
             </div>
+
+            {/* Teach with us (highlighted nav menu item after Discover) */}
+            <Link
+              href={ROUTES.teachWithUs}
+              prefetch
+              className={cn(
+                'relative inline-flex items-center gap-1.5 whitespace-nowrap text-[11px] font-bold uppercase tracking-[0.1em] py-1 px-2.5 xl:px-3 rounded-md transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl shrink-0',
+                isActive(ROUTES.teachWithUs)
+                  ? 'bg-bl text-slate-950 font-black shadow-xs'
+                  : 'text-bl bg-bl/10 hover:bg-bl/20 border border-bl/30 hover:border-bl/60',
+              )}
+            >
+              <span>Teach with us</span>
+              <span className="relative flex h-1.5 w-1.5 shrink-0" aria-hidden>
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-bl opacity-75" />
+                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-bl" />
+              </span>
+            </Link>
           </nav>
 
           <div className="hidden lg:flex items-center justify-end gap-3 shrink-0">
@@ -634,15 +651,44 @@ export function Nav() {
                 aria-label="Mobile navigation"
               >
                 {MOBILE_SECTIONS.map((section, i) => (
-                  <MobileSection
-                    key={section.id}
-                    title={section.title}
-                    links={section.links}
-                    pathname={pathname}
-                    isActive={isActive}
-                    onNavigate={closeMobile}
-                    icon={i === 0 ? BookOpen : mobileSectionIcons[i - 1]}
-                  />
+                  <div key={section.id}>
+                    <MobileSection
+                      title={section.title}
+                      links={section.links}
+                      pathname={pathname}
+                      isActive={isActive}
+                      onNavigate={closeMobile}
+                      icon={i === 0 ? BookOpen : mobileSectionIcons[i - 1]}
+                    />
+                    {section.id === 'discover' && (
+                      <div className="p-3 bg-blk border-b border-white/10">
+                        <Link
+                          href={ROUTES.teachWithUs}
+                          onClick={closeMobile}
+                          className={cn(
+                            'flex items-center justify-between gap-3 px-4 py-3 rounded-md border border-bl/40 bg-bl/10 hover:bg-bl/20 transition-all text-white touch-manipulation',
+                            isActive(ROUTES.teachWithUs) && 'bg-bl/25 border-bl text-white',
+                          )}
+                        >
+                          <div className="flex items-center gap-2.5 min-w-0">
+                            <span className="relative flex h-2 w-2 shrink-0" aria-hidden>
+                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-bl opacity-75" />
+                              <span className="relative inline-flex rounded-full h-2 w-2 bg-bl" />
+                            </span>
+                            <div className="min-w-0">
+                              <span className="block font-bold text-sm uppercase tracking-wider text-bl">
+                                Teach with us
+                              </span>
+                              <span className="block text-xs text-white/60 truncate">
+                                Join our faculty &amp; choreography roster
+                              </span>
+                            </div>
+                          </div>
+                          <ArrowRight size={16} className="text-bl shrink-0" />
+                        </Link>
+                      </div>
+                    )}
+                  </div>
                 ))}
               </nav>
 

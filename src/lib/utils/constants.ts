@@ -106,6 +106,7 @@ export const ROUTES = {
   refund: "/refund",
   shipping: "/shipping",
   gear: "/gear",
+  teachWithUs: "/teach-with-us",
   // Auth
   login: "/login",
   adminLogin: "/admin-login",
