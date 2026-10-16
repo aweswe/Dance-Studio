@@ -107,6 +107,7 @@ export const ROUTES = {
   shipping: "/shipping",
   gear: "/gear",
   teachWithUs: "/teach-with-us",
+  guestTrainers: "/guest-trainers",
   // Auth
   login: "/login",
   adminLogin: "/admin-login",

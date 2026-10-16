@@ -99,6 +99,100 @@ export async function toggleVisibility(id: string) {
   return { success: true };
 }
 
+export async function getGalleryHiddenArchiveIds(): Promise<string[]> {
+  try {
+    const admin = createAdminSupabase();
+    const { data } = await admin
+      .from('site_content')
+      .select('content_value')
+      .eq('content_key', 'gallery_hidden_archive_ids')
+      .maybeSingle();
+
+    if (data?.content_value && Array.isArray((data.content_value as any).ids)) {
+      return (data.content_value as any).ids as string[];
+    }
+  } catch (err) {
+    console.warn('Error fetching hidden archive IDs:', err);
+  }
+  return [];
+}
+
+export async function deleteGalleryItem(id: string) {
+  const supabase = await createServerSupabase();
+  if (!(await isAdmin(supabase))) return { success: false, error: 'Not authorized' };
+
+  const admin = createAdminSupabase();
+
+  // 1. Check if item exists in 'gallery' table
+  const { data: item } = await admin
+    .from('gallery')
+    .select('id, url')
+    .eq('id', id)
+    .maybeSingle();
+
+  if (item) {
+    return deleteMedia(id);
+  }
+
+  // 2. Otherwise it's an archive item — store in site_content hidden array
+  try {
+    const currentHidden = await getGalleryHiddenArchiveIds();
+    if (!currentHidden.includes(id)) {
+      const updatedHidden = [...currentHidden, id];
+      await admin
+        .from('site_content')
+        .upsert(
+          {
+            content_key: 'gallery_hidden_archive_ids',
+            content_value: { ids: updatedHidden },
+          },
+          { onConflict: 'content_key' }
+        );
+    }
+
+    revalidatePath('/admin/gallery');
+    revalidatePath('/gallery');
+    revalidatePath('/');
+    return { success: true };
+  } catch (e: any) {
+    return { success: false, error: e?.message || 'Failed to delete photo' };
+  }
+}
+
+export async function saveGalleryOrder(orderedIds: string[]) {
+  const supabase = await createServerSupabase();
+  if (!(await isAdmin(supabase))) return { success: false, error: 'Not authorized' };
+
+  const admin = createAdminSupabase();
+
+  // Update DB items if any
+  for (let i = 0; i < orderedIds.length; i++) {
+    const id = orderedIds[i];
+    const sortOrder = orderedIds.length - i;
+    await admin.from('gallery').update({ sort_order: sortOrder }).eq('id', id);
+  }
+
+  // Save the complete order in site_content
+  try {
+    await admin
+      .from('site_content')
+      .upsert(
+        {
+          content_key: 'gallery_custom_order',
+          content_value: { order: orderedIds },
+        },
+        { onConflict: 'content_key' }
+      );
+  } catch (e) {
+    console.warn('Error saving custom order:', e);
+  }
+
+  revalidatePath('/admin/gallery');
+  revalidatePath('/gallery');
+  revalidatePath('/');
+  return { success: true };
+}
+
 export async function deleteMedia(id: string) {
   const supabase = await createServerSupabase();
   if (!(await isAdmin(supabase))) return { success: false, error: 'Not authorized' };

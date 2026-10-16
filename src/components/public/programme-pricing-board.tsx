@@ -1359,7 +1359,7 @@ export function ProgrammePricingBoard() {
         </div>
         <div className="flex items-center gap-2">
           <Users className="w-4 h-4 text-bl" />
-          <span>5,000+ students trained</span>
+          <span>3,000+ students trained</span>
         </div>
         <div className="flex items-center gap-2">
           <MapPin className="w-4 h-4 text-rose-600" />

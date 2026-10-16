@@ -17,8 +17,9 @@ import { ReelsStrip } from '@/components/public/reels-strip';
 import { getHomepageReels } from '@/data/reels';
 import { CorporateCollaborationsStrip } from '@/components/public/corporate-collaborations-strip';
 import { FAQSection } from '@/components/public/faq-section';
-import { GearStorefront } from '@/components/public/gear-storefront';
+import { HomepageEcomSection } from '@/components/public/homepage-ecom-section';
 import { getProducts } from '@/data/products';
+import { getStorefrontStatus } from '@/actions/products';
 import { StructuredData } from '@/components/shared/structured-data';
 
 export const metadata: Metadata = {
@@ -30,12 +31,13 @@ export const revalidate = 3600;
 export default async function HomePage() {
   const { getFAQs, getTestimonials } = await import('@/data/content');
   const { getStats } = await import('@/data/content');
-  const [faqs, testimonials, reels, stats, products] = await Promise.all([
+  const [faqs, testimonials, reels, stats, products, storefrontMode] = await Promise.all([
     getFAQs(),
     getTestimonials(),
     getHomepageReels(),
     getStats(),
     getProducts(),
+    getStorefrontStatus(),
   ]);
 
   return (
@@ -52,7 +54,7 @@ export default async function HomePage() {
       <HomepageAboutSection stats={stats} />
       <DanziaTestimonialsSection quotes={Array.isArray(testimonials) ? testimonials : []} />
       <CorporateCollaborationsStrip />
-      <GearStorefront initialProducts={products} embedded={true} />
+      <HomepageEcomSection mode={storefrontMode} products={products} />
       <FAQSection faqs={Array.isArray(faqs) ? faqs : []} />
       <DanziaCTASection />
       <ReelsStrip reels={reels} />

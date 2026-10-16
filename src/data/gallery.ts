@@ -606,6 +606,23 @@ export async function getGalleryImages(limit = 60) {
   try {
     const supabase = getPublicSupabase();
     if (!supabase) throw new Error('no public client');
+
+    let hiddenIds: string[] = [];
+    try {
+      const { data: hiddenData } = await supabase
+        .from('site_content')
+        .select('content_value')
+        .eq('content_key', 'gallery_hidden_archive_ids')
+        .maybeSingle();
+      if (hiddenData?.content_value && Array.isArray((hiddenData.content_value as any).ids)) {
+        hiddenIds = (hiddenData.content_value as any).ids;
+      }
+    } catch {}
+
+    const visibleArchive = ALL_AUTHENTIC_GALLERY_IMAGES.filter(
+      (img) => !hiddenIds.includes(img.id)
+    );
+
     const { data } = await supabase
       .from('gallery')
       .select('id, url, thumbnail_url, type, title, tags, is_visible, sort_order')
@@ -626,8 +643,9 @@ export async function getGalleryImages(limit = 60) {
         sort_order: img.sort_order,
       }));
       // Put uploaded photos at the beginning, followed by authentic academy images
-      return [...dbImages, ...ALL_AUTHENTIC_GALLERY_IMAGES].slice(0, limit);
+      return [...dbImages, ...visibleArchive].slice(0, limit);
     }
+    return visibleArchive.slice(0, limit);
   } catch {}
   return ALL_AUTHENTIC_GALLERY_IMAGES.slice(0, limit);
 }

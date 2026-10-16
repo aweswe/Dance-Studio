@@ -234,3 +234,64 @@ export async function deleteProduct(id: string): Promise<{ success: boolean; err
 
   return { success: true };
 }
+
+export type StorefrontMode = 'coming_soon' | 'live';
+
+/**
+ * Get current storefront display mode (coming_soon vs live).
+ */
+export async function getStorefrontStatus(): Promise<StorefrontMode> {
+  try {
+    const admin = createAdminSupabase();
+    const { data } = await admin
+      .from('site_content')
+      .select('content_value')
+      .eq('content_key', 'storefront_status')
+      .maybeSingle();
+
+    if (data?.content_value && typeof (data.content_value as any).mode === 'string') {
+      return (data.content_value as any).mode as StorefrontMode;
+    }
+  } catch (err) {
+    console.warn('Error fetching storefront status:', err);
+  }
+  return 'coming_soon';
+}
+
+/**
+ * Set storefront display mode (coming_soon vs live) and revalidate public layout.
+ */
+export async function setStorefrontStatus(
+  mode: StorefrontMode
+): Promise<{ success: boolean; error?: string }> {
+  const supabase = await createServerSupabase();
+  if (!(await isAdmin(supabase))) {
+    return { success: false, error: 'Unauthorized: Admin access required' };
+  }
+
+  try {
+    const admin = createAdminSupabase();
+    const { error } = await admin
+      .from('site_content')
+      .upsert(
+        {
+          content_key: 'storefront_status',
+          content_value: { mode, updated_at: new Date().toISOString() },
+        },
+        { onConflict: 'content_key' }
+      );
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+
+    revalidatePath('/', 'layout');
+    revalidatePath('/');
+    revalidatePath('/gear');
+    revalidatePath('/admin/gear');
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err?.message || 'Failed to update storefront mode' };
+  }
+}
+

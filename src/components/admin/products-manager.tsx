@@ -18,19 +18,43 @@ import {
   Upload,
 } from 'lucide-react';
 import { type Product, MAX_CATALOG_PRODUCTS, buildWhatsAppOrderLink, resolveProductImageUrl } from '@/data/products';
-import { updateProduct, createProduct, toggleProductActive, type ProductInput } from '@/actions/products';
+import { updateProduct, createProduct, toggleProductActive, setStorefrontStatus, type ProductInput, type StorefrontMode } from '@/actions/products';
 import { cn } from '@/lib/utils/cn';
 
 interface ProductsManagerProps {
   initialProducts: Product[];
+  initialStorefrontMode?: StorefrontMode;
 }
 
-export function ProductsManager({ initialProducts }: ProductsManagerProps) {
+export function ProductsManager({ initialProducts, initialStorefrontMode = 'coming_soon' }: ProductsManagerProps) {
   const [products, setProducts] = useState<Product[]>(initialProducts);
+  const [storefrontMode, setStorefrontMode] = useState<StorefrontMode>(initialStorefrontMode);
+  const [isTogglingMode, setIsTogglingMode] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [isCreating, setIsCreating] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [statusMessage, setStatusMessage] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
+
+  const handleToggleStorefrontMode = async (mode: StorefrontMode) => {
+    setIsTogglingMode(true);
+    setStatusMessage(null);
+    try {
+      const res = await setStorefrontStatus(mode);
+      if (res.success) {
+        setStorefrontMode(mode);
+        setStatusMessage({
+          text: `Storefront mode updated to "${mode === 'coming_soon' ? 'Coming Soon' : 'Live Store'}". Changes applied to homepage and header.`,
+          type: 'success',
+        });
+      } else {
+        setStatusMessage({ text: res.error || 'Failed to update storefront mode', type: 'error' });
+      }
+    } catch {
+      setStatusMessage({ text: 'Error updating storefront mode', type: 'error' });
+    } finally {
+      setIsTogglingMode(false);
+    }
+  };
 
   // Form states for edit/create
   const [formData, setFormData] = useState<{
@@ -290,6 +314,61 @@ export function ProductsManager({ initialProducts }: ProductsManagerProps) {
             <span>Live Store</span>
             <ExternalLink size={13} />
           </Link>
+        </div>
+      </div>
+
+      {/* ── STOREFRONT DISPLAY MODE SWITCHER (COMING SOON vs LIVE PRODUCTS) ── */}
+      <div className="p-4 sm:p-5 rounded-md border-2 border-line bg-surface flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-2xs">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2 flex-wrap">
+            <h3 className="text-sm font-bold uppercase tracking-wider text-ink font-anton">
+              Storefront Display Mode
+            </h3>
+            <span
+              className={cn(
+                'text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider border',
+                storefrontMode === 'coming_soon'
+                  ? 'bg-amber-500/10 text-amber-600 border-amber-500/30'
+                  : 'bg-emerald-500/10 text-emerald-600 border-emerald-500/30'
+              )}
+            >
+              {storefrontMode === 'coming_soon' ? '● Coming Soon Mode' : '● Live Products Store'}
+            </span>
+          </div>
+          <p className="text-xs text-ink-3 max-w-xl leading-relaxed">
+            {storefrontMode === 'coming_soon'
+              ? 'Homepage displays the minimalist "Coming Soon" drop teaser, and the top navigation shows the "SOON" badge.'
+              : 'Storefront is live: Homepage displays product cards with prices, and top header links directly to the full catalog.'}
+          </p>
+        </div>
+
+        <div className="inline-flex items-center p-1 rounded-md bg-canvas border border-line shrink-0">
+          <button
+            type="button"
+            onClick={() => handleToggleStorefrontMode('coming_soon')}
+            disabled={isTogglingMode}
+            className={cn(
+              'px-4 py-2 rounded text-xs font-mono font-bold uppercase tracking-wider transition-all cursor-pointer',
+              storefrontMode === 'coming_soon'
+                ? 'bg-slate-950 text-white shadow-xs'
+                : 'text-ink-2 hover:text-ink'
+            )}
+          >
+            Coming Soon
+          </button>
+          <button
+            type="button"
+            onClick={() => handleToggleStorefrontMode('live')}
+            disabled={isTogglingMode}
+            className={cn(
+              'px-4 py-2 rounded text-xs font-mono font-bold uppercase tracking-wider transition-all cursor-pointer',
+              storefrontMode === 'live'
+                ? 'bg-bl text-slate-950 font-bold shadow-xs'
+                : 'text-ink-2 hover:text-ink'
+            )}
+          >
+            Show All Products
+          </button>
         </div>
       </div>
 

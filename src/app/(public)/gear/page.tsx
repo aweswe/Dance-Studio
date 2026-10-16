@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { SITE_URL, ACADEMY } from '@/lib/utils/constants';
 import { getProducts } from '@/data/products';
+import { getStorefrontStatus } from '@/actions/products';
 import { GearStorefront } from '@/components/public/gear-storefront';
 import { StructuredData } from '@/components/shared/structured-data';
 
@@ -21,12 +22,15 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic';
 
 export default async function GearPage() {
-  const products = await getProducts();
+  const [products, storefrontMode] = await Promise.all([
+    getProducts(),
+    getStorefrontStatus(),
+  ]);
 
   return (
     <div className="relative bg-canvas text-ink min-h-screen">
       <StructuredData />
-      <GearStorefront initialProducts={products} />
+      <GearStorefront initialProducts={products} storefrontMode={storefrontMode} />
     </div>
   );
 }

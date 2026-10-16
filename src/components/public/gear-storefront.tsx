@@ -2,13 +2,16 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { Check, MessageCircle, ShoppingBag, ShieldCheck, Truck, RefreshCw, X } from 'lucide-react';
+import Link from 'next/link';
+import { Check, MessageCircle, ShoppingBag, ShieldCheck, Truck, RefreshCw, X, ArrowUpRight, Clock, Sparkles } from 'lucide-react';
 import { type Product, type ProductCategory, buildWhatsAppOrderLink } from '@/data/products';
+import { whatsappLink } from '@/lib/utils/format';
 import { cn } from '@/lib/utils/cn';
 
 interface GearStorefrontProps {
   initialProducts: Product[];
   embedded?: boolean;
+  storefrontMode?: 'coming_soon' | 'live';
 }
 
 const CATEGORIES: { id: ProductCategory; label: string }[] = [
@@ -47,7 +50,105 @@ function ProductCardImage({
   );
 }
 
-export function GearStorefront({ initialProducts, embedded = false }: GearStorefrontProps) {
+export function GearStorefront({
+  initialProducts,
+  embedded = false,
+  storefrontMode = 'live',
+}: GearStorefrontProps) {
+  if (storefrontMode === 'coming_soon') {
+    const notifyWaHref = whatsappLink(
+      'Hi Rhythmzz Academy, please notify me when the official studio gear and merchandise drop is live.'
+    );
+
+    return (
+      <section id="gear" className={cn('relative bg-canvas text-ink py-16 sm:py-24', embedded && 'pt-12 sm:pt-16')}>
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="relative rounded-xl border border-line bg-surface p-8 sm:p-14 md:p-20 text-center shadow-xs overflow-hidden">
+            <div
+              className="absolute inset-0 pointer-events-none opacity-40 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-bl/15 via-transparent to-transparent"
+              aria-hidden="true"
+            />
+            <div className="relative z-10 max-w-3xl mx-auto space-y-6">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-mono font-bold uppercase tracking-wider bg-bl/10 text-bl border border-bl/25">
+                <ShoppingBag size={13} strokeWidth={2.2} />
+                <span>Rhythmzz Studio Merch · Collection 01</span>
+              </div>
+
+              <div className="space-y-2">
+                <p className="text-xs sm:text-sm font-mono font-bold uppercase tracking-widest text-ink-3">
+                  Rhythmzz Academy of Dance
+                </p>
+                <h1 className="font-anton text-4xl sm:text-6xl md:text-7xl uppercase tracking-tight text-ink leading-[0.95]">
+                  OFFICIAL GEAR <span className="text-bl">COMING SOON</span>
+                </h1>
+              </div>
+
+              <p className="text-sm sm:text-base md:text-lg text-ink-2 max-w-2xl mx-auto leading-relaxed font-body">
+                Our custom line of studio rehearsal dancewear, performance layers, grip socks, and classical stage accessories is currently in production. Designed for daily rehearsals, classes, and stage showcases.
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-left max-w-2xl mx-auto pt-2">
+                {[
+                  {
+                    title: 'Rehearsal Hoodies & Tees',
+                    desc: 'Breathable, movement-friendly cotton-poly blends with embroidered insignia',
+                  },
+                  {
+                    title: 'Performance Activewear',
+                    desc: 'Moisture-wicking crops, joggers, and stretch leggings for intense training',
+                  },
+                  {
+                    title: 'Dance Grip Essentials',
+                    desc: 'High-traction grip socks and protective dance accessories',
+                  },
+                  {
+                    title: 'Classical Stage Gear',
+                    desc: 'Authentic dance ghungroos, rehearsal sarees, and traditional accessories',
+                  },
+                ].map((item, idx) => (
+                  <div key={idx} className="p-4 rounded-md border border-line bg-canvas space-y-1">
+                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-bl">
+                      0{idx + 1} · In Production
+                    </span>
+                    <h3 className="font-anton text-base uppercase text-ink tracking-wide">
+                      {item.title}
+                    </h3>
+                    <p className="text-xs text-ink-3 leading-relaxed">
+                      {item.desc}
+                    </p>
+                  </div>
+                ))}
+              </div>
+
+              <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
+                <a
+                  href={notifyWaHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 h-11 min-h-[44px] px-6 rounded-md font-bold text-xs uppercase tracking-wider bg-bl text-slate-950 hover:bg-bl-deep hover:text-slate-950 transition-colors shadow-xs active:scale-[0.98] w-full sm:w-auto"
+                >
+                  <span>Notify Me on WhatsApp</span>
+                  <ArrowUpRight size={15} strokeWidth={2.2} />
+                </a>
+
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center justify-center gap-2 h-11 min-h-[44px] px-6 rounded-md font-bold text-xs uppercase tracking-wider bg-canvas border border-line text-ink hover:border-ink/40 transition-colors active:scale-[0.98] w-full sm:w-auto"
+                >
+                  <span>Contact Studio Desk</span>
+                </Link>
+              </div>
+
+              <div className="pt-2 flex items-center justify-center gap-2 text-[11px] font-mono text-ink-3">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                <span>Registered students receive priority drop reservation and studio pick-up</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
   const [activeCategory, setActiveCategory] = useState<ProductCategory>('all');
   const [selectedSizes, setSelectedSizes] = useState<Record<string, string>>(() => {
     const defaults: Record<string, string> = {};

@@ -399,6 +399,52 @@ erDiagram
 
 ---
 
+### L. Hero Spotlight Chips, Universal Gallery Reordering & Deletion, E-Com Toggle, and International Guest Trainers
+
+1. **Hero Spotlight Video Chips (`src/data/hero-spotlight-videos.ts`)**:
+   * Updated the first three spotlight labels to match the client's exact production requirements:
+     1. Card 1: **`Choreography Sessions`**
+     2. Card 2: **`Workshops`**
+     3. Card 3: **`Advanced Intensive Training`**
+   * Preserved all underlying video assets, aspect ratios, sound toggle controls, and hover animations without any design degradation.
+
+2. **Universal Admin Gallery Deletion, Drag-and-Drop Reordering, and Ideal Size Guidance (`src/components/admin/gallery-manager.tsx`, `src/actions/gallery.ts`, `src/data/gallery.ts`, `src/app/admin/gallery/page.tsx`)**:
+   * **Ideal Size Guidance**: Placed a prominent, highly visible dimension guideline banner:
+     - **1920 × 1080 px (16:9 Landscape)** or **1080 × 1080 px (1:1 Square)** with WebP/JPEG under 2 MB to prevent any image cropping.
+   * **Universal Deletion Capability**: Expanded deletion beyond the initial database uploads so **ALL images** (both Supabase dynamic uploads and curated studio archive photos) can be deleted directly from the admin panel.
+     - For archive photos, deleted IDs are persisted to `site_content` under `gallery_hidden_archive_ids` via `deleteGalleryItem()`.
+     - Filtered consistently across both `/admin/gallery` and the public `/gallery` (`getGalleryImages()`).
+   * **Mouse Drag-and-Drop Reordering**: Built an interactive HTML5 drag-and-drop workflow (`onDragStart`, `onDragOver`, `onDragLeave`, `onDrop`) featuring visual grip handles, grab/grabbing cursors, scale transitions, active drop indicators, and an instant **"Save Custom Order"** server action (`saveGalleryOrder()`).
+
+3. **Student Count Standardization (`src/components/public/programme-pricing-board.tsx`)**:
+   * Replaced the remaining `5,000+ students` reference with `3,000+ students`.
+   * Repository verified: Zero occurrences of `5,000+ students`.
+
+4. **Nav Menu Hierarchy (`src/components/public/nav.tsx`)**:
+   * Renamed the classical group under the "Programs" dropdown from `"Classical Syllabus"` (dictated as "Classical Slivers") to **`"Certification-Based Classes"`**.
+
+5. **Homepage E-Commerce Section & Admin "Coming Soon" Toggle (`src/components/public/homepage-ecom-section.tsx`, `src/actions/products.ts`, `src/components/admin/products-manager.tsx`, `src/app/api/storefront-mode/route.ts`, `src/components/public/nav.tsx`, `src/app/(public)/page.tsx`, `src/components/public/gear-storefront.tsx`, `src/app/(public)/gear/page.tsx`)**:
+   * **Strict Zero-Product Coming Soon Policy**: As explicitly directed, "Coming Soon" means **zero products at all** — no product cards, no mock prices, and no placeholder product images.
+   * **Elevated Minimal Design**: Rendered as an intentional, high-craft editorial teaser with high-contrast typography, custom studio drop pill (`Official Studio Merch · Drop 01`), upcoming collection chips (`Rehearsal Hoodies`, `Performance Activewear`, `Dance Grip Socks`, `Classical Stage Gear`), and a direct WhatsApp drop alert button (`h-11 min-h-[44px] px-6 rounded-md bg-bl text-slate-950`).
+   * **Full Storefront Parity**: Both the homepage ecom section and `/gear` storefront respect the display mode. In "Coming Soon" mode, zero products are leaked or rendered.
+   * **Admin Display Mode Switcher**: In `/admin/gear` (`ProductsManager`), administrators can toggle between:
+     - **Coming Soon Mode**: Clean teaser with zero products across `/` and `/gear`, plus `SOON` nav badge.
+     - **Live Catalog Mode**: Direct live product catalog showcase with prices, stock tags, and cart modals across both homepage and `/gear`.
+   * **Header Badge Integration**: When in "Coming Soon" mode, the top header navigation automatically appends an amber `SOON` pill badge to the **Gear** navigation link.
+
+6. **International Guest Trainers Showcase (`src/app/(public)/guest-trainers/page.tsx`, `src/components/public/footer.tsx`, `public/images/guest-trainers/`)**:
+   * Sourced genuine faculty profiles from the official website (`https://rhythmzzdance.com/about-us/guest-trainers/`):
+     - **Kay Crook** (United Kingdom · Contemporary Choreographer, Chhaya Collective artistic director)
+     - **Ajeesh Balakrishnan** (India / International · Contemporary Movement Specialist, Natya & Attakkalari alumnus)
+     - **Atalya Baumer** (Israel · Gaga Movement & Improvisation Artist, Jerusalem Academy of Music & Dance)
+     - **Maria Schneiders** (Germany · Urban Contemporary & Floorwork Specialist, Folkwang University alumna)
+   * Stored authentic high-resolution portraits locally in `public/images/guest-trainers/`.
+   * Formatted as crisp, editorial bios with country flags/badges, credentials, workshop styles, and direct WhatsApp masterclass reservation CTAs.
+   * Linked permanently in the footer under "About Us".
+   * Adheres strictly to design system standards: 44px minimum touch targets (`h-11 min-h-[44px]`), concentric `rounded-md` radius, and high-contrast typography with zero AI slop.
+
+---
+
 ## 4. Verification, Testing & Quality Audit Checklist
 
 * [x] **Vitest Unit & Integration Tests**: 5 test suites, 42 tests, **100% passing**.
@@ -408,11 +454,13 @@ erDiagram
   - `src/lib/products.test.ts` (6 tests)
   - `src/lib/validators/validators.test.ts` (13 tests)
 * [x] **TypeScript Strict Typing**: `npx tsc --noEmit` returns **0 errors**.
-* [x] **In-Place Batch & Programme Editing**: Verified edit modal, form binding, server actions, and cache revalidation.
-* [x] **Gallery Multi-Layer Overview**: Verified all 60 items visible in admin with tabbed filtering.
-* [x] **Pricing Ascending Sorting**: Verified Yoga (₹1,000) $\rightarrow$ Zumba (₹1,500) $\rightarrow$ Sibling (₹3,500) $\rightarrow$ Annual (₹18,000).
-* [x] **Age Bracket Universal Accuracy**: Kids = `3.5 – 12 years`, Adults = `13+ years`.
-* [x] **Zero Trainer Names**: Verified zero trainer names in public schedules, syllabus, certification tracks, and upcoming class cards.
-* [x] **Supabase Quota Safety**: Zero video uploads to Supabase storage; reels rendered via Instagram iframe URLs.
+* [x] **Spotlight Labels**: Card 1 `Choreography Sessions`, Card 2 `Workshops`, Card 3 `Advanced Intensive Training`.
+* [x] **Admin Gallery Size Banner**: Displaying `1920 × 1080 px` / `1080 × 1080 px` guidance.
+* [x] **Universal Gallery Deletion & Drag Reordering**: DB uploads and studio archive items can be deleted and reordered via mouse drag.
+* [x] **Student Count**: 3,000+ students used across all pages.
+* [x] **Nav Dropdown**: "Certification-Based Classes" label active.
+* [x] **Storefront Mode**: Admin toggle between "Coming Soon" and "Live", with nav badge and homepage dynamic rendering.
+* [x] **International Guest Trainers**: Live at `/guest-trainers`, linked in footer, authentic local images, reduced editorial bios.
+
 
 

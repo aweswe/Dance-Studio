@@ -60,7 +60,7 @@ const PROGRAMMES_GROUPS: { label: string; links: NavLink[] }[] = [
     ],
   },
   {
-    label: 'Classical Syllabus',
+    label: 'Certification-Based Classes',
     links: [
       { name: 'Kuchipudi', href: ROUTES.syllabusKuchipudi, hint: 'Level-wise curriculum' },
       { name: 'Kathak', href: ROUTES.syllabusKathak, hint: 'Level-wise curriculum' },
@@ -119,11 +119,13 @@ function NavLinkItem({
   link,
   active,
   className,
+  badge,
   onClick,
 }: {
   link: NavLink;
   active: boolean;
   className?: string;
+  badge?: string;
   onClick?: () => void;
 }) {
   return (
@@ -132,12 +134,17 @@ function NavLinkItem({
       prefetch
       onClick={onClick}
       className={cn(
-        'whitespace-nowrap text-[11px] font-semibold uppercase tracking-[0.1em] transition-colors relative py-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl rounded-md',
+        'inline-flex items-center gap-1.5 whitespace-nowrap text-[11px] font-semibold uppercase tracking-[0.1em] transition-colors relative py-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl rounded-md',
         active ? 'text-ink font-bold' : 'text-ink-2 hover:text-bl',
         className,
       )}
     >
-      {link.name}
+      <span>{link.name}</span>
+      {badge && (
+        <span className="text-[8px] font-mono px-1.5 py-0.2 rounded-full bg-amber-500/15 text-amber-600 font-bold border border-amber-500/30 tracking-wider">
+          {badge}
+        </span>
+      )}
       {active && (
         <span className="absolute left-0 right-0 -bottom-0.5 h-[2px] bg-bl rounded-full" aria-hidden />
       )}
@@ -360,6 +367,7 @@ export function Nav() {
   const [programmesOpen, setProgrammesOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [authInfo, setAuthInfo] = useState<AuthInfo | null>(null);
+  const [storefrontMode, setStorefrontMode] = useState<'coming_soon' | 'live'>('coming_soon');
   const mounted = useSyncExternalStore(() => () => {}, () => true, () => false);
   const pathname = usePathname();
   const [lastPathname, setLastPathname] = useState(pathname);
@@ -367,6 +375,15 @@ export function Nav() {
   const programmesRef = useRef<HTMLDivElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const scrollLockRef = useRef(0);
+
+  useEffect(() => {
+    fetch('/api/storefront-mode')
+      .then((r) => r.json())
+      .then((d) => {
+        if (d?.mode) setStorefrontMode(d.mode);
+      })
+      .catch(() => {});
+  }, []);
 
   if (lastPathname !== pathname) {
     setLastPathname(pathname);
@@ -525,9 +542,14 @@ export function Nav() {
               {programmesOpen && <ProgrammesPanel isActive={isActive} onNavigate={() => setProgrammesOpen(false)} />}
             </div>
 
-            {/* Remaining primary links (Schedule, Studio Rental, Contact) */}
+            {/* Remaining primary links (Schedule, Gear, Studio Rental, Contact) */}
             {PRIMARY_LINKS.filter((l) => l.name !== 'Programmes').map((link) => (
-              <NavLinkItem key={link.name} link={link} active={isActive(link.href)} />
+              <NavLinkItem
+                key={link.name}
+                link={link}
+                active={isActive(link.href)}
+                badge={link.name === 'Gear' && storefrontMode === 'coming_soon' ? 'SOON' : undefined}
+              />
             ))}
 
             {/* Discover dropdown */}

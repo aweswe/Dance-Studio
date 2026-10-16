@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { getAdminProducts } from '@/actions/products';
+import { getAdminProducts, getStorefrontStatus } from '@/actions/products';
 import { ProductsManager } from '@/components/admin/products-manager';
 import { DEFAULT_PRODUCTS } from '@/data/products';
 
@@ -10,12 +10,18 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic';
 
 export default async function AdminGearPage() {
-  const res = await getAdminProducts();
+  const [res, storefrontMode] = await Promise.all([
+    getAdminProducts(),
+    getStorefrontStatus(),
+  ]);
   const products = res.products && res.products.length > 0 ? res.products : DEFAULT_PRODUCTS;
 
   return (
     <div className="space-y-6">
-      <ProductsManager initialProducts={products} />
+      <ProductsManager
+        initialProducts={products}
+        initialStorefrontMode={storefrontMode}
+      />
     </div>
   );
 }

@@ -3,22 +3,30 @@ import { GalleryManager } from '@/components/admin/gallery-manager';
 import { Skeleton } from '@/components/ui/skeleton';
 import { createAdminSupabase } from '@/lib/supabase/server';
 import { ALL_AUTHENTIC_GALLERY_IMAGES } from '@/data/gallery';
+import { getGalleryHiddenArchiveIds } from '@/actions/gallery';
 
 export const dynamic = 'force-dynamic';
 
 export default async function GalleryPage() {
   const supabase = createAdminSupabase();
-  const { data: items } = await supabase
-    .from('gallery')
-    .select('*')
-    .order('sort_order', { ascending: false });
+  const [{ data: items }, hiddenArchiveIds] = await Promise.all([
+    supabase
+      .from('gallery')
+      .select('*')
+      .order('sort_order', { ascending: false }),
+    getGalleryHiddenArchiveIds(),
+  ]);
+
+  const visibleArchive = ALL_AUTHENTIC_GALLERY_IMAGES.filter(
+    (item) => !hiddenArchiveIds.includes(item.id)
+  );
 
   return (
     <div className="space-y-6">
       <div>
         <h2 className="font-display text-3xl text-ink tracking-wide">Gallery</h2>
         <p className="text-ink-2 font-body text-sm mt-1">
-          Upload, manage, and view all website photos across your database and curated studio archives.
+          Upload, manage, and rearrange all website photos. Drag photos by mouse to change presentation order.
         </p>
       </div>
 
@@ -31,7 +39,7 @@ export default async function GalleryPage() {
       }>
         <GalleryManager 
           initialItems={(items ?? []) as any[]} 
-          archiveItems={ALL_AUTHENTIC_GALLERY_IMAGES}
+          archiveItems={visibleArchive}
         />
       </Suspense>
     </div>

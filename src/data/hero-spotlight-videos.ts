@@ -2,19 +2,19 @@
 export const HERO_SPOTLIGHT_VIDEOS = [
   {
     id: 'spotlight-1',
-    label: 'Bollywood batch',
+    label: 'Choreography Sessions',
     poster: '/images/srilanka-tour/raasta-stage-2.jpg',
     src: '/videos/spotlight-1.mp4',
   },
   {
     id: 'spotlight-2',
-    label: 'Commercial choreo',
+    label: 'Workshops',
     poster: '/images/studio-training/studio-leaps.jpg',
     src: '/videos/spotlight-2.mp4',
   },
   {
     id: 'spotlight-3',
-    label: 'Canada workshop',
+    label: 'Advanced Intensive Training',
     poster: '/images/canada-workshop-poster.jpg',
     src: '/videos/spotlight-3.mp4',
   },
