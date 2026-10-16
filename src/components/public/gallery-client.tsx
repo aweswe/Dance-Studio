@@ -155,7 +155,7 @@ export function GalleryClient({ images }: { images: ImageType[] }) {
           role="dialog"
           aria-modal="true"
           aria-label={lightboxImage.title || lightboxImage.alt || 'Gallery image'}
-          className="fixed inset-0 z-50 bg-black/95 flex flex-col items-center justify-center p-4 md:p-8 animate-overlay-in"
+          className="fixed inset-0 z-[1000] bg-black/95 flex flex-col items-center justify-center p-4 md:p-8 animate-overlay-in"
           onClick={(e) => {
             if (e.target === e.currentTarget) close();
           }}

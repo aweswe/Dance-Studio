@@ -144,12 +144,6 @@ export function LevelCertificationSection({
           {/* Left Column: Master Image Showcase (Fitting 100% of photo without cut down) */}
           <div className="lg:col-span-6 w-full">
             <figure className="relative w-full rounded-xl sm:rounded-2xl overflow-hidden bg-slate-950 border border-slate-800/80 shadow-2xl flex flex-col justify-between">
-              {/* Ambient Blurred Aura (Preserves aspect ratio while eliminating dead space) */}
-              <div
-                className="absolute inset-0 bg-cover bg-center filter blur-3xl opacity-35 scale-125 pointer-events-none transition-all duration-700"
-                style={{ backgroundImage: `url(${activeImage.src})` }}
-              />
-
               {/* Top Floating Bar: Accreditation Badge & Multi-Photo Switcher */}
               <div className="relative z-10 p-2.5 sm:p-4 flex flex-wrap sm:flex-nowrap items-center justify-between gap-1.5 sm:gap-2">
                 <span className="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full bg-slate-950/85 backdrop-blur-md border border-white/15 text-[9px] sm:text-[11px] font-mono font-bold uppercase tracking-wider text-white shadow-lg shrink-0">

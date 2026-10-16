@@ -441,19 +441,19 @@ export function ProgrammePricingBoard() {
     <section className="w-full bg-white text-neutral-900 py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-10 max-w-[1360px] mx-auto select-none">
       {/* ── TOP HEADER ── */}
       <header className="text-center max-w-3xl mx-auto mb-8 sm:mb-10">
-        <p className="text-[#0284c7] font-mono font-bold uppercase tracking-[0.2em] text-[11px] sm:text-xs mb-2">
+        <p className="text-[#0284c7] font-mono font-bold uppercase tracking-[0.18em] sm:tracking-[0.2em] text-[10px] sm:text-xs mb-2">
           TRANSPARENT · NO HIDDEN FEES · HYDERABAD&apos;S BEST VALUE
         </p>
-        <h2 className="font-anton text-4xl sm:text-5xl md:text-6xl uppercase tracking-tight leading-[0.95] text-neutral-950">
+        <h2 className="font-anton text-3xl sm:text-5xl md:text-6xl uppercase tracking-tight leading-tight sm:leading-[0.95] text-neutral-950">
           PICK A CLASS.{' '}
           <span className="text-[#0284c7]">PAY YOUR WAY.</span>
         </h2>
-        <p className="mt-3 text-sm sm:text-base text-neutral-700 font-medium max-w-xl mx-auto leading-relaxed">
+        <p className="mt-2.5 sm:mt-3 text-xs sm:text-base text-neutral-700 font-medium max-w-xl mx-auto leading-relaxed">
           Quarterly saves most · Annual locks in the best rate · First class is on us
         </p>
 
         {/* First class is on us pill */}
-        <div className="mt-4 inline-flex items-center gap-2 px-4 py-1.5 rounded-md bg-emerald-50 border border-emerald-300 text-emerald-900 text-xs font-bold shadow-2xs">
+        <div className="mt-3.5 sm:mt-4 inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 rounded-md bg-emerald-50 border border-emerald-300 text-emerald-900 text-[11px] sm:text-xs font-bold shadow-2xs">
           <span className="relative flex h-2 w-2">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75" />
             <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-600" />
@@ -490,8 +490,8 @@ export function ProgrammePricingBoard() {
       </div>
 
       {/* ── ACTIVE PROGRAMME HEADER BAR ── */}
-      <div className="rounded-md border-2 border-neutral-200 bg-neutral-50 px-5 sm:px-6 py-4 flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 shadow-2xs">
-        <div className="flex items-center gap-4">
+      <div className="rounded-md border-2 border-neutral-200 bg-neutral-50 p-4 sm:px-6 sm:py-4 flex flex-col md:flex-row md:items-center justify-between gap-3.5 sm:gap-4 mb-6 shadow-2xs">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
           {activeProgramme.image && (
             <div className="relative h-14 w-20 sm:h-16 sm:w-24 rounded-md overflow-hidden border border-neutral-300 shadow-2xs shrink-0 bg-neutral-200">
               <Image

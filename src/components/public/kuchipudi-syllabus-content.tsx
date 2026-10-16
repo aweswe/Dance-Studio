@@ -284,89 +284,92 @@ export function KuchipudiSyllabusContent() {
     <PublicPage>
 
       {/* ═══════════════════════════════════════════════════════════════════════
-          1. HERO SECTION — High-Contrast Classical Elegance Aligned with Website
+          1. HERO SECTION — Clean Editorial Classical Presentation
       ═══════════════════════════════════════════════════════════════════════ */}
-      <div className="relative w-full bg-deep text-white overflow-hidden border-b border-line">
-
-        {/* Right-anchored dancer image on desktop with smooth gradient scrim */}
-        <div className="absolute right-0 top-0 bottom-0 w-full lg:w-[48%] pointer-events-none select-none z-0">
-          <Image
-            src="/images/kuchipudi/hero_kuchipudi_1.jpg"
-            alt="Kuchipudi dancer in traditional classical costume"
-            fill
-            priority
-            className="object-cover object-[70%_15%] opacity-35 lg:opacity-85"
-            sizes="(max-width: 1024px) 100vw, 50vw"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-deep via-transparent to-deep/60 lg:to-transparent" />
-          <div className="hidden lg:block absolute inset-0 bg-gradient-to-r from-deep via-deep/80 to-transparent" />
-        </div>
-
-        {/* Hero Content Column — Standard Website Max-Width & Grid Alignment */}
-        <div className="relative z-10 max-w-[1440px] mx-auto px-4 sm:px-6 md:px-10 pt-12 sm:pt-16 md:pt-20 pb-16 md:pb-24">
+      <section className="relative w-full bg-canvas text-ink border-b border-line">
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-10 py-8 sm:py-12 md:py-16">
           <div className="px-0 sm:px-10 lg:px-12 xl:px-14">
-            <div className="max-w-xl lg:max-w-2xl">
-              {/* Brand Eyebrow Pill */}
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-bl/40 bg-bl/15 text-bl text-xs font-mono font-bold uppercase tracking-wider mb-5 backdrop-blur-sm">
-                <Award size={13} className="text-bl" />
-                <span>Structured Classical Curriculum · Ages 5+</span>
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+              {/* Left Column — Clean Copy & Actions */}
+              <div className="lg:col-span-7 flex flex-col justify-center">
+                {/* Clean Editorial Eyebrow — Kept strictly in one line */}
+                <div className="flex items-center gap-2 mb-3 sm:mb-4 flex-nowrap">
+                  <span className="w-1.5 h-1.5 rounded-full bg-bl shrink-0" />
+                  <p className="text-[10px] sm:text-xs font-mono font-bold uppercase tracking-wider sm:tracking-[0.16em] text-bl whitespace-nowrap">
+                    Structured Classical Curriculum · Ages 5+
+                  </p>
+                </div>
+
+                {/* Headings */}
+                <h1 className="font-anton text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-ink uppercase tracking-tight leading-tight">
+                  Structured Kuchipudi Training
+                </h1>
+                <p className="font-serif italic text-lg sm:text-2xl text-ink-2 font-normal mt-1 mb-4 leading-snug">
+                  From First Steps to Rangapravesham
+                </p>
+
+                {/* Editorial Lead Paragraph */}
+                <p className="text-sm sm:text-base text-ink-2 leading-relaxed max-w-xl font-normal mb-6">
+                  Kuchipudi taught as a progressive classical art form, not a series of unrelated classes — for students from age 5 through to the artistic maturity of Rangapravesham.
+                </p>
+
+                {/* Clean Studio Metadata Chips */}
+                <div className="flex flex-wrap gap-2 sm:gap-2.5 mb-7">
+                  <div className="inline-flex items-center gap-2 px-3 py-2 rounded-md bg-surface border border-line text-xs text-ink font-mono font-medium shadow-2xs">
+                    <Clock size={13} className="text-bl shrink-0" />
+                    <span>Fri &amp; Sat · 6:30–7:30 PM</span>
+                  </div>
+                  <div className="inline-flex items-center gap-2 px-3 py-2 rounded-md bg-surface border border-line text-xs text-ink font-mono font-medium shadow-2xs">
+                    <MapPin size={13} className="text-bl shrink-0" />
+                    <span>Neredmet X Road Studio</span>
+                  </div>
+                  <div className="inline-flex items-center gap-2 px-3 py-2 rounded-md bg-surface border border-line text-xs text-ink font-mono font-medium shadow-2xs">
+                    <IndianRupee size={13} className="text-bl shrink-0" />
+                    <span>₹2,000 / mo · ₹5,000 / qtr</span>
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex flex-wrap items-center gap-3">
+                  <Link
+                    href={enrolHref({ programme: 'kuchipudi', intent: 'trial' })}
+                    className="inline-flex items-center justify-center min-h-[44px] px-6 py-2.5 rounded-md text-xs font-bold uppercase tracking-wider bg-bl text-slate-950 hover:bg-bl-deep hover:text-white transition-colors shadow-xs"
+                  >
+                    <span>Enquire About Admissions</span>
+                  </Link>
+                  <Link
+                    href="#curriculum"
+                    className="inline-flex items-center justify-center min-h-[44px] px-6 py-2.5 rounded-md text-xs font-semibold uppercase tracking-wider border border-line text-ink hover:border-ink/50 bg-surface transition-colors"
+                  >
+                    <span>Explore Curriculum</span>
+                  </Link>
+                  <Link
+                    href={enrolHref({ programme: 'classical-dance', intent: 'trial' })}
+                    className="inline-flex items-center gap-1.5 text-xs text-ink-2 hover:text-bl transition-colors py-2 px-1 font-mono font-bold uppercase tracking-wider"
+                  >
+                    <span>Also view Kathak</span>
+                    <ArrowRight size={12} />
+                  </Link>
+                </div>
               </div>
 
-              {/* Hero Headings with Breathable Letter Spacing */}
-              <h1 className="font-anton text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-white uppercase tracking-wide leading-tight mb-3">
-                Structured Kuchipudi Training
-              </h1>
-              <p className="font-serif italic text-xl sm:text-2xl md:text-3xl text-bl-light font-normal leading-snug mb-5">
-                From First Steps to Rangapravesham
-              </p>
-
-              {/* Editorial Lead Paragraph */}
-              <p className="text-sm sm:text-base md:text-lg text-white/80 leading-relaxed mb-6 font-body">
-                Kuchipudi taught as a progressive classical art form, not a series of unrelated classes — for students from age 5 through to the artistic maturity of Rangapravesham.
-              </p>
-
-              {/* Quick Metadata Badges */}
-              <div className="flex flex-wrap gap-2.5 sm:gap-3 mb-8">
-                <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-white/10 border border-white/20 text-xs text-white font-mono font-semibold">
-                  <Clock size={12} className="text-bl" />
-                  <span>Fri &amp; Sat · 6:30–7:30 PM</span>
+              {/* Right Column — Authentic High-Resolution Photography */}
+              <div className="lg:col-span-5 w-full">
+                <div className="relative aspect-[4/3] sm:aspect-[16/11] lg:aspect-square w-full rounded-md overflow-hidden border border-line bg-surface shadow-md">
+                  <Image
+                    src="/images/kuchipudi/hero_kuchipudi_1.jpg"
+                    alt="Kuchipudi dancer in traditional classical costume at Rhythmzz Academy"
+                    fill
+                    priority
+                    className="object-cover object-[center_20%]"
+                    sizes="(max-width: 1024px) 100vw, 40vw"
+                  />
                 </div>
-                <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-white/10 border border-white/20 text-xs text-white font-mono font-semibold">
-                  <MapPin size={12} className="text-bl" />
-                  <span>Neredmet X Road Studio</span>
-                </div>
-                <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-white/10 border border-white/20 text-xs text-white font-mono font-semibold">
-                  <IndianRupee size={12} className="text-bl" />
-                  <span>₹2,000 / month (or ₹5,000 / qtr)</span>
-                </div>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex flex-wrap items-center gap-3">
-                <Link
-                  href={enrolHref({ programme: 'kuchipudi', intent: 'trial' })}
-                  className="inline-flex items-center justify-center px-6 py-3 rounded-md text-xs font-bold uppercase tracking-wider bg-bl text-slate-950 hover:bg-bl-deep hover:text-white transition-colors shadow-md"
-                >
-                  <span>Enquire About Admissions</span>
-                </Link>
-                <Link
-                  href="#curriculum"
-                  className="inline-flex items-center justify-center px-6 py-3 rounded-md text-xs font-semibold uppercase tracking-wider border border-white/40 text-white hover:border-bl hover:text-bl transition-colors"
-                >
-                  <span>Explore the Curriculum</span>
-                </Link>
-                <Link
-                  href={enrolHref({ programme: 'classical-dance', intent: 'trial' })}
-                  className="inline-flex items-center gap-1.5 text-xs text-white/80 hover:text-bl transition-colors py-2 px-1 font-mono font-bold uppercase tracking-wider"
-                >
-                  <span>Also view Kathak</span>
-                  <ArrowRight size={11} />
-                </Link>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* ═══════════════════════════════════════════════════════════════════════
           2. WHAT MAKES THIS TRAINING DIFFERENT (Editorial Narrative + 4 Bento Cards)
@@ -448,21 +451,21 @@ export function KuchipudiSyllabusContent() {
             ))}
           </div>
 
-          {/* High-Impact Batch Admissions Box with Academy Styling */}
-          <div className="rounded-md bg-deep text-white border-2 border-bl/30 p-6 sm:p-8 md:p-10 shadow-xl relative overflow-hidden">
+          {/* Clean High-Contrast Batch Admissions Box */}
+          <div className="rounded-md bg-surface text-ink border border-line p-6 sm:p-8 md:p-10 shadow-sm relative overflow-hidden">
             <div className="relative z-10">
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
                 <div>
                   <span className="text-xs font-mono font-bold uppercase tracking-widest text-bl block mb-1">
                     ◆ BATCH-BASED ADMISSIONS
                   </span>
-                  <h3 className="font-anton text-2xl sm:text-3xl text-white uppercase tracking-wide">
+                  <h3 className="font-anton text-2xl sm:text-3xl text-ink uppercase tracking-wide">
                     Now Enrolling: Regular &amp; Weekend Classical Batches
                   </h3>
                 </div>
                 <Link
                   href={enrolHref({ programme: 'kuchipudi', intent: 'trial' })}
-                  className="inline-flex items-center justify-center px-5 py-2.5 rounded-md text-xs font-bold uppercase tracking-wider bg-bl text-slate-950 hover:bg-bl-deep hover:text-white transition-colors shrink-0 shadow-md"
+                  className="inline-flex items-center justify-center px-5 py-2.5 rounded-md text-xs font-bold uppercase tracking-wider bg-bl text-slate-950 hover:bg-bl-deep hover:text-white transition-colors shrink-0 shadow-xs"
                 >
                   Book Introductory Class
                 </Link>
@@ -470,25 +473,25 @@ export function KuchipudiSyllabusContent() {
 
               {/* 4 Stats Grid */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-6">
-                <div className="p-4 rounded-md bg-white/5 border border-white/10 text-center">
-                  <p className="font-anton text-xl sm:text-2xl text-white tracking-wide">Fri &amp; Sat</p>
+                <div className="p-4 rounded-md bg-canvas border border-line text-center">
+                  <p className="font-anton text-xl sm:text-2xl text-ink tracking-wide">Fri &amp; Sat</p>
                   <p className="text-[11px] font-mono uppercase tracking-wider text-bl font-bold mt-1">2 Days / Week</p>
                 </div>
-                <div className="p-4 rounded-md bg-white/5 border border-white/10 text-center">
-                  <p className="font-anton text-xl sm:text-2xl text-white tracking-wide">6:30 – 7:30 PM</p>
+                <div className="p-4 rounded-md bg-canvas border border-line text-center">
+                  <p className="font-anton text-xl sm:text-2xl text-ink tracking-wide">6:30 – 7:30 PM</p>
                   <p className="text-[11px] font-mono uppercase tracking-wider text-bl font-bold mt-1">Evening Timing</p>
                 </div>
-                <div className="p-4 rounded-md bg-white/5 border border-white/10 text-center">
-                  <p className="font-anton text-xl sm:text-2xl text-white tracking-wide">₹2,000</p>
+                <div className="p-4 rounded-md bg-canvas border border-line text-center">
+                  <p className="font-anton text-xl sm:text-2xl text-ink tracking-wide">₹2,000</p>
                   <p className="text-[11px] font-mono uppercase tracking-wider text-bl font-bold mt-1">Per Month (or ₹5k/qtr)</p>
                 </div>
-                <div className="p-4 rounded-md bg-white/5 border border-white/10 text-center">
-                  <p className="font-anton text-xl sm:text-2xl text-white tracking-wide">Ages 5+</p>
+                <div className="p-4 rounded-md bg-canvas border border-line text-center">
+                  <p className="font-anton text-xl sm:text-2xl text-ink tracking-wide">Ages 5+</p>
                   <p className="text-[11px] font-mono uppercase tracking-wider text-bl font-bold mt-1">Kids &amp; Adults</p>
                 </div>
               </div>
 
-              <div className="p-4 rounded-md bg-black/40 border border-white/10 text-xs sm:text-sm text-white/80 leading-relaxed font-serif italic">
+              <div className="p-4 rounded-md bg-canvas border border-line text-xs sm:text-sm text-ink-2 leading-relaxed font-serif italic">
                 Note: Because Kuchipudi is a progressive art form, students are admitted in structured cohorts so that everyone learns sequentially. Small batch sizes ensure hands-on posture corrections from faculty.
               </div>
             </div>
@@ -680,7 +683,7 @@ export function KuchipudiSyllabusContent() {
       {/* ═══════════════════════════════════════════════════════════════════════
           8. CLASSICAL PHOTO STRIP — Visual Breathing Room
       ═══════════════════════════════════════════════════════════════════════ */}
-      <div className="w-full grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-1.5 p-1.5 bg-deep">
+      <div className="w-full grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-3 p-2 sm:p-4 bg-canvas border-y border-line">
         {[
           { src: '/images/kuchipudi/kuchipudi-classical-02.jpg', label: 'Classical Adavus' },
           { src: '/images/kuchipudi/kuchipudi-aramandi-dynamic.jpg', label: 'Aramandi Posture' },
@@ -688,7 +691,7 @@ export function KuchipudiSyllabusContent() {
           { src: '/images/kuchipudi/kuchipudi-classical-pose-2.jpg', label: 'Stage Presentation' },
           { src: '/images/kuchipudi/kuchipudi-traditional-standing.jpg', label: 'Traditional Attire' },
         ].map((item, idx) => (
-          <div key={idx} className="relative aspect-[3/4] overflow-hidden group">
+          <div key={idx} className="relative aspect-[3/4] rounded-md overflow-hidden border border-line bg-surface group shadow-2xs">
             <Image
               src={item.src}
               alt={item.label}

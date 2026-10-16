@@ -35,16 +35,9 @@ export function CreativeFamilySection() {
           </div>
         </div>
 
-        {/* ── Centerpiece Giant Headline ── */}
-        <h2 className="font-anton text-5xl sm:text-6xl md:text-7xl lg:text-[88px] xl:text-[104px] uppercase leading-[1.08] sm:leading-[0.92] tracking-tight max-w-4xl text-blk">
-          <span>MORE THAN</span>
-          <br />
-          <span>A </span>
-          <span className="text-bl">DANCE</span>
-          <span> SCHOOL, A</span>
-          <br />
-          <span>CREATIVE </span>
-          <span className="text-bl">FAMILY</span>
+        {/* ── Centerpiece Headline ── */}
+        <h2 className="font-anton text-3xl sm:text-5xl md:text-6xl lg:text-7xl uppercase leading-tight tracking-tight max-w-4xl text-blk">
+          More than a <span className="text-bl">dance</span> school, a creative <span className="text-bl">family.</span>
         </h2>
 
         {/* Subtitle statement */}

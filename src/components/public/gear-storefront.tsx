@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { Check, MessageCircle, ShoppingBag, ShieldCheck, Truck, RefreshCw } from 'lucide-react';
+import { Check, MessageCircle, ShoppingBag, ShieldCheck, Truck, RefreshCw, X } from 'lucide-react';
 import { type Product, type ProductCategory, buildWhatsAppOrderLink } from '@/data/products';
 import { cn } from '@/lib/utils/cn';
 
@@ -63,6 +63,17 @@ export function GearStorefront({ initialProducts, embedded = false }: GearStoref
     price: number;
     whatsappUrl: string;
   } | null>(null);
+
+  // Close modal on Escape
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape') setOrderModal(null);
+    }
+    if (orderModal?.open) {
+      window.addEventListener('keydown', handleKeyDown);
+      return () => window.removeEventListener('keydown', handleKeyDown);
+    }
+  }, [orderModal?.open]);
 
   const filteredProducts = initialProducts.filter((product) => {
     if (activeCategory === 'all') return true;
@@ -304,66 +315,83 @@ export function GearStorefront({ initialProducts, embedded = false }: GearStoref
         </div>
       </div>
 
-      {/* Confirmation Modal */}
+      {/* Confirmation Modal — Fully Responsive for Mobile & Announcement Banner */}
       {orderModal && orderModal.open && (
         <div
           role="dialog"
           aria-modal="true"
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-blk/80 backdrop-blur-sm animate-in fade-in duration-200"
+          aria-labelledby="gear-order-title"
+          className="fixed inset-0 z-[1000] flex items-center justify-center p-3 sm:p-4 bg-blk/80 backdrop-blur-sm animate-in fade-in duration-200 overflow-y-auto pt-[max(1rem,env(safe-area-inset-top))] pb-[max(1rem,env(safe-area-inset-bottom))]"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setOrderModal(null);
+          }}
         >
-          <div className="relative w-full max-w-md rounded-md border border-line bg-canvas p-6 sm:p-8 shadow-2xl space-y-5 text-center">
-            <div className="w-12 h-12 mx-auto rounded-full bg-bl/15 text-bl flex items-center justify-center">
-              <Check size={24} className="stroke-[3]" />
-            </div>
+          <div className="relative w-full max-w-md rounded-md border border-line bg-canvas shadow-2xl my-auto max-h-[min(90dvh,560px)] flex flex-col overflow-hidden animate-in zoom-in-95 duration-150">
+            {/* Pinned Top-Right Close Button — Always Accessible */}
+            <button
+              type="button"
+              onClick={() => setOrderModal(null)}
+              className="absolute top-3 right-3 z-20 p-2 rounded-md text-ink-3 hover:text-ink hover:bg-surface transition-colors cursor-pointer"
+              aria-label="Close order modal"
+            >
+              <X size={18} />
+            </button>
 
-            <div className="space-y-2">
-              <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-bl">
-                Order Enquiry Initiated
-              </span>
-              <h3 className="font-anton text-2xl text-ink uppercase tracking-tight">
-                Your order is with our desk
-              </h3>
-              <p className="text-xs text-ink-2 leading-relaxed">
-                WhatsApp has been launched with your exact order details pre-filled.
-              </p>
-            </div>
-
-            <div className="p-4 rounded-md border border-line bg-surface text-left space-y-1.5 font-mono text-xs">
-              <div className="flex justify-between">
-                <span className="text-ink-3">Product:</span>
-                <span className="font-bold text-ink">{orderModal.productName}</span>
+            {/* Scrollable Body */}
+            <div className="overflow-y-auto p-5 sm:p-7 space-y-4 text-center">
+              <div className="w-12 h-12 mx-auto rounded-full bg-bl/15 text-bl flex items-center justify-center">
+                <Check size={24} className="stroke-[3]" />
               </div>
-              <div className="flex justify-between">
-                <span className="text-ink-3">Size:</span>
-                <span className="font-bold text-bl">{orderModal.size}</span>
-              </div>
-              <div className="flex justify-between pt-1.5 border-t border-line/60">
-                <span className="text-ink-3">Price:</span>
-                <span className="font-bold text-ink text-sm">₹{orderModal.price.toLocaleString('en-IN')}</span>
-              </div>
-            </div>
 
-            <div className="p-3 rounded bg-bl/5 border border-bl/20 text-[11px] text-ink-2 text-left">
-              <strong>Notice:</strong> Your order has been received. Our studio team is working to verify availability and confirm your payment / dispatch options immediately.
-            </div>
+              <div className="space-y-1.5">
+                <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-bl">
+                  Order Enquiry Initiated
+                </span>
+                <h3 id="gear-order-title" className="font-anton text-2xl text-ink uppercase tracking-tight">
+                  Your order is with our desk
+                </h3>
+                <p className="text-xs text-ink-2 leading-relaxed">
+                  WhatsApp has been launched with your exact order details pre-filled.
+                </p>
+              </div>
 
-            <div className="flex flex-col gap-2 pt-2">
-              <a
-                href={orderModal.whatsappUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="h-11 min-h-[44px] w-full rounded-md font-mono text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 bg-bl text-blk hover:bg-bl-deep transition-colors"
-              >
-                <MessageCircle size={15} />
-                <span>Open WhatsApp Again</span>
-              </a>
-              <button
-                type="button"
-                onClick={() => setOrderModal(null)}
-                className="h-10 min-h-[40px] w-full rounded-md font-mono text-xs font-bold uppercase tracking-wider text-ink-2 border border-line hover:bg-surface transition-colors cursor-pointer"
-              >
-                Done
-              </button>
+              <div className="p-3.5 rounded-md border border-line bg-surface text-left space-y-1.5 font-mono text-xs">
+                <div className="flex justify-between">
+                  <span className="text-ink-3">Product:</span>
+                  <span className="font-bold text-ink">{orderModal.productName}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-ink-3">Size:</span>
+                  <span className="font-bold text-bl">{orderModal.size}</span>
+                </div>
+                <div className="flex justify-between pt-1.5 border-t border-line/60">
+                  <span className="text-ink-3">Price:</span>
+                  <span className="font-bold text-ink text-sm">₹{orderModal.price.toLocaleString('en-IN')}</span>
+                </div>
+              </div>
+
+              <div className="p-3 rounded bg-bl/5 border border-bl/20 text-[11px] text-ink-2 text-left">
+                <strong>Notice:</strong> Your order has been received. Our studio team is working to verify availability and confirm your payment / dispatch options immediately.
+              </div>
+
+              <div className="flex flex-col gap-2 pt-1">
+                <a
+                  href={orderModal.whatsappUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="h-11 min-h-[44px] w-full rounded-md font-mono text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 bg-bl text-blk hover:bg-bl-deep transition-colors"
+                >
+                  <MessageCircle size={15} />
+                  <span>Open WhatsApp Again</span>
+                </a>
+                <button
+                  type="button"
+                  onClick={() => setOrderModal(null)}
+                  className="h-10 min-h-[40px] w-full rounded-md font-mono text-xs font-bold uppercase tracking-wider text-ink-2 border border-line hover:bg-surface transition-colors cursor-pointer"
+                >
+                  Done
+                </button>
+              </div>
             </div>
           </div>
         </div>

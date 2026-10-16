@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { X, CheckCircle2, Clock, Users, ShieldCheck, ArrowRight, Loader2 } from 'lucide-react';
 import { submitWaitlistRequest } from '@/actions/waitlist';
 import { whatsappLink } from '@/lib/utils/format';
@@ -40,6 +40,17 @@ export function WaitlistModal({
     queuePosition: number;
     message: string;
   } | null>(null);
+
+  // Escape key handler
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape') onClose();
+    }
+    if (isOpen) {
+      window.addEventListener('keydown', handleKeyDown);
+      return () => window.removeEventListener('keydown', handleKeyDown);
+    }
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
@@ -83,21 +94,30 @@ export function WaitlistModal({
       role="dialog"
       aria-modal="true"
       aria-labelledby="waitlist-title"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200"
+      className="fixed inset-0 z-[1000] flex items-center justify-center p-3 sm:p-4 bg-black/75 backdrop-blur-xs animate-in fade-in duration-200 overflow-y-auto pt-[max(1rem,env(safe-area-inset-top))] pb-[max(1rem,env(safe-area-inset-bottom))]"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="relative w-full max-w-lg rounded-md bg-white border border-neutral-200 shadow-2xl p-6 sm:p-7 text-neutral-900 max-h-[92vh] overflow-y-auto">
-        {/* Close Button */}
-        <button
-          type="button"
-          onClick={onClose}
-          className="absolute top-4 right-4 p-2 rounded-md text-neutral-500 hover:text-neutral-950 hover:bg-neutral-100 transition-colors cursor-pointer"
-          aria-label="Close waitlist modal"
-        >
-          <X className="w-5 h-5" />
-        </button>
+      <div className="relative w-full max-w-lg rounded-md bg-white border border-neutral-200 shadow-2xl text-neutral-900 max-h-[min(90dvh,680px)] flex flex-col overflow-hidden my-auto animate-in zoom-in-95 duration-150">
+        {/* Sticky Header with Always-Visible Close Button */}
+        <div className="flex items-center justify-between px-4 sm:px-6 py-3 border-b border-neutral-100 bg-white shrink-0 z-10">
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-neutral-950 text-white text-[10px] font-extrabold uppercase tracking-wider">
+            <Clock className="w-3 h-3 text-[#FDE68A]" />
+            <span>Priority Waitlist</span>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="p-1.5 -mr-1 rounded-md text-neutral-500 hover:text-neutral-950 hover:bg-neutral-100 transition-colors cursor-pointer"
+            aria-label="Close waitlist modal"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* Scrollable Modal Content */}
+        <div className="overflow-y-auto px-4 sm:px-6 py-4">
 
         {successData ? (
           /* SUCCESS STATE */
@@ -295,6 +315,7 @@ export function WaitlistModal({
             </div>
           </form>
         )}
+        </div>
       </div>
     </div>
   );

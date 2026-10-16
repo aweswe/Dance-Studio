@@ -211,7 +211,7 @@ export function StudioGallery() {
           role="dialog"
           aria-modal="true"
           aria-label={activeImage.title}
-          className="fixed inset-0 z-[700] bg-black/95 backdrop-blur-sm flex flex-col items-center justify-between p-4 sm:p-6 md:p-8 animate-overlay-in"
+          className="fixed inset-0 z-[1000] bg-black/95 backdrop-blur-sm flex flex-col items-center justify-between p-4 sm:p-6 md:p-8 animate-overlay-in"
           onClick={(e) => {
             if (e.target === e.currentTarget) close();
           }}

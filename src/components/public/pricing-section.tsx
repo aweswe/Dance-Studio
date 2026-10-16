@@ -17,8 +17,7 @@ export async function PricingSection() {
         <div>
           <p className="text-[11px] font-mono uppercase tracking-[0.22em] text-ink-2 mb-1">Classes &amp; Fees</p>
           <h2 className="font-anton text-3xl sm:text-4xl md:text-5xl text-ink uppercase tracking-tight leading-none">
-            PICK YOUR<br />
-            <span className="text-bl">CLASS.</span>
+            Pick Your <span className="text-bl">Class.</span>
           </h2>
         </div>
         <Link

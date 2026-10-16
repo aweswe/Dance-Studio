@@ -83,21 +83,17 @@ export function VideoModal({
               className="w-full h-full object-cover"
             />
           ) : (
-            /* Cinematic Dance Studio Reel Embed with Ambient Lighting */
-            <div className="relative w-full h-full flex flex-col items-center justify-center bg-gradient-to-tr from-black via-deep to-deep">
-              {/* Studio Stage Spotlight Effect */}
-              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-bl/20 via-transparent to-transparent pointer-events-none" />
-              <div className="absolute top-1/2 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-gold/80 to-transparent blur-[1px]" />
-              
-              <div className="relative z-10 text-center px-6">
-                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full border border-white/30 bg-white/10 backdrop-blur-md flex items-center justify-center mx-auto mb-4 text-white shadow-xl shadow-cyan-500/20">
+            /* Dance Studio Reel Embed */
+            <div className="relative w-full h-full flex flex-col items-center justify-center bg-black/90 p-6">
+              <div className="relative z-10 text-center px-4">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full border border-white/20 bg-white/10 flex items-center justify-center mx-auto mb-4 text-white shadow-lg">
                   <Play className="w-8 h-8 sm:w-10 sm:h-10 fill-white translate-x-0.5" />
                 </div>
                 <h4 className="heading-urban text-2xl sm:text-4xl text-white mb-2">
                   CHOREOGRAPHY SHOWCASE
                 </h4>
                 <p className="text-xs sm:text-sm text-white/70 max-w-md mx-auto">
-                  Featuring Nitish Kumar & Faculty • Urban Bolly-Hop, Contemporary & Foundation Training
+                  Academy Faculty &amp; Student Cohorts • Commercial, Contemporary &amp; Classical Training
                 </p>
                 <div className="mt-6 flex items-center justify-center gap-3">
                   <a

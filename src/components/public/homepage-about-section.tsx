@@ -67,10 +67,8 @@ export function HomepageAboutSection({ stats, showLearnMore = true }: HomepageAb
               <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-bl-light">
                 Our story
               </p>
-              <h2 className="font-anton text-[clamp(1.75rem,4.5vw,2.75rem)] uppercase leading-[0.93] tracking-tight text-wh">
-                15+ years teaching
-                <br />
-                Hyderabad to <span className="text-bl">dance.</span>
+              <h2 className="font-anton text-[clamp(1.75rem,4.5vw,2.75rem)] uppercase leading-tight tracking-tight text-wh">
+                15+ years teaching Hyderabad to <span className="text-bl">dance.</span>
               </h2>
               <div className="space-y-4 text-sm text-wh/75 leading-[1.75] max-w-[34rem]">
                 <p>
@@ -123,10 +121,8 @@ export function HomepageAboutSection({ stats, showLearnMore = true }: HomepageAb
                 >
                   {item.value}
                 </p>
-                <p className="mt-1.5 text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.14em] text-wh/55 leading-snug">
-                  {item.label[0]}
-                  <br />
-                  {item.label[1]}
+                <p className="mt-1.5 text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.14em] text-wh/70 leading-snug">
+                  {item.label.join(' ')}
                 </p>
               </div>
             ))}

@@ -180,7 +180,7 @@ export function CorporateCollaborationsStrip() {
     <HomepageSection
       id="collaborations"
       ariaLabel="Brand collaborations and corporate productions"
-      className="py-5 sm:py-6 border-t border-line/60"
+      className="py-8 sm:py-6 border-t border-line/60"
     >
       <div className="rounded-md border border-line bg-surface/70 p-3.5 sm:p-4.5 shadow-2xs">
         {/* Compact Header Bar */}
