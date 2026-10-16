@@ -62,7 +62,7 @@ const PROGRAMMES: ProgrammeTab[] = [
     tags: [
       { label: 'BOLLYWOOD' },
       { label: 'HIP HOP' },
-      { label: 'CONTEMPORARY' },
+      { label: 'FREESTYLE' },
       { label: 'AGES 3.5 – 12 YRS' },
       { label: 'ALL SKILL LEVELS', highlight: true },
     ],

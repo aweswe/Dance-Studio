@@ -9,7 +9,7 @@ export const PRICING_DISPLAY: Record<
     shortLabel: 'Kids',
     dropIn: DROP_IN_FEE,
     schedule: 'Mon–Wed · 5–7 PM',
-    tagline: 'Bollywood · Hip hop · Contemporary · Ages 5+',
+    tagline: 'Bollywood · Hip hop · Freestyle · Ages 3.5–12',
   },
   'adults-dance': {
     shortLabel: 'Adults',
