@@ -39,7 +39,7 @@ export const homepageCtaOutlineDark = [
 /** Cyan fill — dark sections (Our Story, reference .btn-bl). */
 export const homepageCtaBrand = [
   homepageCtaBase,
-  'bg-bl text-blk hover:bg-bl-deep shadow-[0_6px_28px_-8px_rgba(43,180,216,0.45)]',
+  'bg-bl text-slate-950 font-bold hover:bg-bl-deep hover:text-slate-950 shadow-[0_6px_28px_-8px_rgba(43,180,216,0.45)]',
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl focus-visible:ring-offset-2 focus-visible:ring-offset-canvas',
 ].join(' ');
 

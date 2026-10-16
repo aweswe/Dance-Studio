@@ -108,7 +108,7 @@ export default async function InstructorDashboardPage() {
         {batches.length > 0 ? (
           <Link
             href={`${ROUTES.instructor}/attendance`}
-            className="inline-flex items-center justify-center min-h-11 px-4 rounded-md bg-bl text-slate-950 text-sm font-bold hover:bg-bl-deep hover:text-white focus-visible:focus-ring active:scale-[0.96]"
+            className="inline-flex items-center justify-center min-h-11 px-4 rounded-md bg-bl text-slate-950 text-sm font-bold hover:bg-bl-deep hover:text-slate-950 focus-visible:focus-ring active:scale-[0.96]"
           >
             Mark attendance
           </Link>

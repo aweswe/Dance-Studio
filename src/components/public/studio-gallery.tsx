@@ -291,7 +291,7 @@ export function StudioGallery() {
             <a
               href="#rental-form"
               onClick={() => close()}
-              className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-md bg-bl hover:bg-bl-deep text-blk font-bold text-xs uppercase tracking-wider transition-colors shrink-0 self-start sm:self-auto"
+              className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-md bg-bl hover:bg-bl-deep text-slate-950 hover:text-slate-950 font-bold text-xs uppercase tracking-wider transition-colors shrink-0 self-start sm:self-auto"
             >
               <span>Book this space</span>
               <ArrowUpRight size={15} />

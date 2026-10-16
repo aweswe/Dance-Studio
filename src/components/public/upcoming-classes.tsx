@@ -190,7 +190,7 @@ export function UpcomingClasses() {
       <div className="flex justify-end mt-8 sm:mt-10">
         <Link
           href={ROUTES.programmes}
-          className="group inline-flex items-center gap-2 text-xs sm:text-sm font-bold uppercase tracking-[0.2em] text-bl hover:text-bl-deep transition-colors"
+          className="group inline-flex items-center gap-2 text-xs sm:text-sm font-bold uppercase tracking-[0.2em] text-bl-ink hover:text-ink transition-colors"
         >
           <span>Explore All 12 Programmes</span>
           <span className="font-mono text-base translate-x-0 group-hover:translate-x-1.5 transition-transform">

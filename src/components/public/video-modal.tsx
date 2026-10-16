@@ -100,7 +100,7 @@ export function VideoModal({
                     href="https://www.instagram.com/rhythmzzdance.live"
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md bg-white text-blk text-xs font-bold uppercase tracking-wider hover:bg-bl hover:text-white transition-all active:scale-[0.96]"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md bg-white text-blk text-xs font-bold uppercase tracking-wider hover:bg-bl hover:text-slate-950 transition-all active:scale-[0.96]"
                   >
                     Watch on Instagram Reels
                   </a>

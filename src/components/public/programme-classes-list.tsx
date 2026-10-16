@@ -63,7 +63,7 @@ function ClassRow({ slot }: { slot: DaySchedule['slots'][number] }) {
 
       <p className="hidden sm:block text-xs font-mono text-ink-2">{slot.duration}</p>
 
-      <span className="hidden sm:inline-flex items-center justify-center gap-1 text-[10px] font-bold uppercase tracking-[0.12em] px-3.5 py-1.5 rounded-md bg-bl text-blk hover:bg-bl-deep shadow-sm transition-all justify-self-end group-hover:scale-[1.02]">
+      <span className="hidden sm:inline-flex items-center justify-center gap-1 text-[10px] font-bold uppercase tracking-[0.12em] px-3.5 py-1.5 rounded-md bg-bl text-slate-950 hover:bg-bl-deep hover:text-slate-950 shadow-sm transition-all justify-self-end group-hover:scale-[1.02]">
         {bookLabel}
         <ArrowUpRight size={12} strokeWidth={2.5} />
       </span>
@@ -72,7 +72,7 @@ function ClassRow({ slot }: { slot: DaySchedule['slots'][number] }) {
         <p className="text-[11px] font-medium text-ink-2 truncate">
           {slot.instructor} · {slot.duration}
         </p>
-        <span className="inline-flex items-center justify-center gap-1 text-[11px] font-bold uppercase tracking-[0.1em] px-3.5 py-1.5 min-h-[36px] rounded-md bg-bl text-blk hover:bg-bl-deep shadow-xs transition-all shrink-0">
+        <span className="inline-flex items-center justify-center gap-1 text-[11px] font-bold uppercase tracking-[0.1em] px-3.5 py-1.5 min-h-[36px] rounded-md bg-bl text-slate-950 hover:bg-bl-deep hover:text-slate-950 shadow-xs transition-all shrink-0">
           {bookLabel}
           <ArrowUpRight size={13} strokeWidth={2.5} />
         </span>

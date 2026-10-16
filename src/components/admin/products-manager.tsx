@@ -275,7 +275,7 @@ export function ProductsManager({ initialProducts }: ProductsManagerProps) {
               'h-10 px-4 rounded-md font-mono text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 transition-colors cursor-pointer',
               isCatalogFull
                 ? 'bg-line text-ink-3 cursor-not-allowed opacity-60'
-                : 'bg-bl text-blk hover:bg-bl-deep'
+                : 'bg-bl text-slate-950 hover:bg-bl-deep hover:text-slate-950'
             )}
           >
             <Plus size={14} />
@@ -637,7 +637,7 @@ export function ProductsManager({ initialProducts }: ProductsManagerProps) {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="h-10 px-5 rounded-md font-mono text-xs font-bold uppercase tracking-wider bg-bl text-blk hover:bg-bl-deep transition-colors flex items-center gap-1.5 cursor-pointer"
+                  className="h-10 px-5 rounded-md font-mono text-xs font-bold uppercase tracking-wider bg-bl text-slate-950 hover:bg-bl-deep hover:text-slate-950 transition-colors flex items-center gap-1.5 cursor-pointer"
                 >
                   {isLoading && <Loader2 size={13} className="animate-spin" />}
                   <span>{editingProduct ? 'Save Changes' : 'Create Item'}</span>

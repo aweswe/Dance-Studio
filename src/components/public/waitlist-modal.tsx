@@ -293,7 +293,7 @@ export function WaitlistModal({
               <button
                 type="submit"
                 disabled={busy}
-                className="w-full py-3.5 px-6 rounded-md bg-[#0284c7] hover:bg-[#0369a1] text-white font-extrabold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all active:scale-[0.98] shadow-sm cursor-pointer disabled:opacity-70"
+                className="w-full py-3.5 px-6 rounded-md bg-[#0284c7] hover:bg-[#0ea5e9] text-white font-extrabold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all active:scale-[0.98] shadow-sm cursor-pointer disabled:opacity-70"
               >
                 {busy ? (
                   <>

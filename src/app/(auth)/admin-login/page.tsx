@@ -129,7 +129,7 @@ export default function AdminLoginPage() {
           />
           <span>
             I agree to the{" "}
-            <Link href="/terms" target="_blank" className="text-bl underline hover:text-bl-deep">
+            <Link href="/terms" target="_blank" className="text-bl-ink underline hover:text-ink">
               Terms &amp; Conditions
             </Link>{" "}
             and Staff Guidelines.

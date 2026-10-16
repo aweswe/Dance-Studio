@@ -257,7 +257,7 @@ export function GearStorefront({ initialProducts, embedded = false }: GearStoref
                     <button
                       type="button"
                       onClick={() => handleOrderClick(product)}
-                      className="h-11 min-h-[44px] w-full rounded-md font-mono text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 bg-bl text-blk hover:bg-bl-deep transition-all duration-150 cursor-pointer shadow-sm active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl"
+                      className="h-11 min-h-[44px] w-full rounded-md font-mono text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 bg-bl text-slate-950 hover:bg-bl-deep hover:text-slate-950 transition-all duration-150 cursor-pointer shadow-sm active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl"
                     >
                       <MessageCircle size={15} className="fill-current" />
                       <span>Order on WhatsApp</span>
@@ -379,7 +379,7 @@ export function GearStorefront({ initialProducts, embedded = false }: GearStoref
                   href={orderModal.whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="h-11 min-h-[44px] w-full rounded-md font-mono text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 bg-bl text-blk hover:bg-bl-deep transition-colors"
+                  className="h-11 min-h-[44px] w-full rounded-md font-mono text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 bg-bl text-slate-950 hover:bg-bl-deep hover:text-slate-950 transition-colors"
                 >
                   <MessageCircle size={15} />
                   <span>Open WhatsApp Again</span>

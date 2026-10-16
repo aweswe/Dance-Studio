@@ -333,7 +333,7 @@ export function KuchipudiSyllabusContent() {
                 <div className="flex flex-wrap items-center gap-3">
                   <Link
                     href={enrolHref({ programme: 'kuchipudi', intent: 'trial' })}
-                    className="inline-flex items-center justify-center min-h-[44px] px-6 py-2.5 rounded-md text-xs font-bold uppercase tracking-wider bg-bl text-slate-950 hover:bg-bl-deep hover:text-white transition-colors shadow-xs"
+                    className="inline-flex items-center justify-center min-h-[44px] px-6 py-2.5 rounded-md text-xs font-bold uppercase tracking-wider bg-bl text-slate-950 hover:bg-bl-deep hover:text-slate-950 transition-colors shadow-xs"
                   >
                     <span>Enquire About Admissions</span>
                   </Link>
@@ -465,7 +465,7 @@ export function KuchipudiSyllabusContent() {
                 </div>
                 <Link
                   href={enrolHref({ programme: 'kuchipudi', intent: 'trial' })}
-                  className="inline-flex items-center justify-center px-5 py-2.5 rounded-md text-xs font-bold uppercase tracking-wider bg-bl text-slate-950 hover:bg-bl-deep hover:text-white transition-colors shrink-0 shadow-xs"
+                  className="inline-flex items-center justify-center px-5 py-2.5 rounded-md text-xs font-bold uppercase tracking-wider bg-bl text-slate-950 hover:bg-bl-deep hover:text-slate-950 transition-colors shrink-0 shadow-xs"
                 >
                   Book Introductory Class
                 </Link>

@@ -126,7 +126,7 @@
   --bl-ink: #0369A1; /* Deep ocean blue with 5.5:1 contrast on white */
   --gold-ink: #92400E; /* Deep amber bronze with 6.2:1 contrast on white */
   --green-ink: #15803D; /* Deep forest emerald with 5.2:1 contrast on white */
-  --bl-deep: #0C4A6E;
+  --bl-deep: #1CA0C4; /* Vibrant rich cyan hover that maintains high contrast and does not darken muddy */
   --danger: #DC2626;
   --danger-deep: #B91C1C;
 }
@@ -609,7 +609,7 @@ h4.font-anton.tracking-tight {
 .btn-sun,
 .btn-periwinkle {
   background-color: var(--bl);
-  color: var(--wh) !important;
+  color: var(--blk) !important;
   font-weight: 800;
   border-radius: 0.375rem;
   transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1);
@@ -622,6 +622,7 @@ h4.font-anton.tracking-tight {
 .btn-sun:hover,
 .btn-periwinkle:hover {
   background-color: var(--bl-deep);
+  color: var(--blk) !important;
   transform: scale(1.02);
   box-shadow: 0 8px 24px -4px rgba(43, 180, 216, 0.4);
 }

@@ -37,7 +37,7 @@ const navLoginButton = cn(
 
 const navBookButton = cn(
   navActionButton,
-  'bg-bl text-blk hover:bg-bl-deep shadow-[0_4px_16px_-4px_rgba(43,180,216,0.45)]',
+  'bg-bl text-slate-950 font-bold hover:bg-bl-deep hover:text-slate-950 shadow-[0_4px_16px_-4px_rgba(43,180,216,0.45)]',
 );
 
 type NavLink = { name: string; href: string; hint?: string };

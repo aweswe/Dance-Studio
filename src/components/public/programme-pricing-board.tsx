@@ -614,7 +614,7 @@ export function ProgrammePricingBoard() {
                   })}
                   className={
                     isQuarterly
-                      ? 'w-full min-h-[44px] h-11 px-5 rounded-md bg-[#0284c7] hover:bg-[#0369a1] text-white font-extrabold uppercase text-[11px] tracking-wider flex items-center justify-center gap-1.5 transition-all shadow-sm active:scale-[0.98]'
+                      ? 'w-full min-h-[44px] h-11 px-5 rounded-md bg-[#0284c7] hover:bg-[#0ea5e9] text-white font-extrabold uppercase text-[11px] tracking-wider flex items-center justify-center gap-1.5 transition-all shadow-sm active:scale-[0.98]'
                       : isHalfYearly
                       ? 'w-full min-h-[44px] h-11 px-5 rounded-md bg-amber-500 hover:bg-amber-600 text-neutral-950 font-extrabold uppercase text-[11px] tracking-wider flex items-center justify-center gap-1.5 transition-all shadow-sm active:scale-[0.98]'
                       : 'w-full min-h-[44px] h-11 px-5 rounded-md bg-neutral-950 hover:bg-black text-white font-bold uppercase text-[11px] tracking-wider flex items-center justify-center gap-1.5 transition-all shadow-sm active:scale-[0.98]'
@@ -937,7 +937,7 @@ export function ProgrammePricingBoard() {
                       })}
                       className={
                         isQuarterly
-                          ? 'w-full min-h-[44px] h-11 px-4 rounded-md bg-[#0284c7] hover:bg-[#0369a1] text-white text-[10px] font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-sm active:scale-[0.98]'
+                          ? 'w-full min-h-[44px] h-11 px-4 rounded-md bg-[#0284c7] hover:bg-[#0ea5e9] text-white text-[10px] font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-sm active:scale-[0.98]'
                           : isHalfYearly
                           ? 'w-full min-h-[44px] h-11 px-4 rounded-md bg-amber-500 hover:bg-amber-600 text-neutral-950 text-[10px] font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-sm active:scale-[0.98]'
                           : 'w-full min-h-[44px] h-11 px-4 rounded-md bg-neutral-950 hover:bg-black text-white text-[10px] font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-sm active:scale-[0.98]'
