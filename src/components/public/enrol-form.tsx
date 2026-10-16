@@ -99,9 +99,11 @@ function computeProgrammeFee(
   const slug = prog?.slug || '';
   const name = prog?.name?.toLowerCase() || '';
 
+  const isGymnastics = slug === 'gymnastics' || slug.includes('gymnastic') || name.includes('gymnastic');
+
   // Special Studio Plans
   if (planType === 'all-access') return 2500;
-  if (planType === 'sibling') return 3500;
+  if (planType === 'sibling') return isGymnastics ? 1500 : 3500;
 
   // 1. Kids Dance
   if (slug === 'kids-dance' || slug.includes('kids') || name.includes('kids')) {
@@ -128,10 +130,12 @@ function computeProgrammeFee(
   }
 
   // 2.5 Gymnastics
-  if (slug === 'gymnastics' || slug.includes('gymnastic') || name.includes('gymnastic')) {
+  if (isGymnastics) {
     if (planType === 'monthly') return 1000;
     if (planType === 'quarterly') return 2500;
     if (planType === 'half-yearly') return 4500;
+    if (planType === 'annual') return 8000;
+    if (planType === 'sibling') return 1500;
     if (planType === 'drop-in') return 300;
   }
 

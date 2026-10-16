@@ -402,16 +402,22 @@ export function ProgrammePricingBoard() {
     setWaitlistOpen(true);
   };
 
+  const isGymnastics = activeProgramme.id === 'gymnastics' || activeProgramme.slug === 'gymnastics';
+  const siblingFee = isGymnastics ? 1500 : 3500;
+  const annualFee = isGymnastics ? 8000 : 18000;
+  const annualSavings = isGymnastics ? 4000 : 6000;
+  const allAccessFee = 2500;
+
   const dropInWaHref = whatsappLink(
     `Hi Rhythmzz! I'd like to book a Drop-in single class for ${activeProgramme.name} (₹${activeProgramme.dropInFee}). Please confirm upcoming batch timing.`,
   );
 
   const siblingWaHref = whatsappLink(
-    `Hi Rhythmzz! I'd like to enquire about the Sibling Plan (2 kids · ₹3,500/month). Please share batch details.`,
+    `Hi Rhythmzz! I'd like to enquire about the Sibling Plan for ${activeProgramme.name} (2 kids · ₹${siblingFee.toLocaleString('en-IN')}/month). Please share batch details.`,
   );
 
   const annualWaHref = whatsappLink(
-    `Hi Rhythmzz! I'd like to lock in the Annual Plan (Full year · ₹18,000). Please share enrolment details.`,
+    `Hi Rhythmzz! I'd like to lock in the Annual Plan for ${activeProgramme.name} (Full year · ₹${annualFee.toLocaleString('en-IN')}). Please share enrolment details.`,
   );
 
   const allAccessWaHref = whatsappLink(
@@ -680,99 +686,199 @@ export function ProgrammePricingBoard() {
           SPECIAL &amp; ALL-ACCESS PLANS
         </p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {/* 1. All-Access Pass (Lowest price) */}
-          <Link
-            href={enrolHref({
-              programme: 'commercial-expressive',
-              intent: 'pay',
-              plan: 'all-access',
-              fee: 2500,
-            })}
-            className="rounded-md border border-neutral-200 bg-white hover:border-neutral-400 p-4 sm:p-5 flex items-center justify-between gap-4 transition-all shadow-xs hover:shadow-sm group cursor-pointer"
-          >
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="text-base">🎟️</span>
-                <span className="text-sm font-bold text-neutral-950 group-hover:text-bl transition-colors">
-                  All-Access Pass
-                </span>
-              </div>
-              <p className="text-xs text-neutral-600 font-medium mt-1">
-                Every programme, unlimited classes · Monthly
-              </p>
-            </div>
+          {isGymnastics ? (
+            <>
+              {/* 1. Sibling Plan (₹1,500 - Lowest) */}
+              <Link
+                href={enrolHref({
+                  programme: activeProgramme.slug,
+                  intent: 'pay',
+                  plan: 'sibling',
+                  fee: siblingFee,
+                })}
+                className="rounded-md border border-neutral-200 bg-white hover:border-neutral-400 p-4 sm:p-5 flex items-center justify-between gap-4 transition-all shadow-xs hover:shadow-sm group cursor-pointer"
+              >
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-base">👨‍👩‍👧</span>
+                    <span className="text-sm font-bold text-neutral-950 group-hover:text-bl transition-colors">
+                      Sibling Plan
+                    </span>
+                  </div>
+                  <p className="text-xs text-neutral-600 font-medium mt-1">
+                    2 kids (3.5 – 12 yrs) from same family · Monthly
+                  </p>
+                </div>
 
-            <div className="text-right shrink-0">
-              <span className="font-anton text-2xl text-neutral-950 block leading-tight">
-                ₹2,500
-              </span>
-              <span className="text-[11px] text-neutral-600 font-bold">/month</span>
-            </div>
-          </Link>
+                <div className="text-right shrink-0">
+                  <span className="font-anton text-2xl text-neutral-950 block leading-tight">
+                    {formatInr(siblingFee)}
+                  </span>
+                  <span className="text-[10px] font-extrabold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 inline-block mt-0.5">
+                    Save ₹500/mo
+                  </span>
+                </div>
+              </Link>
 
-          {/* 2. Sibling Plan (Second) */}
-          <Link
-            href={enrolHref({
-              programme: activeProgramme.slug,
-              intent: 'pay',
-              plan: 'sibling',
-              fee: 3500,
-            })}
-            className="rounded-md border border-neutral-200 bg-white hover:border-neutral-400 p-4 sm:p-5 flex items-center justify-between gap-4 transition-all shadow-xs hover:shadow-sm group cursor-pointer"
-          >
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="text-base">👨‍👩‍👧</span>
-                <span className="text-sm font-bold text-neutral-950 group-hover:text-bl transition-colors">
-                  Sibling Plan
-                </span>
-              </div>
-              <p className="text-xs text-neutral-600 font-medium mt-1">
-                2 kids (3.5 – 12 yrs) from same family · Monthly
-              </p>
-            </div>
+              {/* 2. All-Access Pass (₹2,500 - Middle) */}
+              <Link
+                href={enrolHref({
+                  programme: 'commercial-expressive',
+                  intent: 'pay',
+                  plan: 'all-access',
+                  fee: allAccessFee,
+                })}
+                className="rounded-md border border-neutral-200 bg-white hover:border-neutral-400 p-4 sm:p-5 flex items-center justify-between gap-4 transition-all shadow-xs hover:shadow-sm group cursor-pointer"
+              >
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-base">🎟️</span>
+                    <span className="text-sm font-bold text-neutral-950 group-hover:text-bl transition-colors">
+                      All-Access Pass
+                    </span>
+                  </div>
+                  <p className="text-xs text-neutral-600 font-medium mt-1">
+                    Every programme, unlimited classes · Monthly
+                  </p>
+                </div>
 
-            <div className="text-right shrink-0">
-              <span className="font-anton text-2xl text-neutral-950 block leading-tight">
-                ₹3,500
-              </span>
-              <span className="text-[10px] font-extrabold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 inline-block mt-0.5">
-                Save ₹500/mo
-              </span>
-            </div>
-          </Link>
+                <div className="text-right shrink-0">
+                  <span className="font-anton text-2xl text-neutral-950 block leading-tight">
+                    {formatInr(allAccessFee)}
+                  </span>
+                  <span className="text-[11px] text-neutral-600 font-bold">/month</span>
+                </div>
+              </Link>
 
-          {/* 3. Annual Plan (Third / Biggest) */}
-          <Link
-            href={enrolHref({
-              programme: activeProgramme.slug,
-              intent: 'pay',
-              plan: 'annual',
-              fee: 18000,
-            })}
-            className="rounded-md border border-neutral-200 bg-white hover:border-neutral-400 p-4 sm:p-5 flex items-center justify-between gap-4 transition-all shadow-xs hover:shadow-sm group cursor-pointer"
-          >
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="text-base">📅</span>
-                <span className="text-sm font-bold text-neutral-950 group-hover:text-bl transition-colors">
-                  Annual Plan
-                </span>
-              </div>
-              <p className="text-xs text-neutral-600 font-medium mt-1">
-                Lock in the best rate · Full year
-              </p>
-            </div>
+              {/* 3. Annual Plan (₹8,000 - Highest) */}
+              <Link
+                href={enrolHref({
+                  programme: activeProgramme.slug,
+                  intent: 'pay',
+                  plan: 'annual',
+                  fee: annualFee,
+                })}
+                className="rounded-md border border-neutral-200 bg-white hover:border-neutral-400 p-4 sm:p-5 flex items-center justify-between gap-4 transition-all shadow-xs hover:shadow-sm group cursor-pointer"
+              >
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-base">📅</span>
+                    <span className="text-sm font-bold text-neutral-950 group-hover:text-bl transition-colors">
+                      Annual Plan
+                    </span>
+                  </div>
+                  <p className="text-xs text-neutral-600 font-medium mt-1">
+                    Lock in the best rate · Full year
+                  </p>
+                </div>
 
-            <div className="text-right shrink-0">
-              <span className="font-anton text-2xl text-neutral-950 block leading-tight">
-                ₹18,000
-              </span>
-              <span className="text-[10px] font-extrabold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 inline-block mt-0.5">
-                Save ₹6,000
-              </span>
-            </div>
-          </Link>
+                <div className="text-right shrink-0">
+                  <span className="font-anton text-2xl text-neutral-950 block leading-tight">
+                    {formatInr(annualFee)}
+                  </span>
+                  <span className="text-[10px] font-extrabold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 inline-block mt-0.5">
+                    Save {formatInr(annualSavings)}
+                  </span>
+                </div>
+              </Link>
+            </>
+          ) : (
+            <>
+              {/* 1. All-Access Pass (₹2,500 - Lowest) */}
+              <Link
+                href={enrolHref({
+                  programme: 'commercial-expressive',
+                  intent: 'pay',
+                  plan: 'all-access',
+                  fee: allAccessFee,
+                })}
+                className="rounded-md border border-neutral-200 bg-white hover:border-neutral-400 p-4 sm:p-5 flex items-center justify-between gap-4 transition-all shadow-xs hover:shadow-sm group cursor-pointer"
+              >
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-base">🎟️</span>
+                    <span className="text-sm font-bold text-neutral-950 group-hover:text-bl transition-colors">
+                      All-Access Pass
+                    </span>
+                  </div>
+                  <p className="text-xs text-neutral-600 font-medium mt-1">
+                    Every programme, unlimited classes · Monthly
+                  </p>
+                </div>
+
+                <div className="text-right shrink-0">
+                  <span className="font-anton text-2xl text-neutral-950 block leading-tight">
+                    {formatInr(allAccessFee)}
+                  </span>
+                  <span className="text-[11px] text-neutral-600 font-bold">/month</span>
+                </div>
+              </Link>
+
+              {/* 2. Sibling Plan (₹3,500 - Second) */}
+              <Link
+                href={enrolHref({
+                  programme: activeProgramme.slug,
+                  intent: 'pay',
+                  plan: 'sibling',
+                  fee: siblingFee,
+                })}
+                className="rounded-md border border-neutral-200 bg-white hover:border-neutral-400 p-4 sm:p-5 flex items-center justify-between gap-4 transition-all shadow-xs hover:shadow-sm group cursor-pointer"
+              >
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-base">👨‍👩‍👧</span>
+                    <span className="text-sm font-bold text-neutral-950 group-hover:text-bl transition-colors">
+                      Sibling Plan
+                    </span>
+                  </div>
+                  <p className="text-xs text-neutral-600 font-medium mt-1">
+                    2 kids (3.5 – 12 yrs) from same family · Monthly
+                  </p>
+                </div>
+
+                <div className="text-right shrink-0">
+                  <span className="font-anton text-2xl text-neutral-950 block leading-tight">
+                    {formatInr(siblingFee)}
+                  </span>
+                  <span className="text-[10px] font-extrabold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 inline-block mt-0.5">
+                    Save ₹500/mo
+                  </span>
+                </div>
+              </Link>
+
+              {/* 3. Annual Plan (₹18,000 - Highest) */}
+              <Link
+                href={enrolHref({
+                  programme: activeProgramme.slug,
+                  intent: 'pay',
+                  plan: 'annual',
+                  fee: annualFee,
+                })}
+                className="rounded-md border border-neutral-200 bg-white hover:border-neutral-400 p-4 sm:p-5 flex items-center justify-between gap-4 transition-all shadow-xs hover:shadow-sm group cursor-pointer"
+              >
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-base">📅</span>
+                    <span className="text-sm font-bold text-neutral-950 group-hover:text-bl transition-colors">
+                      Annual Plan
+                    </span>
+                  </div>
+                  <p className="text-xs text-neutral-600 font-medium mt-1">
+                    Lock in the best rate · Full year
+                  </p>
+                </div>
+
+                <div className="text-right shrink-0">
+                  <span className="font-anton text-2xl text-neutral-950 block leading-tight">
+                    {formatInr(annualFee)}
+                  </span>
+                  <span className="text-[10px] font-extrabold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 inline-block mt-0.5">
+                    Save {formatInr(annualSavings)}
+                  </span>
+                </div>
+              </Link>
+            </>
+          )}
         </div>
       </div>
 
