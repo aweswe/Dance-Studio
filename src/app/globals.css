@@ -143,25 +143,8 @@
   border-top: 2px solid var(--bl);
 }
 
-/* ── Crisp, High-Contrast Typography Utilities ── */
-/* On light backgrounds, ensure blue and gold text achieve WCAG AA/AAA readability */
-body .text-bl:not(.cinema-stage .text-bl):not(.dark .text-bl):not([data-theme="dark"] .text-bl):not(.bg-blk .text-bl):not(.bg-black .text-bl):not(.bg-slate-950 .text-bl):not(.bg-slate-900 .text-bl):not(#hero .text-bl) {
-  color: #0369A1; /* Deep ocean blue with 5.5:1 contrast on white */
-}
-
-body .text-gold:not(.cinema-stage .text-gold):not(.dark .text-gold):not([data-theme="dark"] .text-gold):not(.bg-blk .text-gold):not(.bg-black .text-gold):not(.bg-slate-950 .text-gold):not(.bg-slate-900 .text-gold):not(#hero .text-gold) {
-  color: #92400E; /* Deep amber bronze with 6.2:1 contrast on white */
-}
-
-/* On dark containers, cinema-stage, and dark surfaces, use luminous brand shades */
-.cinema-stage .text-bl,
-[data-theme="dark"] .text-bl,
-.dark .text-bl,
-.bg-blk .text-bl,
-.bg-black .text-bl,
-.bg-slate-950 .text-bl,
-.bg-slate-900 .text-bl,
-#hero .text-bl {
+/* ── Luminous Brand Colors Everywhere ── */
+.text-bl {
   color: var(--bl);
 }
 

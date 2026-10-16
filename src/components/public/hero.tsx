@@ -17,7 +17,7 @@ interface HeroProps {
 
 export function Hero({ stats }: HeroProps) {
   return (
-    <section className="relative w-full px-4 sm:px-6 md:px-10 pt-3 sm:pt-4 pb-4 sm:pb-5 max-w-[1440px] mx-auto">
+    <section id="hero" className="relative w-full px-4 sm:px-6 md:px-10 pt-3 sm:pt-4 pb-4 sm:pb-5 max-w-[1440px] mx-auto">
       {/* Subtle top ambient sheen transitioning smoothly from the header */}
       <div
         className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-white/70 to-transparent"

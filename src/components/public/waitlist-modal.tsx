@@ -127,7 +127,7 @@ export function WaitlistModal({
             </div>
 
             <div>
-              <span className="inline-block px-3 py-1 rounded-md bg-sky-100 text-[#0284c7] font-mono text-xs font-extrabold uppercase tracking-wider mb-2">
+              <span className="inline-block px-3 py-1 rounded-md bg-bl/15 text-bl font-mono text-xs font-extrabold uppercase tracking-wider mb-2">
                 Queue Position #{successData.queuePosition} Confirmed
               </span>
               <h3 className="font-anton text-2xl sm:text-3xl uppercase tracking-tight text-neutral-950">
@@ -208,7 +208,7 @@ export function WaitlistModal({
                   placeholder="e.g. Ananya Sharma"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-md border border-neutral-300 bg-white text-xs sm:text-sm text-neutral-900 focus:outline-hidden focus:border-[#0284c7] focus:ring-1 focus:ring-[#0284c7]"
+                  className="w-full px-3.5 py-2.5 rounded-md border border-neutral-300 bg-white text-xs sm:text-sm text-neutral-900 focus:outline-hidden focus:border-bl focus:ring-1 focus:ring-bl"
                 />
               </div>
 
@@ -223,7 +223,7 @@ export function WaitlistModal({
                     placeholder="10-digit mobile number"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-md border border-neutral-300 bg-white text-xs sm:text-sm text-neutral-900 focus:outline-hidden focus:border-[#0284c7] focus:ring-1 focus:ring-[#0284c7]"
+                    className="w-full px-3.5 py-2.5 rounded-md border border-neutral-300 bg-white text-xs sm:text-sm text-neutral-900 focus:outline-hidden focus:border-bl focus:ring-1 focus:ring-bl"
                   />
                 </div>
 
@@ -236,7 +236,7 @@ export function WaitlistModal({
                     placeholder="name@example.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-md border border-neutral-300 bg-white text-xs sm:text-sm text-neutral-900 focus:outline-hidden focus:border-[#0284c7] focus:ring-1 focus:ring-[#0284c7]"
+                    className="w-full px-3.5 py-2.5 rounded-md border border-neutral-300 bg-white text-xs sm:text-sm text-neutral-900 focus:outline-hidden focus:border-bl focus:ring-1 focus:ring-bl"
                   />
                 </div>
               </div>
@@ -248,7 +248,7 @@ export function WaitlistModal({
                 <select
                   value={programme}
                   onChange={(e) => setProgramme(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-md border border-neutral-300 bg-white text-xs sm:text-sm text-neutral-900 focus:outline-hidden focus:border-[#0284c7] focus:ring-1 focus:ring-[#0284c7]"
+                  className="w-full px-3.5 py-2.5 rounded-md border border-neutral-300 bg-white text-xs sm:text-sm text-neutral-900 focus:outline-hidden focus:border-bl focus:ring-1 focus:ring-bl"
                 >
                   {PROGRAMME_OPTIONS.map((opt) => (
                     <option key={opt} value={opt}>
@@ -265,7 +265,7 @@ export function WaitlistModal({
                 <select
                   value={preferredTiming}
                   onChange={(e) => setPreferredTiming(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-md border border-neutral-300 bg-white text-xs sm:text-sm text-neutral-900 focus:outline-hidden focus:border-[#0284c7] focus:ring-1 focus:ring-[#0284c7]"
+                  className="w-full px-3.5 py-2.5 rounded-md border border-neutral-300 bg-white text-xs sm:text-sm text-neutral-900 focus:outline-hidden focus:border-bl focus:ring-1 focus:ring-bl"
                 >
                   <option value="Flexible / Any Open Slot">Flexible / Any Open Slot</option>
                   <option value="Weekday Evenings (5 PM – 7 PM)">Weekday Evenings (5 PM – 7 PM)</option>
@@ -284,7 +284,7 @@ export function WaitlistModal({
                   placeholder="Tell us about prior dance experience, age of student, etc."
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
-                  className="w-full px-3.5 py-2 rounded-md border border-neutral-300 bg-white text-xs text-neutral-900 focus:outline-hidden focus:border-[#0284c7] focus:ring-1 focus:ring-[#0284c7]"
+                  className="w-full px-3.5 py-2 rounded-md border border-neutral-300 bg-white text-xs text-neutral-900 focus:outline-hidden focus:border-bl focus:ring-1 focus:ring-bl"
                 />
               </div>
             </div>
@@ -293,7 +293,7 @@ export function WaitlistModal({
               <button
                 type="submit"
                 disabled={busy}
-                className="w-full py-3.5 px-6 rounded-md bg-[#0284c7] hover:bg-[#0ea5e9] text-white font-extrabold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all active:scale-[0.98] shadow-sm cursor-pointer disabled:opacity-70"
+                className="w-full py-3.5 px-6 rounded-md bg-bl hover:bg-bl-deep text-slate-950 hover:text-slate-950 font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all active:scale-[0.98] shadow-sm cursor-pointer disabled:opacity-70"
               >
                 {busy ? (
                   <>

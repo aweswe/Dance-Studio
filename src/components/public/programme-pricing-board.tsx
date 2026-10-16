@@ -441,12 +441,12 @@ export function ProgrammePricingBoard() {
     <section className="w-full bg-white text-neutral-900 py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-10 max-w-[1360px] mx-auto select-none">
       {/* ── TOP HEADER ── */}
       <header className="text-center max-w-3xl mx-auto mb-8 sm:mb-10">
-        <p className="text-[#0284c7] font-mono font-bold uppercase tracking-[0.18em] sm:tracking-[0.2em] text-[10px] sm:text-xs mb-2">
+        <p className="text-bl font-mono font-bold uppercase tracking-[0.18em] sm:tracking-[0.2em] text-[10px] sm:text-xs mb-2">
           TRANSPARENT · NO HIDDEN FEES · HYDERABAD&apos;S BEST VALUE
         </p>
         <h2 className="font-anton text-3xl sm:text-5xl md:text-6xl uppercase tracking-tight leading-tight sm:leading-[0.95] text-neutral-950">
           PICK A CLASS.{' '}
-          <span className="text-[#0284c7]">PAY YOUR WAY.</span>
+          <span className="text-bl">PAY YOUR WAY.</span>
         </h2>
         <p className="mt-2.5 sm:mt-3 text-xs sm:text-base text-neutral-700 font-medium max-w-xl mx-auto leading-relaxed">
           Quarterly saves most · Annual locks in the best rate · First class is on us
@@ -513,7 +513,7 @@ export function ProgrammePricingBoard() {
                   key={idx}
                   className={`px-2.5 py-0.5 rounded-md text-[10px] font-extrabold tracking-wider uppercase border ${
                     tag.highlight
-                      ? 'bg-sky-50 border-sky-400 text-sky-900'
+                      ? 'bg-bl/15 border-bl/40 text-neutral-950 font-bold'
                       : 'bg-white border-neutral-300 text-neutral-800'
                   }`}
                 >
@@ -525,7 +525,7 @@ export function ProgrammePricingBoard() {
         </div>
 
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-md bg-white border border-neutral-300 text-xs text-neutral-900 font-bold self-start md:self-auto shrink-0 shadow-2xs">
-          <Calendar className="w-3.5 h-3.5 text-[#0284c7]" />
+          <Calendar className="w-3.5 h-3.5 text-bl" />
           <span>{activeProgramme.schedule}</span>
         </div>
       </div>
@@ -537,7 +537,7 @@ export function ProgrammePricingBoard() {
           const isHalfYearly = tier.id === 'half-yearly';
 
           const cardClasses = isQuarterly
-            ? 'relative rounded-md border-2 border-[#0284c7] bg-white p-6 flex flex-col justify-between shadow-[0_4px_24px_-4px_rgba(2,132,199,0.25)] transition-all'
+            ? 'relative rounded-md border-2 border-bl bg-white p-6 flex flex-col justify-between shadow-[0_4px_24px_-4px_rgba(43,180,216,0.25)] transition-all'
             : isHalfYearly
             ? 'relative rounded-md border-2 border-amber-500 bg-white p-6 flex flex-col justify-between shadow-[0_4px_24px_-4px_rgba(245,158,11,0.25)] transition-all'
             : 'relative rounded-md border-2 border-neutral-200 bg-white p-6 flex flex-col justify-between shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:border-neutral-400 hover:shadow-md transition-all';
@@ -548,7 +548,7 @@ export function ProgrammePricingBoard() {
               {tier.badge && (
                 <div
                   className={`absolute -top-3 left-1/2 -translate-x-1/2 px-3.5 py-0.5 rounded-md text-[10px] font-extrabold uppercase tracking-wider flex items-center gap-1 shadow-sm whitespace-nowrap ${
-                    isQuarterly ? 'bg-[#0284c7] text-white' : 'bg-amber-500 text-neutral-950'
+                    isQuarterly ? 'bg-bl text-slate-950 font-extrabold' : 'bg-amber-500 text-neutral-950'
                   }`}
                 >
                   {isQuarterly ? '⭐ MOST POPULAR' : '🏆 BEST VALUE'}
@@ -614,7 +614,7 @@ export function ProgrammePricingBoard() {
                   })}
                   className={
                     isQuarterly
-                      ? 'w-full min-h-[44px] h-11 px-5 rounded-md bg-[#0284c7] hover:bg-[#0ea5e9] text-white font-extrabold uppercase text-[11px] tracking-wider flex items-center justify-center gap-1.5 transition-all shadow-sm active:scale-[0.98]'
+                      ? 'w-full min-h-[44px] h-11 px-5 rounded-md bg-bl hover:bg-bl-deep text-slate-950 hover:text-slate-950 font-extrabold uppercase text-[11px] tracking-wider flex items-center justify-center gap-1.5 transition-all shadow-sm active:scale-[0.98]'
                       : isHalfYearly
                       ? 'w-full min-h-[44px] h-11 px-5 rounded-md bg-amber-500 hover:bg-amber-600 text-neutral-950 font-extrabold uppercase text-[11px] tracking-wider flex items-center justify-center gap-1.5 transition-all shadow-sm active:scale-[0.98]'
                       : 'w-full min-h-[44px] h-11 px-5 rounded-md bg-neutral-950 hover:bg-black text-white font-bold uppercase text-[11px] tracking-wider flex items-center justify-center gap-1.5 transition-all shadow-sm active:scale-[0.98]'
@@ -684,7 +684,7 @@ export function ProgrammePricingBoard() {
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-base">👨‍👩‍👧</span>
-                <span className="text-sm font-bold text-neutral-950 group-hover:text-[#0284c7] transition-colors">
+                <span className="text-sm font-bold text-neutral-950 group-hover:text-bl transition-colors">
                   Sibling Plan
                 </span>
               </div>
@@ -716,7 +716,7 @@ export function ProgrammePricingBoard() {
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-base">📅</span>
-                <span className="text-sm font-bold text-neutral-950 group-hover:text-[#0284c7] transition-colors">
+                <span className="text-sm font-bold text-neutral-950 group-hover:text-bl transition-colors">
                   Annual Plan
                 </span>
               </div>
@@ -756,7 +756,7 @@ export function ProgrammePricingBoard() {
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-base">🎟️</span>
-                <span className="text-sm font-bold text-neutral-950 group-hover:text-[#0284c7] transition-colors">
+                <span className="text-sm font-bold text-neutral-950 group-hover:text-bl transition-colors">
                   All-Access Pass
                 </span>
               </div>
@@ -786,7 +786,7 @@ export function ProgrammePricingBoard() {
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-base">👨‍👩‍👦‍👦</span>
-                <span className="text-sm font-bold text-neutral-950 group-hover:text-[#0284c7] transition-colors">
+                <span className="text-sm font-bold text-neutral-950 group-hover:text-bl transition-colors">
                   Family Plan
                 </span>
               </div>
@@ -865,7 +865,7 @@ export function ProgrammePricingBoard() {
               const isHalfYearly = tier.id === 'half-yearly';
 
               const cardClasses = isQuarterly
-                ? 'relative rounded-md border-2 border-[#0284c7] bg-white p-5 sm:p-6 flex flex-col justify-between shadow-[0_4px_20px_-4px_rgba(2,132,199,0.25)]'
+                ? 'relative rounded-md border-2 border-bl bg-white p-5 sm:p-6 flex flex-col justify-between shadow-[0_4px_20px_-4px_rgba(43,180,216,0.25)]'
                 : isHalfYearly
                 ? 'relative rounded-md border-2 border-amber-500 bg-white p-5 sm:p-6 flex flex-col justify-between shadow-[0_4px_20px_-4px_rgba(245,158,11,0.25)]'
                 : 'relative rounded-md border-2 border-neutral-200 bg-white p-5 sm:p-6 flex flex-col justify-between shadow-2xs';
@@ -875,7 +875,7 @@ export function ProgrammePricingBoard() {
                   {tier.badge && (
                     <div
                       className={`absolute -top-3 left-1/2 -translate-x-1/2 px-3.5 py-0.5 rounded-md text-[10px] font-extrabold uppercase tracking-wider flex items-center gap-1 shadow-sm whitespace-nowrap ${
-                        isQuarterly ? 'bg-[#0284c7] text-white' : 'bg-amber-500 text-neutral-950'
+                        isQuarterly ? 'bg-bl text-slate-950 font-extrabold' : 'bg-amber-500 text-neutral-950'
                       }`}
                     >
                       {isQuarterly ? '⭐ MOST POPULAR' : '🏆 BEST VALUE'}
@@ -937,7 +937,7 @@ export function ProgrammePricingBoard() {
                       })}
                       className={
                         isQuarterly
-                          ? 'w-full min-h-[44px] h-11 px-4 rounded-md bg-[#0284c7] hover:bg-[#0ea5e9] text-white text-[10px] font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-sm active:scale-[0.98]'
+                          ? 'w-full min-h-[44px] h-11 px-4 rounded-md bg-bl hover:bg-bl-deep text-slate-950 hover:text-slate-950 text-[10px] font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-sm active:scale-[0.98]'
                           : isHalfYearly
                           ? 'w-full min-h-[44px] h-11 px-4 rounded-md bg-amber-500 hover:bg-amber-600 text-neutral-950 text-[10px] font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-sm active:scale-[0.98]'
                           : 'w-full min-h-[44px] h-11 px-4 rounded-md bg-neutral-950 hover:bg-black text-white text-[10px] font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-sm active:scale-[0.98]'
@@ -1034,7 +1034,7 @@ export function ProgrammePricingBoard() {
             className="text-xs text-neutral-700 hover:text-black font-semibold transition-colors inline-flex items-center gap-1 group cursor-pointer"
           >
             <span>More certification programmes coming soon —</span>
-            <span className="text-[#0284c7] font-bold underline underline-offset-4 group-hover:text-black">
+            <span className="text-bl font-bold underline underline-offset-4 group-hover:text-black">
               Join the waitlist →
             </span>
           </button>
@@ -1052,7 +1052,7 @@ export function ProgrammePricingBoard() {
           <span>IAO Accredited since 2014</span>
         </div>
         <div className="flex items-center gap-2">
-          <Users className="w-4 h-4 text-[#0284c7]" />
+          <Users className="w-4 h-4 text-bl" />
           <span>5,000+ students trained</span>
         </div>
         <div className="flex items-center gap-2">
