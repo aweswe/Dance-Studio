@@ -10,7 +10,7 @@ const DAY_ORDER = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Satu
 export const FALLBACK_SCHEDULES: Record<string, { days: string; time: string; instructor: string }> = {
   'kids-dance': { days: 'Mon – Wed', time: '5:00 PM – 7:00 PM', instructor: 'Academy Faculty' },
   'adults-dance': { days: 'Mon – Wed', time: '7:00 PM – 9:00 PM', instructor: 'Academy Faculty' },
-  'mind-body-fitness': { days: 'Mon – Fri', time: '9:30 AM – 10:30 AM', instructor: 'Fitness Faculty' },
+  'mind-body-fitness': { days: 'Mon – Fri', time: '8:30 AM – 10:20 AM (Zumba Mon/Wed · Yoga Tue)', instructor: 'Fitness Faculty' },
   'kuchipudi': { days: 'Fri · Sat', time: '6:30 PM – 7:30 PM', instructor: 'Classical Faculty' },
 };
 

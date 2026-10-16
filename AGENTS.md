@@ -74,6 +74,24 @@ Over the course of development and production optimization for Rhythmzz Academy 
     * Replaced all stock and placeholder assets with authentic academy photography, official vector/PNG branding (`/images/branding/`), authentic instructor & leadership portraits (`/images/team/`), verified studio photography (`/images/studio-rental/`), and real workshop event posters.
     * Compressed large spotlight hero video (`spotlight-3.mp4`) down to 66 MB to satisfy git and production bandwidth standards without perceptual quality loss.
 
+13. **Mind & Body Fitness Pricing Expansion (Yoga & Zumba Plans)**:
+    * Added standalone **Yoga** (₹1,000/mo, 1 day/wk, Tuesday 9:30 AM) and standalone **Zumba** (₹1,500/mo, 2 days/wk, Mon & Wed 8:30 AM & 9:30 AM).
+    * Restructured and sorted the Special & All-Access plan cards in strictly ascending price order: Yoga (₹1,000) $\rightarrow$ Zumba (₹1,500) $\rightarrow$ Sibling (₹3,500) $\rightarrow$ Annual (₹18,000).
+    * Integrated deep-linked enrolment (`plan=yoga`, `plan=zumba`) with pre-locked confirmed plan cards, timetable updates, and strict generic faculty naming (`Fitness Faculty`).
+
+14. **In-Place Admin Class & Batch Editing (`/admin/classes`)**:
+    * Eliminated the tedious workflow of deleting and recreating classes to update parameters.
+    * Added `updateBatch` and `updateProgramme` server actions with full Zod schema validation.
+    * Integrated interactive Edit modals with pencil triggers across all batches and programmes for immediate editing of timings, interactive day chips, instructor assignment, capacity, fees, and active status with full cache revalidation.
+
+15. **Multi-Layer Gallery Architecture & Admin Visibility Synchronization**:
+    * Resolved the visibility gap where admins previously saw only 6 uploaded database photos while the public gallery showcased over 60 assets.
+    * Unified dynamic database uploads with the curated static studio archive (`ALL_AUTHENTIC_GALLERY_IMAGES`) inside `GalleryManager` with explanatory architecture banners, tab filters (**All 60**, **Database Uploads 6**, **Studio & Tour Archive 54**), and instant category tag filters.
+
+16. **Kuchipudi Curriculum Racetrack Roadmap & Classical Showcase (`/syllabus/kuchipudi`)**:
+    * Engineered a fluid curved racetrack SVG roadmap featuring gold milestone medallions, progressive year-by-year syllabus tracking, and authentic classical photography (`artifact_img_2.jpg`).
+    * Added a dedicated classical credentials spotlight for Guru Srushti Nidhi (16 years under Guru Smt. Lakshmi Shankar, Doordarshan B-Grade certification, Telugu University credentials, and Nruthyadeekshamani title).
+
 ---
 
 ## 2. Key Architecture & Code Implementation Details
@@ -346,26 +364,55 @@ erDiagram
 
 ---
 
+### K. Mind & Body Fitness Expansion, In-Place Admin Class Editing, & Multi-Layer Gallery Architecture
+
+1. **Mind & Body Fitness Pricing & Schedule Architecture (`src/components/public/programme-pricing-board.tsx`, `src/data/batches.ts`, `src/data/programmes.ts`)**:
+   * Added standalone **Yoga** (1 day a week · Tuesday · 9:30 AM · ₹1,000/month).
+   * Added standalone **Zumba** (2 days a week · Mon & Wed · 8:30 AM & 9:30 AM · ₹1,500/month).
+   * Rebalanced the Special & All-Access Plans grid into a responsive 4-column layout (`grid-cols-1 sm:grid-cols-2 lg:grid-cols-4`) ordered strictly in ascending price order:
+     1. **Yoga**: ₹1,000 / month
+     2. **Zumba**: ₹1,500 / month
+     3. **Sibling Plan**: ₹3,500 / month (Save ₹500/mo)
+     4. **Annual Plan**: ₹18,000 (Save ₹6,000)
+   * Updated programme tags (`YOGA (1 DAY/WK)`, `ZUMBA (2 DAYS/WK)`, `COMBO PACK (MON-FRI)`) and schedule descriptions.
+   * Added standalone batches in `DEFAULT_BATCHES` and updated `FALLBACK_SCHEDULES['mind-body-fitness']` while preserving strict generic faculty naming (`Fitness Faculty`).
+   * Supported deep-linked enrolment for `plan=zumba` (₹1,500) and `plan=yoga` (₹1,000) in `EnrolForm` with pre-locked confirmed plan cards.
+
+2. **In-Place Admin Class & Batch Editing (`src/actions/classes.ts`, `src/components/admin/batch-manager.tsx`)**:
+   * *Problem Solved:* Previously, admins had to delete and completely recreate batches whenever timing, capacity, days, or instructors changed.
+   * *Solution:* Built `updateBatch` and `updateProgramme` server actions with full Zod validation (`updateBatchSchema`, `updateProgrammeSchema`).
+   * *UI Implementation:* Added dedicated **Edit** buttons with pencil icons to every batch and programme card in `BatchManager`.
+   * *Interactive Modals:* Built comprehensive **Edit Class Batch** and **Edit Programme** modals allowing in-place edits to name, programme, instructor, interactive days selector, 24h start/end times, student capacity, status (active/paused/full), and fees, with automatic cache revalidation across `/admin/classes`, `/schedule`, `/student/schedule`, and `/instructor/classes`.
+
+3. **Multi-Layer Gallery Architecture & Admin Visibility (`src/app/admin/gallery/page.tsx`, `src/components/admin/gallery-manager.tsx`)**:
+   * *Problem Solved:* Admin only saw 6 uploaded images in the admin portal despite the public gallery showcasing over 60 high-resolution photos.
+   * *Root Cause Identified:* The public site automatically blends database uploads with the curated static studio archive (`ALL_AUTHENTIC_GALLERY_IMAGES`), whereas the admin page was querying only the `gallery` database table.
+   * *Solution:* Unified both media layers in `GalleryManager`:
+     - Explanatory architecture banner clarifying the split between database uploads and the curated studio archive.
+     - Multi-tier tab navigation: **All Photos (60)**, **Database Uploads (6)**, and **Studio & Tour Archive (54)**.
+     - Instant category filters for archive photos: *Classical*, *Contemporary*, *Gymnastics*, *Live Concerts & Tours*, and *Studio Training*.
+     - Full reordering, visibility toggle, and deletion for database uploads; high-resolution lightbox viewing for archive assets.
+
+4. **Kuchipudi Curriculum Roadmap & Guru Srushti Nidhi Profile (`src/components/public/kuchipudi-road-map.tsx`, `src/components/public/guru-srushtinidhi-section.tsx`)**:
+   * Minimalist racetrack curved SVG road with gold-bordered milestone cards and authentic photography.
+   * Dedicated classical credentials showcase for Srushti Nidhi: 16 years of training under Guru Smt. Lakshmi Shankar, Doordarshan B-Grade certification, Telugu University credentials, and Nruthyadeekshamani title.
+
+---
+
 ## 4. Verification, Testing & Quality Audit Checklist
 
-* [x] **Vitest Unit & Integration Tests**: 5 test suites, 41 tests, **100% passing**.
+* [x] **Vitest Unit & Integration Tests**: 5 test suites, 42 tests, **100% passing**.
   - `src/lib/utils/csv.test.ts` (5 tests)
   - `src/lib/fees/ledger.test.ts` (11 tests)
   - `src/lib/rate-limit.test.ts` (7 tests)
-  - `src/lib/products.test.ts` (5 tests)
+  - `src/lib/products.test.ts` (6 tests)
   - `src/lib/validators/validators.test.ts` (13 tests)
 * [x] **TypeScript Strict Typing**: `npx tsc --noEmit` returns **0 errors**.
-* [x] **Gear Storefront & Admin Portal**: Verified public browsing, WhatsApp checkout generation, and admin CRUD actions.
-* [x] **Studio Rental Gallery**: Verified interactive filter, lightroom modal, and tiered rate cards.
-* [x] **Browser Visual Verification**:
-  - `/terms`: Confirmed centered layout.
-  - `/#pricing`: Verified interactive waitlist modal.
-  - `/enrol?programme=kids-dance&plan=quarterly&fee=5000`: Verified pre-selected plan summary card.
-  - `/syllabus/kuchipudi`: Verified Hero, Philosophy, Roadmap, Interactive Syllabus, Margam Repertoire Suite, and Rangapravesham.
-  - `/syllabus`: Verified high-contrast index cards and sanitized faculty notes.
-  - `/gear`: Verified product catalog, filters, modal, and cart builder.
-  - `/studio-rental`: Verified studio photo gallery and booking CTA.
+* [x] **In-Place Batch & Programme Editing**: Verified edit modal, form binding, server actions, and cache revalidation.
+* [x] **Gallery Multi-Layer Overview**: Verified all 60 items visible in admin with tabbed filtering.
+* [x] **Pricing Ascending Sorting**: Verified Yoga (₹1,000) $\rightarrow$ Zumba (₹1,500) $\rightarrow$ Sibling (₹3,500) $\rightarrow$ Annual (₹18,000).
 * [x] **Age Bracket Universal Accuracy**: Kids = `3.5 – 12 years`, Adults = `13+ years`.
 * [x] **Zero Trainer Names**: Verified zero trainer names in public schedules, syllabus, certification tracks, and upcoming class cards.
 * [x] **Supabase Quota Safety**: Zero video uploads to Supabase storage; reels rendered via Instagram iframe URLs.
+
 

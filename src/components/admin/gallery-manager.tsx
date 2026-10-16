@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Modal } from '@/components/ui/modal';
 import { ConfirmModal } from '@/components/ui/confirm-modal';
-import { Upload, X, ArrowUp, ArrowDown, Eye, EyeOff, Loader2, Image as ImageIcon, CheckCircle2 } from 'lucide-react';
+import { Upload, X, ArrowUp, ArrowDown, Eye, EyeOff, Loader2, Image as ImageIcon, CheckCircle2, ExternalLink } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { uploadMedia, toggleVisibility, deleteMedia, reorderMedia } from '@/actions/gallery';
 import { compressImage } from '@/lib/utils/image-compress';
@@ -20,11 +20,32 @@ interface GalleryItem {
   sort_order: number;
 }
 
-export function GalleryManager({ initialItems }: { initialItems: GalleryItem[] }) {
+export interface ArchiveGalleryItem {
+  id: string;
+  url: string;
+  thumbnail_url?: string;
+  title: string;
+  alt: string;
+  type: string;
+  category: string;
+  tags: string[];
+  is_visible: boolean;
+  sort_order: number;
+}
+
+export function GalleryManager({ 
+  initialItems, 
+  archiveItems = [] 
+}: { 
+  initialItems: GalleryItem[]; 
+  archiveItems?: ArchiveGalleryItem[]; 
+}) {
   const router = useRouter();
   const fileRef = useRef<HTMLInputElement>(null);
   const [items, setItems] = useState<GalleryItem[]>(initialItems || []);
   const [itemSource, setItemSource] = useState(initialItems);
+  const [activeTab, setActiveTab] = useState<'all' | 'uploaded' | 'archive'>('all');
+  const [archiveCategory, setArchiveCategory] = useState<string>('all');
   const [busy, setBusy] = useState(false);
   const [uploadStatus, setUploadStatus] = useState<string>('');
   const [feedback, setFeedback] = useState<{ ok: boolean; text: string } | null>(null);
@@ -244,107 +265,242 @@ export function GalleryManager({ initialItems }: { initialItems: GalleryItem[] }
         />
       </div>
 
-      {/* Grid of Existing Photos */}
-      <div className="flex items-center justify-between pt-2">
-        <h3 className="font-display text-lg text-ink">
-          Uploaded Media <span className="text-xs text-ink-2 font-normal">({items.length} items)</span>
-        </h3>
-        {items.length > 0 && (
-          <span className="text-xs text-ink-2">Hover over an item to reorder or remove</span>
+      {/* Information Banner explaining the multi-layer gallery system */}
+      <div className="rounded-md border border-bl/30 bg-bl/5 p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+        <div className="space-y-1">
+          <p className="font-bold text-ink flex items-center gap-1.5">
+            <CheckCircle2 size={16} className="text-bl shrink-0" />
+            <span>Complete Website Gallery Overview</span>
+          </p>
+          <p className="text-ink-2 leading-relaxed">
+            The public website gallery serves <strong className="text-ink">{items.length + archiveItems.length} photos</strong> in total: <strong className="text-ink">{items.length} dynamic uploads</strong> stored in your Supabase database, and <strong className="text-ink">{archiveItems.length} curated studio &amp; tour archive photos</strong>. Newly uploaded photos here appear at the very front of the gallery.
+          </p>
+        </div>
+      </div>
+
+      {/* Tab Filter Bar */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 pt-2 border-b border-line pb-3">
+        <div className="flex items-center gap-2 flex-wrap">
+          <button
+            type="button"
+            onClick={() => setActiveTab('all')}
+            className={`px-3 py-1.5 rounded-md text-xs font-bold transition-all cursor-pointer ${
+              activeTab === 'all'
+                ? 'bg-slate-950 text-white shadow-xs'
+                : 'bg-canvas-muted text-ink-2 hover:text-ink'
+            }`}
+          >
+            All Photos ({items.length + archiveItems.length})
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab('uploaded')}
+            className={`px-3 py-1.5 rounded-md text-xs font-bold transition-all cursor-pointer ${
+              activeTab === 'uploaded'
+                ? 'bg-slate-950 text-white shadow-xs'
+                : 'bg-canvas-muted text-ink-2 hover:text-ink'
+            }`}
+          >
+            Database Uploads ({items.length})
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab('archive')}
+            className={`px-3 py-1.5 rounded-md text-xs font-bold transition-all cursor-pointer ${
+              activeTab === 'archive'
+                ? 'bg-slate-950 text-white shadow-xs'
+                : 'bg-canvas-muted text-ink-2 hover:text-ink'
+            }`}
+          >
+            Studio &amp; Tour Archive ({archiveItems.length})
+          </button>
+        </div>
+
+        {activeTab !== 'uploaded' && (
+          <div className="flex items-center gap-1.5 overflow-x-auto text-[11px]">
+            <span className="text-ink-3 font-semibold mr-1 shrink-0">Category:</span>
+            {['all', 'Classical', 'Contemporary', 'Gymnastics', 'Live Concerts & Tours', 'Studio Training'].map((cat) => (
+              <button
+                key={cat}
+                type="button"
+                onClick={() => setArchiveCategory(cat)}
+                className={`px-2.5 py-1 rounded text-xs font-medium transition-colors cursor-pointer whitespace-nowrap ${
+                  archiveCategory === cat
+                    ? 'bg-bl/20 text-bl-ink font-bold border border-bl/40'
+                    : 'text-ink-2 hover:text-ink'
+                }`}
+              >
+                {cat === 'all' ? 'All' : cat}
+              </button>
+            ))}
+          </div>
         )}
       </div>
 
+      {/* Grid of Photos */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {items.map((item, i) => (
-          <div
-            key={item.id}
-            className="relative group rounded-md overflow-hidden border border-line-strong bg-surface shadow-sm hover:shadow-md transition-shadow"
-          >
-            <div className="aspect-square relative bg-canvas-muted">
-              {item.type === 'video' ? (
-                <video src={item.url} className="object-cover w-full h-full" muted />
-              ) : (
-                /* eslint-disable-next-line @next/next/no-img-element */
-                <img
-                  src={item.url}
-                  alt={item.title || 'Gallery item'}
-                  className="object-cover w-full h-full"
-                  loading="lazy"
-                />
-              )}
+        {/* 1. Uploaded Database Photos */}
+        {(activeTab === 'all' || activeTab === 'uploaded') &&
+          items.map((item, i) => (
+            <div
+              key={`db-${item.id}`}
+              className="relative group rounded-md overflow-hidden border border-line-strong bg-surface shadow-sm hover:shadow-md transition-shadow"
+            >
+              <div className="aspect-square relative bg-canvas-muted">
+                {item.type === 'video' ? (
+                  <video src={item.url} className="object-cover w-full h-full" muted />
+                ) : (
+                  /* eslint-disable-next-line @next/next/no-img-element */
+                  <img
+                    src={item.url}
+                    alt={item.title || 'Gallery item'}
+                    className="object-cover w-full h-full"
+                    loading="lazy"
+                  />
+                )}
 
-              {/* Status pill */}
-              <div className="absolute top-2 left-2 z-10">
-                <span
-                  className={`text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full backdrop-blur-md ${
-                    item.is_visible
-                      ? 'bg-black/70 text-green-400 border border-green-500/30'
-                      : 'bg-black/70 text-ink-2 border border-line'
-                  }`}
-                >
-                  {item.is_visible ? 'Live' : 'Hidden'}
+                {/* Status pill */}
+                <div className="absolute top-2 left-2 z-10 flex items-center gap-1">
+                  <span
+                    className={`text-[9px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full backdrop-blur-md ${
+                      item.is_visible
+                        ? 'bg-black/70 text-green-400 border border-green-500/30'
+                        : 'bg-black/70 text-ink-2 border border-line'
+                    }`}
+                  >
+                    {item.is_visible ? 'Live' : 'Hidden'}
+                  </span>
+                  <span className="bg-black/70 text-bl text-[9px] font-bold px-1.5 py-0.5 rounded-full border border-bl/30">
+                    Upload
+                  </span>
+                </div>
+
+                {/* Hover action overlay */}
+                <div className="absolute inset-0 bg-blk/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 p-2">
+                  <button
+                    className="p-2 bg-wh/95 rounded-full text-blk hover:text-bl disabled:opacity-30 focus-visible:focus-ring active:scale-95 shadow-md"
+                    onClick={() => doMove(i, -1)}
+                    disabled={i === 0}
+                    title="Move forward in gallery"
+                    aria-label="Move forward"
+                  >
+                    <ArrowUp size={16} />
+                  </button>
+                  <button
+                    className="p-2 bg-wh/95 rounded-full text-blk hover:text-bl disabled:opacity-30 focus-visible:focus-ring active:scale-95 shadow-md"
+                    onClick={() => doMove(i, 1)}
+                    disabled={i === items.length - 1}
+                    title="Move backward in gallery"
+                    aria-label="Move backward"
+                  >
+                    <ArrowDown size={16} />
+                  </button>
+                  <button
+                    className="p-2 bg-red-600 rounded-full text-white hover:bg-red-700 focus-visible:focus-ring active:scale-95 shadow-md"
+                    onClick={() => setPendingDelete(item)}
+                    title="Delete from gallery"
+                    aria-label="Delete"
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+              </div>
+
+              <div className="p-3 flex justify-between items-center bg-surface border-t border-line-subtle">
+                <span className="text-xs font-medium text-ink truncate pr-2" title={item.title || ''}>
+                  {item.title || item.tags?.[0] || 'Photo'}
                 </span>
-              </div>
-
-              {/* Hover action overlay */}
-              <div className="absolute inset-0 bg-blk/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 p-2">
-                <button
-                  className="p-2 bg-wh/95 rounded-full text-blk hover:text-bl disabled:opacity-30 focus-visible:focus-ring active:scale-95 shadow-md"
-                  onClick={() => doMove(i, -1)}
-                  disabled={i === 0}
-                  title="Move forward in gallery"
-                  aria-label="Move forward"
-                >
-                  <ArrowUp size={16} />
-                </button>
-                <button
-                  className="p-2 bg-wh/95 rounded-full text-blk hover:text-bl disabled:opacity-30 focus-visible:focus-ring active:scale-95 shadow-md"
-                  onClick={() => doMove(i, 1)}
-                  disabled={i === items.length - 1}
-                  title="Move backward in gallery"
-                  aria-label="Move backward"
-                >
-                  <ArrowDown size={16} />
-                </button>
-                <button
-                  className="p-2 bg-red-600 rounded-full text-white hover:bg-red-700 focus-visible:focus-ring active:scale-95 shadow-md"
-                  onClick={() => setPendingDelete(item)}
-                  title="Delete from gallery"
-                  aria-label="Delete"
-                >
-                  <X size={16} />
-                </button>
+                <div className="flex items-center gap-1 shrink-0">
+                  <button
+                    className="p-1.5 rounded-md text-ink-2 hover:text-bl hover:bg-canvas-muted transition-colors focus-visible:focus-ring"
+                    onClick={() => doToggle(item.id)}
+                    title={item.is_visible ? 'Hide from public site' : 'Show on public site'}
+                    aria-label={item.is_visible ? 'Hide' : 'Show'}
+                  >
+                    {item.is_visible ? <Eye size={15} /> : <EyeOff size={15} />}
+                  </button>
+                  <button
+                    className="p-1.5 rounded-md text-danger hover:bg-danger/10 transition-colors focus-visible:focus-ring"
+                    onClick={() => setPendingDelete(item)}
+                    title="Delete photo"
+                    aria-label="Delete photo"
+                  >
+                    <X size={15} />
+                  </button>
+                </div>
               </div>
             </div>
+          ))}
 
-            <div className="p-3 flex justify-between items-center bg-surface border-t border-line-subtle">
-              <span className="text-xs font-medium text-ink truncate pr-2" title={item.title || ''}>
-                {item.title || item.tags?.[0] || 'Photo'}
-              </span>
-              <div className="flex items-center gap-1 shrink-0">
-                <button
-                  className="p-1.5 rounded-md text-ink-2 hover:text-bl hover:bg-canvas-muted transition-colors focus-visible:focus-ring"
-                  onClick={() => doToggle(item.id)}
-                  title={item.is_visible ? 'Hide from public site' : 'Show on public site'}
-                  aria-label={item.is_visible ? 'Hide' : 'Show'}
-                >
-                  {item.is_visible ? <Eye size={15} /> : <EyeOff size={15} />}
-                </button>
-                <button
-                  className="p-1.5 rounded-md text-danger hover:bg-danger/10 transition-colors focus-visible:focus-ring"
-                  onClick={() => setPendingDelete(item)}
-                  title="Delete photo"
-                  aria-label="Delete photo"
-                >
-                  <X size={15} />
-                </button>
+        {/* 2. Curated Studio Archive Photos */}
+        {(activeTab === 'all' || activeTab === 'archive') &&
+          archiveItems
+            .filter((item) => {
+              if (archiveCategory === 'all') return true;
+              return item.category === archiveCategory || item.tags?.includes(archiveCategory);
+            })
+            .map((item) => (
+              <div
+                key={`archive-${item.id}`}
+                className="relative group rounded-md overflow-hidden border border-line-strong bg-surface shadow-sm hover:shadow-md transition-shadow"
+              >
+                <div className="aspect-square relative bg-canvas-muted">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={item.url}
+                    alt={item.title || 'Studio Archive photo'}
+                    className="object-cover w-full h-full"
+                    loading="lazy"
+                  />
+
+                  {/* Status pills */}
+                  <div className="absolute top-2 left-2 z-10 flex items-center gap-1">
+                    <span className="text-[9px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-black/75 text-amber-300 border border-amber-400/30 backdrop-blur-md">
+                      Archive
+                    </span>
+                    <span className="text-[9px] font-bold tracking-wider px-1.5 py-0.5 rounded-full bg-black/75 text-white/90 border border-white/20 backdrop-blur-md">
+                      {item.category}
+                    </span>
+                  </div>
+
+                  {/* Hover overlay with link to view original */}
+                  <div className="absolute inset-0 bg-blk/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center p-2">
+                    <a
+                      href={item.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-3 py-1.5 bg-white text-slate-950 font-bold text-xs rounded-md shadow-md flex items-center gap-1.5 hover:bg-bl hover:text-white transition-colors"
+                    >
+                      <span>View Full Image</span>
+                      <ExternalLink size={13} />
+                    </a>
+                  </div>
+                </div>
+
+                <div className="p-3 flex justify-between items-center bg-surface border-t border-line-subtle">
+                  <div className="truncate pr-2">
+                    <p className="text-xs font-semibold text-ink truncate" title={item.title}>
+                      {item.title}
+                    </p>
+                    <p className="text-[10px] text-ink-3 truncate mt-0.5">
+                      {item.category} · {item.tags?.slice(0, 2).join(', ')}
+                    </p>
+                  </div>
+                  <a
+                    href={item.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-1.5 rounded-md text-ink-2 hover:text-bl hover:bg-canvas-muted transition-colors shrink-0"
+                    title="Open original image"
+                  >
+                    <ExternalLink size={14} />
+                  </a>
+                </div>
               </div>
-            </div>
-          </div>
-        ))}
+            ))}
       </div>
 
-      {items.length === 0 && (
+      {items.length === 0 && activeTab === 'uploaded' && (
         <div className="py-16 text-center text-ink-2 bg-canvas-muted rounded-md border border-line">
           <ImageIcon size={40} className="mx-auto mb-3 text-ink-2 opacity-50" />
           <p className="font-medium text-ink">No photos uploaded to database yet.</p>

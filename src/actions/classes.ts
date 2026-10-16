@@ -2,8 +2,8 @@
 
 import { createServerSupabase } from '@/lib/supabase/server'
 import { isAdmin } from '@/lib/supabase/guards'
-import { createProgrammeSchema, type CreateProgrammeData } from '@/lib/validators/programme'
-import { createBatchSchema, type CreateBatchData } from '@/lib/validators/batch'
+import { createProgrammeSchema, updateProgrammeSchema, type CreateProgrammeData, type UpdateProgrammeData } from '@/lib/validators/programme'
+import { createBatchSchema, updateBatchSchema, type CreateBatchData, type UpdateBatchData } from '@/lib/validators/batch'
 import { revalidatePath } from 'next/cache'
 
 export async function getProgrammesAction() {
@@ -93,6 +93,74 @@ export async function createBatch(data: CreateBatchData) {
 
   revalidatePath('/programmes')
   revalidatePath('/schedule')
+  revalidatePath('/')
+  return { success: true }
+}
+
+export async function updateBatch(id: string, data: UpdateBatchData) {
+  const supabase = await createServerSupabase()
+  if (!(await isAdmin(supabase))) return { success: false, error: 'Not authorized' }
+
+  const parsed = updateBatchSchema.safeParse(data)
+  if (!parsed.success) {
+    return { success: false, error: parsed.error.issues[0]?.message ?? 'Invalid batch data' }
+  }
+  const d = parsed.data
+
+  const { createAdminSupabase } = await import('@/lib/supabase/server')
+  const admin = createAdminSupabase()
+
+  const updatePayload: Record<string, any> = {}
+  if (d.name !== undefined) updatePayload.name = d.name
+  if (d.programmeId !== undefined) updatePayload.programme_id = d.programmeId
+  if (d.instructorId !== undefined) updatePayload.instructor_id = d.instructorId ? d.instructorId : null
+  if (d.days !== undefined) updatePayload.days = d.days
+  if (d.timeStart !== undefined) updatePayload.time_start = d.timeStart
+  if (d.timeEnd !== undefined) updatePayload.time_end = d.timeEnd
+  if (d.capacity !== undefined) updatePayload.capacity = d.capacity
+  if (d.status !== undefined) updatePayload.status = d.status
+
+  const { error } = await (admin.from('batches') as any).update(updatePayload).eq('id', id)
+  if (error) return { success: false, error: error.message }
+
+  revalidatePath('/admin/classes')
+  revalidatePath('/programmes')
+  revalidatePath('/schedule')
+  revalidatePath('/student')
+  revalidatePath('/student/schedule')
+  revalidatePath('/instructor')
+  revalidatePath('/instructor/classes')
+  revalidatePath('/')
+  return { success: true }
+}
+
+export async function updateProgramme(id: string, data: UpdateProgrammeData) {
+  const supabase = await createServerSupabase()
+  if (!(await isAdmin(supabase))) return { success: false, error: 'Not authorized' }
+
+  const parsed = updateProgrammeSchema.safeParse(data)
+  if (!parsed.success) {
+    return { success: false, error: parsed.error.issues[0]?.message ?? 'Invalid programme data' }
+  }
+  const d = parsed.data
+
+  const { createAdminSupabase } = await import('@/lib/supabase/server')
+  const admin = createAdminSupabase()
+
+  const updatePayload: Record<string, any> = {}
+  if (d.name !== undefined) updatePayload.name = d.name
+  if (d.description !== undefined) updatePayload.description = d.description
+  if (d.includes !== undefined) updatePayload.includes = d.includes
+  if (d.feesMonthly !== undefined) updatePayload.fees_monthly = d.feesMonthly
+  if (d.feesQuarterly !== undefined) updatePayload.fees_quarterly = d.feesQuarterly
+  if (d.ageGroup !== undefined) updatePayload.age_group = d.ageGroup
+  if (d.isActive !== undefined) updatePayload.is_active = d.isActive
+
+  const { error } = await (admin.from('programmes') as any).update(updatePayload).eq('id', id)
+  if (error) return { success: false, error: error.message }
+
+  revalidatePath('/admin/classes')
+  revalidatePath('/programmes')
   revalidatePath('/')
   return { success: true }
 }

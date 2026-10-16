@@ -73,7 +73,7 @@ export const CERTIFICATION_TRACKS: CertificationTrack[] = [
       },
       {
         label: 'Batch Size',
-        value: 'Max 15 Students',
+        value: 'Max 25 Students',
         subtext: 'Personal teacher attention',
         iconName: 'users',
       },

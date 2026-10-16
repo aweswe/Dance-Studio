@@ -7,6 +7,7 @@ import { PublicBookTrialCta } from '@/components/public/public-book-trial-cta';
 import { PublicPageTitle } from '@/components/public/public-page-title';
 import { homepageCtaBrand, homepageCtaOutlineLight } from '@/lib/ui/homepage-cta';
 import { sectionPadAfterTitleLg, sectionPadLg } from '@/lib/ui/section-layout';
+import { GuruSrushtinidhiSection } from '@/components/public/guru-srushtinidhi-section';
 
 export function KuchipudiShowcase() {
   return (
@@ -69,6 +70,8 @@ export function KuchipudiShowcase() {
           </div>
         </div>
       </HomepageSection>
+
+      <GuruSrushtinidhiSection />
 
       <HomepageSection className={sectionPadLg}>
         <KuchipudiCurriculum />

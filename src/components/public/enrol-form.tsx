@@ -70,7 +70,7 @@ export function EnrolForm({
   const [selectedBatchId, setSelectedBatchId] = useState<string>(() => initialBatch?.id ?? filteredBatches[0]?.id ?? '');
   const selectedBatch = batches.find((b) => b.id === selectedBatchId) || filteredBatches[0];
 
-  const initialPlan = (defaultPlan === 'quarterly' || defaultPlan === 'half-yearly' || defaultPlan === 'annual' || defaultPlan === 'drop-in')
+  const initialPlan = (defaultPlan === 'quarterly' || defaultPlan === 'half-yearly' || defaultPlan === 'annual' || defaultPlan === 'drop-in' || defaultPlan === 'all-access' || defaultPlan === 'sibling' || defaultPlan === 'zumba' || defaultPlan === 'yoga')
     ? defaultPlan
     : 'monthly';
 
@@ -100,10 +100,13 @@ function computeProgrammeFee(
   const name = prog?.name?.toLowerCase() || '';
 
   const isGymnastics = slug === 'gymnastics' || slug.includes('gymnastic') || name.includes('gymnastic');
+  const isAdults = slug === 'adults-dance' || slug.includes('adult') || name.includes('adult');
 
   // Special Studio Plans
-  if (planType === 'all-access') return 2500;
+  if (planType === 'all-access') return (isAdults || slug.includes('kuchipudi') || slug.includes('classical')) ? 5000 : 2500;
   if (planType === 'sibling') return isGymnastics ? 1500 : 3500;
+  if (planType === 'zumba') return 1500;
+  if (planType === 'yoga') return 1000;
 
   // 1. Kids Dance
   if (slug === 'kids-dance' || slug.includes('kids') || name.includes('kids')) {
@@ -518,7 +521,7 @@ function computeProgrammeFee(
                   {selectedProgramme.name}
                 </h4>
                 <p className="text-xs text-slate-700 font-medium capitalize mt-0.5">
-                  {plan.replace('-', ' ')} Plan · {selectedProgramme.age_group || 'All levels'}
+                  {plan === 'zumba' ? 'Zumba (2 Days/Week)' : plan === 'yoga' ? 'Yoga (1 Day/Week)' : `${plan.replace('-', ' ')} Plan`} · {selectedProgramme.age_group || 'All levels'}
                 </p>
               </div>
               {isPay && (
@@ -527,7 +530,7 @@ function computeProgrammeFee(
                     {formatCurrency(fee)}
                   </span>
                   <span className="block text-[10px] text-slate-600 uppercase font-mono font-bold">
-                    {plan.replace('-', ' ')}
+                    {plan === 'zumba' ? '2 DAYS/WK' : plan === 'yoga' ? '1 DAY/WK' : plan.replace('-', ' ')}
                   </span>
                 </div>
               )}
@@ -668,6 +671,10 @@ function computeProgrammeFee(
                 { id: 'half-yearly', label: '6-Month Plan' },
                 ...(plan === 'annual' ? [{ id: 'annual', label: 'Annual Plan' }] : []),
                 ...(plan === 'drop-in' ? [{ id: 'drop-in', label: 'Drop-in' }] : []),
+                ...(plan === 'all-access' ? [{ id: 'all-access', label: 'All-Access' }] : []),
+                ...(plan === 'sibling' ? [{ id: 'sibling', label: 'Sibling Plan' }] : []),
+                ...(plan === 'zumba' ? [{ id: 'zumba', label: 'Zumba (2 Days/Wk)' }] : []),
+                ...(plan === 'yoga' ? [{ id: 'yoga', label: 'Yoga (1 Day/Wk)' }] : []),
               ].map((p) => {
                 const planFee = computeProgrammeFee(selectedProgramme, p.id);
                 const isSelected = plan === p.id;

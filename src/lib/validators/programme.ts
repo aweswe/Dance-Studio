@@ -20,3 +20,6 @@ export const createProgrammeSchema = z.object({
 });
 
 export type CreateProgrammeData = z.infer<typeof createProgrammeSchema>;
+
+export const updateProgrammeSchema = createProgrammeSchema.partial();
+export type UpdateProgrammeData = z.infer<typeof updateProgrammeSchema>;

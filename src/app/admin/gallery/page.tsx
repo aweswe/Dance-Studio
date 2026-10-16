@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 import { GalleryManager } from '@/components/admin/gallery-manager';
 import { Skeleton } from '@/components/ui/skeleton';
 import { createAdminSupabase } from '@/lib/supabase/server';
+import { ALL_AUTHENTIC_GALLERY_IMAGES } from '@/data/gallery';
 
 export const dynamic = 'force-dynamic';
 
@@ -16,7 +17,9 @@ export default async function GalleryPage() {
     <div className="space-y-6">
       <div>
         <h2 className="font-display text-3xl text-ink tracking-wide">Gallery</h2>
-        <p className="text-ink-2 font-body text-sm mt-1">Upload, tag, and reorder photos displayed on the website.</p>
+        <p className="text-ink-2 font-body text-sm mt-1">
+          Upload, manage, and view all website photos across your database and curated studio archives.
+        </p>
       </div>
 
       <Suspense fallback={
@@ -26,7 +29,10 @@ export default async function GalleryPage() {
           ))}
         </div>
       }>
-        <GalleryManager initialItems={(items ?? []) as any[]} />
+        <GalleryManager 
+          initialItems={(items ?? []) as any[]} 
+          archiveItems={ALL_AUTHENTIC_GALLERY_IMAGES}
+        />
       </Suspense>
     </div>
   );

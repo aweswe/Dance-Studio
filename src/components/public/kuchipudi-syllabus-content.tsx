@@ -11,6 +11,8 @@ import { PublicBookTrialCta } from '@/components/public/public-book-trial-cta';
 import { homepageCtaBrand, homepageCtaOutlineLight } from '@/lib/ui/homepage-cta';
 import { sectionPadLg, sectionPadAfterTitleLg, sectionGap } from '@/lib/ui/section-layout';
 import { Reveal } from '@/components/motion/reveal';
+import { GuruSrushtinidhiSection } from '@/components/public/guru-srushtinidhi-section';
+import { KuchipudiRoadMap } from '@/components/public/kuchipudi-road-map';
 import {
   ChevronDown,
   Clock,
@@ -500,56 +502,16 @@ export function KuchipudiSyllabusContent() {
       </HomepageSection>
 
       {/* ═══════════════════════════════════════════════════════════════════════
-          4. THE KUCHIPUDI LEARNING ROADMAP (Balanced, Non-colliding Grid)
+          4. YOUR GURU — LEARN UNDER GURU SRUSHTINIDHI
       ═══════════════════════════════════════════════════════════════════════ */}
-      <HomepageSection className={sectionPadLg}>
+      <GuruSrushtinidhiSection />
+
+      {/* ═══════════════════════════════════════════════════════════════════════
+          5. THE KUCHIPUDI LEARNING ROADMAP (Real Road-Like Structure)
+      ═══════════════════════════════════════════════════════════════════════ */}
+      <HomepageSection className={cn('bg-canvas-muted', sectionPadLg)}>
         <Reveal>
-          <HomepageSectionHeading
-            eyebrow="Milestone Pathways"
-            title="The Kuchipudi learning"
-            accent="roadmap"
-            description="Every student passes through sequential foundational stages — paced according to individual readiness and classical rigour."
-          />
-
-          {/* Balanced 8-Slot Responsive Grid (Stages 1–5 + Rangapravesham Span 2 + Stage 7) */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5">
-            {ROADMAP_STAGES.map((stage) => (
-              <div
-                key={stage.num}
-                className={cn(
-                  'bento-card p-5 sm:p-6 rounded-md border flex flex-col justify-between h-full transition-all duration-300',
-                  stage.milestone
-                    ? 'border-bl/60 bg-bl/5 ring-1 ring-bl/30 shadow-md sm:col-span-2 lg:col-span-2'
-                    : 'border-line bg-surface hover:border-bl/40',
-                )}
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="w-8 h-8 rounded-full bg-slate-950 text-white flex items-center justify-center font-mono text-xs font-bold shadow-sm">
-                      0{stage.num}
-                    </span>
-                    <span
-                      className={cn(
-                        'text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-md font-bold',
-                        stage.milestone
-                          ? 'bg-bl text-slate-950 font-black'
-                          : 'bg-canvas text-ink-3 border border-line',
-                      )}
-                    >
-                      {stage.milestone ? 'Debut Milestone' : `Stage ${stage.num}`}
-                    </span>
-                  </div>
-
-                  <h4 className="font-anton text-lg sm:text-xl text-ink uppercase tracking-wide leading-snug mb-1.5">
-                    {stage.label}
-                  </h4>
-                  <p className="text-xs sm:text-sm text-ink-2 leading-relaxed font-medium">
-                    {stage.desc}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
+          <KuchipudiRoadMap />
         </Reveal>
       </HomepageSection>
 

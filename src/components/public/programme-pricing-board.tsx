@@ -187,13 +187,13 @@ const PROGRAMMES: ProgrammeTab[] = [
     image: '/images/studio-training/floorwork-stretch.jpg',
     headline: 'MIND & BODY FITNESS PROGRAMME',
     tags: [
-      { label: 'YOGA' },
-      { label: 'ZUMBA' },
-      { label: 'DANCE FITNESS' },
+      { label: 'YOGA (1 DAY/WK)' },
+      { label: 'ZUMBA (2 DAYS/WK)' },
+      { label: 'COMBO PACK (MON-FRI)' },
       { label: 'ALL LEVELS' },
-      { label: 'MORNING BATCH', highlight: true },
+      { label: 'MORNING BATCHES', highlight: true },
     ],
-    schedule: 'Mon - Fri · 9:30 AM',
+    schedule: 'Mon–Fri 8:30–9:15 AM & 9:30–10:20 AM · Zumba (Mon & Wed) · Yoga (Tue)',
     dropInFee: 300,
     tiers: [
       {
@@ -202,10 +202,10 @@ const PROGRAMMES: ProgrammeTab[] = [
         periodLabel: 'per month',
         price: 2500,
         features: [
-          { text: '20–22 classes per month (Mon-Fri)', included: true },
-          { text: 'Cardio & stamina tracking', included: true },
-          { text: 'Mobility & posture drills', included: true },
-          { text: '1-on-1 monthly check-in', included: true },
+          { text: 'Complete Mon–Fri Fitness Combo Pack', included: true },
+          { text: 'Includes Zumba (2 days) & Yoga (1 day)', included: true },
+          { text: 'Cardio, stamina & mobility tracking', included: true },
+          { text: 'Morning batches: 8:30 AM & 9:30 AM', included: true },
           { text: 'Monthly guest pass (1 friend)', included: false },
         ],
       },
@@ -315,9 +315,9 @@ const KUCHIPUDI_DATA = {
   subtext: 'IAO-Accredited Classical Academy · Fri & Sat · 6:30 - 7:30 PM',
   slug: 'kuchipudi',
   image: '/images/programmes/kuchipudi-programme-cover.jpg',
-  tiers: [
+  kidsTiers: [
     {
-      id: 'monthly',
+      id: 'monthly' as const,
       name: 'MONTHLY',
       periodLabel: 'per month',
       price: 2000,
@@ -330,7 +330,7 @@ const KUCHIPUDI_DATA = {
       ],
     },
     {
-      id: 'quarterly',
+      id: 'quarterly' as const,
       name: 'QUARTERLY',
       periodLabel: 'per 3 months',
       price: 5000,
@@ -346,7 +346,7 @@ const KUCHIPUDI_DATA = {
       ],
     },
     {
-      id: 'half-yearly',
+      id: 'half-yearly' as const,
       name: 'HALF-YEARLY',
       periodLabel: 'per 6 months',
       price: 9500,
@@ -362,31 +362,51 @@ const KUCHIPUDI_DATA = {
       ],
     },
   ],
-  pathway: [
+  adultsTiers: [
     {
-      level: 'LEVEL 01',
-      title: 'Foundation',
-      duration: '3 months · 24 classes',
-      fee: '₹6,000',
+      id: 'monthly' as const,
+      name: 'MONTHLY',
+      periodLabel: 'per month',
+      price: 2500,
+      features: [
+        { text: '8 classes per month', included: true },
+        { text: 'Structured syllabus', included: true },
+        { text: 'Stage performance access', included: true },
+        { text: 'Exam/certification prep', included: false },
+        { text: 'Costume guidance', included: false },
+      ],
     },
     {
-      level: 'LEVEL 02',
-      title: 'Intermediate',
-      duration: '4 months · 32 classes',
-      fee: '₹8,000',
+      id: 'quarterly' as const,
+      name: 'QUARTERLY',
+      periodLabel: 'per 3 months',
+      price: 6000,
+      equivalentMonthly: 2000,
+      savings: 1500,
+      badge: 'MOST POPULAR',
+      features: [
+        { text: '24 classes over 3 months', included: true },
+        { text: 'Structured syllabus', included: true },
+        { text: 'Stage performance access', included: true },
+        { text: 'Exam/certification prep', included: true },
+        { text: 'Costume guidance', included: false },
+      ],
     },
     {
-      level: 'LEVEL 03',
-      title: 'Advanced + Cert',
-      duration: '6 months · 48 classes',
-      fee: '₹12,000',
-    },
-    {
-      level: 'FULL PATHWAY',
-      badge: 'BEST DEAL',
-      title: 'All 3 Levels',
-      duration: '13 months · Save ₹4,000',
-      fee: '₹22,000',
+      id: 'half-yearly' as const,
+      name: 'HALF-YEARLY',
+      periodLabel: 'per 6 months',
+      price: 11000,
+      equivalentMonthly: 1833,
+      savings: 4000,
+      badge: 'BEST VALUE',
+      features: [
+        { text: '48 classes over 6 months', included: true },
+        { text: 'Structured syllabus', included: true },
+        { text: 'Stage performance access', included: true },
+        { text: 'Exam/certification prep', included: true },
+        { text: 'Costume & stage guidance', included: true },
+      ],
     },
   ],
 };
@@ -395,18 +415,25 @@ export function ProgrammePricingBoard() {
   const [activeTabId, setActiveTabId] = useState<string>('kids-dance');
   const [waitlistOpen, setWaitlistOpen] = useState(false);
   const [waitlistTrack, setWaitlistTrack] = useState('Upcoming Certification Courses');
+  const [kuchipudiAgeGroup, setKuchipudiAgeGroup] = useState<'kids' | 'adults'>('kids');
   const activeProgramme = PROGRAMMES.find((p) => p.id === activeTabId) || PROGRAMMES[0];
+
+  const currentKuchipudiTiers =
+    kuchipudiAgeGroup === 'kids' ? KUCHIPUDI_DATA.kidsTiers : KUCHIPUDI_DATA.adultsTiers;
 
   const handleOpenWaitlist = (track?: string) => {
     setWaitlistTrack(track || 'Upcoming Certification Courses');
     setWaitlistOpen(true);
   };
 
+  const isKidsDance = activeProgramme.id === 'kids-dance' || activeProgramme.slug === 'kids-dance';
   const isGymnastics = activeProgramme.id === 'gymnastics' || activeProgramme.slug === 'gymnastics';
+  const isAdults = activeProgramme.id === 'adults-dance' || activeProgramme.slug === 'adults-dance';
+  const isFitness = activeProgramme.id === 'mind-body-fitness' || activeProgramme.slug === 'mind-body-fitness';
   const siblingFee = isGymnastics ? 1500 : 3500;
   const annualFee = isGymnastics ? 8000 : 18000;
   const annualSavings = isGymnastics ? 4000 : 6000;
-  const allAccessFee = 2500;
+  const allAccessFee = isAdults ? 5000 : 2500;
 
   const dropInWaHref = whatsappLink(
     `Hi Rhythmzz! I'd like to book a Drop-in single class for ${activeProgramme.name} (₹${activeProgramme.dropInFee}). Please confirm upcoming batch timing.`,
@@ -421,7 +448,7 @@ export function ProgrammePricingBoard() {
   );
 
   const allAccessWaHref = whatsappLink(
-    `Hi Rhythmzz! I'd like to enquire about the All-Access Pass (Unlimited classes · ₹2,500/month).`,
+    `Hi Rhythmzz! I'd like to enquire about the All-Access Pass (Dance + Gymnastics · ₹2,500/month).`,
   );
 
   const certificationWaHref = whatsappLink(
@@ -648,23 +675,20 @@ export function ProgrammePricingBoard() {
             </span>
           </div>
           <h4 className="font-anton text-xl sm:text-2xl text-neutral-950 uppercase tracking-tight">
-            Try a single class for ₹{activeProgramme.dropInFee}
+            Try a single class
           </h4>
           <p className="text-xs sm:text-[13px] text-neutral-700 font-medium max-w-2xl leading-relaxed">
-            Walk into any regular batch. Pay per class at the desk or online — if you decide to join a plan afterwards, your ₹{activeProgramme.dropInFee} is adjusted into your fee.
+            Walk into any regular batch. Pay per class at the desk or online — if you join a plan afterwards, the drop-in fee is adjusted into your fee.
           </p>
         </div>
 
-        <div className="flex items-center justify-between md:justify-end gap-5 shrink-0 pt-3 md:pt-0 border-t md:border-t-0 border-amber-200">
+        <div className="flex items-center justify-between md:justify-end gap-4 shrink-0 pt-3 md:pt-0 border-t md:border-t-0 border-amber-200">
           <div className="text-left md:text-right">
             <span className="font-anton text-3xl sm:text-4xl text-neutral-950 leading-none block">
               ₹{activeProgramme.dropInFee}
             </span>
-            <span className="text-[11px] text-neutral-600 font-medium">
-              single session
-            </span>
+            <span className="text-[11px] text-neutral-600 font-medium">single session</span>
           </div>
-
           <Link
             href={enrolHref({
               programme: activeProgramme.slug,
@@ -674,7 +698,7 @@ export function ProgrammePricingBoard() {
             })}
             className="min-h-[44px] h-11 px-5 rounded-md bg-neutral-950 hover:bg-black text-white text-[11px] font-bold uppercase tracking-wider flex items-center gap-2 transition-all active:scale-[0.98] whitespace-nowrap shadow-xs"
           >
-            <span>Book Drop-In (₹{activeProgramme.dropInFee})</span>
+            <span>Book Drop-In</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
@@ -685,7 +709,7 @@ export function ProgrammePricingBoard() {
         <p className="text-[11px] font-extrabold uppercase tracking-[0.2em] text-neutral-900 mb-3">
           SPECIAL &amp; ALL-ACCESS PLANS
         </p>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className={isFitness ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" : "grid grid-cols-1 md:grid-cols-3 gap-4"}>
           {isGymnastics ? (
             <>
               {/* 1. Sibling Plan (₹1,500 - Lowest) */}
@@ -723,7 +747,7 @@ export function ProgrammePricingBoard() {
               {/* 2. All-Access Pass (₹2,500 - Middle) */}
               <Link
                 href={enrolHref({
-                  programme: 'commercial-expressive',
+                  programme: activeProgramme.slug,
                   intent: 'pay',
                   plan: 'all-access',
                   fee: allAccessFee,
@@ -738,7 +762,7 @@ export function ProgrammePricingBoard() {
                     </span>
                   </div>
                   <p className="text-xs text-neutral-600 font-medium mt-1">
-                    Every programme, unlimited classes · Monthly
+                    Dance + Gymnastics · Monthly
                   </p>
                 </div>
 
@@ -782,12 +806,12 @@ export function ProgrammePricingBoard() {
                 </div>
               </Link>
             </>
-          ) : (
+          ) : isAdults ? (
             <>
-              {/* 1. All-Access Pass (₹2,500 - Lowest) */}
+              {/* Adults: All-Access ₹5,000 */}
               <Link
                 href={enrolHref({
-                  programme: 'commercial-expressive',
+                  programme: activeProgramme.slug,
                   intent: 'pay',
                   plan: 'all-access',
                   fee: allAccessFee,
@@ -802,7 +826,7 @@ export function ProgrammePricingBoard() {
                     </span>
                   </div>
                   <p className="text-xs text-neutral-600 font-medium mt-1">
-                    Every programme, unlimited classes · Monthly
+                    Unlimited classes in any batches
                   </p>
                 </div>
 
@@ -814,7 +838,228 @@ export function ProgrammePricingBoard() {
                 </div>
               </Link>
 
-              {/* 2. Sibling Plan (₹3,500 - Second) */}
+              {/* Adults: Sibling Plan */}
+              <Link
+                href={enrolHref({
+                  programme: activeProgramme.slug,
+                  intent: 'pay',
+                  plan: 'sibling',
+                  fee: siblingFee,
+                })}
+                className="rounded-md border border-neutral-200 bg-white hover:border-neutral-400 p-4 sm:p-5 flex items-center justify-between gap-4 transition-all shadow-xs hover:shadow-sm group cursor-pointer"
+              >
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-base">👨‍👩‍👧</span>
+                    <span className="text-sm font-bold text-neutral-950 group-hover:text-bl transition-colors">
+                      Sibling Plan
+                    </span>
+                  </div>
+                  <p className="text-xs text-neutral-600 font-medium mt-1">
+                    2 students from same family · Monthly
+                  </p>
+                </div>
+
+                <div className="text-right shrink-0">
+                  <span className="font-anton text-2xl text-neutral-950 block leading-tight">
+                    {formatInr(siblingFee)}
+                  </span>
+                  <span className="text-[10px] font-extrabold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 inline-block mt-0.5">
+                    Save ₹500/mo
+                  </span>
+                </div>
+              </Link>
+
+              {/* Adults: Annual Plan */}
+              <Link
+                href={enrolHref({
+                  programme: activeProgramme.slug,
+                  intent: 'pay',
+                  plan: 'annual',
+                  fee: annualFee,
+                })}
+                className="rounded-md border border-neutral-200 bg-white hover:border-neutral-400 p-4 sm:p-5 flex items-center justify-between gap-4 transition-all shadow-xs hover:shadow-sm group cursor-pointer"
+              >
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-base">📅</span>
+                    <span className="text-sm font-bold text-neutral-950 group-hover:text-bl transition-colors">
+                      Annual Plan
+                    </span>
+                  </div>
+                  <p className="text-xs text-neutral-600 font-medium mt-1">
+                    Lock in the best rate · Full year
+                  </p>
+                </div>
+
+                <div className="text-right shrink-0">
+                  <span className="font-anton text-2xl text-neutral-950 block leading-tight">
+                    {formatInr(annualFee)}
+                  </span>
+                  <span className="text-[10px] font-extrabold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 inline-block mt-0.5">
+                    Save {formatInr(annualSavings)}
+                  </span>
+                </div>
+              </Link>
+            </>
+          ) : isFitness ? (
+            <>
+              {/* Fitness: Yoga standalone (₹1,000 - Smallest) */}
+              <Link
+                href={enrolHref({
+                  programme: activeProgramme.slug,
+                  intent: 'pay',
+                  plan: 'yoga',
+                  fee: 1000,
+                })}
+                className="rounded-md border border-neutral-200 bg-white hover:border-neutral-400 p-4 sm:p-5 flex items-center justify-between gap-4 transition-all shadow-xs hover:shadow-sm group cursor-pointer"
+              >
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-base">🧘</span>
+                    <span className="text-sm font-bold text-neutral-950 group-hover:text-bl transition-colors">
+                      Yoga
+                    </span>
+                  </div>
+                  <p className="text-xs text-neutral-600 font-medium mt-1">
+                    1 day a week · Tuesday · 9:30 AM
+                  </p>
+                </div>
+
+                <div className="text-right shrink-0">
+                  <span className="font-anton text-2xl text-neutral-950 block leading-tight">
+                    {formatInr(1000)}
+                  </span>
+                  <span className="text-[11px] text-neutral-600 font-bold">/month</span>
+                </div>
+              </Link>
+
+              {/* Fitness: Zumba standalone (₹1,500 - Second) */}
+              <Link
+                href={enrolHref({
+                  programme: activeProgramme.slug,
+                  intent: 'pay',
+                  plan: 'zumba',
+                  fee: 1500,
+                })}
+                className="rounded-md border border-neutral-200 bg-white hover:border-neutral-400 p-4 sm:p-5 flex items-center justify-between gap-4 transition-all shadow-xs hover:shadow-sm group cursor-pointer"
+              >
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-base">💃</span>
+                    <span className="text-sm font-bold text-neutral-950 group-hover:text-bl transition-colors">
+                      Zumba
+                    </span>
+                  </div>
+                  <p className="text-xs text-neutral-600 font-medium mt-1">
+                    2 days a week · Mon &amp; Wed · 8:30 &amp; 9:30 AM
+                  </p>
+                </div>
+
+                <div className="text-right shrink-0">
+                  <span className="font-anton text-2xl text-neutral-950 block leading-tight">
+                    {formatInr(1500)}
+                  </span>
+                  <span className="text-[11px] text-neutral-600 font-bold">/month</span>
+                </div>
+              </Link>
+
+              {/* Fitness: Sibling Plan */}
+              <Link
+                href={enrolHref({
+                  programme: activeProgramme.slug,
+                  intent: 'pay',
+                  plan: 'sibling',
+                  fee: siblingFee,
+                })}
+                className="rounded-md border border-neutral-200 bg-white hover:border-neutral-400 p-4 sm:p-5 flex items-center justify-between gap-4 transition-all shadow-xs hover:shadow-sm group cursor-pointer"
+              >
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-base">👨‍👩‍👧</span>
+                    <span className="text-sm font-bold text-neutral-950 group-hover:text-bl transition-colors">
+                      Sibling Plan
+                    </span>
+                  </div>
+                  <p className="text-xs text-neutral-600 font-medium mt-1">
+                    2 students from same family · Monthly
+                  </p>
+                </div>
+
+                <div className="text-right shrink-0">
+                  <span className="font-anton text-2xl text-neutral-950 block leading-tight">
+                    {formatInr(siblingFee)}
+                  </span>
+                  <span className="text-[10px] font-extrabold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 inline-block mt-0.5">
+                    Save ₹500/mo
+                  </span>
+                </div>
+              </Link>
+
+              {/* Fitness: Annual Plan */}
+              <Link
+                href={enrolHref({
+                  programme: activeProgramme.slug,
+                  intent: 'pay',
+                  plan: 'annual',
+                  fee: annualFee,
+                })}
+                className="rounded-md border border-neutral-200 bg-white hover:border-neutral-400 p-4 sm:p-5 flex items-center justify-between gap-4 transition-all shadow-xs hover:shadow-sm group cursor-pointer"
+              >
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-base">📅</span>
+                    <span className="text-sm font-bold text-neutral-950 group-hover:text-bl transition-colors">
+                      Annual Plan
+                    </span>
+                  </div>
+                  <p className="text-xs text-neutral-600 font-medium mt-1">
+                    Lock in the best rate · Full year
+                  </p>
+                </div>
+
+                <div className="text-right shrink-0">
+                  <span className="font-anton text-2xl text-neutral-950 block leading-tight">
+                    {formatInr(annualFee)}
+                  </span>
+                  <span className="text-[10px] font-extrabold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 inline-block mt-0.5">
+                    Save {formatInr(annualSavings)}
+                  </span>
+                </div>
+              </Link>
+            </>
+          ) : (
+            <>
+              {/* Kids Dance: All-Access ₹2,500 + Sibling + Annual */}
+              <Link
+                href={enrolHref({
+                  programme: activeProgramme.slug,
+                  intent: 'pay',
+                  plan: 'all-access',
+                  fee: allAccessFee,
+                })}
+                className="rounded-md border border-neutral-200 bg-white hover:border-neutral-400 p-4 sm:p-5 flex items-center justify-between gap-4 transition-all shadow-xs hover:shadow-sm group cursor-pointer"
+              >
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-base">🎟️</span>
+                    <span className="text-sm font-bold text-neutral-950 group-hover:text-bl transition-colors">
+                      All-Access Pass
+                    </span>
+                  </div>
+                  <p className="text-xs text-neutral-600 font-medium mt-1">
+                    Dance + Gymnastics · Monthly
+                  </p>
+                </div>
+
+                <div className="text-right shrink-0">
+                  <span className="font-anton text-2xl text-neutral-950 block leading-tight">
+                    {formatInr(allAccessFee)}
+                  </span>
+                  <span className="text-[11px] text-neutral-600 font-bold">/month</span>
+                </div>
+              </Link>
+
               <Link
                 href={enrolHref({
                   programme: activeProgramme.slug,
@@ -846,7 +1091,6 @@ export function ProgrammePricingBoard() {
                 </div>
               </Link>
 
-              {/* 3. Annual Plan (₹18,000 - Highest) */}
               <Link
                 href={enrolHref({
                   programme: activeProgramme.slug,
@@ -931,13 +1175,48 @@ export function ProgrammePricingBoard() {
             </div>
           </div>
 
-          <p className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-neutral-900 mb-4">
-            MONTHLY ENROLMENT
-          </p>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 border-b border-neutral-200 pb-4">
+            <div>
+              <p className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-neutral-900">
+                MONTHLY ENROLMENT
+              </p>
+              <p className="text-xs text-neutral-600 font-medium mt-0.5">
+                {kuchipudiAgeGroup === 'kids'
+                  ? 'Kids Foundation & Core Batch · Ages 3.5 – 12 yrs'
+                  : 'Adults Intensive & Repertoire Batch · Ages 13+ yrs'}
+              </p>
+            </div>
 
-          {/* Kuchipudi 3 Tiers */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5 items-stretch mb-8">
-            {KUCHIPUDI_DATA.tiers.map((tier) => {
+            {/* Kids / Adults Toggle */}
+            <div className="inline-flex items-center p-1 rounded-md bg-neutral-100 border border-neutral-300 self-start sm:self-auto">
+              <button
+                type="button"
+                onClick={() => setKuchipudiAgeGroup('kids')}
+                className={`px-3.5 py-1.5 rounded text-xs font-extrabold transition-all cursor-pointer ${
+                  kuchipudiAgeGroup === 'kids'
+                    ? 'bg-neutral-950 text-white shadow-xs'
+                    : 'text-neutral-700 hover:text-neutral-950'
+                }`}
+              >
+                Kids (3.5 – 12 yrs)
+              </button>
+              <button
+                type="button"
+                onClick={() => setKuchipudiAgeGroup('adults')}
+                className={`px-3.5 py-1.5 rounded text-xs font-extrabold transition-all cursor-pointer ${
+                  kuchipudiAgeGroup === 'adults'
+                    ? 'bg-neutral-950 text-white shadow-xs'
+                    : 'text-neutral-700 hover:text-neutral-950'
+                }`}
+              >
+                Adults (13+ yrs)
+              </button>
+            </div>
+          </div>
+
+          {/* Kuchipudi 3 Tiers (Kids or Adults based on toggle) */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5 items-stretch mb-6">
+            {currentKuchipudiTiers.map((tier) => {
               const isQuarterly = tier.id === 'quarterly';
               const isHalfYearly = tier.id === 'half-yearly';
 
@@ -1036,70 +1315,20 @@ export function ProgrammePricingBoard() {
             })}
           </div>
 
-          {/* Certification Pathway Sub-Container */}
-          <div className="border-t border-neutral-200 pt-7">
-            <div className="flex items-center justify-between gap-2 flex-wrap mb-4">
-              <span className="text-xs font-extrabold uppercase tracking-wider text-neutral-950">
-                CERTIFICATION PATHWAY
-              </span>
-              <span className="px-2.5 py-0.5 rounded-md bg-neutral-950 text-white text-[10px] font-extrabold uppercase tracking-wider">
-                IAO CERTIFICATE INCLUDED
-              </span>
-            </div>
-
-            {/* 4 Levels Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-              {KUCHIPUDI_DATA.pathway.map((step, idx) => {
-                const isFull = step.level === 'FULL PATHWAY';
-                return (
-                  <div
-                    key={idx}
-                    className={`rounded-md p-4 flex flex-col justify-between ${
-                      isFull
-                        ? 'bg-neutral-950 text-white border-2 border-neutral-950 shadow-md'
-                        : 'bg-neutral-50 border-2 border-neutral-200 text-neutral-950'
-                    }`}
-                  >
-                    <div>
-                      <div className="flex items-center justify-between gap-1 mb-1">
-                        <span className={`text-[10px] font-extrabold uppercase tracking-wider ${isFull ? 'text-neutral-400' : 'text-neutral-500'}`}>
-                          {step.level}
-                        </span>
-                        {step.badge && (
-                          <span className="px-2 py-0.5 rounded-md bg-[#D4AF37] text-neutral-950 text-[9px] font-black uppercase">
-                            {step.badge}
-                          </span>
-                        )}
-                      </div>
-                      <h5 className={`font-bold text-sm ${isFull ? 'text-white' : 'text-neutral-950'}`}>{step.title}</h5>
-                      <p className={`text-[11px] font-medium mt-1 ${isFull ? 'text-neutral-300' : 'text-neutral-600'}`}>{step.duration}</p>
-                    </div>
-
-                    <div className={`mt-3 pt-2 border-t ${isFull ? 'border-neutral-800' : 'border-neutral-200'}`}>
-                      <span className={`font-anton text-xl block ${isFull ? 'text-white' : 'text-neutral-950'}`}>
-                        {step.fee}
-                      </span>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Certification CTA */}
-            <div className="mt-6 text-center">
-              <a
-                href={certificationWaHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-md bg-amber-500 hover:bg-amber-600 text-neutral-950 font-extrabold text-[11px] uppercase tracking-wider transition-all active:scale-[0.98] shadow-sm shadow-amber-500/20"
-              >
-                <span>Enquire about certification</span>
-                <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.5]" />
-              </a>
-              <p className="text-xs text-neutral-600 font-medium mt-2">
-                Placement test available · Prior experience considered · Batches fill fast
-              </p>
-            </div>
+          {/* Certification CTA */}
+          <div className="mt-4 pt-6 border-t border-neutral-200 text-center">
+            <a
+              href={certificationWaHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-md bg-amber-500 hover:bg-amber-600 text-neutral-950 font-extrabold text-[11px] uppercase tracking-wider transition-all active:scale-[0.98] shadow-sm shadow-amber-500/20"
+            >
+              <span>Enquire about certification</span>
+              <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.5]" />
+            </a>
+            <p className="text-xs text-neutral-600 font-medium mt-2">
+              Placement test available · Prior experience considered · Batches fill fast
+            </p>
           </div>
         </div>
 
