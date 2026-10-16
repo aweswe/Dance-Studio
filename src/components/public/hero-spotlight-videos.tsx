@@ -71,7 +71,7 @@ function SpotlightCard({
       <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent pointer-events-none" />
 
       <div className="absolute bottom-0 inset-x-0 z-[2] flex items-end justify-between gap-2 p-3 sm:p-3.5">
-        <span className="inline-block max-w-[75%] rounded-md bg-black/55 backdrop-blur-sm px-2.5 py-1 text-[9px] sm:text-[10px] font-semibold uppercase tracking-[0.14em] text-white/90 leading-snug">
+        <span className="inline-block max-w-[calc(100%-44px)] rounded-md bg-black/60 backdrop-blur-sm px-2.5 py-1 text-[9px] sm:text-[10px] font-semibold uppercase tracking-[0.08em] sm:tracking-[0.12em] text-white/95 leading-tight">
           {label}
         </span>
         {hasVideo ? (

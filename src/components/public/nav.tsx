@@ -251,6 +251,7 @@ function MobileSection({
   isActive,
   onNavigate,
   icon: Icon,
+  storefrontMode,
 }: {
   title: string;
   links: NavLink[];
@@ -258,6 +259,7 @@ function MobileSection({
   isActive: (href: string) => boolean;
   onNavigate: () => void;
   icon?: LucideIcon;
+  storefrontMode?: 'coming_soon' | 'live';
 }) {
   const sectionActive = links.some((l) => isActive(l.href));
   const [open, setOpen] = useState(() => sectionActive || title === 'Explore');
@@ -299,7 +301,14 @@ function MobileSection({
               )}
             >
               <span className="min-w-0">
-                <span className="block font-semibold tracking-wide text-base">{link.name}</span>
+                <span className="flex items-center gap-2 font-semibold tracking-wide text-base">
+                  <span>{link.name}</span>
+                  {link.name === 'Rhythmzz Gear' && storefrontMode === 'coming_soon' && (
+                    <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                      SOON
+                    </span>
+                  )}
+                </span>
                 {link.hint && (
                   <span className="block text-[13px] font-normal text-white/50 mt-0.5 normal-case tracking-normal">
                     {link.hint}
@@ -681,6 +690,7 @@ export function Nav() {
                       isActive={isActive}
                       onNavigate={closeMobile}
                       icon={i === 0 ? BookOpen : mobileSectionIcons[i - 1]}
+                      storefrontMode={storefrontMode}
                     />
                     {section.id === 'discover' && (
                       <div className="p-3 bg-blk border-b border-white/10">

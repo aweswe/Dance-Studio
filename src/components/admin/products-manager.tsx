@@ -337,18 +337,18 @@ export function ProductsManager({ initialProducts, initialStorefrontMode = 'comi
           </div>
           <p className="text-xs text-ink-3 max-w-xl leading-relaxed">
             {storefrontMode === 'coming_soon'
-              ? 'Homepage displays the minimalist "Coming Soon" drop teaser, and the top navigation shows the "SOON" badge.'
-              : 'Storefront is live: Homepage displays product cards with prices, and top header links directly to the full catalog.'}
+              ? 'Public pages display the clean "Coming Soon" section with zero products, and the header displays the SOON badge.'
+              : 'Store is live: Public pages display full product cards with pricing and WhatsApp checkout.'}
           </p>
         </div>
 
-        <div className="inline-flex items-center p-1 rounded-md bg-canvas border border-line shrink-0">
+        <div className="inline-flex items-center p-1 rounded-md bg-canvas border border-line shrink-0 w-full sm:w-auto justify-center">
           <button
             type="button"
             onClick={() => handleToggleStorefrontMode('coming_soon')}
             disabled={isTogglingMode}
             className={cn(
-              'px-4 py-2 rounded text-xs font-mono font-bold uppercase tracking-wider transition-all cursor-pointer',
+              'flex-1 sm:flex-initial px-4 py-2 rounded text-xs font-mono font-bold uppercase tracking-wider transition-all cursor-pointer text-center',
               storefrontMode === 'coming_soon'
                 ? 'bg-slate-950 text-white shadow-xs'
                 : 'text-ink-2 hover:text-ink'
@@ -361,7 +361,7 @@ export function ProductsManager({ initialProducts, initialStorefrontMode = 'comi
             onClick={() => handleToggleStorefrontMode('live')}
             disabled={isTogglingMode}
             className={cn(
-              'px-4 py-2 rounded text-xs font-mono font-bold uppercase tracking-wider transition-all cursor-pointer',
+              'flex-1 sm:flex-initial px-4 py-2 rounded text-xs font-mono font-bold uppercase tracking-wider transition-all cursor-pointer text-center',
               storefrontMode === 'live'
                 ? 'bg-bl text-slate-950 font-bold shadow-xs'
                 : 'text-ink-2 hover:text-ink'

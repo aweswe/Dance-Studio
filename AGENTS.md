@@ -425,7 +425,7 @@ erDiagram
 
 5. **Homepage E-Commerce Section & Admin "Coming Soon" Toggle (`src/components/public/homepage-ecom-section.tsx`, `src/actions/products.ts`, `src/components/admin/products-manager.tsx`, `src/app/api/storefront-mode/route.ts`, `src/components/public/nav.tsx`, `src/app/(public)/page.tsx`, `src/components/public/gear-storefront.tsx`, `src/app/(public)/gear/page.tsx`)**:
    * **Strict Zero-Product Coming Soon Policy**: As explicitly directed, "Coming Soon" means **zero products at all** — no product cards, no mock prices, and no placeholder product images.
-   * **Elevated Minimal Design**: Rendered as an intentional, high-craft editorial teaser with high-contrast typography, custom studio drop pill (`Official Studio Merch · Drop 01`), upcoming collection chips (`Rehearsal Hoodies`, `Performance Activewear`, `Dance Grip Socks`, `Classical Stage Gear`), and a direct WhatsApp drop alert button (`h-11 min-h-[44px] px-6 rounded-md bg-bl text-slate-950`).
+   * **Elevated Minimal Design**: Rendered as a simple, human, and mobile-responsive section with clean typography, an `Official Studio Merchandise` badge, plain natural copy, and a direct WhatsApp inquiry button (`h-11 min-h-[44px] px-6 rounded-md bg-bl text-slate-950`). Stripped out artificial jargon like "Drop 01", "Batch 01", or fake hype strips.
    * **Full Storefront Parity**: Both the homepage ecom section and `/gear` storefront respect the display mode. In "Coming Soon" mode, zero products are leaked or rendered.
    * **Admin Display Mode Switcher**: In `/admin/gear` (`ProductsManager`), administrators can toggle between:
      - **Coming Soon Mode**: Clean teaser with zero products across `/` and `/gear`, plus `SOON` nav badge.

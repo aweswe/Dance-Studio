@@ -305,29 +305,15 @@ export function GalleryManager({
         </div>
       )}
 
-      {/* ── IDEAL SIZE INFORMATION CALLOUT ── */}
-      <div className="rounded-md border-2 border-bl/40 bg-bl/5 p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="flex items-start gap-3">
-          <div className="w-9 h-9 rounded-md bg-bl/15 text-bl flex items-center justify-center shrink-0 border border-bl/30 mt-0.5">
-            <Info size={20} />
-          </div>
-          <div>
-            <h4 className="font-bold text-sm sm:text-base text-ink flex items-center gap-2">
-              <span>Ideal Image Size to Prevent Cropping</span>
-              <span className="text-[10px] uppercase font-mono font-bold tracking-wider px-2 py-0.5 rounded-full bg-bl text-slate-950">
-                16:9 or 1:1
-              </span>
-            </h4>
-            <p className="text-xs sm:text-sm text-ink-2 mt-1 leading-relaxed">
-              Use <strong className="text-ink">1920 × 1080 px</strong> (16:9 Landscape) or <strong className="text-ink">1080 × 1080 px</strong> (1:1 Square) for optimal studio framing without edges being cut off.
-            </p>
-          </div>
+      {/* ── IDEAL SIZE INFORMATION ── */}
+      <div className="rounded-md border border-line bg-surface p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs sm:text-sm">
+        <div className="flex items-center gap-2.5 text-ink">
+          <Info size={16} className="text-bl shrink-0" />
+          <span>
+            <strong>Ideal image size:</strong> 1920 × 1080 px (Landscape) or 1080 × 1080 px (Square) so images don&apos;t get cut down.
+          </span>
         </div>
-        <div className="text-left md:text-right shrink-0">
-          <div className="inline-block px-3 py-1.5 rounded-md bg-surface border border-line text-xs font-mono font-semibold text-ink">
-            Recommended: 1920 × 1080 px
-          </div>
-        </div>
+        <span className="font-mono text-xs font-semibold text-ink-3 shrink-0">1920 × 1080 px</span>
       </div>
 
       {/* Drag & Drop / Click Upload Area */}
