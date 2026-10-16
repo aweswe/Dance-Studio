@@ -439,7 +439,8 @@ erDiagram
      - **Atalya Baumer** (Israel · Gaga Movement & Improvisation Artist, Jerusalem Academy of Music & Dance)
      - **Maria Schneiders** (Germany · Urban Contemporary & Floorwork Specialist, Folkwang University alumna)
    * Stored authentic high-resolution portraits locally in `public/images/guest-trainers/`.
-   * Formatted as crisp, editorial bios with country flags/badges, credentials, workshop styles, and direct WhatsApp masterclass reservation CTAs.
+   * **Zero-Crop Mobile Guarantee**: Configured natural image aspect scaling (`w-full h-auto max-h-[460px] object-contain`) with exact image dimension metadata, guaranteeing zero cropping/clipping on mobile phones and desktops.
+   * Formatted as crisp, factual bios directly from the original studio website with country badges, key backgrounds, and WhatsApp workshop inquiry CTAs.
    * Linked permanently in the footer under "About Us".
    * Adheres strictly to design system standards: 44px minimum touch targets (`h-11 min-h-[44px]`), concentric `rounded-md` radius, and high-contrast typography with zero AI slop.
 

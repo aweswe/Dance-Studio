@@ -18,6 +18,8 @@ interface GuestTrainer {
   country: string;
   role: string;
   image: string;
+  width: number;
+  height: number;
   bio: string;
   highlights: string[];
 }
@@ -28,6 +30,8 @@ const GUEST_TRAINERS: GuestTrainer[] = [
     country: 'India',
     role: 'Kalaripayattu & Contemporary Dance Trainer',
     image: '/images/guest-trainers/ajeesh-balakrishnan.jpg',
+    width: 500,
+    height: 500,
     bio: 'Ajeesh has toured internationally with Attakkalari since 2006, performing across Europe and Asia including France, Belgium, Prague, Seoul, and Amsterdam. He has worked with ICK Amsterdam, the Emio Greco Company for the Beyond Project, and toured his choreography "Rush" with the British Council. He co-founded Chhaya Collective with British dance artist Kay Crook.',
     highlights: [
       'Attakkalari Centre for Movement Arts (Principal Performer)',
@@ -41,6 +45,8 @@ const GUEST_TRAINERS: GuestTrainer[] = [
     country: 'United Kingdom',
     role: 'Contemporary Trainer & Choreographer',
     image: '/images/guest-trainers/kay-crook.jpg',
+    width: 768,
+    height: 424,
     bio: 'Kay Crook is a freelance UK dance artist and the Artistic Director of Chhaya Collective, working between the UK and India. She holds a Masters in Dance Performance and a BA in Dance from the University of Chichester, where she received the Lea Anderson Award for Choreographic Excellence. Kay has conducted workshops for Attakkalari, toured with Map Dance Company, and collaborated with Asian Arts Agency in the UK.',
     highlights: [
       'MA in Dance Performance (University of Chichester)',
@@ -54,6 +60,8 @@ const GUEST_TRAINERS: GuestTrainer[] = [
     country: 'Israel',
     role: 'Ballet Trainer & Performer',
     image: '/images/guest-trainers/atalya-baumer.jpg',
+    width: 768,
+    height: 768,
     bio: 'Atalya graduated from the Academy of Music and Dance in Jerusalem, holding a Teaching Certificate in Dance and Choreography, and completed the "Kelim" young choreographers program under Anat Daniely. She specializes in modern dance, jazz, and ballet (Vaganova and Chakaty methods), and has won multiple awards at the Gertrude Kraus Annual Dance Competition.',
     highlights: [
       'Academy of Music and Dance in Jerusalem (Dance & Choreography)',
@@ -67,6 +75,8 @@ const GUEST_TRAINERS: GuestTrainer[] = [
     country: 'Germany',
     role: 'Contemporary Dance Teacher & Choreographer',
     image: '/images/guest-trainers/maria-schneiders.jpg',
+    width: 768,
+    height: 768,
     bio: 'Maria is a German dancer, choreographer, and teacher trained in Classical Ballet (Royal Academy of Dance and Vaganova Method), contemporary dance, and somatic bodywork (Feldenkrais and Klein Technique). She has worked across Germany and India, presenting choreographies at the Get on Stage Festival in Dortmund, Dock11 Berlin, and the Attakkalari Centre for Movement Arts in Bangalore.',
     highlights: [
       'Royal Academy of Dance (RAD) & Vaganova Method Trained',
@@ -111,23 +121,27 @@ export default function GuestTrainersPage() {
                 className="rounded-md border border-line bg-surface overflow-hidden shadow-2xs hover:shadow-xs transition-shadow"
               >
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-0">
-                  {/* Portrait - Responsive Image */}
-                  <div className="md:col-span-4 lg:col-span-4 relative aspect-[4/3] sm:aspect-[16/10] md:aspect-auto md:min-h-[320px] bg-canvas-muted overflow-hidden">
-                    <Image
-                      src={trainer.image}
-                      alt={`${trainer.name} — ${trainer.role}`}
-                      fill
-                      sizes="(max-width: 768px) 100vw, 33vw"
-                      className="object-cover object-top"
-                    />
-                    <div className="absolute top-3 left-3 z-10 flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-black/80 text-white backdrop-blur-md text-[11px] font-mono font-bold uppercase tracking-wider border border-white/15">
+                  {/* Portrait - Zero-crop Image on all screens */}
+                  <div className="md:col-span-5 lg:col-span-4 relative bg-canvas-muted flex items-center justify-center overflow-hidden border-b md:border-b-0 md:border-r border-line">
+                    <div className="relative w-full flex items-center justify-center p-0 md:p-3">
+                      <Image
+                        src={trainer.image}
+                        alt={`${trainer.name} — ${trainer.role}`}
+                        width={trainer.width}
+                        height={trainer.height}
+                        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 42vw, 380px"
+                        className="w-full h-auto max-h-[460px] object-contain"
+                        priority={trainer.name === 'Ajeesh Balakrishnan'}
+                      />
+                    </div>
+                    <div className="absolute top-3 left-3 z-10 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/85 text-white backdrop-blur-md text-[11px] font-mono font-bold uppercase tracking-wider border border-white/20 shadow-xs">
                       <MapPin size={11} className="text-bl" />
                       <span>{trainer.country}</span>
                     </div>
                   </div>
 
                   {/* Profile Details */}
-                  <div className="md:col-span-8 lg:col-span-8 p-5 sm:p-7 lg:p-8 flex flex-col justify-between space-y-4">
+                  <div className="md:col-span-7 lg:col-span-8 p-5 sm:p-7 lg:p-8 flex flex-col justify-between space-y-4">
                     <div className="space-y-3">
                       <div>
                         <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-ink-3">
