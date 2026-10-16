@@ -415,7 +415,7 @@ export function ProgrammePricingBoard() {
   );
 
   const allAccessWaHref = whatsappLink(
-    `Hi Rhythmzz! I'd like to enquire about the All-Access Pass (Unlimited classes · ₹2,800/month).`,
+    `Hi Rhythmzz! I'd like to enquire about the All-Access Pass (Unlimited classes · ₹2,500/month).`,
   );
 
   const certificationWaHref = whatsappLink(
@@ -680,7 +680,37 @@ export function ProgrammePricingBoard() {
           SPECIAL &amp; ALL-ACCESS PLANS
         </p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {/* Sibling Card */}
+          {/* 1. All-Access Pass (Lowest price) */}
+          <Link
+            href={enrolHref({
+              programme: 'commercial-expressive',
+              intent: 'pay',
+              plan: 'all-access',
+              fee: 2500,
+            })}
+            className="rounded-md border border-neutral-200 bg-white hover:border-neutral-400 p-4 sm:p-5 flex items-center justify-between gap-4 transition-all shadow-xs hover:shadow-sm group cursor-pointer"
+          >
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-base">🎟️</span>
+                <span className="text-sm font-bold text-neutral-950 group-hover:text-bl transition-colors">
+                  All-Access Pass
+                </span>
+              </div>
+              <p className="text-xs text-neutral-600 font-medium mt-1">
+                Every programme, unlimited classes · Monthly
+              </p>
+            </div>
+
+            <div className="text-right shrink-0">
+              <span className="font-anton text-2xl text-neutral-950 block leading-tight">
+                ₹2,500
+              </span>
+              <span className="text-[11px] text-neutral-600 font-bold">/month</span>
+            </div>
+          </Link>
+
+          {/* 2. Sibling Plan (Second) */}
           <Link
             href={enrolHref({
               programme: activeProgramme.slug,
@@ -712,37 +742,7 @@ export function ProgrammePricingBoard() {
             </div>
           </Link>
 
-          {/* All-Access Card */}
-          <Link
-            href={enrolHref({
-              programme: 'commercial-expressive',
-              intent: 'pay',
-              plan: 'all-access',
-              fee: 2800,
-            })}
-            className="rounded-md border border-neutral-200 bg-white hover:border-neutral-400 p-4 sm:p-5 flex items-center justify-between gap-4 transition-all shadow-xs hover:shadow-sm group cursor-pointer"
-          >
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="text-base">🎟️</span>
-                <span className="text-sm font-bold text-neutral-950 group-hover:text-bl transition-colors">
-                  All-Access Pass
-                </span>
-              </div>
-              <p className="text-xs text-neutral-600 font-medium mt-1">
-                Every programme, unlimited classes · Monthly
-              </p>
-            </div>
-
-            <div className="text-right shrink-0">
-              <span className="font-anton text-2xl text-neutral-950 block leading-tight">
-                ₹2,800
-              </span>
-              <span className="text-[11px] text-neutral-600 font-bold">/month</span>
-            </div>
-          </Link>
-
-          {/* Annual Card */}
+          {/* 3. Annual Plan (Third / Biggest) */}
           <Link
             href={enrolHref({
               programme: activeProgramme.slug,

@@ -100,7 +100,7 @@ function computeProgrammeFee(
   const name = prog?.name?.toLowerCase() || '';
 
   // Special Studio Plans
-  if (planType === 'all-access') return 2800;
+  if (planType === 'all-access') return 2500;
   if (planType === 'sibling') return 3500;
 
   // 1. Kids Dance
