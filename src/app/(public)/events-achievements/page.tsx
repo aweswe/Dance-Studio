@@ -2,7 +2,6 @@ import { Metadata } from 'next';
 import { EventsAchievementsContent } from '@/components/public/events-achievements-content';
 import { PublicBookTrialCta } from '@/components/public/public-book-trial-cta';
 import { PublicPage } from '@/components/public/public-page';
-import { PublicPageTitle } from '@/components/public/public-page-title';
 import { SITE_URL } from '@/lib/utils/constants';
 
 export const metadata: Metadata = {
@@ -24,13 +23,6 @@ export const metadata: Metadata = {
 export default function EventsAchievementsPage() {
   return (
     <PublicPage>
-      <PublicPageTitle
-        eyebrow="Milestones · Press · Shows"
-        title="Events &"
-        accent="Achievements"
-        description="Representing Team India at nATFEST Sri Lanka, directing Hyderabad's biggest dance tournament with 1,500+ dancers, choreographing for Amazon & Sony IPL, and certifying students in leading universities since 2010."
-      />
-
       <EventsAchievementsContent />
 
       <PublicBookTrialCta

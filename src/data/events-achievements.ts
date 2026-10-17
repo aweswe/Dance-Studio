@@ -47,14 +47,14 @@ export interface SocialChannel {
 
 export const ACHIEVEMENT_STATS: AchievementStat[] = [
   {
+    number: 'Global',
+    label: 'Canada & Sri Lanka',
+    detail: 'Workshops in Toronto & Ottawa; nATFEST Sri Lanka',
+  },
+  {
     number: '1,500+',
     label: 'HDPL Competitors',
     detail: 'Across Telangana & Andhra Pradesh in 2015',
-  },
-  {
-    number: '2017',
-    label: 'Team India at nATFEST',
-    detail: 'International Contemporary Dance Festival, Sri Lanka',
   },
   {
     number: '15+',
@@ -69,6 +69,23 @@ export const ACHIEVEMENT_STATS: AchievementStat[] = [
 ];
 
 export const MAJOR_EVENTS: MilestoneEvent[] = [
+  {
+    id: 'canada-collaborations',
+    title: 'International Presence & Creative Collaborations – Canada',
+    year: '2023 – 2026',
+    category: 'international',
+    categoryLabel: 'Global Workshops & Films',
+    clientOrPartner: 'Toronto, Ottawa & Magic Mist Media',
+    description:
+      'Extending Rhythmzz Academy of Dance beyond borders, founder Nitish Kumar conducted multiple contemporary dance workshops for dancers in Toronto and Ottawa, Canada, between 2024 and 2026. These workshops explored contemporary movement, musicality, improvisation, and innovative choreography, fostering artistic growth and creative exchange within the dance community.\n\nFurther expanding Rhythmzz’s creative footprint, Nitish choreographed a music video in 2023 for Magic Mist Media, a Toronto-based short film production company, blending expressive movement with visual storytelling. These milestones reflect Rhythmzz’s growing international presence, cross-cultural collaborations, and commitment to pushing creative boundaries through dance.',
+    badge: 'Toronto & Ottawa',
+    highlights: [
+      'Contemporary dance workshops across Toronto & Ottawa (2024–2026)',
+      'Exploration of movement, musicality, improvisation & choreography',
+      'Music video choreography for Magic Mist Media Toronto (2023)',
+      'Cross-cultural creative exchange and global storytelling',
+    ],
+  },
   {
     id: 'natfest-srilanka',
     title: 'Represented Team India at nATFEST Sri Lanka',
