@@ -706,7 +706,7 @@ export default async function ProgrammeDetailPage({ params }: Props) {
                       </div>
                     </div>
 
-                    <div className="pt-2 border-t border-line/60 flex justify-end">
+                    <div className="pt-2.5 border-t border-line/60">
                       <Link
                         href={enrolHref({
                           programme: slug,
@@ -714,10 +714,15 @@ export default async function ProgrammeDetailPage({ params }: Props) {
                           plan: plan.id,
                           fee: plan.price,
                         })}
-                        className="inline-flex items-center gap-1 text-[11px] font-bold text-bl hover:underline"
+                        className={cn(
+                          'w-full min-h-[38px] h-[38px] px-3.5 rounded-md text-xs font-bold tracking-normal flex items-center justify-center gap-1.5 transition-all active:scale-[0.98] shadow-xs cursor-pointer',
+                          plan.highlight
+                            ? 'bg-bl text-slate-950 hover:bg-bl-deep shadow-bl/20'
+                            : 'bg-neutral-950 hover:bg-black text-white dark:bg-white dark:text-neutral-950 dark:hover:bg-neutral-100',
+                        )}
                       >
                         <span>Book this plan</span>
-                        <ArrowUpRight size={12} strokeWidth={2.5} />
+                        <ArrowUpRight size={13} strokeWidth={2.5} />
                       </Link>
                     </div>
                   </div>
