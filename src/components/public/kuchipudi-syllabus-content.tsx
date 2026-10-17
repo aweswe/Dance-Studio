@@ -532,36 +532,7 @@ export function KuchipudiSyllabusContent() {
             <SyllabusYears />
           </div>
 
-          {/* Supporting Classical Visual Reference Strip */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-            <div className="relative aspect-[4/3] sm:aspect-[3/2] lg:aspect-[4/3] rounded-md overflow-hidden border border-line shadow-sm bg-surface">
-              <Image
-                src="/images/kuchipudi/kuchipudi-classical-02.jpg"
-                alt="Kuchipudi foundational posture and body alignment"
-                fill
-                loading="lazy"
-                sizes="(max-width: 768px) 100vw, 50vw"
-                className="object-cover object-[center_top]"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-transparent flex items-end p-4">
-                <p className="text-xs font-mono font-semibold text-white">Foundational Posture &amp; Body Alignment</p>
-              </div>
-            </div>
 
-            <div className="relative aspect-[4/3] sm:aspect-[3/2] lg:aspect-[4/3] rounded-md overflow-hidden border border-line shadow-sm bg-surface">
-              <Image
-                src="/images/kuchipudi/kuchipudi-classical-06.jpg"
-                alt="Kuchipudi classical repertoire and stage presence"
-                fill
-                loading="lazy"
-                sizes="(max-width: 768px) 100vw, 50vw"
-                className="object-cover object-[center_top]"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-transparent flex items-end p-4">
-                <p className="text-xs font-mono font-semibold text-white">Classical Repertoire &amp; Stage Presence</p>
-              </div>
-            </div>
-          </div>
         </Reveal>
       </HomepageSection>
 
@@ -647,24 +618,21 @@ export function KuchipudiSyllabusContent() {
       ═══════════════════════════════════════════════════════════════════════ */}
       <div className="w-full grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-3 p-2 sm:p-4 bg-canvas border-y border-line">
         {[
-          { src: '/images/kuchipudi/kuchipudi-classical-03.jpg', label: 'Aramandi Stance' },
-          { src: '/images/kuchipudi/kuchipudi-classical-01.jpg', label: 'Classical Expression' },
-          { src: '/images/kuchipudi/kuchipudi-classical-04.jpg', label: 'Traditional Attire' },
-          { src: '/images/kuchipudi/kuchipudi-classical-07.jpg', label: 'Stage Performance' },
-          { src: '/images/kuchipudi/kuchipudi-classical-05.jpg', label: 'Dynamic Technique' },
+          { src: '/images/kuchipudi/kuchipudi-classical-03.jpg', alt: 'Kuchipudi classical stance' },
+          { src: '/images/kuchipudi/kuchipudi-classical-01.jpg', alt: 'Kuchipudi classical expression' },
+          { src: '/images/kuchipudi/kuchipudi-classical-04.jpg', alt: 'Kuchipudi traditional costume' },
+          { src: '/images/kuchipudi/kuchipudi-classical-07.jpg', alt: 'Kuchipudi classical performance' },
+          { src: '/images/kuchipudi/kuchipudi-classical-05.jpg', alt: 'Kuchipudi dynamic technique' },
         ].map((item, idx) => (
           <div key={idx} className="relative aspect-[3/4] rounded-md overflow-hidden border border-line bg-surface group shadow-2xs">
             <Image
               src={item.src}
-              alt={item.label}
+              alt={item.alt}
               fill
               loading="lazy"
               className="object-cover object-[center_top] group-hover:scale-105 transition-transform duration-500"
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-transparent opacity-80 group-hover:opacity-100 transition-opacity flex items-end p-2.5">
-              <span className="text-xs font-mono font-bold text-white">{item.label}</span>
-            </div>
           </div>
         ))}
       </div>
@@ -740,14 +708,6 @@ export function KuchipudiSyllabusContent() {
                 className="object-cover object-[center_top]"
                 sizes="(max-width: 1024px) 100vw, 42vw"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-transparent flex items-end p-5">
-                <div className="text-white">
-                  <span className="text-[11px] font-mono uppercase tracking-widest text-bl font-bold block">
-                    Solo Stage Debut
-                  </span>
-                  <p className="font-anton text-2xl uppercase tracking-wide">Rangapravesham</p>
-                </div>
-              </div>
             </div>
 
             {/* Text Editorial */}

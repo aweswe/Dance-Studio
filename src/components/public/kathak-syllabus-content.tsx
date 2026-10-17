@@ -364,36 +364,7 @@ export function KathakSyllabusContent() {
             <KathakSyllabusLevels />
           </div>
 
-          {/* Authentic Studio Reference Strip (Using real studio assets) */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-            <div className="relative aspect-[16/9] rounded-md overflow-hidden border border-line shadow-sm">
-              <Image
-                src="/images/studio-training/studio-practice-mirrors.jpg"
-                alt="Studio technique and alignment practice at Rhythmzz Academy"
-                fill
-                loading="lazy"
-                sizes="(max-width: 768px) 100vw, 50vw"
-                className="object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-transparent flex items-end p-4">
-                <p className="text-xs font-mono font-semibold text-white">Full-height studio mirror posture &amp; balance alignment</p>
-              </div>
-            </div>
 
-            <div className="relative aspect-[16/9] rounded-md overflow-hidden border border-line shadow-sm">
-              <Image
-                src="/images/studio-training/studio-technique.jpg"
-                alt="Classical dance training at Rhythmzz Academy studio"
-                fill
-                loading="lazy"
-                sizes="(max-width: 768px) 100vw, 50vw"
-                className="object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-transparent flex items-end p-4">
-                <p className="text-xs font-mono font-semibold text-white">Tatkar rhythm conditioning &amp; movement precision</p>
-              </div>
-            </div>
-          </div>
         </Reveal>
       </HomepageSection>
 
@@ -479,24 +450,21 @@ export function KathakSyllabusContent() {
       ═══════════════════════════════════════════════════════════════════════ */}
       <div className="w-full grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-3 p-2 sm:p-4 bg-canvas border-y border-line">
         {[
-          { src: '/images/studio-training/studio-technique.jpg', label: 'Technique Conditioning' },
-          { src: '/images/studio-training/studio-practice-mirrors.jpg', label: 'Mirror Form & Balance' },
-          { src: '/images/studio-training/alignment-drills-1.jpg', label: 'Postural Alignment' },
-          { src: '/images/studio-training/alignment-drills-2.jpg', label: 'Rhythm & Footwork' },
-          { src: '/images/studio-training/masterclass-foundation.jpg', label: 'Studio Masterclass' },
+          { src: '/images/kathak/kathak-photo-1.jpg', alt: 'Indian Kathak classical dancer in traditional Lucknow gharana posture' },
+          { src: '/images/kathak/kathak-photo-2.jpg', alt: 'Classical Kathak brass ghungroos and Tatkar footwork' },
+          { src: '/images/kathak/kathak-photo-3.jpg', alt: 'Indian Kathak dancer executing Hastak and classical Abhinaya' },
+          { src: '/images/kathak/kathak-photo-4.jpg', alt: 'Live classical sitar and tabla musical accompaniment for Kathak' },
+          { src: '/images/kathak/kathak-photo-5.jpg', alt: 'Dynamic Kathak Chakkar pirouette spin with swirling dupatta' },
         ].map((item, idx) => (
-          <div key={idx} className="relative aspect-[4/3] rounded-md overflow-hidden border border-line bg-surface group shadow-2xs">
+          <div key={idx} className="relative aspect-[3/4] rounded-md overflow-hidden border border-line bg-surface group shadow-2xs">
             <Image
               src={item.src}
-              alt={item.label}
+              alt={item.alt}
               fill
               loading="lazy"
-              className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
+              className="object-cover object-[center_top] group-hover:scale-105 transition-transform duration-500"
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-transparent opacity-80 group-hover:opacity-100 transition-opacity flex items-end p-2.5">
-              <span className="text-xs font-mono font-bold text-white">{item.label}</span>
-            </div>
           </div>
         ))}
       </div>
@@ -565,21 +533,13 @@ export function KathakSyllabusContent() {
             {/* Visual Frame using Authentic Stage / Bento Asset */}
             <div className="lg:col-span-5 relative aspect-[3/4] rounded-md overflow-hidden border border-line shadow-lg bg-surface">
               <Image
-                src="/images/srilanka-tour/raasta-stage-5.jpg"
-                alt="Classical dance solo stage debut and Manch Pravesh at Rhythmzz Academy"
+                src="/images/kathak/kathak-manch-pravesh.jpg"
+                alt="Kathak Manch Pravesh solo stage debut performance at Rhythmzz Academy"
                 fill
                 loading="lazy"
                 className="object-cover object-[center_top]"
                 sizes="(max-width: 1024px) 100vw, 42vw"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-transparent flex items-end p-5">
-                <div className="text-white">
-                  <span className="text-[11px] font-mono uppercase tracking-widest text-bl font-bold block">
-                    Solo Stage Debut &amp; Graduation
-                  </span>
-                  <p className="font-anton text-2xl uppercase tracking-wide">Manch Pravesh</p>
-                </div>
-              </div>
             </div>
 
             {/* Text Editorial */}
