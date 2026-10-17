@@ -15,13 +15,13 @@ export const PRICING_DISPLAY: Record<
     shortLabel: 'Adults',
     dropIn: DROP_IN_FEE,
     schedule: 'Mon–Wed · 7–9 PM',
-    tagline: 'Bollywood · Hip hop · Choreography · Ages 16+',
+    tagline: 'Bollywood · Hip hop · Choreography · Ages 13+',
   },
   'mind-body-fitness': {
     shortLabel: 'Fitness',
     dropIn: DROP_IN_FEE,
-    schedule: 'Mon–Fri · 9:30 AM',
-    tagline: 'Zumba · Yoga · Pilates · Morning batch',
+    schedule: 'Mon–Fri · 8:30–9:15 AM & 9:30–10:20 AM',
+    tagline: 'Combo Pack · Zumba · Yoga · Ages 13+',
   },
   kuchipudi: {
     shortLabel: 'Kuchipudi',

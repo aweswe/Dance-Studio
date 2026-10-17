@@ -30,199 +30,252 @@ export interface ProgrammeItem {
 
 export const DEFAULT_PROGRAMMES: ProgrammeItem[] = [
   {
-    id: "p1-commercial-expressive",
-    name: "Commercial & Expressive Style",
-    slug: "commercial-expressive",
-    badge: "Kids & Adults Batches",
-    tagline: "Bollywood · Hip Hop · Contemporary · Tollywood · Gymnastics",
+    id: "p1-kids-dance",
+    name: "Kids Dance",
+    slug: "kids-dance",
+    badge: "Kids Foundation & Choreography",
+    tagline: "Bollywood · Hip Hop · Contemporary · Freestyle · Gymnastics",
     description:
-      "Kids 3.5–12 years at 5 pm, adults 13+ years at 7 pm, Monday to Wednesday. Bollywood, hip-hop, contemporary, Tollywood, and foundational acrobatics — the same floor, two rooms of energy.",
-    styles_highlight: ["Bollywood", "Hip Hop", "Contemporary", "Tollywood", "Gymnastics"],
+      "Monday to Wednesday, 5:00 to 7:00 PM. Foundational technique, rhythm, stage confidence, Bollywood routines, hip hop basics, contemporary expression, and foundational gymnastics tailored specifically for young dancers.",
+    styles_highlight: ["Bollywood", "Hip Hop", "Contemporary", "Freestyle", "Gymnastics"],
     batches_info: [
       {
-        name: "Kids Batch",
-        age: "Ages 3.5–12 Years",
-        styles: "Bollywood, Hip Hop, Contemporary & Foundational Gymnastics",
-        schedule: "Mon to Wed · 5:00 PM – 7:00 PM",
-        instructors: "Senior Academy Faculty",
+        name: "Kids Bollywood & Freestyle (5–6 PM)",
+        age: "Kids: 3.5–12 Years",
+        styles: "Bollywood, Freestyle Rhythm & Coordination",
+        schedule: "Mon to Wed · 5:00 PM – 6:00 PM",
+        instructors: "Certified Studio Lead",
       },
       {
-        name: "Adults Batch",
-        age: "Ages 13+ Years",
-        styles: "Bollywood, Commercial Hip Hop, Contemporary & Tollywood",
-        schedule: "Mon to Wed · 7:00 PM – 9:00 PM",
-        instructors: "Senior Academy Faculty",
+        name: "Kids Bollywood & Contemporary (6–7 PM)",
+        age: "Kids: 3.5–12 Years",
+        styles: "Bollywood, Hip Hop & Foundational Contemporary",
+        schedule: "Mon to Wed · 6:00 PM – 7:00 PM",
+        instructors: "Certified Studio Lead",
       },
     ],
     includes: [
-      "Kids 3.5–12 years, Mon–Wed 5 to 7",
-      "Adults 13+ years, Mon–Wed 7 to 9",
-      "Bollywood, hip-hop, contemporary, Tollywood",
-      "One recital a year — you will be on stage",
-      "First class is on us. No registration fee",
+      "Kids 3.5–12 years, Monday to Wednesday 5:00–7:00 PM",
+      "Bollywood, hip hop, contemporary & freestyle routines",
+      "Rhythm, balance, agility & stage confidence building",
+      "Annual academy stage recital & performance showcase invite",
+      "First trial class is on us · Zero admission fee",
     ],
     fees_monthly: 2000,
     fees_quarterly: 5000,
-    age_group: "Kids (3.5–12 yrs) & Adults (13+ yrs)",
+    age_group: "Kids: 3.5–12 years",
     sort_order: 1,
     is_active: true,
   },
   {
-    id: "p2-mind-body-fitness",
+    id: "p2-adults-dance",
+    name: "Adults Dance",
+    slug: "adults-dance",
+    badge: "Adults Choreography & Technique",
+    tagline: "Bollywood · Commercial Hip Hop · Contemporary · Tollywood",
+    description:
+      "Monday to Wednesday, 7:00 to 9:00 PM. High-energy commercial choreography, trending Bollywood tracks, sharp hip hop isolations, contemporary floorwork, and video shoot routines. Beginner to advanced dancers.",
+    styles_highlight: ["Bollywood", "Hip Hop", "Contemporary", "Tollywood", "Choreography"],
+    batches_info: [
+      {
+        name: "Adults Bollywood & Commercial (7–8 PM)",
+        age: "Adults: 13+ Years",
+        styles: "Trending Bollywood & Commercial Choreography",
+        schedule: "Mon to Wed · 7:00 PM – 8:00 PM",
+        instructors: "Certified Studio Lead",
+      },
+      {
+        name: "Adults Contemporary & Lyrical (8–9 PM)",
+        age: "Adults: 13+ Years",
+        styles: "Contemporary Floorwork & Expressive Phrasing",
+        schedule: "Mon to Wed · 8:00 PM – 9:00 PM",
+        instructors: "Certified Studio Lead",
+      },
+    ],
+    includes: [
+      "Adults 13+ years, Monday to Wednesday 7:00–9:00 PM",
+      "Trending Bollywood, commercial hip hop & Tollywood",
+      "Contemporary floorwork, fluid phrasing & musicality drills",
+      "Studio video shoots & annual recital performance invite",
+      "First trial class is on us · Zero admission fee",
+    ],
+    fees_monthly: 2500,
+    fees_quarterly: 6000,
+    age_group: "Adults: 13+ years",
+    sort_order: 2,
+    is_active: true,
+  },
+  {
+    id: "p3-mind-body-fitness",
     name: "Mind & Body Fitness",
     slug: "mind-body-fitness",
     badge: "Morning Wellness Batch",
     tagline: "Yoga · Zumba · Dance Fitness · Core Conditioning",
     description:
-      "Weekday mornings, 8:30 to 9:15 AM & 9:30 to 10:20 AM. Complete Fitness Combo Pack (₹2,500/mo), Zumba (2 days a week · ₹1,500/mo), and Yoga (1 day a week · ₹1,000/mo). Come in gym clothes. No dance background needed.",
+      "Weekday mornings, 8:30 to 9:15 AM & 9:30 to 10:20 AM. Complete Fitness Combo Pack (₹2,500/mo, Mon–Fri), Standalone Zumba (₹1,500/mo, 2 days/wk, Mon & Wed), and Standalone Yoga (₹1,000/mo, 1 day/wk, Tuesday). Full cardio stamina, core toning, and posture alignment.",
     styles_highlight: ["Yoga", "Zumba", "Dance Fitness", "Pilates", "HIIT"],
     batches_info: [
       {
         name: "Complete Fitness Combo Pack",
-        age: "Ages 13+ Years · All Fitness Levels",
+        age: "Adults: 13+ Years · All Fitness Levels",
         styles: "Zumba, Yoga, Pilates, HIIT & Mobility Drills",
         schedule: "Mon to Fri · 8:30–9:15 AM & 9:30–10:20 AM",
-        instructors: "Certified Fitness Faculty & Coaches",
+        instructors: "Fitness Faculty",
       },
       {
         name: "Zumba (2 Days a Week)",
-        age: "Ages 13+ Years · All Fitness Levels",
+        age: "Adults: 13+ Years · All Fitness Levels",
         styles: "High-Energy Latin Dance Fitness Cardio",
         schedule: "Mon & Wed · 8:30–9:15 AM & 9:30–10:20 AM",
-        instructors: "Certified Fitness Faculty & Coaches",
+        instructors: "Fitness Faculty",
       },
       {
         name: "Yoga (1 Day a Week)",
-        age: "Ages 13+ Years · All Fitness Levels",
+        age: "Adults: 13+ Years · All Fitness Levels",
         styles: "Flexibility, Posture & Breathwork Conditioning",
         schedule: "Tuesday · 9:30 AM – 10:20 AM",
-        instructors: "Certified Fitness Faculty & Coaches",
+        instructors: "Fitness Faculty",
       },
     ],
     includes: [
-      "Complete Fitness Combo Pack (Mon to Fri, 8:30 AM & 9:30 AM)",
-      "Zumba standalone option (2 days/wk · Mon & Wed · ₹1,500/mo)",
-      "Yoga standalone option (1 day/wk · Tuesday · ₹1,000/mo)",
+      "Complete Fitness Combo Pack (Mon to Fri, 8:30 AM & 9:30 AM · ₹2,500/mo)",
+      "Standalone Zumba option (2 days/wk · Mon & Wed · ₹1,500/mo)",
+      "Standalone Yoga option (1 day/wk · Tuesday · ₹1,000/mo)",
       "Cardio stamina, posture correction & mobility tracking",
-      "No dance background needed. Gym clothes are fine",
+      "First trial class is on us · Zero admission fee",
     ],
     fees_monthly: 2500,
     fees_quarterly: 6000,
-    age_group: "16+ Years · All Levels",
-    sort_order: 2,
+    age_group: "Adults: 13+ years · All Levels",
+    sort_order: 3,
     is_active: true,
   },
   {
-    id: "p3-classical-certification",
+    id: "p4-classical-certification",
     name: "Structured Level-Based Certification (Classical Dance)",
-    slug: "classical-dance",
+    slug: "kuchipudi",
     badge: "Kuchipudi syllabus",
     tagline: "Kuchipudi · Friday & Saturday · exams",
     description:
-      "Kuchipudi on Friday and Saturday evenings. There is a published year-by-year syllabus, board exams, and a path toward Rangapravesham. This is a term class, not a drop-in.",
+      "Kuchipudi classical training on Friday and Saturday, 6:30 to 7:30 PM. Published year-by-year syllabus, board examinations, and accredited pathway toward Rangapravesham under Guru Srushti Nidhi.",
     styles_highlight: ["Kuchipudi"],
     active_syllabi: ["Kuchipudi"],
     catalog_styles: ["Kuchipudi"],
     batches_info: [
       {
-        name: "Kuchipudi",
-        age: "Ages 3.5+ Years through Adults",
+        name: "Kuchipudi Classical Batch",
+        age: "Kids: 3.5–12 yrs & Adults: 13+ yrs",
         styles: "10-year foundation or 6-year certificate track",
         schedule: "Fri & Sat · 6:30 PM – 7:30 PM",
-        instructors: "IAO-Accredited Classical Academy Faculty",
+        instructors: "Certified Classical Academy Faculty",
       },
     ],
     includes: [
-      "Year-wise Kuchipudi syllabus (the one on this site)",
-      "Adavus, jathis, hastas, and abhinaya in class, not on a handout",
-      "Monthly or quarterly fees — you stay on the batch",
-      "Board exams and certification milestones",
-      "Stage work and Rangapravesham when the dancer is actually there",
+      "Year-wise Kuchipudi syllabus (Nritta, Nritya, Natya & Abhinaya)",
+      "Adavus, jathis, hastas, and traditional repertoire items",
+      "Board exams and accredited certification milestones",
+      "Stage recitals and Rangapravesham preparation",
+      "First trial class is on us · Zero admission fee",
     ],
     fees_monthly: 2000,
     fees_quarterly: 5000,
-    age_group: "3.5+ Years to Adults",
-    sort_order: 3,
+    age_group: "Kids: 3.5–12 yrs & Adults: 13+ yrs",
+    sort_order: 4,
     is_active: true,
   },
   {
-    id: "p4-gymnastics",
+    id: "p5-gymnastics",
     name: "Gymnastics & Tumbling",
     slug: "gymnastics",
     badge: "Acrobatics & Agility",
     tagline: "Foundational Tumbling & Acrobatics · Ages 3.5–12 Years",
-    description: "Thursday & Saturday 5:15 to 6:15 PM. Tumbling, agility, flexibility, and foundational gymnastics. Ages 3.5–12 years.",
+    description:
+      "Thursday & Saturday 5:15 to 6:15 PM. Tumbling, agility, flexibility, and foundational gymnastics. Ages 3.5–12 years.",
     styles_highlight: ["Gymnastics", "Tumbling", "Acrobatics"],
     batches_info: [
       {
         name: "Gymnastic Batch",
-        age: "Ages 3.5–12 Years",
+        age: "Kids: 3.5–12 Years",
         styles: "Tumbling, Acrobatics, Agility",
         schedule: "Thu & Sat · 5:15 PM – 6:15 PM",
         instructors: "Certified Gymnastics Faculty",
       },
     ],
     includes: [
-      "Foundational tumbling and floorwork",
+      "Foundational tumbling, rolls & handstand balance",
       "Core stability, flexibility, and spatial awareness",
       "Thursday & Saturday 5:15–6:15 PM",
       "Drop-in ₹300, Monthly ₹1,000, Quarterly ₹2,500",
-      "First class is on us. No registration fee",
+      "First class is on us · Zero admission fee",
     ],
     fees_monthly: 1000,
     fees_quarterly: 2500,
-    age_group: "Ages 3.5–12 Years",
-    sort_order: 4,
+    age_group: "Kids: 3.5–12 years",
+    sort_order: 5,
     is_active: true,
+  },
+  {
+    id: "p6-commercial-expressive",
+    name: "Commercial & Expressive Style",
+    slug: "commercial-expressive",
+    badge: "Legacy Track",
+    tagline: "Bollywood · Hip Hop · Contemporary",
+    description: "Combined commercial choreography track for legacy registrations.",
+    styles_highlight: ["Bollywood", "Hip Hop", "Contemporary"],
+    includes: ["Commercial dance training", "Zero admission fee"],
+    fees_monthly: 2000,
+    fees_quarterly: 5000,
+    age_group: "All Age Pathways",
+    sort_order: 99,
+    is_active: false,
   },
 ];
 
 export async function getProgrammes() {
   try {
     const supabase = getPublicSupabase();
-    if (!supabase) return DEFAULT_PROGRAMMES;
-    const { data } = await supabase
-      .from('programmes')
-      .select('id, name, slug, description, includes, fees_monthly, fees_quarterly, age_group, sort_order')
-      .eq('is_active', true)
-      .order('sort_order');
-    if (data && data.length > 0) {
-      return data.map((row) => mergeProgrammeWithDefaults(row as Record<string, unknown>));
+    if (supabase) {
+      const { data } = await supabase
+        .from('programmes')
+        .select('id, name, slug, description, includes, fees_monthly, fees_quarterly, age_group, sort_order')
+        .eq('is_active', true)
+        .order('sort_order');
+      if (data && data.length > 0) {
+        return data.map((row) => mergeProgrammeWithDefaults(row as Record<string, unknown>));
+      }
     }
   } catch {}
-  return DEFAULT_PROGRAMMES;
+  return DEFAULT_PROGRAMMES.filter((p) => p.is_active);
 }
 
 export async function getProgrammeBySlug(slug: string) {
-  // Alias mapping to support both new 3-programme slugs and legacy paths
-  const normalizedSlug =
-    slug === 'kids-dance' || slug === 'adults-dance'
-      ? 'commercial-expressive'
-      : slug === 'kuchipudi' || slug === 'kathak' || slug === 'classical-certification'
-      ? 'classical-dance'
-      : slug;
-
   try {
     const supabase = getPublicSupabase();
-    if (!supabase) {
-      return (
-        DEFAULT_PROGRAMMES.find((p) => p.slug === normalizedSlug) ??
-        DEFAULT_PROGRAMMES.find((p) => p.slug === slug) ??
-        null
-      );
+    if (supabase) {
+      const { data } = await supabase
+        .from('programmes')
+        .select('*, batches(id, days, time_start, time_end, capacity, enrolled_count, status, instructor:instructors(name, photo_url))')
+        .eq('slug', slug)
+        .eq('is_active', true)
+        .maybeSingle();
+      if (data) return mergeProgrammeWithDefaults(data as Record<string, unknown>);
     }
-    const { data } = await supabase
-      .from('programmes')
-      .select('*, batches(id, days, time_start, time_end, capacity, enrolled_count, status, instructor:instructors(name, photo_url))')
-      .eq('slug', normalizedSlug)
-      .eq('is_active', true)
-      .single();
-    if (data) return mergeProgrammeWithDefaults(data as Record<string, unknown>);
   } catch {}
 
-  return (
-    DEFAULT_PROGRAMMES.find((p) => p.slug === normalizedSlug) ??
-    DEFAULT_PROGRAMMES.find((p) => p.slug === slug) ??
-    null
-  );
+  // Direct exact match from DEFAULT_PROGRAMMES
+  const direct = DEFAULT_PROGRAMMES.find((p) => p.slug === slug);
+  if (direct) return direct;
+
+  // Legacy alias fallbacks
+  if (slug === 'commercial-expressive') {
+    return DEFAULT_PROGRAMMES.find((p) => p.slug === 'kids-dance') ?? null;
+  }
+  if (slug === 'classical-dance' || slug === 'classical-certification' || slug === 'kathak') {
+    return DEFAULT_PROGRAMMES.find((p) => p.slug === 'kuchipudi') ?? null;
+  }
+  if (slug === 'gymnastic') {
+    return DEFAULT_PROGRAMMES.find((p) => p.slug === 'gymnastics') ?? null;
+  }
+
+  return null;
 }

@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getProgrammeBySlug } from '@/data/programmes';
 import { getBatches } from '@/data/batches';
-import { Clock, Calendar, IndianRupee, MapPin } from 'lucide-react';
+import { Clock, Calendar, IndianRupee, MapPin, ArrowUpRight } from 'lucide-react';
 import { formatTime } from '@/lib/utils/format';
 import { enrolHref, SITE_URL, ROUTES } from '@/lib/utils/constants';
 import { KuchipudiShowcase } from '@/components/public/kuchipudi-showcase';
@@ -22,30 +22,67 @@ interface Props {
 
 export async function generateStaticParams() {
   return [
-    { slug: 'commercial-expressive' },
-    { slug: 'mind-body-fitness' },
-    { slug: 'classical-dance' },
     { slug: 'kids-dance' },
     { slug: 'adults-dance' },
+    { slug: 'mind-body-fitness' },
     { slug: 'kuchipudi' },
+    { slug: 'gymnastics' },
+    { slug: 'classical-dance' },
+    { slug: 'commercial-expressive' },
   ];
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const programme: any = await getProgrammeBySlug(slug);
-  
+
   if (!programme) {
     return {
-      title: 'Programme Not Found'
+      title: 'Programme Not Found',
     };
   }
-  
+
+  if (slug === 'kids-dance') {
+    return {
+      title: 'Kids Dance Classes (Ages 3.5–12) | Rhythmzz Academy of Dance',
+      description:
+        'Foundational dance training for children aged 3.5 to 12 in Secunderabad. Bollywood, hip hop, contemporary, freestyle, and gymnastics. Book your free trial class.',
+      alternates: { canonical: `${SITE_URL}/programmes/kids-dance` },
+    };
+  }
+
+  if (slug === 'adults-dance') {
+    return {
+      title: 'Adults Dance Classes (Ages 13+) | Rhythmzz Academy of Dance',
+      description:
+        'Commercial choreography, trending Bollywood, hip hop, and contemporary dance classes for adults aged 13+ in Secunderabad. Book your free trial class.',
+      alternates: { canonical: `${SITE_URL}/programmes/adults-dance` },
+    };
+  }
+
+  if (slug === 'mind-body-fitness') {
+    return {
+      title: 'Mind & Body Fitness (Yoga & Zumba) | Rhythmzz Academy of Dance',
+      description:
+        'Weekday morning fitness, high-energy Zumba, and flexibility Yoga at Neredmet X Road, Secunderabad. Combo and standalone plans. Free trial session.',
+      alternates: { canonical: `${SITE_URL}/programmes/mind-body-fitness` },
+    };
+  }
+
+  if (slug === 'gymnastics') {
+    return {
+      title: 'Gymnastics & Tumbling for Kids (Ages 3.5–12) | Rhythmzz Academy of Dance',
+      description:
+        'Safety-certified gymnastics, tumbling, agility, and flexibility coaching for kids aged 3.5 to 12 at Neredmet X Road, Secunderabad. Free trial class.',
+      alternates: { canonical: `${SITE_URL}/programmes/gymnastics` },
+    };
+  }
+
   if (slug === 'kuchipudi') {
     return {
-      title: 'Kuchipudi Dance Classes for Kids & Adults | Rhythmzz Academy of Dance',
+      title: 'Kuchipudi Classical Dance Classes | Rhythmzz Academy of Dance',
       description:
-        'Structured Kuchipudi training from age 5 to Rangapravesham. Year-wise curriculum, expert guidance, and batches now open at Rhythmzz Academy of Dance.',
+        'Structured classical Kuchipudi training under Guru Srushti Nidhi from foundation to Rangapravesham. Year-wise syllabus and accredited certifications.',
       alternates: { canonical: `${SITE_URL}/programmes/kuchipudi` },
     };
   }
@@ -58,52 +95,321 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 const PROGRAMME_NOTES: Record<string, string> = {
-  'commercial-expressive':
-    'Monday to Wednesday. Kids 3.5–12 years from 5 to 7 PM. Adults 13+ years from 7 to 9 PM. Bollywood, hip-hop, contemporary, Tollywood.',
-  'mind-body-fitness':
-    'Weekday mornings 9:30 to 10:30 AM. Zumba, yoga, pilates, HIIT. Bring a bottle. The room is cold.',
-  'classical-dance':
-    'Kuchipudi on Friday and Saturday, 6:30 to 7:30 PM. Kathak — see /syllabus/kathak for the level plan, or WhatsApp the desk for batch schedule.',
   'kids-dance':
-    'Kids 3.5 to 12 years, Monday to Wednesday 5 to 7 PM. Bollywood, hip-hop, contemporary, and gymnastics progression.',
+    'Monday to Wednesday, 5:00 to 7:00 PM. Ages 3.5 to 12 years. Foundational technique, rhythm, stage confidence, Bollywood routines, hip hop basics, contemporary expression, and foundational gymnastics tailored specifically for young dancers.',
   'adults-dance':
-    'Adults 13+ years, Monday to Wednesday 7 to 9 PM. Same styles as the kids batch, faster music, longer phrases.',
+    'Monday to Wednesday, 7:00 to 9:00 PM. Ages 13+ years. High-energy commercial choreography, trending Bollywood tracks, sharp hip hop isolations, contemporary floorwork, and video shoot routines. Beginner to advanced dancers.',
+  'mind-body-fitness':
+    'Weekday mornings, 8:30 to 9:15 AM & 9:30 to 10:20 AM. Complete Fitness Combo Pack (₹2,500/mo, Mon–Fri), Standalone Zumba (₹1,500/mo, 2 days/wk, Mon & Wed), and Standalone Yoga (₹1,000/mo, 1 day/wk, Tuesday). Full cardio stamina, core toning, and posture alignment.',
+  gymnastics:
+    'Thursday and Saturday, 5:15 to 6:15 PM. Ages 3.5 to 12 years. Safety-certified tumbling mats, cartwheels, handstand balance, flexibility, and foundational acrobatics.',
   kuchipudi:
-    'Kuchipudi classical training, Friday and Saturday 6:30 to 7:30 PM. Ten-year foundation or six-year certificate.',
-  kathak:
-    'Kathak classes. Five levels from foundation to masterclass — full syllabus at /syllabus/kathak. WhatsApp the desk for batch days and fees.',
+    'Friday and Saturday, 6:30 to 7:30 PM. Certified classical Kuchipudi curriculum under Guru Srushti Nidhi. From foundational adavus to Rangapravesham recital milestones.',
+  'classical-dance':
+    'Friday and Saturday, 6:30 to 7:30 PM. Certified classical dance certification track.',
+  'commercial-expressive':
+    'Commercial and expressive style choreography batches for all age pathways.',
 };
 
 const PROGRAMME_HERO_IMAGES: Record<string, { src: string; alt: string }> = {
-  'commercial-expressive': {
-    src: '/images/programmes/kids-programme-cover.jpg',
-    alt: 'Commercial and Expressive Style dance training at Rhythmzz Academy',
-  },
-  'mind-body-fitness': {
-    src: '/images/studio-training/floorwork-stretch.jpg',
-    alt: 'Mind and body fitness, yoga and conditioning at Rhythmzz',
-  },
-  'classical-dance': {
-    src: '/images/programmes/kuchipudi-programme-cover.jpg',
-    alt: 'Structured level-based classical dance certification',
-  },
   'kids-dance': {
     src: '/images/programmes/kids-programme-cover.jpg',
     alt: 'Kids dance foundation and choreography batch at Rhythmzz Academy',
   },
   'adults-dance': {
     src: '/images/programmes/adults-programme-cover.jpg',
-    alt: 'Adults dance batch and contemporary training at Rhythmzz Academy',
+    alt: 'Adults dance batch and commercial choreography at Rhythmzz Academy',
+  },
+  'mind-body-fitness': {
+    src: '/images/studio-training/floorwork-stretch.jpg',
+    alt: 'Mind and body fitness, yoga and Zumba at Rhythmzz',
+  },
+  gymnastics: {
+    src: '/images/team/srikanth-gymnastics-2.jpg',
+    alt: 'Gymnastics and tumbling training at Rhythmzz Academy',
   },
   kuchipudi: {
     src: '/images/programmes/kuchipudi-programme-cover.jpg',
     alt: 'Kuchipudi classical dance recital and stage performance',
   },
-  kathak: {
+  'classical-dance': {
     src: '/images/programmes/kuchipudi-programme-cover.jpg',
-    alt: 'Classical class at Rhythmzz Academy',
+    alt: 'Structured level-based classical dance certification',
+  },
+  'commercial-expressive': {
+    src: '/images/programmes/kids-programme-cover.jpg',
+    alt: 'Commercial and Expressive Style dance training at Rhythmzz Academy',
   },
 };
+
+interface PricingPlanOption {
+  id: string;
+  name: string;
+  price: number;
+  period: string;
+  badge?: string;
+  highlight?: boolean;
+  note?: string;
+}
+
+function getProgrammePlans(slug: string, programme: any): PricingPlanOption[] {
+  if (slug === 'mind-body-fitness') {
+    return [
+      {
+        id: 'monthly',
+        name: 'Combo Pack (Monthly)',
+        price: 2500,
+        period: 'per month',
+        badge: 'Mon–Fri 8:30 & 9:30 AM',
+        note: 'Complete fitness: Zumba, Yoga, Pilates & HIIT',
+      },
+      {
+        id: 'quarterly',
+        name: 'Combo Pack (Quarterly)',
+        price: 6000,
+        period: 'per 3 months',
+        badge: 'Save ₹1,500 · Popular',
+        highlight: true,
+        note: 'Full 3-month wellness & stamina cycle',
+      },
+      {
+        id: 'half-yearly',
+        name: 'Combo Pack (Half-Yearly)',
+        price: 11000,
+        period: 'per 6 months',
+        badge: 'Save ₹4,000 · Best Value',
+        note: 'Full 6-month wellness & conditioning cycle',
+      },
+      {
+        id: 'zumba',
+        name: 'Zumba Standalone (2 Days/Wk)',
+        price: 1500,
+        period: 'per month',
+        badge: 'Mon & Wed',
+        note: 'High-energy Latin dance cardio (8:30 or 9:30 AM)',
+      },
+      {
+        id: 'yoga',
+        name: 'Yoga Standalone (1 Day/Wk)',
+        price: 1000,
+        period: 'per month',
+        badge: 'Tuesday 9:30 AM',
+        note: 'Flexibility, posture & breathwork conditioning',
+      },
+      {
+        id: 'drop-in',
+        name: 'Single Drop-in Session',
+        price: 300,
+        period: 'per class',
+        note: 'Single morning workout session pass',
+      },
+    ];
+  }
+
+  if (slug === 'kids-dance') {
+    return [
+      {
+        id: 'monthly',
+        name: 'Monthly Plan',
+        price: 2000,
+        period: 'per month',
+        badge: '12 Classes / Month',
+        note: 'Mon–Wed · 5:00–6:00 PM or 6:00–7:00 PM',
+      },
+      {
+        id: 'quarterly',
+        name: 'Quarterly Plan',
+        price: 5000,
+        period: 'per 3 months',
+        badge: 'Save ₹1,000 · Most Popular',
+        highlight: true,
+        note: '36 classes + free academy uniform kit',
+      },
+      {
+        id: 'half-yearly',
+        name: 'Half-Yearly Plan',
+        price: 9500,
+        period: 'per 6 months',
+        badge: 'Save ₹2,500 · Best Value',
+        note: '72 classes + annual showcase priority',
+      },
+      {
+        id: 'sibling',
+        name: 'Sibling Plan',
+        price: 3500,
+        period: 'per month',
+        badge: '2 Kids Enrolled',
+        note: 'Save ₹500/mo on joint sibling enrollment',
+      },
+      {
+        id: 'annual',
+        name: 'Annual Plan',
+        price: 18000,
+        period: 'per year',
+        badge: 'Save ₹6,000',
+        note: 'Full year foundational progression & recitals',
+      },
+      {
+        id: 'drop-in',
+        name: 'Single Drop-in Class',
+        price: 300,
+        period: 'per session',
+        note: 'Single trial or practice session pass',
+      },
+    ];
+  }
+
+  if (slug === 'adults-dance') {
+    return [
+      {
+        id: 'monthly',
+        name: 'Monthly Plan',
+        price: 2500,
+        period: 'per month',
+        badge: '12 Classes / Month',
+        note: 'Mon–Wed · 7:00–8:00 PM or 8:00–9:00 PM',
+      },
+      {
+        id: 'quarterly',
+        name: 'Quarterly Plan',
+        price: 6000,
+        period: 'per 3 months',
+        badge: 'Save ₹1,500 · Most Popular',
+        highlight: true,
+        note: '36 classes + studio shoot video invite',
+      },
+      {
+        id: 'half-yearly',
+        name: 'Half-Yearly Plan',
+        price: 11000,
+        period: 'per 6 months',
+        badge: 'Save ₹4,000 · Best Value',
+        note: '72 classes + priority workshop access',
+      },
+      {
+        id: 'all-access',
+        name: 'All-Access Pass',
+        price: 5000,
+        period: 'per month',
+        badge: 'Unlimited Studio Access',
+        note: 'Attend any adult dance & morning fitness batch',
+      },
+      {
+        id: 'annual',
+        name: 'Annual Plan',
+        price: 18000,
+        period: 'per year',
+        badge: 'Save ₹12,000',
+        note: 'Full 12-month commercial dance immersion',
+      },
+      {
+        id: 'drop-in',
+        name: 'Single Drop-in Class',
+        price: 300,
+        period: 'per session',
+        note: 'Single commercial choreography pass',
+      },
+    ];
+  }
+
+  if (slug === 'gymnastics' || slug === 'gymnastic') {
+    return [
+      {
+        id: 'monthly',
+        name: 'Monthly Plan',
+        price: 1000,
+        period: 'per month',
+        badge: '8 Classes / Month',
+        note: 'Thu & Sat · 5:15–6:15 PM',
+      },
+      {
+        id: 'quarterly',
+        name: 'Quarterly Plan',
+        price: 2500,
+        period: 'per 3 months',
+        badge: 'Save ₹500 · Most Popular',
+        highlight: true,
+        note: '24 classes + progression badge',
+      },
+      {
+        id: 'half-yearly',
+        name: 'Half-Yearly Plan',
+        price: 4500,
+        period: 'per 6 months',
+        badge: 'Save ₹1,500 · Best Value',
+        note: '48 classes + showcase routine slot',
+      },
+      {
+        id: 'sibling',
+        name: 'Sibling Plan',
+        price: 1500,
+        period: 'per month',
+        badge: '2 Kids Enrolled',
+        note: 'Save ₹500/mo for two siblings',
+      },
+      {
+        id: 'annual',
+        name: 'Annual Plan',
+        price: 8000,
+        period: 'per year',
+        badge: 'Save ₹4,000',
+        note: 'Full year tumbling & acrobatic progress',
+      },
+      {
+        id: 'drop-in',
+        name: 'Single Drop-in Class',
+        price: 300,
+        period: 'per session',
+        note: 'Single tumbling assessment pass',
+      },
+    ];
+  }
+
+  // Default / Classical Dance
+  return [
+    {
+      id: 'monthly',
+      name: 'Kids Monthly',
+      price: programme?.fees_monthly || 2000,
+      period: 'per month',
+      badge: 'Kids: 3.5–12 Years',
+      note: 'Fri & Sat · 6:30–7:30 PM',
+    },
+    {
+      id: 'quarterly',
+      name: 'Kids Quarterly',
+      price: programme?.fees_quarterly || 5000,
+      period: 'per 3 months',
+      badge: 'Save ₹1,000',
+      highlight: true,
+      note: 'Full term syllabus & board exams prep',
+    },
+    {
+      id: 'monthly-adult',
+      name: 'Adults Monthly',
+      price: 2500,
+      period: 'per month',
+      badge: 'Adults: 13+ Years',
+      note: 'Fri & Sat · 6:30–7:30 PM',
+    },
+    {
+      id: 'quarterly-adult',
+      name: 'Adults Quarterly',
+      price: 6000,
+      period: 'per 3 months',
+      badge: 'Save ₹1,500',
+      note: 'Classical repertoire & abhinaya mastery',
+    },
+    {
+      id: 'half-yearly',
+      name: 'Half-Yearly Track',
+      price: 9500,
+      period: 'per 6 months',
+      badge: 'Save ₹2,500 · Best Value',
+      note: 'Stage recital & certification milestones',
+    },
+  ];
+}
 
 export default async function ProgrammeDetailPage({ params }: Props) {
   const { slug } = await params;
@@ -114,24 +420,64 @@ export default async function ProgrammeDetailPage({ params }: Props) {
     notFound();
   }
 
-  const programmeBatches = (allBatches ?? []).filter(
-    (b: any) => b.programme?.slug === slug || b.programme_id === programme.id,
-  );
+  // Strictly filter batches so each programme page displays only its own age pathway and cohort
+  const programmeBatches = (allBatches ?? []).filter((b: any) => {
+    if (slug === 'kids-dance') {
+      return (
+        (b.programme?.slug === 'kids-dance' || b.name?.toLowerCase().includes('kids')) &&
+        !b.name?.toLowerCase().includes('adult')
+      );
+    }
+    if (slug === 'adults-dance') {
+      return (
+        (b.programme?.slug === 'adults-dance' || b.name?.toLowerCase().includes('adult')) &&
+        !b.name?.toLowerCase().includes('kids')
+      );
+    }
+    if (slug === 'mind-body-fitness') {
+      return (
+        b.programme?.slug === 'mind-body-fitness' ||
+        b.name?.toLowerCase().includes('fitness') ||
+        b.name?.toLowerCase().includes('zumba') ||
+        b.name?.toLowerCase().includes('yoga')
+      );
+    }
+    if (slug === 'gymnastics' || slug === 'gymnastic') {
+      return (
+        b.programme?.slug === 'gymnastics' ||
+        b.programme?.slug === 'gymnastic' ||
+        b.name?.toLowerCase().includes('gymnastic')
+      );
+    }
+    if (slug === 'kuchipudi' || slug === 'classical-dance') {
+      return (
+        b.programme?.slug === 'kuchipudi' ||
+        b.programme?.slug === 'classical-dance' ||
+        b.name?.toLowerCase().includes('kuchipudi')
+      );
+    }
+    return b.programme?.slug === slug || b.programme_id === programme.id;
+  });
 
   const courseSchema = {
-    "@context": "https://schema.org",
-    "@type": "Course",
-    "name": programme.name,
-    "description": programme.description,
-    "provider": {
-      "@type": "Organization",
-      "name": "Rhythmzz Academy of Dance",
-      "sameAs": SITE_URL
-    }
+    '@context': 'https://schema.org',
+    '@type': 'Course',
+    name: programme.name,
+    description: programme.description,
+    provider: {
+      '@type': 'Organization',
+      name: 'Rhythmzz Academy of Dance',
+      sameAs: SITE_URL,
+    },
   };
 
-  const includesList = programme.includes ? (typeof programme.includes === 'string' ? JSON.parse(programme.includes) : programme.includes) : [];
+  const includesList = programme.includes
+    ? typeof programme.includes === 'string'
+      ? JSON.parse(programme.includes)
+      : programme.includes
+    : [];
   const heroImage = PROGRAMME_HERO_IMAGES[slug] || PROGRAMME_HERO_IMAGES['kids-dance'];
+  const pricingPlans = getProgrammePlans(slug, programme);
 
   if (slug === 'kuchipudi') {
     return (
@@ -176,9 +522,9 @@ export default async function ProgrammeDetailPage({ params }: Props) {
               <div className="text-sm text-ink-2 space-y-4 leading-relaxed">
                 <p>{PROGRAMME_NOTES[slug] ?? programme.description}</p>
                 <p>
-                  The studio is at Neredmet X Road, Secunderabad — 8–15 minutes by drive
-                  from Sainikpuri, AS Rao Nagar and Yapral. Every learner receives one complimentary
-                  trial class with zero registration fee.
+                  The studio is located at Neredmet X Road, Secunderabad — 8–15 minutes by drive
+                  from Sainikpuri, AS Rao Nagar, and Yapral. Every learner receives one complimentary
+                  free trial class with zero admission fee.
                 </p>
               </div>
             </div>
@@ -210,12 +556,15 @@ export default async function ProgrammeDetailPage({ params }: Props) {
                         className="flex flex-col sm:flex-row sm:items-center justify-between p-5 bg-surface border border-line rounded-md gap-4"
                       >
                         <div className="flex flex-col gap-1.5">
-                          <div className="flex items-center gap-2 text-ink font-semibold text-sm">
-                            <Calendar size={16} className="text-bl" />
+                          <div className="text-sm font-bold text-ink">
+                            {batch.name || `${programme.name} Cohort`}
+                          </div>
+                          <div className="flex items-center gap-2 text-ink font-semibold text-xs">
+                            <Calendar size={15} className="text-bl" />
                             {Array.isArray(batch.days) ? batch.days.join(', ') : batch.days}
                           </div>
                           <div className="flex items-center gap-2 text-ink-2 text-xs">
-                            <Clock size={14} className="text-ink-3" />
+                            <Clock size={13} className="text-ink-3" />
                             {formatTime(batch.time_start)} – {formatTime(batch.time_end)}
                           </div>
                         </div>
@@ -234,57 +583,102 @@ export default async function ProgrammeDetailPage({ params }: Props) {
                 </div>
               ) : (
                 <p className="text-ink-2 bg-surface p-6 rounded-md border border-line text-sm">
-                  Schedule details will be updated soon.
+                  Schedule details will be updated soon. Contact our desk for upcoming openings.
                 </p>
               )}
             </div>
           </div>
 
           <div className="lg:col-span-4 space-y-4">
-            <div className="rounded-md border border-line bg-surface p-6 sm:p-8 space-y-6">
+            <div className="rounded-md border border-line bg-surface p-6 sm:p-7 space-y-5">
               <div className="flex items-center justify-between border-b border-line pb-4">
-                <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-bl">Tuition</span>
+                <div>
+                  <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-bl block">
+                    Tuition &amp; Plans
+                  </span>
+                  <span className="text-xs text-ink-3 font-medium">Official academy rate card</span>
+                </div>
                 <span className="text-[9px] uppercase tracking-wider text-blk font-bold bg-bl px-2 py-0.5 rounded-md">
                   Zero admission fee
                 </span>
               </div>
 
-              <div className="space-y-3">
-                {programme.fees_monthly && (
-                  <div className="flex justify-between items-center p-3.5 bg-canvas rounded-md border border-line">
-                    <span className="text-xs uppercase tracking-wider text-ink-2 font-semibold">Monthly</span>
-                    <div className="flex items-center font-anton text-2xl text-ink">
-                      <IndianRupee size={18} className="mr-0.5 text-ink-3" />
-                      {programme.fees_monthly}
+              {/* Comprehensive, accurate plan suite */}
+              <div className="space-y-2.5">
+                {pricingPlans.map((plan) => (
+                  <div
+                    key={plan.id}
+                    className={cn(
+                      'p-3.5 rounded-md border transition-all flex flex-col gap-2',
+                      plan.highlight
+                        ? 'border-bl/50 bg-bl/5'
+                        : 'border-line bg-canvas hover:border-line-strong',
+                    )}
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="text-xs font-bold uppercase tracking-tight text-ink">
+                            {plan.name}
+                          </span>
+                          {plan.badge && (
+                            <span
+                              className={cn(
+                                'text-[9px] font-mono px-1.5 py-0.5 rounded-md uppercase font-semibold',
+                                plan.highlight
+                                  ? 'bg-bl text-blk font-bold'
+                                  : 'bg-surface border border-line text-ink-3',
+                              )}
+                            >
+                              {plan.badge}
+                            </span>
+                          )}
+                        </div>
+                        {plan.note && (
+                          <p className="text-[11px] text-ink-3 mt-0.5 leading-snug">{plan.note}</p>
+                        )}
+                      </div>
+                      <div className="text-right shrink-0">
+                        <div className="flex items-baseline justify-end font-anton text-xl text-ink">
+                          <IndianRupee size={14} className="mr-0.5 text-ink-3 inline" />
+                          {plan.price.toLocaleString('en-IN')}
+                        </div>
+                        <span className="text-[10px] text-ink-3 font-mono block">
+                          {plan.period}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="pt-2 border-t border-line/60 flex justify-end">
+                      <Link
+                        href={enrolHref({
+                          programme: slug,
+                          intent: 'pay',
+                          plan: plan.id,
+                          fee: plan.price,
+                        })}
+                        className="inline-flex items-center gap-1 text-[11px] font-bold text-bl hover:underline"
+                      >
+                        <span>Book this plan</span>
+                        <ArrowUpRight size={12} strokeWidth={2.5} />
+                      </Link>
                     </div>
                   </div>
-                )}
-                {programme.fees_quarterly && (
-                  <div className="flex justify-between items-center p-3.5 bg-canvas rounded-md border border-line">
-                    <div>
-                      <span className="text-xs uppercase tracking-wider text-ink-2 font-semibold block">Quarterly</span>
-                      <span className="text-[10px] text-bl">Save 10%</span>
-                    </div>
-                    <div className="flex items-center font-anton text-2xl text-bl">
-                      <IndianRupee size={18} className="mr-0.5" />
-                      {programme.fees_quarterly}
-                    </div>
-                  </div>
-                )}
+                ))}
               </div>
 
-              <div className={cn(homepageCtaPairStack, 'gap-2.5')}>
+              <div className={cn(homepageCtaPairStack, 'gap-2.5 pt-2')}>
                 <Link
-                  href={enrolHref({ programme: programme.slug, intent: 'trial' })}
+                  href={enrolHref({ programme: slug, intent: 'trial' })}
                   className={cn(homepageCtaBrand, homepageCtaPairButton)}
                 >
-                  Book free trial
+                  Book free trial class
                 </Link>
                 <Link
-                  href={enrolHref({ programme: programme.slug, intent: 'pay' })}
-                  className={cn(homepageCtaOutlineLight, homepageCtaPairButton)}
+                  href="/pricing"
+                  className={cn(homepageCtaOutlineLight, homepageCtaPairButton, 'text-xs')}
                 >
-                  Enrol &amp; pay
+                  Compare all plans &amp; perks
                 </Link>
               </div>
             </div>
@@ -326,4 +720,3 @@ export default async function ProgrammeDetailPage({ params }: Props) {
     </PublicPage>
   );
 }
-
