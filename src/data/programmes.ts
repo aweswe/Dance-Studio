@@ -124,21 +124,21 @@ export const DEFAULT_PROGRAMMES: ProgrammeItem[] = [
     batches_info: [
       {
         name: "Complete Fitness Combo Pack",
-        age: "16+ Years · All Fitness Levels",
+        age: "13+ Years · All Fitness Levels",
         styles: "Zumba, Yoga, Pilates, HIIT & Mobility Drills",
         schedule: "Mon to Fri · 8:30–9:15 AM & 9:30–10:20 AM",
         instructors: "Fitness Faculty",
       },
       {
         name: "Zumba (2 Days a Week)",
-        age: "16+ Years · All Fitness Levels",
+        age: "13+ Years · All Fitness Levels",
         styles: "High-Energy Latin Dance Fitness Cardio",
         schedule: "Mon & Wed · 8:30–9:15 AM & 9:30–10:20 AM",
         instructors: "Fitness Faculty",
       },
       {
         name: "Yoga (1 Day a Week)",
-        age: "16+ Years · All Fitness Levels",
+        age: "13+ Years · All Fitness Levels",
         styles: "Flexibility, Posture & Breathwork Conditioning",
         schedule: "Tuesday · 9:30 AM – 10:20 AM",
         instructors: "Fitness Faculty",
@@ -158,7 +158,7 @@ export const DEFAULT_PROGRAMMES: ProgrammeItem[] = [
     ],
     fees_monthly: 2500,
     fees_quarterly: 6000,
-    age_group: "16+ Years",
+    age_group: "13+ Years",
     sort_order: 3,
     is_active: true,
   },

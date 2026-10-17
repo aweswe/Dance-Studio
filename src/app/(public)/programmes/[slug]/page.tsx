@@ -62,7 +62,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (slug === 'mind-body-fitness') {
     return {
-      title: 'Mind & Body Fitness (16+ Years) | Rhythmzz Academy of Dance',
+      title: 'Mind & Body Fitness (13+ Years) | Rhythmzz Academy of Dance',
       description:
         'Build strength, improve flexibility, and feel your best with morning fitness, Zumba, yoga, Pilates, Tabata, and personal training at Neredmet X Road, Secunderabad.',
       alternates: { canonical: `${SITE_URL}/programmes/mind-body-fitness` },
@@ -516,11 +516,9 @@ export default async function ProgrammeDetailPage({ params }: Props) {
 
       <PublicPageTitle
         eyebrow={
-          slug === 'adults-dance'
+          slug === 'adults-dance' || slug === 'mind-body-fitness'
             ? '13+ YEARS'
-            : slug === 'mind-body-fitness'
-              ? '16+ YEARS'
-              : programme.age_group || 'Open batch'
+            : programme.age_group || 'Open batch'
         }
         title={programme.name}
         description={PROGRAMME_DESCRIPTIONS[slug] ?? programme.description}

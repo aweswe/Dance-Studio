@@ -191,7 +191,7 @@ const PROGRAMMES: ProgrammeTab[] = [
       { label: 'Yoga (1 Day/Wk)' },
       { label: 'Zumba (2 Days/Wk)' },
       { label: 'Combo Pack (Mon–Fri)' },
-      { label: '16+ Years · All Levels' },
+      { label: '13+ Years · All Levels' },
       { label: 'Morning Batches', highlight: true },
     ],
     schedule: 'Mon–Fri 8:30–9:15 AM & 9:30–10:20 AM · Zumba (Mon & Wed) · Yoga (Tue)',

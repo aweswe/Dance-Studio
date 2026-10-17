@@ -65,29 +65,18 @@ export function SiteIntroLoader() {
           : 'opacity-100 scale-100 filter blur-0'
       }`}
     >
-      {/* Ambient Radial Spotlight */}
+      {/* Soft minimal ambient glow — clean blank background, no grid squares */}
       <div
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_46%,rgba(43,180,216,0.18)_0%,rgba(15,17,21,0.85)_50%,#08090b_100%)]"
-        aria-hidden="true"
-      />
-
-      {/* Subtle Studio Floor Grid Sheen */}
-      <div
-        className="pointer-events-none absolute inset-0 opacity-[0.03] bg-[linear-gradient(to_right,#ffffff_1px,transparent_1px),linear-gradient(to_bottom,#ffffff_1px,transparent_1px)] bg-[size:4rem_4rem]"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_46%,rgba(56,189,248,0.08)_0%,transparent_65%)]"
         aria-hidden="true"
       />
 
       {/* Main Content Box */}
       <div className="relative z-10 flex flex-col items-center px-6 text-center max-w-md sm:max-w-lg mx-auto">
-        {/* Pulsing Aura Rings behind Logo */}
+        {/* Soft subtle glow behind Logo — no harsh rings */}
         <div className="relative flex items-center justify-center">
           <div
-            className="absolute -inset-6 sm:-inset-8 rounded-3xl bg-bl/25 blur-3xl animate-pulse"
-            aria-hidden="true"
-          />
-          <div
-            className="absolute -inset-10 rounded-full border border-bl/25 animate-ping opacity-30"
-            style={{ animationDuration: '2.5s' }}
+            className="absolute -inset-6 sm:-inset-8 rounded-full bg-bl/10 blur-2xl"
             aria-hidden="true"
           />
 

@@ -50,7 +50,7 @@ export default async function HomePage(props: {
 
 
   return (
-    <div className="relative bg-canvas text-ink font-body overflow-x-hidden min-h-screen transition-colors duration-300">
+    <div className="relative bg-canvas text-ink font-body overflow-x-hidden transition-colors duration-300">
       <StructuredData />
       <Hero stats={stats} />
       <HeroSpotlightVideos />
