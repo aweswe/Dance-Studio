@@ -72,6 +72,7 @@ const DISCOVER_GROUPS: { label: string; links: NavLink[] }[] = [
   {
     label: 'Academy',
     links: [
+      { name: 'Pricing & Plans', href: ROUTES.pricing, hint: 'Transparent studio tuition' },
       { name: 'About', href: ROUTES.about, hint: 'Our story & team' },
       { name: 'Gear Store', href: ROUTES.gear, hint: 'Official studio dancewear' },
       { name: 'Gallery', href: ROUTES.gallery, hint: 'Stage & studio archive' },

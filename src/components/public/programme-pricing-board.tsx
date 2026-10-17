@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import {
@@ -411,8 +412,26 @@ const KUCHIPUDI_DATA = {
   ],
 };
 
-export function ProgrammePricingBoard() {
-  const [activeTabId, setActiveTabId] = useState<string>('kids-dance');
+function ProgrammePricingBoardInner({ initialProgramme }: { initialProgramme?: string }) {
+  const searchParams = useSearchParams();
+  const paramProg = searchParams?.get('programme') || searchParams?.get('tab') || initialProgramme;
+
+  const resolveTab = (val?: string | null) => {
+    if (!val) return 'kids-dance';
+    const match = PROGRAMMES.find(
+      (p) => p.id.toLowerCase() === val.toLowerCase() || p.slug.toLowerCase() === val.toLowerCase(),
+    );
+    return match ? match.id : 'kids-dance';
+  };
+
+  const [activeTabId, setActiveTabId] = useState<string>(() => resolveTab(paramProg));
+
+  useEffect(() => {
+    if (paramProg) {
+      setActiveTabId(resolveTab(paramProg));
+    }
+  }, [paramProg]);
+
   const [waitlistOpen, setWaitlistOpen] = useState(false);
   const [waitlistTrack, setWaitlistTrack] = useState('Upcoming Certification Courses');
   const [kuchipudiAgeGroup, setKuchipudiAgeGroup] = useState<'kids' | 'adults'>('kids');
@@ -464,7 +483,7 @@ export function ProgrammePricingBoard() {
   );
 
   return (
-    <section className="w-full bg-white text-neutral-900 py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-10 max-w-[1360px] mx-auto select-none">
+    <section id="pricing" className="w-full bg-white text-neutral-900 py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-10 max-w-[1360px] mx-auto select-none">
       {/* ── TOP HEADER ── */}
       <header className="text-center max-w-3xl mx-auto mb-8 sm:mb-10">
         <p className="text-bl font-mono font-bold tracking-wider text-[11px] sm:text-xs mb-2">
@@ -1401,5 +1420,19 @@ export function ProgrammePricingBoard() {
         defaultProgramme={waitlistTrack}
       />
     </section>
+  );
+}
+
+export function ProgrammePricingBoard(props: { initialProgramme?: string } = {}) {
+  return (
+    <Suspense
+      fallback={
+        <div className="w-full min-h-[500px] flex items-center justify-center text-xs font-mono text-neutral-400">
+          Loading tuition &amp; plans...
+        </div>
+      }
+    >
+      <ProgrammePricingBoardInner {...props} />
+    </Suspense>
   );
 }

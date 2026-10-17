@@ -84,6 +84,7 @@ export function enrolHref(opts?: {
 /** Route paths */
 export const ROUTES = {
   home: "/",
+  pricing: "/pricing",
   programmes: "/programmes",
   programme: (slug: string) => `/programmes/${slug}`,
   enrol: "/enrol",

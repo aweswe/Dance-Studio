@@ -732,7 +732,7 @@ export default async function ProgrammeDetailPage({ params }: Props) {
                   Book Free Trial Class
                 </Link>
                 <Link
-                  href="/pricing"
+                  href={`/pricing?programme=${slug}`}
                   className={cn(homepageCtaOutlineLight, homepageCtaPairButton, 'normal-case text-xs tracking-normal font-bold')}
                 >
                   Compare All Plans &amp; Perks
