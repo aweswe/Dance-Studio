@@ -76,6 +76,7 @@ async function ensureRoleRecords(
       await admin.from("students").insert({
         name: account.name,
         email: account.email,
+        phone: "9888812345",
         auth_id: authId,
         status: "active",
         student_id_display: "DEMO-001",

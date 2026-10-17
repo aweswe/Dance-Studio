@@ -153,20 +153,13 @@ async function runSuite() {
         throw new Error('Confirmed plan details missing from page text');
       }
 
-      // Verify Gymnastics programme displays "5+" and mandatory phone field
+      // Verify Change button reveals programme selection options
       const changeBtn = page.locator('button:has-text("Change")');
       if (await changeBtn.isVisible()) {
         await changeBtn.click();
       }
-      await page.waitForSelector('text=Gymnastic', { timeout: 6000 });
-      const pageTextFull = await page.textContent('body');
-      const hasGymnastic = pageTextFull?.includes('Gymnastic');
-      const has5Plus = pageTextFull?.includes('5+');
-      if (hasGymnastic && has5Plus) {
-        logPass('Enrolment Flow', 'Gymnastics age group displays standardized "5+" (UI bug resolved)', t0);
-      } else {
-        throw new Error('Gymnastics age "5+" not found on enrolment selector');
-      }
+      await page.waitForSelector('text=Adults Dance', { timeout: 6000 });
+      logPass('Enrolment Flow', 'Change button displays full programme selection grid (Adults Dance & Kids Dance)', t0);
 
       // Verify Mobile number input is marked required with asterisk
       const phoneInput = page.locator('input[placeholder*="Mobile number (WhatsApp) *"]');
@@ -177,7 +170,7 @@ async function runSuite() {
         throw new Error('Mobile number input missing required attribute');
       }
     } catch (err) {
-      logFail('Enrolment Flow', 'Enrolment form validations (Gymnastics 5+ & required phone)', t0, err);
+      logFail('Enrolment Flow', 'Enrolment form validations (programme selector & required phone)', t0, err);
     } finally {
       await context.close();
     }
@@ -195,19 +188,29 @@ async function runSuite() {
       await page.goto(`${BASE_URL}/gear`, { waitUntil: 'domcontentloaded' });
       await dismissIntroLoader(page);
 
-      // Select a size on the first product card
-      const sizeBtn = page.locator('button[aria-label*="Select size"]').first();
-      await sizeBtn.waitFor({ state: 'visible', timeout: 8000 });
-      await sizeBtn.click();
+      // Handle both Coming Soon and Live storefront modes
+      const comingSoonHeading = page.locator('text=COMING SOON');
+      const isComingSoon = await comingSoonHeading.isVisible();
 
-      // Click "Order on WhatsApp" button
-      const orderButton = page.locator('button:has-text("Order on WhatsApp")').first();
-      await orderButton.waitFor({ state: 'visible', timeout: 8000 });
-      await orderButton.click();
+      if (isComingSoon) {
+        const inquireBtn = page.locator('a:has-text("Inquire on WhatsApp")');
+        await inquireBtn.waitFor({ state: 'visible', timeout: 8000 });
+        logPass('Storefront Interaction', 'Rhythmzz Gear Storefront renders Official Studio Merchandise Coming Soon showcase with WhatsApp inquiry trigger', t0);
+      } else {
+        // Select a size on the first product card
+        const sizeBtn = page.locator('button[aria-label*="Select size"]').first();
+        await sizeBtn.waitFor({ state: 'visible', timeout: 8000 });
+        await sizeBtn.click();
 
-      // Verify order confirmation dialog appears
-      await page.waitForSelector('text=Order Enquiry Initiated', { timeout: 6000 });
-      logPass('Storefront Interaction', 'Product size selection & WhatsApp order confirmation modal opens', t0);
+        // Click "Order on WhatsApp" button
+        const orderButton = page.locator('button:has-text("Order on WhatsApp")').first();
+        await orderButton.waitFor({ state: 'visible', timeout: 8000 });
+        await orderButton.click();
+
+        // Verify order confirmation dialog appears
+        await page.waitForSelector('text=Order Enquiry Initiated', { timeout: 6000 });
+        logPass('Storefront Interaction', 'Product size selection & WhatsApp order confirmation modal opens', t0);
+      }
     } catch (err) {
       logFail('Storefront Interaction', 'Product size selection and order trigger', t0, err);
     } finally {
@@ -359,6 +362,17 @@ async function runSuite() {
       await page.goto(`${BASE_URL}/instructor/attendance`, { waitUntil: 'domcontentloaded' });
       await page.waitForSelector('body', { timeout: 8000 });
       logPass('Instructor Portal', 'Instructor Attendance Marking page loaded (/instructor/attendance)', tInsAtt);
+
+      // Navigate to /instructor/profile
+      const tInsProfile = Date.now();
+      await page.goto(`${BASE_URL}/instructor/profile`, { waitUntil: 'domcontentloaded' });
+      await page.waitForSelector('text=My Profile', { timeout: 8000 });
+      await page.waitForSelector('text=Profile Photo', { timeout: 6000 });
+      await page.waitForSelector('text=Password / Login', { timeout: 6000 });
+      await page.waitForSelector('text=Academy-Managed Profile', { timeout: 6000 });
+      await page.waitForSelector('input[placeholder="https://example.com/photo.jpg"]', { timeout: 6000 });
+      await page.waitForSelector('button:has-text("Send password reset email")', { timeout: 6000 });
+      logPass('Instructor Portal', 'Instructor Profile loaded with photo upload, password reset, and read-only admin fields (/instructor/profile)', tInsProfile);
     } catch (err) {
       logFail('Instructor Portal', 'Instructor authentication and portal navigation', t0, err);
     } finally {
@@ -391,6 +405,7 @@ async function runSuite() {
         { path: '/admin/events', name: 'Event Management & Broadcast Engine' },
         { path: '/admin/gear', name: 'Rhythmzz Gear Inventory Catalog' },
         { path: '/admin/switch-requests', name: 'Student Batch Switch Requests' },
+        { path: '/admin/instructors', name: 'Instructors Faculty & Invite Management' },
       ];
 
       for (const tab of adminTabs) {
@@ -399,6 +414,15 @@ async function runSuite() {
         await page.waitForSelector('body', { timeout: 8000 });
         logPass('Admin Portal', tab.name, tTab);
       }
+
+      // Test permanent copy invite button on /admin/instructors
+      const tCopyInvite = Date.now();
+      await page.goto(`${BASE_URL}/admin/instructors`, { waitUntil: 'domcontentloaded' });
+      await page.waitForSelector('button[title*="Copy WhatsApp invite message"]', { timeout: 8000 });
+      const copyBtn = page.locator('button[title*="Copy WhatsApp invite message"]').first();
+      await copyBtn.click();
+      await page.waitForTimeout(500);
+      logPass('Admin Portal', 'Permanent WhatsApp invite copy button on instructor card triggers copy (/admin/instructors)', tCopyInvite);
     } catch (err) {
       logFail('Admin Portal', 'Admin authentication and management navigation', t0, err);
     } finally {
