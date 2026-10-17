@@ -143,7 +143,7 @@ export function ScheduleFilter({ batches }: ScheduleFilterProps) {
                             <span>{Array.isArray(batch.days) ? batch.days.join(' · ') : batch.days}</span>
                             {batch.instructor?.name && (
                               <span className="text-bl font-bold normal-case tracking-normal">
-                                · Instructor: {batch.instructor.name}
+                                · Certified Faculty
                               </span>
                             )}
                           </p>

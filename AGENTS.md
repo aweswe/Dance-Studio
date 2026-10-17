@@ -572,6 +572,24 @@ erDiagram
      - `/instructor/classes` $\rightarrow$ Assigned Classes & Timetable Skeleton
      - `/instructor/profile` $\rightarrow$ Instructor Profile Skeleton
 
+---
+
+### D. Public Page Loading Sequence & Responsive Card Layout Architecture
+
+1. **Root Cause Analysis (Footer Flashing Before Content)**:
+   * *Problem:* When loading or navigating to public routes (`/enrol`, `/programmes/[slug]`, `/gear`, `/events`, etc.), the footer previously appeared at the very top of the page under the header before the main content arrived, causing a severe layout shift (CLS).
+   * *Root Cause:* In Next.js streaming SSR, `(public)/loading.tsx` returned `null` while `<main id="main">` in `(public)/layout.tsx` had no minimum viewport height constraint. While `{children}` was suspending on server queries, `<main>` collapsed to 0px height, causing Next.js to stream `<PublicHeader />` and `<Footer />` in the first HTML chunk right next to each other.
+   * *Architectural Fix:*
+     - Added `min-h-[calc(100dvh-72px)]` to `<main id="main">` in `(public)/layout.tsx`, physically guaranteeing that `<Footer />` is pushed below the browser fold regardless of loading state.
+     - Replaced `return null;` in `src/app/(public)/loading.tsx` with a responsive, universal `PublicPageSkeleton`.
+     - Built dimension-matched skeletons for public routes: `/enrol`, `/programmes/[slug]`, `/gear`, `/events`, `/schedule`, `/studio-rental`, `/syllabus/kuchipudi`, and `/blog/[slug]`.
+
+2. **Responsive Card Layout Fix (Schedule Row Collision)**:
+   * *Problem:* In `EnrolForm` (`src/components/public/enrol-form.tsx`), the confirmation card ("WE HAVE YOUR DETAILS") displayed the `Schedule` label and batch timing string inside a flat `flex justify-between` without `gap`, `shrink-0`, or text-wrapping rules. On mobile screens (360px–390px), the 45-character string collided directly into the label (`ScheduleMonday · Tuesday · ...`), producing overlapping text.
+   * *Solution:* Refactored the row to responsive stacking (`flex-col sm:flex-row sm:items-start sm:justify-between gap-1 sm:gap-4`) with `shrink-0` on the label and `break-words leading-snug` on the timing value. On mobile, the timing renders cleanly beneath the label; on desktop, it sits side-by-side with guaranteed spacing.
+   * *Form Timing Badge:* Also upgraded the batch timing badge inside the form selector with `flex flex-col sm:flex-row` and `gap-1.5` for universal mobile wrap resilience.
+
+
 
 
 

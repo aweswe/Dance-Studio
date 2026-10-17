@@ -391,29 +391,33 @@ function computeProgrammeFee(
           </p>
         </div>
 
-        <div className="bg-canvas-muted rounded-md p-4 text-xs text-ink space-y-2.5 text-left border border-line">
-          <div className="flex justify-between py-1 border-b border-line">
-            <span className="text-ink-2">Student</span>
-            <span className="font-medium text-ink">{childName}</span>
+        <div className="bg-canvas-muted rounded-md p-4 sm:p-5 text-xs text-ink space-y-3 text-left border border-line">
+          <div className="flex items-center justify-between gap-3 py-1.5 border-b border-line">
+            <span className="text-ink-2 shrink-0 font-medium">Student</span>
+            <span className="font-medium text-ink text-right break-words">{childName}</span>
           </div>
-          <div className="flex justify-between py-1 border-b border-line">
-            <span className="text-ink-2">Programme</span>
-            <span className="font-bold text-ink">{selectedProgramme?.name}</span>
+          <div className="flex items-center justify-between gap-3 py-1.5 border-b border-line">
+            <span className="text-ink-2 shrink-0 font-medium">Programme</span>
+            <span className="font-bold text-ink text-right break-words">{selectedProgramme?.name}</span>
           </div>
-          <div className="flex justify-between py-1 border-b border-line">
-            <span className="text-ink-2">Selected Plan</span>
-            <span className="font-semibold text-ink capitalize">{plan.replace('-', ' ')}</span>
+          <div className="flex items-center justify-between gap-3 py-1.5 border-b border-line">
+            <span className="text-ink-2 shrink-0 font-medium">Selected Plan</span>
+            <span className="font-semibold text-ink capitalize text-right break-words">
+              {plan === 'zumba' ? 'Zumba (2 Days/Wk)' : plan === 'yoga' ? 'Yoga (1 Day/Wk)' : plan.replace('-', ' ')}
+            </span>
           </div>
-          <div className="flex justify-between py-1 border-b border-line">
-            <span className="text-ink-2">Schedule</span>
-            <span className="font-semibold text-bl">{batchLabel(selectedBatch)}</span>
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-1 sm:gap-4 py-2 border-b border-line">
+            <span className="text-ink-2 shrink-0 font-medium">Schedule</span>
+            <span className="font-semibold text-bl sm:text-right leading-snug break-words">
+              {batchLabel(selectedBatch) || 'Slot confirmed upon registration'}
+            </span>
           </div>
           {isPay && (
-            <div className="flex justify-between py-1 text-sm font-bold">
+            <div className="flex items-center justify-between gap-3 pt-1 text-sm font-bold">
               <span className="text-ink">{isPaidOnline ? 'Total Paid' : 'Total Payable'}</span>
               <span
                 className={cn(
-                  'font-mono',
+                  'font-mono text-base',
                   isPaidOnline ? 'text-green' : 'text-amber-600 dark:text-amber-400',
                 )}
               >
@@ -604,11 +608,13 @@ function computeProgrammeFee(
             </p>
           )}
           {selectedBatch && (
-            <div className="p-2.5 rounded-md bg-canvas-muted/60 border border-line-subtle flex items-center justify-between text-[11px] text-ink-2">
-              <span className="flex items-center gap-1.5">
-                <Calendar size={13} className="text-bl" /> {selectedBatch.days?.join(', ')}
+            <div className="p-3 rounded-md bg-canvas-muted/60 border border-line-subtle flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1.5 sm:gap-3 text-[11px] text-ink-2">
+              <span className="flex items-center gap-1.5 font-medium shrink-0">
+                <Calendar size={13} className="text-bl shrink-0" /> {selectedBatch.days?.join(', ') || 'Batch Days'}
               </span>
-              <span>{formatTime(selectedBatch.time_start)} – {formatTime(selectedBatch.time_end)}</span>
+              <span className="font-semibold text-ink sm:text-right tabular-nums">
+                {formatTime(selectedBatch.time_start)} – {formatTime(selectedBatch.time_end)}
+              </span>
             </div>
           )}
         </div>
