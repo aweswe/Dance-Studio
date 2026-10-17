@@ -2,7 +2,7 @@
 
 import { useState, useRef } from 'react';
 import Image from 'next/image';
-import { Camera, Lock, CheckCircle2, AlertCircle, Loader2, ShieldAlert, User } from 'lucide-react';
+import { Camera, Lock, CheckCircle2, AlertCircle, Loader2, ShieldAlert, User, Copy, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { updateInstructorPhoto, sendInstructorPasswordReset } from '@/actions/instructor-profile';
@@ -31,6 +31,8 @@ export function InstructorProfileForm({ instructor, userEmail }: InstructorProfi
 
   const [pwMsg, setPwMsg] = useState<Msg>(null);
   const [pwBusy, setPwBusy] = useState(false);
+  const [directResetLink, setDirectResetLink] = useState<string | null>(null);
+  const [resetCopied, setResetCopied] = useState(false);
 
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -102,10 +104,16 @@ export function InstructorProfileForm({ instructor, userEmail }: InstructorProfi
   async function handlePasswordReset() {
     setPwBusy(true);
     setPwMsg(null);
+    setDirectResetLink(null);
     const res = await sendInstructorPasswordReset();
-    setPwMsg(res.success
-      ? { ok: true, text: `Password reset link sent to ${res.email}. Check your inbox.` }
-      : { ok: false, text: res.error ?? 'Could not send reset email' });
+    if (res.success) {
+      setPwMsg({ ok: true, text: `Password reset link sent to ${res.email}. Check your inbox.` });
+      if (res.directLink) {
+        setDirectResetLink(res.directLink);
+      }
+    } else {
+      setPwMsg({ ok: false, text: res.error ?? 'Could not send reset email' });
+    }
     setPwBusy(false);
   }
 
@@ -195,9 +203,48 @@ export function InstructorProfileForm({ instructor, userEmail }: InstructorProfi
           Send password reset email
         </Button>
         {pwMsg && (
-          <div className={`flex items-center gap-2 text-xs px-3 py-2 rounded-md ${pwMsg.ok ? 'bg-green/10 text-green' : 'bg-danger/10 text-danger'}`}>
-            {pwMsg.ok ? <CheckCircle2 size={13} /> : <AlertCircle size={13} />}
-            {pwMsg.text}
+          <div className={`space-y-2 text-xs px-3.5 py-3 rounded-md ${pwMsg.ok ? 'bg-green/10 text-green border border-green/20' : 'bg-danger/10 text-danger border border-danger/20'}`}>
+            <div className="flex items-center gap-2">
+              {pwMsg.ok ? <CheckCircle2 size={14} className="shrink-0" /> : <AlertCircle size={14} className="shrink-0" />}
+              <span>{pwMsg.text}</span>
+            </div>
+            {directResetLink && (
+              <div className="pt-2 border-t border-green/20 space-y-1.5">
+                <span className="text-[10px] uppercase font-mono tracking-wider font-bold text-ink">
+                  Direct Reset Link (Immediate Access):
+                </span>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    readOnly
+                    value={directResetLink}
+                    className="flex-1 bg-canvas-muted text-ink px-2.5 py-1.5 rounded text-[11px] font-mono border border-line select-all"
+                  />
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    type="button"
+                    onClick={() => {
+                      navigator.clipboard.writeText(directResetLink);
+                      setResetCopied(true);
+                      setTimeout(() => setResetCopied(false), 2000);
+                    }}
+                    className="h-7 text-xs"
+                  >
+                    {resetCopied ? 'Copied!' : 'Copy'}
+                  </Button>
+                  <a
+                    href={directResetLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="h-7 px-2.5 rounded bg-bl text-slate-950 font-bold text-xs inline-flex items-center gap-1 hover:bg-bl-deep transition-colors"
+                  >
+                    <span>Open</span>
+                    <ExternalLink size={11} />
+                  </a>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </Card>

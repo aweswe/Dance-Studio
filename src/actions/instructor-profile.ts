@@ -1,6 +1,6 @@
 'use server';
 
-import { createServerSupabase } from '@/lib/supabase/server';
+import { createServerSupabase, createAdminSupabase } from '@/lib/supabase/server';
 import { getLinkedInstructor } from '@/lib/auth/instructor';
 import { revalidatePath } from 'next/cache';
 
@@ -33,16 +33,36 @@ export async function updateInstructorPhoto(photoUrl: string) {
 /**
  * Send a Supabase password reset email for the currently logged-in instructor.
  * Uses the public-facing /login route as the redirect so they arrive back authenticated.
+ * Also generates a secure direct recovery link as a zero-latency fallback.
  */
 export async function sendInstructorPasswordReset() {
   const supabase = await createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user?.email) return { success: false, error: 'No email on account' };
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://rhythmzzdance.com';
+
+  // 1. Dispatch official Supabase reset password email
   const { error } = await supabase.auth.resetPasswordForEmail(user.email, {
-    redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://rhythmzzdance.com'}/login`,
+    redirectTo: `${siteUrl}/login`,
   });
 
+  // 2. Also generate backup direct recovery link via admin
+  let directLink: string | null = null;
+  try {
+    const admin = createAdminSupabase();
+    const { data: linkData } = await admin.auth.admin.generateLink({
+      type: 'recovery',
+      email: user.email,
+      options: { redirectTo: `${siteUrl}/login` },
+    });
+    if (linkData?.properties?.action_link) {
+      directLink = linkData.properties.action_link;
+    }
+  } catch {
+    // Non-blocking fallback
+  }
+
   if (error) return { success: false, error: error.message };
-  return { success: true, email: user.email };
+  return { success: true, email: user.email, directLink };
 }
