@@ -284,8 +284,19 @@ async function runSuite() {
       const parentPhoneInput = page.locator('#profile-parent-phone');
       const isParentNameReq = await parentNameInput.getAttribute('required');
       const isParentPhoneReq = await parentPhoneInput.getAttribute('required');
+      const samePhoneToggle = page.locator('#profile-same-phone-toggle');
+      await samePhoneToggle.waitFor({ state: 'visible', timeout: 5000 });
+      
+      // Test toggling "Same as student mobile"
+      await samePhoneToggle.check();
+      const studentPhoneVal = await page.locator('#profile-phone').inputValue();
+      const parentPhoneVal = await parentPhoneInput.inputValue();
+      if (studentPhoneVal && parentPhoneVal !== studentPhoneVal) {
+        throw new Error(`Expected parent phone (${parentPhoneVal}) to match student phone (${studentPhoneVal}) when toggle checked`);
+      }
+
       if (isParentNameReq !== null && isParentPhoneReq !== null) {
-        logPass('Student Portal', 'Student Profile renders mandatory parent/guardian information fields (/student/profile)', tProfile);
+        logPass('Student Portal', 'Student Profile renders mandatory parent/guardian fields with single-number own-contact toggle (/student/profile)', tProfile);
       } else {
         throw new Error('Parent name or phone input missing required attribute on profile form');
       }

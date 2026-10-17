@@ -200,7 +200,18 @@ export function StudentActions({ student, batches }: StudentActionsProps) {
               />
             </div>
             <div>
-              <label className="block text-xs text-ink-2 mb-1">Parent Phone (10 digits)</label>
+              <div className="flex items-center justify-between mb-1">
+                <label className="block text-xs text-ink-2">Parent Phone (10 digits)</label>
+                {phone && (
+                  <button
+                    type="button"
+                    onClick={() => setParentPhone(phone.replace(/\D/g, '').slice(0, 10))}
+                    className="text-[11px] font-semibold text-bl hover:underline cursor-pointer"
+                  >
+                    Same as student phone
+                  </button>
+                )}
+              </div>
               <Input
                 value={parentPhone}
                 onChange={(e) => setParentPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}

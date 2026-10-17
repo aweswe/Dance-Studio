@@ -140,8 +140,13 @@ export default async function StudentDetailPage({ params }: { params: Promise<{ 
                 <div className="flex items-start gap-3 text-sm">
                   <Phone size={16} className="text-ink-2 mt-0.5 shrink-0" />
                   <div>
-                    <p className="font-medium text-ink flex items-center gap-2">
+                    <p className="font-medium text-ink flex items-center flex-wrap gap-2">
                       {formatPhone(parentInfo.parentPhone)}
+                      {student.phone && parentInfo.parentPhone.replace(/\D/g, '') === student.phone.replace(/\D/g, '') && (
+                        <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-bl bg-bl/10 border border-bl/20 px-1.5 py-0.5 rounded">
+                          Same as student
+                        </span>
+                      )}
                       <a
                         href={telLink(parentInfo.parentPhone)}
                         className="p-1 rounded text-ink-2 hover:text-bl hover:bg-line-subtle transition-colors focus-visible:focus-ring active:scale-[0.98]"

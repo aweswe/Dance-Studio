@@ -445,28 +445,29 @@ erDiagram
    * Linked permanently in the footer under "About Us".
    * Adheres strictly to design system standards: 44px minimum touch targets (`h-11 min-h-[44px]`), concentric `rounded-md` radius, and high-contrast typography with zero AI slop.
 
-7. **Mandatory Parents' Information Architecture for Student Profiles**:
+7. **Mandatory Parents' Information Architecture & Single-Number Guardian Capability**:
    * **Student Portal Profile (`/student/profile`)**:
      - Hardened `ProfileForm` to mandate Parent / Guardian Full Name (`parentName`), Parent / Guardian 10-digit Mobile Phone (`parentPhone`), and Relationship to Student (`parentRelationship`) before profile updates can be saved.
      - Sectioned with an explicit high-contrast **"Parents / Guardian Information [MANDATORY]"** card explaining the safety, emergency contact, and official receipt policy.
-     - Integrated interactive quick-select relationship chips (`Mother`, `Father`, `Guardian`) with custom write-in fallback.
+     - **Single-Number Own Contact Toggle**: Integrated `#profile-same-phone-toggle` ("Same as student mobile"), allowing students or adult learners who share a mobile or manage their own records to mark their own phone as the guardian contact with zero friction, eliminating the artificial need for two phone numbers.
+     - Integrated interactive quick-select relationship chips (`Mother`, `Father`, `Guardian`, `Self`) with auto-fill logic for adult learners.
    * **Dashboard Integrity & Incomplete Notice**:
      - On the Student Dashboard (`/student`), if parent details are incomplete, a high-priority action banner is rendered directing students to complete their safety records.
    * **Admin Student Management Parity (`/admin/students/[id]`)**:
-     - Displays parent/guardian name, relationship, and parent phone with one-tap phone call and WhatsApp triggers.
-     - Enables editing of parent information inside `StudentActions` and capture during walk-in enrolments in `AddStudentModal`.
+     - Displays parent/guardian name, relationship, and parent phone with one-tap phone call and WhatsApp triggers, plus a `(Same as student)` badge when numbers are linked.
+     - Enables editing of parent information inside `StudentActions` and capture during walk-in enrolments in `AddStudentModal` with 1-click "Same as student phone" copying.
    * **Multi-Layer Data Persistence**:
      - Integrated `parseParentInfo` and `serializeParentInfo` (`src/lib/students/parent-info.ts`), persisting parent details via JSON in `display_name`, Supabase Auth `user_metadata`, and dedicated database columns with automatic fallback handling.
    * **Validation & Test Suite**:
      - Added strict validation in `profileSchema` (`src/lib/validators/profile.ts`).
-     - Added 4 unit tests in `src/lib/validators/validators.test.ts` (17 tests total passing).
+     - Added unit tests in `src/lib/validators/validators.test.ts` (19 tests in file, 55 total passing).
      - Added automated Playwright E2E verification in `scripts/playwright-full-suite.ts` (35/35 passing).
 
 ---
 
 ## 4. Verification, Testing & Quality Audit Checklist
 
-* [x] **Vitest Unit & Integration Tests**: 6 test suites, 53 tests, **100% passing**.
+* [x] **Vitest Unit & Integration Tests**: 6 test suites, 55 tests, **100% passing**.
 * [x] **Playwright E2E & Concurrency Suite**: 35/35 tests, **100% passing**.
 * [x] **Production Bundle**: `npm run build` compiled cleanly with 0 type errors across all 43 routes.
 

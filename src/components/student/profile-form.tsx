@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { updateProfile, uploadProfilePhoto } from "@/actions/profile";
-import { Users, ShieldCheck, AlertCircle } from "lucide-react";
+import { Users, ShieldCheck, AlertCircle, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 
 interface ProfileFormProps {
@@ -28,6 +28,13 @@ export function ProfileForm({ initial }: ProfileFormProps) {
   const [parentName, setParentName] = useState(initial.parentName || "");
   const [parentPhone, setParentPhone] = useState(initial.parentPhone || "");
   const [parentRelationship, setParentRelationship] = useState(initial.parentRelationship || "Mother");
+  const [sameAsStudentPhone, setSameAsStudentPhone] = useState(
+    Boolean(
+      initial.phone &&
+      initial.parentPhone &&
+      initial.phone.replace(/\D/g, "") === initial.parentPhone.replace(/\D/g, "")
+    )
+  );
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [busy, setBusy] = useState(false);
@@ -140,7 +147,12 @@ export function ProfileForm({ initial }: ProfileFormProps) {
               label="Student Phone Number *"
               value={phone}
               onChange={(e) => {
-                setPhone(e.target.value.replace(/\D/g, "").slice(0, 10));
+                const clean = e.target.value.replace(/\D/g, "").slice(0, 10);
+                setPhone(clean);
+                if (sameAsStudentPhone) {
+                  setParentPhone(clean);
+                  if (errors.parentPhone) setErrors((prev) => ({ ...prev, parentPhone: '' }));
+                }
                 if (errors.phone) setErrors((prev) => ({ ...prev, phone: '' }));
               }}
               placeholder="10-digit mobile number"
@@ -180,6 +192,7 @@ export function ProfileForm({ initial }: ProfileFormProps) {
           </div>
           <p className="text-xs text-ink-2 leading-relaxed">
             Mandatory for academy safety, emergency contacts, fee receipts, and official studio notices.
+            No need for a second number — students or adult learners can mark their own mobile number as guardian contact.
           </p>
 
           <Input
@@ -196,12 +209,38 @@ export function ProfileForm({ initial }: ProfileFormProps) {
           />
 
           <div>
+            <div className="flex items-center justify-between gap-2 mb-1.5">
+              <label htmlFor="profile-parent-phone" className="text-xs font-medium text-ink-2">
+                Parent / Guardian Mobile Phone *
+              </label>
+              <label className="inline-flex items-center gap-1.5 cursor-pointer text-xs font-semibold text-bl hover:text-bl/80 select-none group">
+                <input
+                  type="checkbox"
+                  id="profile-same-phone-toggle"
+                  checked={sameAsStudentPhone}
+                  onChange={(e) => {
+                    const checked = e.target.checked;
+                    setSameAsStudentPhone(checked);
+                    if (checked) {
+                      setParentPhone(phone);
+                      if (errors.parentPhone) setErrors((prev) => ({ ...prev, parentPhone: '' }));
+                    }
+                  }}
+                  className="w-3.5 h-3.5 rounded border-line text-bl accent-bl cursor-pointer"
+                />
+                <span className="group-hover:underline">Same as student mobile</span>
+              </label>
+            </div>
+
             <Input
               id="profile-parent-phone"
-              label="Parent / Guardian Mobile Phone *"
               value={parentPhone}
               onChange={(e) => {
-                setParentPhone(e.target.value.replace(/\D/g, "").slice(0, 10));
+                const val = e.target.value.replace(/\D/g, "").slice(0, 10);
+                setParentPhone(val);
+                if (val !== phone) {
+                  setSameAsStudentPhone(false);
+                }
                 if (errors.parentPhone) setErrors((prev) => ({ ...prev, parentPhone: '' }));
               }}
               placeholder="10-digit mobile number"
@@ -209,8 +248,14 @@ export function ProfileForm({ initial }: ProfileFormProps) {
               error={errors.parentPhone}
               required
             />
+            {sameAsStudentPhone && (
+              <div className="flex items-center gap-1.5 text-[11px] text-bl font-medium bg-bl/10 border border-bl/20 rounded px-2.5 py-1 mt-1.5">
+                <CheckCircle2 size={12} className="text-bl shrink-0" />
+                <span>Marked as student&apos;s own number ({phone ? `+91 ${phone}` : "syncs with your student phone"})</span>
+              </div>
+            )}
             <p className="text-[11px] text-ink-3 mt-1">
-              Emergency contact and recipient of official WhatsApp fee receipts.
+              Emergency contact and recipient of official WhatsApp fee receipts. No need for two separate numbers if you share or use your own mobile.
             </p>
           </div>
 
@@ -219,7 +264,7 @@ export function ProfileForm({ initial }: ProfileFormProps) {
               Relationship to Student *
             </label>
             <div className="flex flex-wrap items-center gap-2 mb-2">
-              {['Mother', 'Father', 'Guardian'].map((rel) => {
+              {['Mother', 'Father', 'Guardian', 'Self'].map((rel) => {
                 const isSelected = parentRelationship.toLowerCase() === rel.toLowerCase();
                 return (
                   <button
@@ -227,6 +272,15 @@ export function ProfileForm({ initial }: ProfileFormProps) {
                     type="button"
                     onClick={() => {
                       setParentRelationship(rel);
+                      if (rel === 'Self') {
+                        setSameAsStudentPhone(true);
+                        if (phone) setParentPhone(phone);
+                        if (!parentName.trim() || parentName === initial.name) {
+                          setParentName(name || initial.name);
+                        }
+                        if (errors.parentName) setErrors((prev) => ({ ...prev, parentName: '' }));
+                        if (errors.parentPhone) setErrors((prev) => ({ ...prev, parentPhone: '' }));
+                      }
                       if (errors.parentRelationship) setErrors((prev) => ({ ...prev, parentRelationship: '' }));
                     }}
                     className={cn(

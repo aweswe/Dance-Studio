@@ -132,5 +132,34 @@ describe('profileSchema (mandatory parents information)', () => {
     expect(profileSchema.safeParse({ ...valid, parentRelationship: '' }).success).toBe(false);
     expect(profileSchema.safeParse({ ...valid, parentRelationship: undefined }).success).toBe(false);
   });
+
+  it('accepts student using their own number as guardian phone (no need for two numbers)', () => {
+    const singleNumberProfile = {
+      ...valid,
+      parentPhone: valid.phone, // Same as student phone
+    };
+    const res = profileSchema.safeParse(singleNumberProfile);
+    expect(res.success).toBe(true);
+    if (res.success) {
+      expect(res.data.parentPhone).toBe(res.data.phone);
+    }
+  });
+
+  it('accepts adult student marking Self as guardian with their own name and phone', () => {
+    const adultSelfProfile = {
+      name: 'Rohan Varma',
+      phone: '9876543210',
+      email: 'rohan@example.com',
+      parentName: 'Rohan Varma',
+      parentPhone: '9876543210',
+      parentRelationship: 'Self',
+    };
+    const res = profileSchema.safeParse(adultSelfProfile);
+    expect(res.success).toBe(true);
+    if (res.success) {
+      expect(res.data.parentRelationship).toBe('Self');
+      expect(res.data.parentPhone).toBe(adultSelfProfile.phone);
+    }
+  });
 });
 
