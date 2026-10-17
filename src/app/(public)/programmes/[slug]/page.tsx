@@ -62,9 +62,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (slug === 'mind-body-fitness') {
     return {
-      title: 'Mind & Body Fitness (Yoga & Zumba) | Rhythmzz Academy of Dance',
+      title: 'Mind & Body Fitness (16+ Years) | Rhythmzz Academy of Dance',
       description:
-        'Weekday morning fitness, high-energy Zumba, and flexibility Yoga at Neredmet X Road, Secunderabad. Combo and standalone plans. Free trial session.',
+        'Build strength, improve flexibility, and feel your best with morning fitness, Zumba, yoga, Pilates, Tabata, and personal training at Neredmet X Road, Secunderabad.',
       alternates: { canonical: `${SITE_URL}/programmes/mind-body-fitness` },
     };
   }
@@ -97,6 +97,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 const PROGRAMME_DESCRIPTIONS: Record<string, string> = {
   'adults-dance':
     'Discover your rhythm, build confidence, and experience the joy of dance at Rhythmzz Academy of Dance. Explore Bollywood, Hip Hop, and Contemporary dance through energetic choreography and structured training—from your first steps to confident performances. No prior dance experience is required.',
+  'mind-body-fitness':
+    'Build strength, improve flexibility, and feel your best with Mind & Body Fitness at Rhythmzz Academy of Dance. From Zumba and aerobics to yoga, Pilates, and strength training, our sessions combine energising workouts and mindful movement to support your fitness journey.',
 };
 
 const PROGRAMME_NOTES: Record<string, string> = {
@@ -105,7 +107,7 @@ const PROGRAMME_NOTES: Record<string, string> = {
   'adults-dance':
     'Join our adult dance classes in Neredmet, Secunderabad, every Monday to Wednesday, 7:00–9:00 PM. Learn trending Bollywood choreography, Hip Hop foundations, contemporary movement, freestyle, and musicality in a welcoming, high-energy studio environment designed for beginners and experienced dancers alike.',
   'mind-body-fitness':
-    'Weekday mornings, 8:30 to 9:15 AM & 9:30 to 10:20 AM. Complete Fitness Combo Pack (₹2,500/mo, Mon–Fri), Standalone Zumba (₹1,500/mo, 2 days/wk, Mon & Wed), and Standalone Yoga (₹1,000/mo, 1 day/wk, Tuesday). Full cardio stamina, core toning, and posture alignment.',
+    'Join our morning fitness classes in Neredmet, Secunderabad, with sessions designed to help you improve stamina, build strength, enhance mobility, and develop a consistent fitness routine. Explore personal training, Zumba, aerobics, yoga, Pilates, Tabata, circuit training, cardio, and goal-oriented workouts in a supportive studio environment.',
   gymnastics:
     'Thursday and Saturday, 5:15 to 6:15 PM. Ages 3.5 to 12 years. Safety-certified tumbling mats, cartwheels, handstand balance, flexibility, and foundational acrobatics.',
   kuchipudi:
@@ -119,6 +121,8 @@ const PROGRAMME_NOTES: Record<string, string> = {
 const PROGRAMME_LOCATION_NOTES: Record<string, string> = {
   'adults-dance':
     'Conveniently located at Neredmet X Road, Rhythmzz Academy of Dance welcomes adults from Sainikpuri, AS Rao Nagar, Yapral, Kapra, and nearby areas. Every new learner receives one complimentary trial class, with zero admission fee.',
+  'mind-body-fitness':
+    'Located at Neredmet X Road, Rhythmzz Academy of Dance welcomes fitness enthusiasts from Sainikpuri, AS Rao Nagar, Yapral, Kapra, and surrounding areas. Every new learner receives one complimentary trial class, with zero admission fee.',
 };
 
 const PROGRAMME_HERO_IMAGES: Record<string, { src: string; alt: string }> = {
@@ -173,6 +177,18 @@ const PROGRAMME_CURRICULUM: Record<string, string[]> = {
     'Choreography Retention & Step Transitions',
     'Group Routines, Synchronisation & Teamwork',
     'Fitness, Flexibility & Active Movement',
+  ],
+  'mind-body-fitness': [
+    'Personal Training & Individual Fitness Goals',
+    'Zumba & Dance-Based Cardio Workouts',
+    'Aerobics & Cardiovascular Endurance',
+    'Yoga, Flexibility & Mindful Movement',
+    'Pilates, Core Strength & Body Control',
+    'Tabata & High-Intensity Interval Training',
+    'Circuit Training & Full-Body Conditioning',
+    'Cardio Workouts & Stamina Development',
+    'Goal-Based Workouts & Progress Tracking',
+    'Strength Training, Mobility & Functional Fitness',
   ],
 };
 
@@ -535,7 +551,13 @@ export default async function ProgrammeDetailPage({ params }: Props) {
       />
 
       <PublicPageTitle
-        eyebrow={slug === 'adults-dance' ? '13+ YEARS' : programme.age_group || 'Open batch'}
+        eyebrow={
+          slug === 'adults-dance'
+            ? '13+ YEARS'
+            : slug === 'mind-body-fitness'
+              ? '16+ YEARS'
+              : programme.age_group || 'Open batch'
+        }
         title={programme.name}
         description={PROGRAMME_DESCRIPTIONS[slug] ?? programme.description}
       />
@@ -608,7 +630,7 @@ export default async function ProgrammeDetailPage({ params }: Props) {
                             CF
                           </div>
                           <div className="text-sm min-w-0">
-                            <div className="text-[10px] text-ink-3 uppercase tracking-wider">Faculty</div>
+                            <div className="text-[10px] text-ink-3 font-semibold tracking-wide">Faculty</div>
                             <div className="font-bold text-xs text-ink">Certified Studio Lead</div>
                           </div>
                         </div>
@@ -628,13 +650,13 @@ export default async function ProgrammeDetailPage({ params }: Props) {
             <div className="rounded-md border border-line bg-surface p-6 sm:p-7 space-y-5">
               <div className="flex items-center justify-between border-b border-line pb-4">
                 <div>
-                  <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-bl block">
+                  <span className="text-xs font-semibold tracking-wide text-bl block">
                     Tuition &amp; Plans
                   </span>
                   <span className="text-xs text-ink-3 font-medium">Official academy rate card</span>
                 </div>
-                <span className="text-[9px] uppercase tracking-wider text-blk font-bold bg-bl px-2 py-0.5 rounded-md">
-                  Zero admission fee
+                <span className="text-[10px] tracking-wide text-blk font-bold bg-bl px-2.5 py-0.5 rounded-md">
+                  Zero Admission Fee
                 </span>
               </div>
 
@@ -653,13 +675,13 @@ export default async function ProgrammeDetailPage({ params }: Props) {
                     <div className="flex items-start justify-between gap-2">
                       <div>
                         <div className="flex items-center gap-2 flex-wrap">
-                          <span className="text-xs font-bold uppercase tracking-tight text-ink">
+                          <span className="text-sm font-bold tracking-tight text-ink">
                             {plan.name}
                           </span>
                           {plan.badge && (
                             <span
                               className={cn(
-                                'text-[9px] font-mono px-1.5 py-0.5 rounded-md uppercase font-semibold',
+                                'text-[10px] font-mono px-2 py-0.5 rounded-md font-semibold',
                                 plan.highlight
                                   ? 'bg-bl text-blk font-bold'
                                   : 'bg-surface border border-line text-ink-3',
@@ -705,15 +727,15 @@ export default async function ProgrammeDetailPage({ params }: Props) {
               <div className={cn(homepageCtaPairStack, 'gap-2.5 pt-2')}>
                 <Link
                   href={enrolHref({ programme: slug, intent: 'trial' })}
-                  className={cn(homepageCtaBrand, homepageCtaPairButton)}
+                  className={cn(homepageCtaBrand, homepageCtaPairButton, 'normal-case text-xs tracking-normal font-bold')}
                 >
-                  Book free trial class
+                  Book Free Trial Class
                 </Link>
                 <Link
                   href="/pricing"
-                  className={cn(homepageCtaOutlineLight, homepageCtaPairButton, 'text-xs')}
+                  className={cn(homepageCtaOutlineLight, homepageCtaPairButton, 'normal-case text-xs tracking-normal font-bold')}
                 >
-                  Compare all plans &amp; perks
+                  Compare All Plans &amp; Perks
                 </Link>
               </div>
             </div>
@@ -724,7 +746,7 @@ export default async function ProgrammeDetailPage({ params }: Props) {
                   <MapPin size={20} />
                 </div>
                 <div>
-                  <h3 className="text-[11px] font-semibold uppercase tracking-[0.14em] text-ink mb-1">Studio</h3>
+                  <h3 className="text-xs font-semibold tracking-wide text-ink mb-1">Studio</h3>
                   <p className="text-sm text-ink-2 leading-relaxed">
                     Rhythmzz Academy of Dance, Plot 597, 3rd Floor, Above Jawed Habib, Neredmet X Road, Secunderabad
                   </p>

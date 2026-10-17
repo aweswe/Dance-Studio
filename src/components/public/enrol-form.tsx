@@ -183,7 +183,9 @@ function computeProgrammeFee(
     age ? `Age: ${age}` : null,
     `Programme: ${selectedProgramme?.name ?? ''}`,
     `Batch: ${batchLabel(selectedBatch)}`,
-    isPay ? `Plan: ${plan.toUpperCase()} (${formatCurrency(fee)})` : null,
+    isPay
+      ? `Plan: ${plan === 'zumba' ? 'Zumba' : plan === 'yoga' ? 'Yoga' : plan.replace('-', ' ').replace(/\b\w/g, (c) => c.toUpperCase())} (${formatCurrency(fee)})`
+      : null,
     `Phone: ${normalizedPhone}`,
   ].filter(Boolean).join('\n');
 
@@ -504,7 +506,7 @@ function computeProgrammeFee(
         {!showProgrammeSelector && selectedProgramme ? (
           <div className="p-4 rounded-md border-2 border-slate-900 bg-white space-y-2 shadow-sm">
             <div className="flex items-center justify-between">
-              <span className="text-[10px] font-mono font-black uppercase tracking-wider text-slate-950 flex items-center gap-1.5">
+              <span className="text-xs font-bold text-slate-950 flex items-center gap-1.5">
                 <CheckCircle2 size={14} className="text-emerald-700" /> Selected Programme &amp; Plan
               </span>
               <button
@@ -517,7 +519,7 @@ function computeProgrammeFee(
             </div>
             <div className="flex items-baseline justify-between gap-2">
               <div>
-                <h4 className="font-anton text-lg sm:text-xl text-slate-950 uppercase tracking-tight">
+                <h4 className="font-anton text-lg sm:text-xl text-slate-950 tracking-tight">
                   {selectedProgramme.name}
                 </h4>
                 <p className="text-xs text-slate-700 font-medium capitalize mt-0.5">
@@ -529,8 +531,8 @@ function computeProgrammeFee(
                   <span className="font-anton text-2xl text-slate-950">
                     {formatCurrency(fee)}
                   </span>
-                  <span className="block text-[10px] text-slate-600 uppercase font-mono font-bold">
-                    {plan === 'zumba' ? '2 DAYS/WK' : plan === 'yoga' ? '1 DAY/WK' : plan.replace('-', ' ')}
+                  <span className="block text-[11px] text-slate-600 font-semibold capitalize">
+                    {plan === 'zumba' ? '2 Days/Wk' : plan === 'yoga' ? '1 Day/Wk' : plan.replace('-', ' ')}
                   </span>
                 </div>
               )}
@@ -661,7 +663,7 @@ function computeProgrammeFee(
 
         {isPay && (
           <div className="space-y-1.5">
-            <label className="text-xs font-bold uppercase tracking-wider text-ink block">
+            <label className="text-xs font-bold text-ink block">
               Payment Plan
             </label>
             <div className="flex gap-2 flex-wrap">
@@ -684,7 +686,7 @@ function computeProgrammeFee(
                     type="button"
                     onClick={() => setPlan(p.id)}
                     className={cn(
-                      'flex-1 min-w-[110px] py-2 px-2.5 rounded-md text-[11px] font-bold uppercase tracking-wider border transition-all cursor-pointer flex flex-col items-center justify-center gap-0.5',
+                      'flex-1 min-w-[110px] py-2 px-2.5 rounded-md text-xs font-bold tracking-normal border transition-all cursor-pointer flex flex-col items-center justify-center gap-0.5',
                       isSelected
                         ? 'border-2 border-slate-950 bg-slate-950 text-white shadow-sm'
                         : 'border-2 border-slate-200 bg-white text-slate-800 font-bold hover:border-slate-400'
