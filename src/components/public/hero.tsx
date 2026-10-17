@@ -60,10 +60,10 @@ export function Hero({ stats }: HeroProps) {
                 <ArrowUpRight size={13} strokeWidth={2.5} />
               </Link>
               <Link
-                href={ROUTES.programmes}
+                href={ROUTES.schedule}
                 className={`${homepageCtaOutlineLight} ${homepageCtaPairButton}`}
               >
-                Explore more
+                View Schedule
               </Link>
             </div>
           </div>
