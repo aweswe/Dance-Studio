@@ -19,7 +19,7 @@ export function TeachWithUsForm() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !phone.trim() || !styles.trim()) return;
+    if (!name.trim() || !phone.trim() || !styles.trim() || !portfolio.trim()) return;
 
     const cleanedPhone = normalizeIndianPhone(phone);
     const waText = [
@@ -29,7 +29,7 @@ export function TeachWithUsForm() {
       email.trim() ? `Email: ${email.trim()}` : null,
       `Styles / Disciplines: ${styles.trim()}`,
       experience.trim() ? `Experience: ${experience.trim()}` : null,
-      portfolio.trim() ? `Portfolio/Instagram: ${portfolio.trim()}` : null,
+      `Portfolio/Instagram: ${portfolio.trim()}`,
       message.trim() ? `Notes: ${message.trim()}` : null,
     ]
       .filter(Boolean)
@@ -130,10 +130,11 @@ export function TeachWithUsForm() {
 
       <div className="space-y-1">
         <label className="text-[11px] font-bold uppercase tracking-wider text-ink block">
-          Instagram / Video Link (Optional)
+          Instagram / Video Link *
         </label>
         <Input
-          type="url"
+          type="text"
+          required
           placeholder="https://instagram.com/yourhandle or YouTube video"
           value={portfolio}
           onChange={(e) => setPortfolio(e.target.value)}
