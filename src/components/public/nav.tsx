@@ -627,10 +627,10 @@ export function Nav() {
               <Link
                 href={authInfo.href}
                 title={authInfo.label}
-                className="inline-flex items-center justify-center gap-1.5 h-11 min-h-[44px] px-3 rounded-md border border-line bg-surface/80 text-[11px] font-bold uppercase tracking-wider text-ink hover:text-bl hover:border-bl/40 active:scale-[0.96] transition-all touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl"
+                className="inline-flex items-center justify-center gap-1.5 h-11 min-h-[44px] px-2.5 sm:px-3.5 rounded-md border border-bl/40 bg-bl/10 text-[11px] font-bold uppercase tracking-wider text-bl hover:bg-bl/20 active:scale-[0.96] transition-all touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bl shrink-0"
               >
                 <LayoutDashboard size={15} className="text-bl shrink-0" />
-                <span className="max-w-[4.5rem] truncate">{authInfo.shortLabel}</span>
+                <span className="whitespace-nowrap">{authInfo.label}</span>
               </Link>
             ) : (
               <Link
