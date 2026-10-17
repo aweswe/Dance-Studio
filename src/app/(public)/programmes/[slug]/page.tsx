@@ -53,9 +53,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (slug === 'adults-dance') {
     return {
-      title: 'Adults Dance Classes (Ages 13+) | Rhythmzz Academy of Dance',
+      title: 'Adults Dance Classes (13+ Years) | Rhythmzz Academy of Dance',
       description:
-        'Commercial choreography, trending Bollywood, hip hop, and contemporary dance classes for adults aged 13+ in Secunderabad. Book your free trial class.',
+        'Discover your rhythm, build confidence, and experience the joy of dance at Rhythmzz Academy of Dance. Explore Bollywood, Hip Hop, and Contemporary dance through energetic choreography and structured training—from your first steps to confident performances. No prior dance experience is required.',
       alternates: { canonical: `${SITE_URL}/programmes/adults-dance` },
     };
   }
@@ -94,11 +94,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+const PROGRAMME_DESCRIPTIONS: Record<string, string> = {
+  'adults-dance':
+    'Discover your rhythm, build confidence, and experience the joy of dance at Rhythmzz Academy of Dance. Explore Bollywood, Hip Hop, and Contemporary dance through energetic choreography and structured training—from your first steps to confident performances. No prior dance experience is required.',
+};
+
 const PROGRAMME_NOTES: Record<string, string> = {
   'kids-dance':
     'Monday to Wednesday, 5:00 to 7:00 PM. Ages 3.5 to 12 years. Foundational technique, rhythm, stage confidence, Bollywood routines, hip hop basics, contemporary expression, and foundational gymnastics tailored specifically for young dancers.',
   'adults-dance':
-    'Monday to Wednesday, 7:00 to 9:00 PM. Ages 13+ years. High-energy commercial choreography, trending Bollywood tracks, sharp hip hop isolations, contemporary floorwork, and video shoot routines. Beginner to advanced dancers.',
+    'Join our adult dance classes in Neredmet, Secunderabad, every Monday to Wednesday, 7:00–9:00 PM. Learn trending Bollywood choreography, Hip Hop foundations, contemporary movement, freestyle, and musicality in a welcoming, high-energy studio environment designed for beginners and experienced dancers alike.',
   'mind-body-fitness':
     'Weekday mornings, 8:30 to 9:15 AM & 9:30 to 10:20 AM. Complete Fitness Combo Pack (₹2,500/mo, Mon–Fri), Standalone Zumba (₹1,500/mo, 2 days/wk, Mon & Wed), and Standalone Yoga (₹1,000/mo, 1 day/wk, Tuesday). Full cardio stamina, core toning, and posture alignment.',
   gymnastics:
@@ -109,6 +114,11 @@ const PROGRAMME_NOTES: Record<string, string> = {
     'Friday and Saturday, 6:30 to 7:30 PM. Certified classical dance certification track.',
   'commercial-expressive':
     'Commercial and expressive style choreography batches for all age pathways.',
+};
+
+const PROGRAMME_LOCATION_NOTES: Record<string, string> = {
+  'adults-dance':
+    'Conveniently located at Neredmet X Road, Rhythmzz Academy of Dance welcomes adults from Sainikpuri, AS Rao Nagar, Yapral, Kapra, and nearby areas. Every new learner receives one complimentary trial class, with zero admission fee.',
 };
 
 const PROGRAMME_HERO_IMAGES: Record<string, { src: string; alt: string }> = {
@@ -152,6 +162,17 @@ const PROGRAMME_CURRICULUM: Record<string, string[]> = {
     'Movement & Creative Expression',
     'Foundational Gymnastics & Movement Skills',
     'Discipline, Focus & Self-Confidence',
+  ],
+  'adults-dance': [
+    'Bollywood Choreography & Trending Music',
+    'Hip Hop Foundations & Isolation Techniques',
+    'Contemporary Dance Foundation & Creative Expression',
+    'Dance Technique, Posture & Body Control',
+    'Coordination, Balance & Movement Precision',
+    'Confidence, Stage Presence & Performance Skills',
+    'Choreography Retention & Step Transitions',
+    'Group Routines, Synchronisation & Teamwork',
+    'Fitness, Flexibility & Active Movement',
   ],
 };
 
@@ -514,9 +535,9 @@ export default async function ProgrammeDetailPage({ params }: Props) {
       />
 
       <PublicPageTitle
-        eyebrow={programme.age_group || 'Open batch'}
+        eyebrow={slug === 'adults-dance' ? '13+ YEARS' : programme.age_group || 'Open batch'}
         title={programme.name}
-        description={programme.description}
+        description={PROGRAMME_DESCRIPTIONS[slug] ?? programme.description}
       />
 
       <HomepageSection className={sectionPadAfterTitleLg}>
@@ -537,9 +558,8 @@ export default async function ProgrammeDetailPage({ params }: Props) {
               <div className="text-sm text-ink-2 space-y-4 leading-relaxed">
                 <p>{PROGRAMME_NOTES[slug] ?? programme.description}</p>
                 <p>
-                  The studio is located at Neredmet X Road, Secunderabad — 8–15 minutes by drive
-                  from Sainikpuri, AS Rao Nagar, and Yapral. Every learner receives one complimentary
-                  free trial class with zero admission fee.
+                  {PROGRAMME_LOCATION_NOTES[slug] ??
+                    'The studio is located at Neredmet X Road, Secunderabad — 8–15 minutes by drive from Sainikpuri, AS Rao Nagar, and Yapral. Every learner receives one complimentary free trial class with zero admission fee.'}
                 </p>
               </div>
             </div>
