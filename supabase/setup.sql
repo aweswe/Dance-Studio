@@ -1,6 +1,6 @@
 -- ════════════════════════════════════════════════════════════════
 -- Rhythmzz Academy — Supabase setup (combined)
--- Generated from supabase/migrations/0001–0016. Do not edit by hand.
+-- Generated from supabase/migrations/0001–0021.
 -- Run ONCE in Supabase Dashboard → SQL Editor → paste all → Run.
 -- Safe to re-run: IF NOT EXISTS / DROP POLICY IF EXISTS / guards.
 -- NEVER apply supabase/rhythmzz-supabase-backup/ (stale fees/slugs).
@@ -1908,6 +1908,70 @@ ON CONFLICT (slug) DO UPDATE SET
   description = EXCLUDED.description,
   is_active = EXCLUDED.is_active,
   sort_order = EXCLUDED.sort_order;
+
+-- ════════════════════════════════════════════════════════════════
+-- 0020_supabase_keepalive.sql
+-- ════════════════════════════════════════════════════════════════
+CREATE TABLE IF NOT EXISTS public.supabase_keepalive (
+  id INT PRIMARY KEY DEFAULT 1,
+  last_ping_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now()),
+  ping_count BIGINT NOT NULL DEFAULT 1,
+  source TEXT DEFAULT 'automated'
+);
+
+INSERT INTO public.supabase_keepalive (id, last_ping_at, ping_count, source)
+VALUES (1, timezone('utc'::text, now()), 1, 'initial_setup')
+ON CONFLICT (id) DO NOTHING;
+
+CREATE OR REPLACE FUNCTION public.touch_supabase_keepalive(p_source TEXT DEFAULT 'cron')
+RETURNS TIMESTAMPTZ
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+DECLARE
+  v_now TIMESTAMPTZ := timezone('utc'::text, now());
+BEGIN
+  INSERT INTO public.supabase_keepalive (id, last_ping_at, ping_count, source)
+  VALUES (1, v_now, 1, p_source)
+  ON CONFLICT (id) DO UPDATE
+  SET
+    last_ping_at = EXCLUDED.last_ping_at,
+    ping_count = public.supabase_keepalive.ping_count + 1,
+    source = EXCLUDED.source;
+
+  RETURN v_now;
+END;
+$$;
+
+ALTER TABLE public.supabase_keepalive ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Public can view keepalive status" ON public.supabase_keepalive;
+CREATE POLICY "Public can view keepalive status"
+  ON public.supabase_keepalive
+  FOR SELECT
+  TO public
+  USING (true);
+
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM pg_extension WHERE extname = 'pg_cron'
+  ) THEN
+    BEGIN
+      PERFORM cron.unschedule('daily-supabase-keepalive');
+    EXCEPTION WHEN OTHERS THEN
+    END;
+
+    PERFORM cron.schedule(
+      'daily-supabase-keepalive',
+      '0 0 * * *',
+      'SELECT public.touch_supabase_keepalive(''pg_cron'');'
+    );
+  END IF;
+EXCEPTION
+  WHEN OTHERS THEN
+    RAISE NOTICE 'pg_cron schedule skipped: %', SQLERRM;
+END $$;
 
 -- ════════════════════════════════════════════════════════════════
 -- 0021_atomic_batch_switch.sql
