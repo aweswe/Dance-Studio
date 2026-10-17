@@ -10,6 +10,7 @@ import { ArrowRight, Loader2, LayoutDashboard, ShieldCheck } from "lucide-react"
 import { AuthShell } from "@/components/auth/auth-shell";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { triggerActionLoader, dismissActionLoader } from "@/components/shared/navigation-progress";
 
 function authErrorFromSearch(params: URLSearchParams): string {
   const err = params.get("error_description") || params.get("error");
@@ -76,6 +77,7 @@ function LoginForm() {
         const role = userProfile?.role || "student";
         const dest = role === "admin" ? "/admin" : role === "instructor" ? "/instructor" : "/student";
         setRedirecting(true);
+        triggerActionLoader("Welcome back · Loading your portal…");
         router.replace(dest);
       }
     }
@@ -94,6 +96,7 @@ function LoginForm() {
       return;
     }
     setOauthLoading(true);
+    triggerActionLoader("Connecting to Google… Redirecting to sign in…");
     try {
       const { error: authError } = await supabase.auth.signInWithOAuth({
         provider: "google",
@@ -103,6 +106,7 @@ function LoginForm() {
       });
       if (authError) throw authError;
     } catch (err) {
+      dismissActionLoader();
       setError(err instanceof Error ? err.message : "Google sign-in failed");
       setOauthLoading(false);
     }
@@ -172,9 +176,11 @@ function LoginForm() {
         }
       }
 
+      triggerActionLoader("Signing in · Accessing student portal…");
       router.replace("/student");
       router.refresh();
     } catch (err) {
+      dismissActionLoader();
       setError(err instanceof Error ? err.message : "Invalid or expired verification code");
       setIsLoading(false);
     }
@@ -195,6 +201,7 @@ function LoginForm() {
     }
 
     try {
+      triggerActionLoader("Saving number · Preparing your portal…");
       const res = await completeStudentOnboarding(cleanedPhone, name.trim() || undefined);
       if (!res.success) {
         throw new Error(res.error || "Failed to save phone number");
@@ -202,6 +209,7 @@ function LoginForm() {
       router.replace("/student");
       router.refresh();
     } catch (err) {
+      dismissActionLoader();
       setError(err instanceof Error ? err.message : "Could not complete registration");
       setIsLoading(false);
     }

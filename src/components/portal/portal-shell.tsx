@@ -94,7 +94,7 @@ export function PortalShell({ role, name, isKuchipudi, unreadNotices, children }
   const handleSignOut = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSigningOut(true);
-    triggerActionLoader("Signing out");
+    triggerActionLoader("Signing out of your account… Returning to home…");
     try {
       const { createClient } = await import("@/lib/supabase/client");
       const supabase = createClient();

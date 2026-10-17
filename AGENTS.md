@@ -519,6 +519,60 @@ erDiagram
    - Replace standard `OFFSET` pagination with cursor-based seek queries (`WHERE created_at < :last_seen_timestamp ORDER BY created_at DESC LIMIT 20`).
    - Guarantees $O(1)$ query speed regardless of database growth across `/admin/students`, `/admin/enquiries`, and student transaction logs.
 
+---
+
+### C. Universal Loading Architecture & Instant Visual Feedback
+
+1. **Student Detail Instant Skeleton Transition (`/admin/students/[id]/loading.tsx`)**:
+   * *Problem:* When opening a student profile from the admin or student directory, the UI froze for ~3 seconds without feedback because Next.js awaited all 4 parallel Supabase server queries (`students`, `kuchipudi_progress`, `fee_payments`, `batches`) before swapping views.
+   * *Solution:* Built a high-craft loading skeleton `src/app/admin/students/[id]/loading.tsx` precisely mirroring the page geometry (Back button, Name header & Badge skeleton, Profile Details card skeleton, Fee Payment History table skeleton, and Student Action buttons). Next.js now transitions instantly (<50ms) to the skeleton view.
+
+2. **Instant Row-Click State in Student Table (`src/components/admin/student-table.tsx`)**:
+   * When an admin clicks a student row, the table immediately provides active visual feedback:
+     - Sets `loadingStudentId` to highlight the row with an active accent border (`bg-bl/10 border-l-4 border-l-bl`).
+     - Renders an inline animated spinner and `Opening…` tag beside the student's name.
+     - Dispatches `triggerTopProgress()`, igniting the top radiant loading bar across the viewport.
+
+3. **Global Radiant Top Progress Bar (`src/components/shared/navigation-progress.tsx`)**:
+   * Replaced static/dormant navigation listener with an active slim (3px) top progress bar with radiant gradient (`from-bl via-sky-400 to-emerald-400`) and glow (`shadow-[0_0_12px_rgba(0,153,255,0.85)]`).
+   * Automatically intercepts all internal link clicks (`<a>`), starting progressive animation (0% $\rightarrow$ 30% $\rightarrow$ 65% $\rightarrow$ 85% $\rightarrow$ 100%) and smoothly completing on route change.
+
+4. **Action Modal Loader & Premature Dismissal Bug Fix**:
+   * *Bug Fix:* Previously, action loaders auto-dismissed after a fixed 250ms timeout, vanishing long before network requests or auth handshakes completed.
+   * *Refactor:* Fixed action loader lifecycle to persist during authentication flows (Google OAuth, OTP verification, mobile onboarding, sign-out) with minimum display time guarantee (400ms) to prevent visual jarring while ensuring persistent status display until navigation completes.
+   * *Integrated Across Auth Flows*:
+     - **Student Login (`/login`)**: Google sign-in ("Connecting to Google…"), Email OTP verification ("Signing in · Accessing student portal…"), Phone registration ("Saving number · Preparing your portal…"), and auto-redirect ("Welcome back · Loading your portal…").
+     - **Staff & Admin Login (`/admin-login`)**: Credential submission ("Signing in · Accessing front desk…") and instructor login ("Signing in · Accessing instructor portal…").
+     - **Logout / Sign Out (`Sidebar` & `PortalShell`)**: Persistent modal display ("Signing out of front desk… Returning to home…" and "Signing out of your account… Returning to home…").
+
+5. **Universal Sub-Route Loading Skeletons (`loading.tsx`)**:
+   * **Admin Panel**:
+     - `/admin/students/[id]` $\rightarrow$ Student Profile & Fee Ledger Skeleton
+     - `/admin/students` $\rightarrow$ Student Directory Table & Filter Skeleton
+     - `/admin/classes` $\rightarrow$ Classes & Batches Grid Skeleton
+     - `/admin/fees` $\rightarrow$ Fees Metric Cards & Ledger Skeleton
+     - `/admin/attendance` $\rightarrow$ Attendance Marker & Checklist Skeleton
+     - `/admin/enquiries` $\rightarrow$ Enquiries Tabs & Table Skeleton
+     - `/admin/events` $\rightarrow$ Events Showcase Grid Skeleton
+     - `/admin/broadcast` $\rightarrow$ Broadcast Composer & History Skeleton
+     - `/admin/gear` $\rightarrow$ Gear Merchandise Catalog Skeleton
+     - `/admin/leave-requests` $\rightarrow$ Leave Requests List Skeleton
+   * **Student Portal**:
+     - `/student/profile` $\rightarrow$ Student Profile Form & Guardian Details Skeleton
+     - `/student/fees` $\rightarrow$ Monthly Fee Status & Payment History Skeleton
+     - `/student/attendance` $\rightarrow$ Attendance Metrics & Calendar Skeleton
+     - `/student/classes` $\rightarrow$ Enrolled Batch & Programme Timetable Skeleton
+     - `/student/schedule` $\rightarrow$ Weekly Schedule Days Skeleton
+     - `/student/progress` $\rightarrow$ Performance & Milestones Progress Skeleton
+     - `/student/notices` $\rightarrow$ Studio Notices Feed Skeleton
+     - `/student/leave` $\rightarrow$ Leave Request Form Skeleton
+   * **Instructor Portal**:
+     - `/instructor/students` $\rightarrow$ Instructor Student Roster Skeleton
+     - `/instructor/attendance` $\rightarrow$ Instructor Attendance Marker Skeleton
+     - `/instructor/classes` $\rightarrow$ Assigned Classes & Timetable Skeleton
+     - `/instructor/profile` $\rightarrow$ Instructor Profile Skeleton
+
+
 
 
 

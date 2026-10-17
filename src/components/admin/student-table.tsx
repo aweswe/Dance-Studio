@@ -5,11 +5,13 @@ import { Input } from '@/components/ui/input'
 import { Select } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Search, Filter, Phone, MessageCircle } from 'lucide-react'
+import { Search, Filter, Phone, MessageCircle, Loader2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { usePagination } from '@/hooks/use-pagination'
 import { getStudentsAction } from '@/actions/students'
 import { formatDate, telLink, formatPhone } from '@/lib/utils/format'
+import { cn } from '@/lib/utils/cn'
+import { triggerTopProgress } from '@/components/shared/navigation-progress'
 
 interface Student extends Record<string, unknown> {
   id: string
@@ -52,6 +54,14 @@ export function StudentTable({ initialData }: StudentTableProps) {
     initialCursor: initialData?.nextCursor ?? null,
     refreshKey: `${search}|${statusFilter}`,
   })
+
+  const [loadingStudentId, setLoadingStudentId] = useState<string | null>(null);
+
+  const handleRowClick = (studentId: string) => {
+    setLoadingStudentId(studentId);
+    triggerTopProgress();
+    router.push(`/admin/students/${studentId}`);
+  };
 
   return (
     <div className="bg-surface rounded-card border border-line overflow-hidden">
@@ -99,20 +109,33 @@ export function StudentTable({ initialData }: StudentTableProps) {
             </tr>
           </thead>
           <tbody className="divide-y divide-line-subtle">
-            {data.map((student) => (
-              <tr
-                key={student.id}
-                className="hover:bg-canvas-muted transition-colors cursor-pointer"
-                onClick={() => router.push(`/admin/students/${student.id}`)}
-              >
-                <td className="px-3 sm:px-6 py-3 sm:py-4">
-                  <div className="font-medium text-ink flex items-center gap-2">
-                    {student.name}
-                    {student.auth_id && (
-                      <Badge variant="green" className="text-[10px] px-2 py-0.5">PORTAL</Badge>
-                    )}
-                  </div>
-                </td>
+            {data.map((student) => {
+              const isLoadingThis = loadingStudentId === student.id;
+              return (
+                <tr
+                  key={student.id}
+                  className={cn(
+                    "transition-all duration-150 cursor-pointer select-none",
+                    isLoadingThis
+                      ? "bg-bl/10 border-l-4 border-l-bl shadow-sm"
+                      : "hover:bg-canvas-muted"
+                  )}
+                  onClick={() => handleRowClick(student.id)}
+                >
+                  <td className="px-3 sm:px-6 py-3 sm:py-4">
+                    <div className="font-medium text-ink flex items-center gap-2">
+                      {student.name}
+                      {student.auth_id && (
+                        <Badge variant="green" className="text-[10px] px-2 py-0.5">PORTAL</Badge>
+                      )}
+                      {isLoadingThis && (
+                        <span className="inline-flex items-center gap-1.5 text-xs text-bl font-semibold animate-pulse ml-1.5">
+                          <Loader2 size={13} className="animate-spin text-bl" />
+                          Opening…
+                        </span>
+                      )}
+                    </div>
+                  </td>
                 <td className="px-3 sm:px-6 py-3 sm:py-4 text-sm text-ink-2">
                   <div className="flex items-center gap-1">
                     <span>{student.phone ? formatPhone(student.phone) : '—'}</span>
@@ -162,8 +185,9 @@ export function StudentTable({ initialData }: StudentTableProps) {
                   </Badge>
                 </td>
               </tr>
-            ))}
-            {data.length === 0 && !isLoading && (
+            );
+          })}
+          {data.length === 0 && !isLoading && (
               <tr>
                 <td colSpan={5} className="px-6 py-12 text-center text-ink-2">
                   No students found.

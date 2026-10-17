@@ -9,6 +9,7 @@ import { ArrowRight } from "lucide-react";
 import { AuthShell } from "@/components/auth/auth-shell";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { triggerActionLoader, dismissActionLoader } from "@/components/shared/navigation-progress";
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState("");
@@ -29,8 +30,13 @@ export default function AdminLoginPage() {
         .maybeSingle();
 
       const role = (profile as { role?: string } | null)?.role;
-      if (role === "admin") router.push("/admin");
-      else if (role === "instructor") router.push("/instructor");
+      if (role === "admin") {
+        triggerActionLoader("Welcome back · Accessing front desk…");
+        router.push("/admin");
+      } else if (role === "instructor") {
+        triggerActionLoader("Welcome back · Accessing instructor portal…");
+        router.push("/instructor");
+      }
     });
   }, [router, supabase]);
 
@@ -58,9 +64,11 @@ export default function AdminLoginPage() {
 
       const role = profile?.role;
       if (role === "admin") {
+        triggerActionLoader("Signing in · Accessing front desk…");
         router.replace("/admin");
         router.refresh();
       } else if (role === "instructor") {
+        triggerActionLoader("Signing in · Accessing instructor portal…");
         router.replace("/instructor");
         router.refresh();
       } else {
@@ -68,6 +76,7 @@ export default function AdminLoginPage() {
         await supabase.auth.signOut();
       }
     } catch (err) {
+      dismissActionLoader();
       setError(err instanceof Error ? err.message : "Could not sign in");
     } finally {
       setIsLoading(false);

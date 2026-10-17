@@ -79,7 +79,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const handleSignOut = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSigningOut(true)
-    triggerActionLoader("Signing out")
+    triggerActionLoader("Signing out of front desk… Returning to home…")
     try {
       const { createClient } = await import("@/lib/supabase/client")
       const supabase = createClient()
