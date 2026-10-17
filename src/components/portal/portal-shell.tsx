@@ -55,6 +55,7 @@ const INSTRUCTOR_NAV = [
   { name: "Roster", href: `${ROUTES.instructor}/attendance`, icon: CheckSquare },
   { name: "Students", href: `${ROUTES.instructor}/students`, icon: Users },
   { name: "Terms & Policy", href: `${ROUTES.instructor}/terms`, icon: FileText },
+  { name: "My Profile", href: `${ROUTES.instructor}/profile`, icon: User },
 ];
 
 function getPageLabel(pathname: string, role: PortalRole): string {
@@ -63,6 +64,7 @@ function getPageLabel(pathname: string, role: PortalRole): string {
     if (pathname.includes("/attendance")) return "Roster";
     if (pathname.includes("/students")) return "Students";
     if (pathname.includes("/terms")) return "Terms & Policy";
+    if (pathname.includes("/profile")) return "My Profile";
     return "Today";
   }
   if (pathname === ROUTES.student || pathname === `${ROUTES.student}/`) return "Today";

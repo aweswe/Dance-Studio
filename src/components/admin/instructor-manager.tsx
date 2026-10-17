@@ -13,8 +13,9 @@ import { createInstructor, linkInstructorAuth, deleteInstructor } from '@/action
 
 const PORTAL_URL = 'https://rhythmzzdance.com/login'
 
-function buildWhatsAppInvite(name: string) {
-  return `Hi ${name}! 👋 Welcome to *Rhythmzz Academy of Dance*!\n\nYou have been onboarded as an instructor on our portal. You can access your assigned classes, daily attendance, and schedule here:\n\n🔗 ${PORTAL_URL}\n\nSign in with your registered email. If you have any questions, feel free to contact the academy administration. 🎶`
+function buildWhatsAppInvite(name: string, email?: string | null) {
+  const emailLine = email ? `\n📧 Login email: ${email}` : ''
+  return `Hi ${name}! 👋 Welcome to *Rhythmzz Academy of Dance*!\n\nYou have been onboarded as an instructor on our portal. You can access your assigned classes, daily attendance, and schedule here:\n\n🔗 ${PORTAL_URL}${emailLine}\n\nSign in with your registered email. If you have any questions, feel free to contact the academy administration. 🎶`
 }
 
 export function InstructorManager({ initialInstructors }: { initialInstructors: any[] }) {
@@ -23,8 +24,9 @@ export function InstructorManager({ initialInstructors }: { initialInstructors: 
   const [busy, setBusy] = useState(false)
   const [feedback, setFeedback] = useState<{ ok: boolean; text: string } | null>(null)
   const [pendingDelete, setPendingDelete] = useState<any | null>(null)
-  const [inviteInfo, setInviteInfo] = useState<{ name: string; phone?: string } | null>(null)
+  const [inviteInfo, setInviteInfo] = useState<{ name: string; phone?: string; email?: string } | null>(null)
   const [copied, setCopied] = useState(false)
+  const [cardCopied, setCardCopied] = useState<string | null>(null) // instructor id
 
   const [form, setForm] = useState({
     name: '',
@@ -50,7 +52,7 @@ export function InstructorManager({ initialInstructors }: { initialInstructors: 
     setBusy(false)
     if (res.success) {
       setIsOpen(false)
-      setInviteInfo({ name: form.name, phone: form.phone })
+      setInviteInfo({ name: form.name, phone: form.phone, email: form.email })
       setForm({ name: '', role: '', bio: '', certifications: '', email: '', phone: '' })
       router.refresh()
     } else {
@@ -60,19 +62,26 @@ export function InstructorManager({ initialInstructors }: { initialInstructors: 
 
   const copyInvite = async () => {
     if (!inviteInfo) return
-    await navigator.clipboard.writeText(buildWhatsAppInvite(inviteInfo.name))
+    await navigator.clipboard.writeText(buildWhatsAppInvite(inviteInfo.name, inviteInfo.email))
     setCopied(true)
     setTimeout(() => setCopied(false), 2500)
   }
 
   const sendWhatsApp = () => {
     if (!inviteInfo) return
-    const msg = buildWhatsAppInvite(inviteInfo.name)
+    const msg = buildWhatsAppInvite(inviteInfo.name, inviteInfo.email)
     const phone = inviteInfo.phone?.replace(/[^0-9]/g, '')
     const url = phone
       ? `https://wa.me/91${phone}?text=${encodeURIComponent(msg)}`
       : `https://wa.me/?text=${encodeURIComponent(msg)}`
     window.open(url, '_blank', 'noopener,noreferrer')
+  }
+
+  const copyCardInvite = async (instructor: any) => {
+    const msg = buildWhatsAppInvite(instructor.name, instructor.email)
+    await navigator.clipboard.writeText(msg)
+    setCardCopied(instructor.id)
+    setTimeout(() => setCardCopied(null), 2000)
   }
 
   const confirmDelete = async () => {
@@ -154,8 +163,12 @@ export function InstructorManager({ initialInstructors }: { initialInstructors: 
           <Card key={instructor.id} className="p-6">
             <div className="flex justify-between items-start mb-4">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-canvas-muted border border-line-strong flex items-center justify-center font-display text-xl text-bl">
-                  {instructor.name.charAt(0)}
+                {/* Avatar: show photo_url if available */}
+                <div className="w-12 h-12 rounded-full bg-canvas-muted border border-line-strong flex items-center justify-center font-display text-xl text-bl overflow-hidden shrink-0">
+                  {instructor.photo_url
+                    ? <img src={instructor.photo_url} alt={instructor.name} className="w-full h-full object-cover" />
+                    : instructor.name.charAt(0)
+                  }
                 </div>
                 <div>
                   <h4 className="font-display text-xl text-ink">{instructor.name}</h4>
@@ -164,16 +177,29 @@ export function InstructorManager({ initialInstructors }: { initialInstructors: 
                   </Badge>
                 </div>
               </div>
-              <Button
-                type="button"
-                size="sm"
-                variant="ghost"
-                className="text-red-600 hover:text-red-700 hover:bg-red-500/10 p-2"
-                title="Delete instructor"
-                onClick={() => setPendingDelete(instructor)}
-              >
-                <Trash2 size={16} />
-              </Button>
+              <div className="flex items-center gap-1">
+                {/* Permanent invite copy icon — always visible, never disappears */}
+                <button
+                  type="button"
+                  title="Copy WhatsApp invite message"
+                  onClick={() => copyCardInvite(instructor)}
+                  className="p-2 rounded-md text-ink-3 hover:text-bl hover:bg-bl/10 transition-colors"
+                >
+                  {cardCopied === instructor.id
+                    ? <CheckCircle2 size={15} className="text-green" />
+                    : <Copy size={15} />}
+                </button>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="ghost"
+                  className="text-red-600 hover:text-red-700 hover:bg-red-500/10 p-2"
+                  title="Delete instructor"
+                  onClick={() => setPendingDelete(instructor)}
+                >
+                  <Trash2 size={16} />
+                </Button>
+              </div>
             </div>
 
             {instructor.role && (
