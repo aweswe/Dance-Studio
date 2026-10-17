@@ -142,6 +142,19 @@ const PROGRAMME_HERO_IMAGES: Record<string, { src: string; alt: string }> = {
   },
 };
 
+const PROGRAMME_CURRICULUM: Record<string, string[]> = {
+  'kids-dance': [
+    'Dance & Choreography',
+    'Foundations & Grooves',
+    'Rhythm, Musicality & Beat Recognition',
+    'Basic Dance Technique & Body Control',
+    'Stage Confidence & Performance Skills',
+    'Movement & Creative Expression',
+    'Foundational Gymnastics & Movement Skills',
+    'Discipline, Focus & Self-Confidence',
+  ],
+};
+
 interface PricingPlanOption {
   id: string;
   name: string;
@@ -471,11 +484,13 @@ export default async function ProgrammeDetailPage({ params }: Props) {
     },
   };
 
-  const includesList = programme.includes
-    ? typeof programme.includes === 'string'
-      ? JSON.parse(programme.includes)
-      : programme.includes
-    : [];
+  const includesList =
+    PROGRAMME_CURRICULUM[slug] ||
+    (programme.includes
+      ? typeof programme.includes === 'string'
+        ? JSON.parse(programme.includes)
+        : programme.includes
+      : []);
   const heroImage = PROGRAMME_HERO_IMAGES[slug] || PROGRAMME_HERO_IMAGES['kids-dance'];
   const pricingPlans = getProgrammePlans(slug, programme);
 
