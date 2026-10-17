@@ -65,22 +65,22 @@ export function SiteIntroLoader() {
           : 'opacity-100 scale-100 filter blur-0'
       }`}
     >
-      {/* Soft minimal ambient glow — clean blank background, no grid squares */}
+      {/* Soft minimal ambient glow — clean blank background, no squares, gentle light */}
       <div
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_46%,rgba(56,189,248,0.08)_0%,transparent_65%)]"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_46%,rgba(56,189,248,0.04)_0%,transparent_50%)]"
         aria-hidden="true"
       />
 
       {/* Main Content Box */}
       <div className="relative z-10 flex flex-col items-center px-6 text-center max-w-md sm:max-w-lg mx-auto">
-        {/* Soft subtle glow behind Logo — no harsh rings */}
+        {/* Soft subtle glow behind Logo — tiny light */}
         <div className="relative flex items-center justify-center">
           <div
-            className="absolute -inset-6 sm:-inset-8 rounded-full bg-bl/10 blur-2xl"
+            className="absolute w-44 h-44 rounded-full bg-bl/[0.06] blur-3xl pointer-events-none"
             aria-hidden="true"
           />
 
-          {/* Logo — fully transparent, no card, no padding */}
+          {/* Logo — clean transparent, no card, subtle soft shadow */}
           <div className="relative transition-transform duration-500 hover:scale-[1.02]">
             <Image
               src="/logo.png"
@@ -88,7 +88,7 @@ export function SiteIntroLoader() {
               width={896}
               height={697}
               priority
-              className="h-52 sm:h-60 md:h-68 lg:h-76 w-auto object-contain drop-shadow-[0_0_60px_rgba(43,180,216,0.6)]"
+              className="h-48 sm:h-56 md:h-64 lg:h-72 w-auto object-contain drop-shadow-[0_10px_25px_rgba(0,0,0,0.4)]"
             />
           </div>
         </div>
