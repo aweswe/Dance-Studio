@@ -1,4 +1,5 @@
 import { formatTime } from '@/lib/utils/format';
+import { getBatches, DEFAULT_BATCHES } from '@/data/batches';
 
 /** Backend programme slugs — same as Supabase `programmes.slug`. */
 export type BackendProgrammeSlug =
@@ -75,7 +76,7 @@ function durationLabel(start: string, end: string): string {
   return `${minutes} min`;
 }
 
-function instructorInitials(name: string): string {
+export function instructorInitials(name: string): string {
   const parts = name.replace(/&.*$/, '').trim().split(/\s+/);
   if (parts.length >= 2) return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
   return name.slice(0, 2).toUpperCase();
@@ -170,4 +171,179 @@ export function accentForSlug(slug: string): string {
 
 export function avatarForSlug(slug: string): string {
   return SLUG_AVATAR[slug] ?? SLUG_AVATAR['adults-dance'];
+}
+
+export interface ProgrammeScheduleBatch {
+  id: string;
+  name: string;
+  programmeSlug: string;
+  programmeName: string;
+  days: string[];
+  daysDisplay: string;
+  daysShort: string;
+  time_start: string;
+  time_end: string;
+  timeDisplay: string;
+  duration: string;
+  trainer: {
+    name: string;
+    initials: string;
+    photoUrl: string | null;
+    role: string;
+  };
+  capacity?: number;
+  enrolledCount?: number;
+  status: string;
+}
+
+export function formatDaysDisplay(days: string[]): string {
+  if (!Array.isArray(days) || days.length === 0) return 'Flexible Schedule';
+  return days.join(', ');
+}
+
+export function formatDaysShort(days: string[]): string {
+  if (!Array.isArray(days) || days.length === 0) return 'Flexible';
+  if (days.length === 5 && days.includes('Monday') && days.includes('Friday')) return 'Mon–Fri';
+  if (days.length === 3 && days.includes('Monday') && days.includes('Wednesday')) return 'Mon–Wed';
+  if (days.length === 2 && days.includes('Monday') && days.includes('Wednesday')) return 'Mon & Wed';
+  if (days.length === 2 && days.includes('Thursday') && days.includes('Saturday')) return 'Thu & Sat';
+  if (days.length === 2 && days.includes('Friday') && days.includes('Saturday')) return 'Fri & Sat';
+  if (days.length === 1) return days[0];
+  return days.map((d) => DAY_ABBR[d] || d.slice(0, 3)).join(', ');
+}
+
+/**
+ * Filter and format active batches for a programme directly from the schedule source,
+ * extracting complete trainer names, timings, duration, days, and initials.
+ */
+export function getProgrammeActiveBatches(
+  slug: string,
+  batches: BatchLike[],
+): ProgrammeScheduleBatch[] {
+  const normSlug = slug.toLowerCase();
+
+  const matchesSlug = (b: BatchLike) => {
+    if (b.status && b.status !== 'active') return false;
+    const progSlug = (b.programme?.slug ?? '').toLowerCase();
+    const batchName = (b.name ?? b.batch_title ?? '').toLowerCase();
+
+    if (normSlug === 'kids-dance') {
+      return (progSlug === 'kids-dance' || batchName.includes('kids')) && !batchName.includes('adult');
+    }
+    if (normSlug === 'adults-dance') {
+      return (progSlug === 'adults-dance' || batchName.includes('adult')) && !batchName.includes('kids');
+    }
+    if (normSlug === 'mind-body-fitness') {
+      return (
+        progSlug === 'mind-body-fitness' ||
+        batchName.includes('fitness') ||
+        batchName.includes('zumba') ||
+        batchName.includes('yoga')
+      );
+    }
+    if (normSlug === 'gymnastics' || normSlug === 'gymnastic') {
+      return (
+        progSlug === 'gymnastics' ||
+        progSlug === 'gymnastic' ||
+        batchName.includes('gymnastic') ||
+        batchName.includes('tumbling')
+      );
+    }
+    if (normSlug === 'kuchipudi' || normSlug === 'classical-dance') {
+      return (
+        progSlug === 'kuchipudi' ||
+        progSlug === 'classical-dance' ||
+        progSlug === 'kuchipudi-classical' ||
+        batchName.includes('kuchipudi')
+      );
+    }
+    return progSlug === normSlug;
+  };
+
+  let matched = (batches ?? []).filter(matchesSlug);
+
+  // Fallback to default batches if DB has no batches for this programme
+  if (matched.length === 0) {
+    matched = DEFAULT_BATCHES.filter(matchesSlug);
+  }
+
+  // Sort chronologically by start time
+  matched.sort((a, b) => {
+    const timeA = a.time_start || '00:00:00';
+    const timeB = b.time_start || '00:00:00';
+    return minutesFromMidnight(timeA) - minutesFromMidnight(timeB);
+  });
+
+  return matched.map((batch) => {
+    const rawDays = Array.isArray(batch.days) ? batch.days : [];
+    const timeStart = batch.time_start || '17:00:00';
+    const timeEnd = batch.time_end || '18:00:00';
+
+    const defaultMatch = DEFAULT_BATCHES.find(
+      (d) =>
+        d.id === batch.id ||
+        ((d.programme?.slug === normSlug || d.programme?.slug === (batch.programme?.slug ?? '').toLowerCase()) &&
+          d.time_start === timeStart) ||
+        (d.name && batch.name && d.name.toLowerCase() === batch.name.toLowerCase()),
+    );
+
+    const instructorName =
+      batch.instructor?.name?.trim() ||
+      defaultMatch?.instructor?.name?.trim() ||
+      (normSlug === 'mind-body-fitness'
+        ? 'Fitness Faculty'
+        : normSlug === 'kuchipudi'
+        ? 'Guru Srushti Nidhi'
+        : 'Academy Faculty');
+
+    const trainerRole =
+      normSlug === 'kuchipudi'
+        ? 'Classical Guru'
+        : normSlug === 'mind-body-fitness'
+        ? 'Fitness Faculty'
+        : normSlug === 'gymnastics' || normSlug === 'gymnastic'
+        ? 'Acrobatics Coach'
+        : 'Dance Faculty';
+
+    const photoUrl =
+      (batch.instructor as any)?.photo_url ||
+      defaultMatch?.instructor?.photo_url ||
+      null;
+
+    return {
+      id: batch.id || `${slug}-${timeStart}`,
+      name: batch.name || batch.batch_title || `${batch.programme?.name || 'Studio'} Cohort`,
+      programmeSlug: batch.programme?.slug || slug,
+      programmeName: batch.programme?.name || 'Studio Batch',
+      days: rawDays,
+      daysDisplay: formatDaysDisplay(rawDays),
+      daysShort: formatDaysShort(rawDays),
+      time_start: timeStart,
+      time_end: timeEnd,
+      timeDisplay: `${formatTime(timeStart)} – ${formatTime(timeEnd)}`,
+      duration: durationLabel(timeStart, timeEnd),
+      trainer: {
+        name: instructorName,
+        initials: instructorInitials(instructorName),
+        photoUrl,
+        role: trainerRole,
+      },
+      capacity: (batch as any).capacity ?? 25,
+      enrolledCount: (batch as any).enrolled_count ?? 0,
+      status: batch.status || 'active',
+    };
+  });
+}
+
+/**
+ * Public async function to fetch active batches directly from the schedule source
+ * with complete trainer, timing, and date details.
+ */
+export async function getProgrammeSchedule(
+  slug: string,
+  existingBatches?: BatchLike[],
+): Promise<ProgrammeScheduleBatch[]> {
+  const sourceBatches =
+    existingBatches && existingBatches.length > 0 ? existingBatches : await getBatches();
+  return getProgrammeActiveBatches(slug, sourceBatches);
 }

@@ -1,7 +1,7 @@
 import { getPublicSupabase } from '@/lib/supabase/public';
 
 /** Mirrors live Supabase seed — used only when the DB is unreachable. */
-const DEFAULT_BATCHES = [
+export const DEFAULT_BATCHES = [
   {
     id: 'a1b2c3d4-4101-4000-8000-000000000001',
     programme_id: 'a1b2c3d4-4001-4000-8000-000000000001',
@@ -38,32 +38,32 @@ const DEFAULT_BATCHES = [
     enrolled_count: 11,
     status: 'active',
     name: 'Gymnastics & Tumbling (5:15–6:15 PM)',
-    programme: { name: 'Gymnastic', slug: 'gymnastics', sort_order: 2 },
-    instructor: { name: 'Deepak & Nitish', photo_url: null },
+    programme: { name: 'Gymnastics', slug: 'gymnastics', sort_order: 2 },
+    instructor: { name: 'Srikanth', photo_url: '/images/team/srikanth-gymnastics-2.jpg' },
   },
   {
     id: 'a1b2c3d4-4103-4000-8000-000000000003',
     programme_id: 'a1b2c3d4-4002-4000-8000-000000000002',
-    days: ['Monday', 'Tuesday'],
+    days: ['Monday', 'Tuesday', 'Wednesday'],
     time_start: '19:00:00',
     time_end: '20:00:00',
     capacity: 30,
     enrolled_count: 20,
     status: 'active',
-    name: 'Adults Bollywood (7–8 PM)',
+    name: 'Adults Bollywood & Commercial (7–8 PM)',
     programme: { name: 'Adults Dance', slug: 'adults-dance', sort_order: 3 },
     instructor: { name: 'Nitish', photo_url: null },
   },
   {
     id: 'a1b2c3d4-4104-4000-8000-000000000004',
     programme_id: 'a1b2c3d4-4002-4000-8000-000000000002',
-    days: ['Monday', 'Tuesday'],
+    days: ['Monday', 'Tuesday', 'Wednesday'],
     time_start: '20:00:00',
     time_end: '21:00:00',
     capacity: 30,
     enrolled_count: 14,
     status: 'active',
-    name: 'Adults Contemporary (8–9 PM)',
+    name: 'Adults Contemporary & Freestyle (8–9 PM)',
     programme: { name: 'Adults Dance', slug: 'adults-dance', sort_order: 3 },
     instructor: { name: 'Pranith', photo_url: null },
   },

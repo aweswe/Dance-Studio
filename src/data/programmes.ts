@@ -44,14 +44,14 @@ export const DEFAULT_PROGRAMMES: ProgrammeItem[] = [
         age: "Kids: 3.5–12 Years",
         styles: "Bollywood, Freestyle Rhythm & Coordination",
         schedule: "Mon to Wed · 5:00 PM – 6:00 PM",
-        instructors: "Certified Studio Lead",
+        instructors: "Deepak (Dance Faculty)",
       },
       {
         name: "Kids Bollywood & Contemporary (6–7 PM)",
         age: "Kids: 3.5–12 Years",
         styles: "Bollywood, Hip Hop & Foundational Contemporary",
         schedule: "Mon to Wed · 6:00 PM – 7:00 PM",
-        instructors: "Certified Studio Lead",
+        instructors: "Kajal (Dance Faculty)",
       },
     ],
     includes: [
@@ -85,14 +85,14 @@ export const DEFAULT_PROGRAMMES: ProgrammeItem[] = [
         age: "13+ Years",
         styles: "Trending Bollywood & Commercial Choreography",
         schedule: "Mon to Wed · 7:00 PM – 8:00 PM",
-        instructors: "Certified Studio Lead",
+        instructors: "Nitish (Dance Faculty)",
       },
       {
         name: "Adults Contemporary & Lyrical (8–9 PM)",
         age: "13+ Years",
         styles: "Contemporary Floorwork & Expressive Phrasing",
         schedule: "Mon to Wed · 8:00 PM – 9:00 PM",
-        instructors: "Certified Studio Lead",
+        instructors: "Pranith (Dance Faculty)",
       },
     ],
     includes: [
@@ -179,7 +179,7 @@ export const DEFAULT_PROGRAMMES: ProgrammeItem[] = [
         age: "Kids: 3.5–12 yrs & Adults: 13+ yrs",
         styles: "10-year foundation or 6-year certificate track",
         schedule: "Fri & Sat · 6:30 PM – 7:30 PM",
-        instructors: "Certified Classical Academy Faculty",
+        instructors: "Guru Srushti Nidhi (Classical Guru)",
       },
     ],
     includes: [
@@ -210,7 +210,7 @@ export const DEFAULT_PROGRAMMES: ProgrammeItem[] = [
         age: "Kids: 3.5–12 Years",
         styles: "Tumbling, Acrobatics, Agility",
         schedule: "Thu & Sat · 5:15 PM – 6:15 PM",
-        instructors: "Certified Gymnastics Faculty",
+        instructors: "Srikanth (Acrobatics Coach)",
       },
     ],
     includes: [

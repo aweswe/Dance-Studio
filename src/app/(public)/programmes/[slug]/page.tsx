@@ -5,8 +5,8 @@ import { notFound } from 'next/navigation';
 import { getProgrammeBySlug } from '@/data/programmes';
 import { getBatches } from '@/data/batches';
 import { Clock, Calendar, IndianRupee, MapPin, ArrowUpRight } from 'lucide-react';
-import { formatTime } from '@/lib/utils/format';
 import { enrolHref, SITE_URL, ROUTES } from '@/lib/utils/constants';
+import { getProgrammeSchedule } from '@/lib/schedule/from-batches';
 import { KuchipudiShowcase } from '@/components/public/kuchipudi-showcase';
 import { HomepageSection, HomepageSectionHeading } from '@/components/public/homepage-section';
 import { PublicBookTrialCta } from '@/components/public/public-book-trial-cta';
@@ -470,44 +470,8 @@ export default async function ProgrammeDetailPage({ params }: Props) {
     notFound();
   }
 
-  // Strictly filter batches so each programme page displays only its own age pathway and cohort
-  const programmeBatches = (allBatches ?? []).filter((b: any) => {
-    if (slug === 'kids-dance') {
-      return (
-        (b.programme?.slug === 'kids-dance' || b.name?.toLowerCase().includes('kids')) &&
-        !b.name?.toLowerCase().includes('adult')
-      );
-    }
-    if (slug === 'adults-dance') {
-      return (
-        (b.programme?.slug === 'adults-dance' || b.name?.toLowerCase().includes('adult')) &&
-        !b.name?.toLowerCase().includes('kids')
-      );
-    }
-    if (slug === 'mind-body-fitness') {
-      return (
-        b.programme?.slug === 'mind-body-fitness' ||
-        b.name?.toLowerCase().includes('fitness') ||
-        b.name?.toLowerCase().includes('zumba') ||
-        b.name?.toLowerCase().includes('yoga')
-      );
-    }
-    if (slug === 'gymnastics' || slug === 'gymnastic') {
-      return (
-        b.programme?.slug === 'gymnastics' ||
-        b.programme?.slug === 'gymnastic' ||
-        b.name?.toLowerCase().includes('gymnastic')
-      );
-    }
-    if (slug === 'kuchipudi' || slug === 'classical-dance') {
-      return (
-        b.programme?.slug === 'kuchipudi' ||
-        b.programme?.slug === 'classical-dance' ||
-        b.name?.toLowerCase().includes('kuchipudi')
-      );
-    }
-    return b.programme?.slug === slug || b.programme_id === programme.id;
-  });
+  // Fetch active batches directly from the schedule source with full details of trainers, timing, and dates
+  const scheduleBatches = await getProgrammeSchedule(slug, allBatches);
 
   const courseSchema = {
     '@context': 'https://schema.org',
@@ -604,39 +568,59 @@ export default async function ProgrammeDetailPage({ params }: Props) {
 
             <div className="flex flex-col gap-3 sm:gap-4">
               <HomepageSectionHeading eyebrow="Timetable" title="Active batch schedule" className="mb-0" />
-              {(programmeBatches.length > 0 ? programmeBatches : ((programme.batches ?? []) as any[])).length > 0 ? (
+              {scheduleBatches.length > 0 ? (
                 <div className="space-y-3">
-                  {(programmeBatches.length > 0 ? programmeBatches : ((programme.batches ?? []) as any[])).map(
-                    (batch: any, idx: number) => (
-                      <div
-                        key={idx}
-                        className="flex flex-col sm:flex-row sm:items-center justify-between p-5 bg-surface border border-line rounded-md gap-4"
-                      >
-                        <div className="flex flex-col gap-1.5">
-                          <div className="text-sm font-bold text-ink">
-                            {batch.name || `${programme.name} Cohort`}
-                          </div>
-                          <div className="flex items-center gap-2 text-ink font-semibold text-xs">
-                            <Calendar size={15} className="text-bl" />
-                            {Array.isArray(batch.days) ? batch.days.join(', ') : batch.days}
-                          </div>
-                          <div className="flex items-center gap-2 text-ink-2 text-xs">
-                            <Clock size={13} className="text-ink-3" />
-                            {formatTime(batch.time_start)} – {formatTime(batch.time_end)}
-                          </div>
+                  {scheduleBatches.map((batch) => (
+                    <div
+                      key={batch.id}
+                      className="flex flex-col sm:flex-row sm:items-center justify-between p-5 bg-surface border border-line rounded-md gap-4"
+                    >
+                      <div className="flex flex-col gap-1.5">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="text-sm font-bold text-ink">
+                            {batch.name}
+                          </span>
+                          <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-line/60 text-ink-2 font-medium">
+                            {batch.daysShort}
+                          </span>
                         </div>
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-full bg-ink text-bl flex items-center justify-center text-xs font-bold shrink-0">
-                            CF
+                        <div className="flex items-center gap-2 text-ink font-semibold text-xs">
+                          <Calendar size={15} className="text-bl shrink-0" />
+                          <span>{batch.daysDisplay}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-ink-2 text-xs">
+                          <Clock size={13} className="text-ink-3 shrink-0" />
+                          <span>{batch.timeDisplay}</span>
+                          <span className="text-ink-3 font-mono">({batch.duration})</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3 shrink-0">
+                        {batch.trainer.photoUrl ? (
+                          <div className="relative w-10 h-10 rounded-full overflow-hidden border border-line shrink-0">
+                            <Image
+                              src={batch.trainer.photoUrl}
+                              alt={batch.trainer.name}
+                              fill
+                              sizes="40px"
+                              className="object-cover"
+                            />
                           </div>
-                          <div className="text-sm min-w-0">
-                            <div className="text-[10px] text-ink-3 font-semibold tracking-wide">Faculty</div>
-                            <div className="font-bold text-xs text-ink">Certified Studio Lead</div>
+                        ) : (
+                          <div className="w-10 h-10 rounded-full bg-ink text-bl flex items-center justify-center text-xs font-bold shrink-0">
+                            {batch.trainer.initials}
+                          </div>
+                        )}
+                        <div className="text-sm min-w-0">
+                          <div className="text-[10px] text-ink-3 font-semibold tracking-wide uppercase">
+                            {batch.trainer.role}
+                          </div>
+                          <div className="font-bold text-xs text-ink truncate">
+                            {batch.trainer.name}
                           </div>
                         </div>
                       </div>
-                    ),
-                  )}
+                    </div>
+                  ))}
                 </div>
               ) : (
                 <p className="text-ink-2 bg-surface p-6 rounded-md border border-line text-sm">
