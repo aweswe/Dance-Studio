@@ -485,13 +485,13 @@ export function KathakSyllabusContent() {
           { src: '/images/studio-training/alignment-drills-2.jpg', label: 'Rhythm & Footwork' },
           { src: '/images/studio-training/masterclass-foundation.jpg', label: 'Studio Masterclass' },
         ].map((item, idx) => (
-          <div key={idx} className="relative aspect-[3/4] rounded-md overflow-hidden border border-line bg-surface group shadow-2xs">
+          <div key={idx} className="relative aspect-[4/3] rounded-md overflow-hidden border border-line bg-surface group shadow-2xs">
             <Image
               src={item.src}
               alt={item.label}
               fill
               loading="lazy"
-              className="object-cover group-hover:scale-105 transition-transform duration-500"
+              className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-transparent opacity-80 group-hover:opacity-100 transition-opacity flex items-end p-2.5">
@@ -565,11 +565,11 @@ export function KathakSyllabusContent() {
             {/* Visual Frame using Authentic Stage / Bento Asset */}
             <div className="lg:col-span-5 relative aspect-[3/4] rounded-md overflow-hidden border border-line shadow-lg bg-surface">
               <Image
-                src="/images/srilanka-tour/raasta-stage-1.jpg"
-                alt="Classical dance stage debut at Rhythmzz Academy"
+                src="/images/srilanka-tour/raasta-stage-5.jpg"
+                alt="Classical dance solo stage debut and Manch Pravesh at Rhythmzz Academy"
                 fill
                 loading="lazy"
-                className="object-cover"
+                className="object-cover object-[center_top]"
                 sizes="(max-width: 1024px) 100vw, 42vw"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-transparent flex items-end p-5">

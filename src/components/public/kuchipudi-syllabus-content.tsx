@@ -357,13 +357,13 @@ export function KuchipudiSyllabusContent() {
 
               {/* Right Column — Authentic High-Resolution Photography */}
               <div className="lg:col-span-5 w-full">
-                <div className="relative aspect-[4/3] sm:aspect-[16/11] lg:aspect-square w-full rounded-md overflow-hidden border border-line bg-surface shadow-md">
+                <div className="relative aspect-[3/4] sm:aspect-[4/5] lg:aspect-[3/4] max-w-md mx-auto lg:max-w-none w-full rounded-md overflow-hidden border border-line bg-surface shadow-md">
                   <Image
                     src="/images/kuchipudi/hero_kuchipudi_1.jpg"
                     alt="Kuchipudi dancer in traditional classical costume at Rhythmzz Academy"
                     fill
                     priority
-                    className="object-cover object-[center_20%]"
+                    className="object-cover object-[center_top]"
                     sizes="(max-width: 1024px) 100vw, 40vw"
                   />
                 </div>
@@ -534,31 +534,31 @@ export function KuchipudiSyllabusContent() {
 
           {/* Supporting Classical Visual Reference Strip */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-            <div className="relative aspect-[16/9] rounded-md overflow-hidden border border-line shadow-sm">
+            <div className="relative aspect-[4/3] sm:aspect-[3/2] lg:aspect-[4/3] rounded-md overflow-hidden border border-line shadow-sm bg-surface">
               <Image
-                src="/images/kuchipudi/kuchipudi-natyarambham-posture.jpg"
-                alt="Kuchipudi Natyarambham posture"
+                src="/images/kuchipudi/kuchipudi-classical-02.jpg"
+                alt="Kuchipudi foundational posture and body alignment"
                 fill
                 loading="lazy"
                 sizes="(max-width: 768px) 100vw, 50vw"
-                className="object-cover"
+                className="object-cover object-[center_top]"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-transparent flex items-end p-4">
-                <p className="text-xs font-mono font-semibold text-white">Natyarambham posture &amp; body alignment</p>
+                <p className="text-xs font-mono font-semibold text-white">Foundational Posture &amp; Body Alignment</p>
               </div>
             </div>
 
-            <div className="relative aspect-[16/9] rounded-md overflow-hidden border border-line shadow-sm">
+            <div className="relative aspect-[4/3] sm:aspect-[3/2] lg:aspect-[4/3] rounded-md overflow-hidden border border-line shadow-sm bg-surface">
               <Image
-                src="/images/kuchipudi/kuchipudi-abhinaya-mudra.jpg"
-                alt="Kuchipudi abhinaya mudra"
+                src="/images/kuchipudi/kuchipudi-classical-06.jpg"
+                alt="Kuchipudi classical repertoire and stage presence"
                 fill
                 loading="lazy"
                 sizes="(max-width: 768px) 100vw, 50vw"
-                className="object-cover"
+                className="object-cover object-[center_top]"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-transparent flex items-end p-4">
-                <p className="text-xs font-mono font-semibold text-white">Asamyukta &amp; Samyukta Hastas (hand gestures)</p>
+                <p className="text-xs font-mono font-semibold text-white">Classical Repertoire &amp; Stage Presence</p>
               </div>
             </div>
           </div>
@@ -647,11 +647,11 @@ export function KuchipudiSyllabusContent() {
       ═══════════════════════════════════════════════════════════════════════ */}
       <div className="w-full grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-3 p-2 sm:p-4 bg-canvas border-y border-line">
         {[
-          { src: '/images/kuchipudi/kuchipudi-classical-02.jpg', label: 'Classical Adavus' },
-          { src: '/images/kuchipudi/kuchipudi-aramandi-dynamic.jpg', label: 'Aramandi Posture' },
-          { src: '/images/kuchipudi/kuchipudi-classical-03.jpg', label: 'Mudra & Abhinaya' },
-          { src: '/images/kuchipudi/kuchipudi-classical-pose-2.jpg', label: 'Stage Presentation' },
-          { src: '/images/kuchipudi/kuchipudi-traditional-standing.jpg', label: 'Traditional Attire' },
+          { src: '/images/kuchipudi/kuchipudi-classical-03.jpg', label: 'Aramandi Stance' },
+          { src: '/images/kuchipudi/kuchipudi-classical-01.jpg', label: 'Classical Expression' },
+          { src: '/images/kuchipudi/kuchipudi-classical-04.jpg', label: 'Traditional Attire' },
+          { src: '/images/kuchipudi/kuchipudi-classical-07.jpg', label: 'Stage Performance' },
+          { src: '/images/kuchipudi/kuchipudi-classical-05.jpg', label: 'Dynamic Technique' },
         ].map((item, idx) => (
           <div key={idx} className="relative aspect-[3/4] rounded-md overflow-hidden border border-line bg-surface group shadow-2xs">
             <Image
@@ -659,7 +659,7 @@ export function KuchipudiSyllabusContent() {
               alt={item.label}
               fill
               loading="lazy"
-              className="object-cover group-hover:scale-105 transition-transform duration-500"
+              className="object-cover object-[center_top] group-hover:scale-105 transition-transform duration-500"
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-transparent opacity-80 group-hover:opacity-100 transition-opacity flex items-end p-2.5">
@@ -731,13 +731,13 @@ export function KuchipudiSyllabusContent() {
         <Reveal>
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
             {/* Photo Frame */}
-            <div className="lg:col-span-5 relative aspect-[3/4] rounded-md overflow-hidden border border-line shadow-lg">
+            <div className="lg:col-span-5 relative aspect-[3/4] rounded-md overflow-hidden border border-line shadow-lg bg-surface">
               <Image
-                src="/images/kuchipudi/hero_kuchipudi_2.jpg"
-                alt="Kuchipudi dancer in Rangapravesham costume"
+                src="/images/programmes/kuchipudi-programme-cover.jpg"
+                alt="Kuchipudi dancer in Rangapravesham solo stage performance at Rhythmzz Academy"
                 fill
                 loading="lazy"
-                className="object-cover"
+                className="object-cover object-[center_top]"
                 sizes="(max-width: 1024px) 100vw, 42vw"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-transparent flex items-end p-5">
