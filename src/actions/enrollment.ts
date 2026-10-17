@@ -158,6 +158,30 @@ export async function resolveBatchSwitchRequest(
   if (!auth.ok) return { success: false, error: auth.error };
 
   const admin = createAdminSupabase();
+
+  // 1. Attempt atomic PostgreSQL RPC for single-transaction ACID execution with row-level locks
+  try {
+    const { data: rpcRes, error: rpcErr } = await admin.rpc('resolve_batch_switch_request_atomic', {
+      p_request_id: requestId,
+      p_decision: decision,
+      p_admin_note: adminNote?.trim() || null,
+    });
+
+    if (!rpcErr && rpcRes) {
+      const res = rpcRes as { success: boolean; error?: string };
+      if (!res.success) {
+        return { success: false, error: res.error || 'Failed to resolve switch request.' };
+      }
+      revalidatePath('/admin/switch-requests');
+      revalidatePath('/student/classes');
+      revalidatePath('/student/schedule');
+      return { success: true };
+    }
+  } catch (err) {
+    console.warn('resolve_batch_switch_request_atomic RPC unavailable, falling back to defensive multi-step resolution:', err);
+  }
+
+  // 2. Defensive fallback logic with compensating rollback
   const { data: req, error: reqErr } = await admin
     .from('batch_switch_requests')
     .select('*, requested:requested_batch_id(id, programme_id, status, capacity, enrolled_count)')
@@ -170,9 +194,11 @@ export async function resolveBatchSwitchRequest(
   }
 
   const row = req as any;
+  let studentBefore: any = null;
+  let target: any = null;
 
   if (decision === 'approved') {
-    const target = row.requested;
+    target = row.requested;
     if (!target) return { success: false, error: 'Target batch not found.' };
 
     // Accurate live capacity check against current active students
@@ -187,11 +213,12 @@ export async function resolveBatchSwitchRequest(
     }
 
     // Check pricing difference between old and new programme
-    const { data: studentBefore } = await admin
+    const { data: sBefore } = await admin
       .from('students')
       .select('programme_id, programme:programmes(name, fees_monthly)')
       .eq('id', row.student_id)
       .maybeSingle();
+    studentBefore = sBefore;
 
     const { data: targetProg } = await admin
       .from('programmes')
@@ -218,7 +245,7 @@ export async function resolveBatchSwitchRequest(
 
     if (studentErr) return { success: false, error: studentErr.message };
 
-    // Sync old and new batch counters atomically
+    // Sync old and new batch counters
     await Promise.all([
       syncBatchCount(admin, row.current_batch_id),
       syncBatchCount(admin, target.id),
@@ -238,7 +265,23 @@ export async function resolveBatchSwitchRequest(
     })
     .eq('id', requestId);
 
-  if (updateErr) return { success: false, error: updateErr.message };
+  if (updateErr) {
+    // Compensating rollback if switch status update fails after student reassignment
+    if (decision === 'approved' && row.student_id && target) {
+      await admin
+        .from('students')
+        .update({
+          batch_id: row.current_batch_id,
+          programme_id: studentBefore?.programme_id ?? null,
+        })
+        .eq('id', row.student_id);
+      await Promise.all([
+        syncBatchCount(admin, row.current_batch_id),
+        syncBatchCount(admin, target.id),
+      ]);
+    }
+    return { success: false, error: updateErr.message };
+  }
 
   revalidatePath('/admin/switch-requests');
   revalidatePath('/student/classes');

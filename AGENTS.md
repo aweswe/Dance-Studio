@@ -342,10 +342,11 @@ erDiagram
    * Integrated dedicated UI badges for `"Pending Verification"` and `"Overdue"`.
    * Cron reminders explicitly exclude pending/unconfirmed payments when computing delinquent student rosters.
 
-3. **Batch Switch Request & Capacity Synchronization (`src/actions/enrollment.ts`, `src/actions/students.ts`, `src/lib/payments/fulfill-order.ts`)**:
-   * Created `syncBatchCount(admin, batchId)` to dynamically query and update `batches.enrolled_count` against verified active students.
-   * In `resolveBatchSwitchRequest`, added real-time capacity checks (`enrolled_count >= max_capacity`), atomic synchronization of both old and new batches upon approval, and automatic fee difference tracking when switching across tracks with differing monthly fees.
-   * Integrated `syncBatchCount` across student creation, updates, deactivations, reactivations, and online payment provisioning.
+3. **Atomic Batch Switch Resolution & Capacity Synchronization (`src/actions/enrollment.ts`, `supabase/migrations/0021_atomic_batch_switch.sql`)**:
+   * Engineered `resolve_batch_switch_request_atomic` PostgreSQL stored procedure running inside a single ACID database transaction.
+   * Leveraged `FOR UPDATE` row-level locks on `batch_switch_requests` and `batches` to eliminate concurrency race conditions.
+   * Atomically executes: live capacity verification, student reassignment (`batch_id` & `programme_id`), dual-batch counter updates (`batches.enrolled_count` and `status: 'active' | 'full'`), fee difference computation, and audit note logging.
+   * Hardened the TypeScript fallback in `resolveBatchSwitchRequest` with compensating rollback logic so network partitions or subsequent step failures revert student assignments cleanly.
 
 4. **Attendance Synchronization for Approved Student Leaves (`src/actions/studio.ts`)**:
    * When an admin or assigned instructor approves a student leave request, an attendance record is atomically upserted with `status: 'leave'`, eliminating false-positive absence streak alerts on instructor rosters.

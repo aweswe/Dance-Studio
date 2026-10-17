@@ -1159,6 +1159,14 @@ export type Database = {
         Args: { p_batch_id: string }
         Returns: boolean
       }
+      resolve_batch_switch_request_atomic: {
+        Args: {
+          p_request_id: string
+          p_decision: string
+          p_admin_note?: string | null
+        }
+        Returns: Json
+      }
     }
     Enums: {
       attendance_status: "present" | "absent" | "leave"
