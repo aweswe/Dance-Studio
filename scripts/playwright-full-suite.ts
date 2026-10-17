@@ -88,7 +88,48 @@ async function runSuite() {
   }
 
   // --------------------------------------------------------------------------
-  // PART 2: DEEP-LINKED ENROLMENT FLOW & WAITLIST
+  // PART 1B: CLASSICAL CROSS-NAVIGATION (KUCHIPUDI <-> KATHAK)
+  // --------------------------------------------------------------------------
+  console.log('\n--- PART 1B: CLASSICAL SYLLABUS CROSS-NAVIGATION ---');
+  {
+    const t0 = Date.now();
+    const context = await browser.newContext();
+    const page = await context.newPage();
+    try {
+      await page.goto(`${BASE_URL}/syllabus/kuchipudi`, { waitUntil: 'domcontentloaded' });
+      await dismissIntroLoader(page);
+
+      // Find and click "Also view Kathak"
+      const alsoViewKathakLink = page.locator('a:has-text("Also view Kathak")');
+      await alsoViewKathakLink.waitFor({ state: 'visible', timeout: 8000 });
+      const kathakHref = await alsoViewKathakLink.getAttribute('href');
+      if (kathakHref !== '/syllabus/kathak') {
+        throw new Error(`Expected href to be /syllabus/kathak but got ${kathakHref}`);
+      }
+
+      await alsoViewKathakLink.click();
+      await page.waitForURL('**/syllabus/kathak', { timeout: 10000 });
+      logPass('Classical Cross-Routing', '"Also view Kathak" on Kuchipudi page correctly routes to /syllabus/kathak', t0);
+
+      const t1 = Date.now();
+      // On Kathak page, find and click "Also view Kuchipudi"
+      const alsoViewKuchipudiLink = page.locator('a:has-text("Also view Kuchipudi")');
+      await alsoViewKuchipudiLink.waitFor({ state: 'visible', timeout: 10000 });
+      const kuchipudiHref = await alsoViewKuchipudiLink.getAttribute('href');
+      if (kuchipudiHref !== '/syllabus/kuchipudi') {
+        throw new Error(`Expected href to be /syllabus/kuchipudi but got ${kuchipudiHref}`);
+      }
+
+      await alsoViewKuchipudiLink.click();
+      await page.waitForURL('**/syllabus/kuchipudi', { timeout: 10000 });
+      logPass('Classical Cross-Routing', '"Also view Kuchipudi" on Kathak page correctly routes to /syllabus/kuchipudi', t1);
+    } catch (err) {
+      logFail('Classical Cross-Routing', 'Bidirectional cross-navigation between Kuchipudi and Kathak', t0, err);
+    } finally {
+      await context.close();
+    }
+  }
+
   // --------------------------------------------------------------------------
   console.log('\n--- PART 2: ENROLMENT DEEP-LINKING & WAITLIST FLOWS ---');
   {

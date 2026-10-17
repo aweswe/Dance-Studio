@@ -346,7 +346,7 @@ export function KuchipudiSyllabusContent() {
                     <span>Explore Curriculum</span>
                   </Link>
                   <Link
-                    href={enrolHref({ programme: 'classical-dance', intent: 'trial' })}
+                    href="/syllabus/kathak"
                     className="inline-flex items-center gap-1.5 text-xs text-ink-2 hover:text-bl transition-colors py-2 px-1 font-mono font-bold uppercase tracking-wider"
                   >
                     <span>Also view Kathak</span>
