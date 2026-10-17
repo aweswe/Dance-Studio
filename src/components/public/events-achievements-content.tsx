@@ -139,7 +139,7 @@ export function EventsAchievementsContent() {
         </div>
 
         <h1 className="font-anton text-3xl sm:text-5xl lg:text-6xl uppercase tracking-tight text-ink leading-[1.06]">
-          Events, Historic Milestones &amp; Press Archive
+          Achievements &amp; Press Archive
         </h1>
 
         <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs font-mono text-ink-3">

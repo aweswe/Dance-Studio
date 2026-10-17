@@ -5,14 +5,14 @@ import { PublicPage } from '@/components/public/public-page';
 import { SITE_URL } from '@/lib/utils/constants';
 
 export const metadata: Metadata = {
-  title: 'Events & Achievements | Rhythmzz Academy of Dance',
+  title: 'Achievements & Press | Rhythmzz Academy of Dance',
   description:
-    'Explore major historic milestones of Rhythmzz Academy of Dance: representing Team India at nATFEST Sri Lanka, 1,500+ participants at HDPL, Amazon & Sony IPL choreography, college certificate courses, and verified press coverage.',
+    'Explore major historic milestones of Rhythmzz Academy of Dance: contemporary workshops in Canada, representing Team India at nATFEST Sri Lanka, 1,500+ participants at HDPL, Amazon & Sony IPL choreography, and verified press coverage.',
   alternates: { canonical: `${SITE_URL}/events-achievements` },
   openGraph: {
-    title: 'Events & Achievements | Rhythmzz Academy of Dance',
+    title: 'Achievements & Press | Rhythmzz Academy of Dance',
     description:
-      'Representing Team India at nATFEST Sri Lanka, hosting Hyderabad Dance Premier League, choreographing for Amazon, Sony IPL, and educating across colleges since 2010.',
+      'Contemporary workshops in Canada, representing Team India at nATFEST Sri Lanka, hosting Hyderabad Dance Premier League, choreographing for Amazon, and verified press coverage.',
     url: `${SITE_URL}/events-achievements`,
     siteName: 'Rhythmzz Academy of Dance',
     locale: 'en_IN',

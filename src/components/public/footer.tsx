@@ -167,11 +167,11 @@ export function Footer() {
             links={[
               { href: ROUTES.about, label: 'Who we are' },
               { href: `${ROUTES.about}#founders`, label: 'Founders & Team' },
-              { href: ROUTES.eventsAchievements, label: 'Events & Achievements' },
+              { href: ROUTES.eventsAchievements, label: 'Achievements & Press' },
               { href: ROUTES.guestTrainers, label: 'International Guest Trainers' },
               { href: '/teach-with-us', label: 'Teach with us' },
               { href: ROUTES.contact, label: 'Contacts' },
-              { href: ROUTES.events, label: 'Events' },
+              { href: ROUTES.events, label: 'Upcoming Events' },
               { href: ROUTES.enrol, label: 'Enrol & pay' },
             ]}
           />

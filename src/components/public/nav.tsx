@@ -80,9 +80,10 @@ const DISCOVER_GROUPS: { label: string; links: NavLink[] }[] = [
     ],
   },
   {
-    label: 'Events',
+    label: 'Events & Press',
     links: [
-      { name: 'Events', href: ROUTES.events, hint: 'Showcases & workshops' },
+      { name: 'Upcoming Events', href: ROUTES.events, hint: 'Showcases & workshops' },
+      { name: 'Achievements & Press', href: ROUTES.eventsAchievements, hint: 'Historic milestones & media' },
     ],
   },
 ];

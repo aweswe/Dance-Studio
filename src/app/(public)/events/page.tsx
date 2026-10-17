@@ -13,7 +13,7 @@ import { Calendar, MapPin, ArrowRight } from 'lucide-react';
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: 'Events & Showcases | Rhythmzz Academy',
+  title: 'Upcoming Events & Showcases | Rhythmzz Academy',
   description: 'Stage recitals, annual days, student showcases, and dance workshops from Rhythmzz Academy of Dance.',
   alternates: { canonical: `${SITE_URL}/events` },
 };
