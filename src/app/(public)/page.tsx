@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { redirect } from 'next/navigation';
 import { SITE_URL } from '@/lib/utils/constants';
 
 // Signature Danzia & Top Skills Pro Hybrid Showcase Components
@@ -28,7 +29,14 @@ export const metadata: Metadata = {
 
 export const revalidate = 3600;
 
-export default async function HomePage() {
+export default async function HomePage(props: {
+  searchParams?: Promise<{ code?: string; error?: string }>;
+}) {
+  const searchParams = props.searchParams ? await props.searchParams : {};
+  if (searchParams?.code) {
+    redirect(`/api/auth/callback?code=${encodeURIComponent(searchParams.code)}`);
+  }
+
   const { getFAQs, getTestimonials } = await import('@/data/content');
   const { getStats } = await import('@/data/content');
   const [faqs, testimonials, reels, stats, products, storefrontMode] = await Promise.all([
@@ -39,6 +47,7 @@ export default async function HomePage() {
     getProducts(),
     getStorefrontStatus(),
   ]);
+
 
   return (
     <div className="relative bg-canvas text-ink font-body overflow-x-hidden min-h-screen transition-colors duration-300">
