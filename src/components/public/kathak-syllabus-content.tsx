@@ -128,83 +128,17 @@ export function KathakSyllabusContent() {
                 </div>
               </div>
 
-              {/* Right Column — Authentic Architectural Classical Showcase Card (Zero AI images) */}
+              {/* Right Column — Authentic High-Resolution Photography */}
               <div className="lg:col-span-5 w-full">
-                <div className="relative rounded-md border border-line bg-surface p-6 sm:p-7 shadow-md flex flex-col justify-between space-y-6">
-                  {/* Card Header */}
-                  <div className="flex items-center justify-between border-b border-line pb-4">
-                    <div>
-                      <span className="text-[10px] font-mono uppercase tracking-widest text-bl font-bold block">
-                        LUCKNOW &amp; JAIPUR LINEAGE
-                      </span>
-                      <h3 className="font-anton text-xl sm:text-2xl text-ink uppercase tracking-wide">
-                        Kathak Classical Foundations
-                      </h3>
-                    </div>
-                    <span className="px-2.5 py-1 rounded bg-bl/10 border border-bl/20 text-bl text-[10px] font-mono font-bold uppercase">
-                      5 Levels
-                    </span>
-                  </div>
-
-                  {/* Teental Metric Cycle Visual Box */}
-                  <div className="p-4 rounded-md bg-canvas border border-line space-y-2">
-                    <div className="flex items-center justify-between text-[11px] font-mono font-bold text-ink">
-                      <span>TEENTAL METRIC CYCLE</span>
-                      <span className="text-bl font-mono">16 BEATS</span>
-                    </div>
-                    <div className="grid grid-cols-4 gap-1.5 text-center font-mono text-[11px] font-semibold">
-                      <div className="p-2 rounded bg-surface border border-line text-ink">
-                        <span className="block text-[9px] text-bl font-bold">SAM (1)</span>
-                        Dha Dhin Dhin Dha
-                      </div>
-                      <div className="p-2 rounded bg-surface border border-line text-ink">
-                        <span className="block text-[9px] text-ink-3">TAALI (5)</span>
-                        Dha Dhin Dhin Dha
-                      </div>
-                      <div className="p-2 rounded bg-surface border border-line text-ink">
-                        <span className="block text-[9px] text-ink-3">KHALI (9)</span>
-                        Dha Tin Tin Ta
-                      </div>
-                      <div className="p-2 rounded bg-surface border border-line text-ink">
-                        <span className="block text-[9px] text-ink-3">TAALI (13)</span>
-                        Ta Dhin Dhin Dha
-                      </div>
-                    </div>
-                    <p className="text-[10px] text-ink-3 font-mono pt-1">
-                      Tatkar Footwork Formula: Ta · Thei · Thei · Tat | Aa · Thei · Thei · Tat
-                    </p>
-                  </div>
-
-                  {/* 3 Core Technical Highlights */}
-                  <div className="space-y-2.5 text-xs text-ink-2 font-medium">
-                    <div className="flex items-start gap-2.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-bl shrink-0 mt-1.5" />
-                      <span>
-                        <strong className="text-ink">Ghungroo Progression: </strong>
-                        50 ankle bells in Foundation advancing to 150–200 bells for virtuoso sound resonance.
-                      </span>
-                    </div>
-                    <div className="flex items-start gap-2.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-bl shrink-0 mt-1.5" />
-                      <span>
-                        <strong className="text-ink">Chakkars (Spins): </strong>
-                        Systematic spot-fixation drills from 1-foot balance to 27 rapid continuous pirouettes.
-                      </span>
-                    </div>
-                    <div className="flex items-start gap-2.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-bl shrink-0 mt-1.5" />
-                      <span>
-                        <strong className="text-ink">Padhant Recitation: </strong>
-                        Mastery of oral bol recitation with hands marking metric claps before floor execution.
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Bottom Note */}
-                  <div className="pt-3 border-t border-line flex items-center justify-between text-[11px] font-mono text-ink-3">
-                    <span>Ages 5+ to Adults</span>
-                    <span className="text-bl font-bold">Zero Admission Fee</span>
-                  </div>
+                <div className="relative aspect-[3/4] sm:aspect-[4/5] lg:aspect-[3/4] max-w-md mx-auto lg:max-w-none w-full rounded-md overflow-hidden border border-line bg-surface shadow-md">
+                  <Image
+                    src="/images/kathak/kathak-hero.jpg"
+                    alt="Kathak classical dancer in traditional Lucknow gharana costume at Rhythmzz Academy"
+                    fill
+                    priority
+                    className="object-cover object-[center_top]"
+                    sizes="(max-width: 1024px) 100vw, 40vw"
+                  />
                 </div>
               </div>
             </div>
@@ -235,6 +169,35 @@ export function KathakSyllabusContent() {
                 </p>
                 <p>
                   Our curriculum at Rhythmzz Academy is structured as a clear, sequential path. Dancers develop crisp footwork, effortless pirouette control, oral rhythmic recitation, and nuanced characterization across each graded milestone.
+                </p>
+              </div>
+
+              {/* Teental Metric Cycle Visual Box */}
+              <div className="mt-6 p-4 rounded-md bg-canvas border border-line space-y-2">
+                <div className="flex items-center justify-between text-[11px] font-mono font-bold text-ink">
+                  <span>TEENTAL METRIC CYCLE</span>
+                  <span className="text-bl font-mono">16 BEATS</span>
+                </div>
+                <div className="grid grid-cols-4 gap-1.5 text-center font-mono text-[11px] font-semibold">
+                  <div className="p-2 rounded bg-surface border border-line text-ink">
+                    <span className="block text-[9px] text-bl font-bold">SAM (1)</span>
+                    Dha Dhin Dhin Dha
+                  </div>
+                  <div className="p-2 rounded bg-surface border border-line text-ink">
+                    <span className="block text-[9px] text-ink-3">TAALI (5)</span>
+                    Dha Dhin Dhin Dha
+                  </div>
+                  <div className="p-2 rounded bg-surface border border-line text-ink">
+                    <span className="block text-[9px] text-ink-3">KHALI (9)</span>
+                    Dha Tin Tin Ta
+                  </div>
+                  <div className="p-2 rounded bg-surface border border-line text-ink">
+                    <span className="block text-[9px] text-ink-3">TAALI (13)</span>
+                    Ta Dhin Dhin Dha
+                  </div>
+                </div>
+                <p className="text-[10px] text-ink-3 font-mono pt-1">
+                  Tatkar Footwork Formula: Ta · Thei · Thei · Tat | Aa · Thei · Thei · Tat
                 </p>
               </div>
             </div>
