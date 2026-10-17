@@ -91,6 +91,10 @@ async function ensureRoleRecords(
  * Call from a client component with a server action button or form action.
  */
 export async function demoLogin(role: DemoRole) {
+  if (process.env.NODE_ENV === "production") {
+    return { error: "Demo logins are disabled in production." };
+  }
+
   const account = DEMO_ACCOUNTS[role];
   const admin = createAdminSupabase();
   const supabase = await createServerSupabase();

@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useState, useEffect, useTransition } from "react";
+import { Suspense, useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
@@ -10,7 +10,6 @@ import { ArrowRight, Loader2, LayoutDashboard, ShieldCheck } from "lucide-react"
 import { AuthShell } from "@/components/auth/auth-shell";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { demoLogin } from "@/actions/demo-login";
 
 function authErrorFromSearch(params: URLSearchParams): string {
   const err = params.get("error_description") || params.get("error");
@@ -40,7 +39,6 @@ function LoginForm() {
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [agreedTerms, setAgreedTerms] = useState(false);
   const [redirecting, setRedirecting] = useState(false);
-  const [isDemoLoading, startDemoTransition] = useTransition();
 
   useEffect(() => {
     let cancelled = false;
@@ -361,37 +359,6 @@ function LoginForm() {
                   Local preview as Aarav
                 </button>
               )}
-
-              {/* Demo student account */}
-              <div className="pt-2 border-t border-line">
-                <p className="text-[11px] text-ink-3 text-center mb-2 uppercase tracking-wide font-medium">
-                  Try a demo account
-                </p>
-                <button
-                  type="button"
-                  disabled={isDemoLoading}
-                  onClick={() => {
-                    setError("");
-                    if (!agreedTerms) {
-                      setError("Please accept the Terms and Conditions and Policies before accessing the demo.");
-                      return;
-                    }
-                    startDemoTransition(async () => {
-                      const result = await demoLogin("student");
-                      if (result?.error) setError(result.error);
-                    });
-                  }}
-                  className="w-full flex items-center justify-center gap-1.5 min-h-10 px-3 rounded-md border border-line text-sm font-medium text-ink hover:bg-canvas-muted focus-visible:focus-ring active:scale-[0.97] transition-all disabled:opacity-60 cursor-pointer"
-                >
-                  {isDemoLoading ? (
-                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                  ) : null}
-                  Demo Student
-                </button>
-                <p className="text-[10px] text-ink-3 text-center mt-1.5">
-                  Read-only demo · data may be reset at any time
-                </p>
-              </div>
             </div>
           )}
 

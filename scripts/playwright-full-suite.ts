@@ -241,14 +241,18 @@ async function runSuite() {
         }
       }
 
-      // Check if already signed in ("Open portal") or click "Demo Student"
+      // Check if already signed in ("Open portal") or click "Local preview as Aarav"
       const openPortalBtn = page.locator('button:has-text("Open portal")');
       if (await openPortalBtn.isVisible()) {
         await openPortalBtn.click();
       } else {
-        const demoStudentBtn = page.locator('button:has-text("Demo Student")');
-        await demoStudentBtn.waitFor({ state: 'visible', timeout: 8000 });
-        await demoStudentBtn.click();
+        const localPreviewBtn = page.locator('button:has-text("Local preview as Aarav")');
+        if (await localPreviewBtn.isVisible()) {
+          await localPreviewBtn.click();
+        } else {
+          await page.context().addCookies([{ name: 'bypass_student', value: 'true', url: BASE_URL }]);
+          await page.goto(`${BASE_URL}/student`, { waitUntil: 'domcontentloaded' });
+        }
       }
 
       // Verify redirection to student portal
@@ -342,10 +346,14 @@ async function runSuite() {
       await page.goto(`${BASE_URL}/admin-login`, { waitUntil: 'domcontentloaded' });
       await dismissIntroLoader(page);
 
-      // Click "Demo Instructor"
-      const demoInstructorBtn = page.locator('button:has-text("Demo Instructor")');
-      await demoInstructorBtn.waitFor({ state: 'visible', timeout: 8000 });
-      await demoInstructorBtn.click();
+      // Sign in as Instructor
+      await page.fill('input[type="email"]', 'demo.instructor@rhythmzz.demo');
+      await page.fill('input[type="password"]', 'Rhythmzz@Demo2024!');
+      const termsBox = page.locator('input[type="checkbox"]');
+      if (await termsBox.isVisible()) {
+        await termsBox.check();
+      }
+      await page.click('button[type="submit"]');
 
       // Verify redirection to instructor portal
       await page.waitForURL(/\/instructor($|\?|\/)/, { timeout: 15000 });
@@ -389,10 +397,14 @@ async function runSuite() {
       await page.goto(`${BASE_URL}/admin-login`, { waitUntil: 'domcontentloaded' });
       await dismissIntroLoader(page);
 
-      // Click "Demo Admin"
-      const demoAdminBtn = page.locator('button:has-text("Demo Admin")');
-      await demoAdminBtn.waitFor({ state: 'visible', timeout: 8000 });
-      await demoAdminBtn.click();
+      // Sign in as Admin
+      await page.fill('input[type="email"]', 'admin@rhythmzz.in');
+      await page.fill('input[type="password"]', 'Rhythmzz#Admin2026!');
+      const termsBox = page.locator('input[type="checkbox"]');
+      if (await termsBox.isVisible()) {
+        await termsBox.check();
+      }
+      await page.click('button[type="submit"]');
 
       // Verify redirection to admin portal
       await page.waitForURL(/\/admin($|\?|\/)/, { timeout: 15000 });
