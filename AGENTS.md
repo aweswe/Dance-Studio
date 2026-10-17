@@ -445,24 +445,30 @@ erDiagram
    * Linked permanently in the footer under "About Us".
    * Adheres strictly to design system standards: 44px minimum touch targets (`h-11 min-h-[44px]`), concentric `rounded-md` radius, and high-contrast typography with zero AI slop.
 
+7. **Mandatory Parents' Information Architecture for Student Profiles**:
+   * **Student Portal Profile (`/student/profile`)**:
+     - Hardened `ProfileForm` to mandate Parent / Guardian Full Name (`parentName`), Parent / Guardian 10-digit Mobile Phone (`parentPhone`), and Relationship to Student (`parentRelationship`) before profile updates can be saved.
+     - Sectioned with an explicit high-contrast **"Parents / Guardian Information [MANDATORY]"** card explaining the safety, emergency contact, and official receipt policy.
+     - Integrated interactive quick-select relationship chips (`Mother`, `Father`, `Guardian`) with custom write-in fallback.
+   * **Dashboard Integrity & Incomplete Notice**:
+     - On the Student Dashboard (`/student`), if parent details are incomplete, a high-priority action banner is rendered directing students to complete their safety records.
+   * **Admin Student Management Parity (`/admin/students/[id]`)**:
+     - Displays parent/guardian name, relationship, and parent phone with one-tap phone call and WhatsApp triggers.
+     - Enables editing of parent information inside `StudentActions` and capture during walk-in enrolments in `AddStudentModal`.
+   * **Multi-Layer Data Persistence**:
+     - Integrated `parseParentInfo` and `serializeParentInfo` (`src/lib/students/parent-info.ts`), persisting parent details via JSON in `display_name`, Supabase Auth `user_metadata`, and dedicated database columns with automatic fallback handling.
+   * **Validation & Test Suite**:
+     - Added strict validation in `profileSchema` (`src/lib/validators/profile.ts`).
+     - Added 4 unit tests in `src/lib/validators/validators.test.ts` (17 tests total passing).
+     - Added automated Playwright E2E verification in `scripts/playwright-full-suite.ts` (35/35 passing).
+
 ---
 
 ## 4. Verification, Testing & Quality Audit Checklist
 
-* [x] **Vitest Unit & Integration Tests**: 5 test suites, 42 tests, **100% passing**.
-  - `src/lib/utils/csv.test.ts` (5 tests)
-  - `src/lib/fees/ledger.test.ts` (11 tests)
-  - `src/lib/rate-limit.test.ts` (7 tests)
-  - `src/lib/products.test.ts` (6 tests)
-  - `src/lib/validators/validators.test.ts` (13 tests)
-* [x] **TypeScript Strict Typing**: `npx tsc --noEmit` returns **0 errors**.
-* [x] **Spotlight Labels**: Card 1 `Choreography Sessions`, Card 2 `Workshops`, Card 3 `Advanced Intensive Training`.
-* [x] **Admin Gallery Size Banner**: Displaying `1920 × 1080 px` / `1080 × 1080 px` guidance.
-* [x] **Universal Gallery Deletion & Drag Reordering**: DB uploads and studio archive items can be deleted and reordered via mouse drag.
-* [x] **Student Count**: 3,000+ students used across all pages.
-* [x] **Nav Dropdown**: "Certification-Based Classes" label active.
-* [x] **Storefront Mode**: Admin toggle between "Coming Soon" and "Live", with nav badge and homepage dynamic rendering.
-* [x] **International Guest Trainers**: Live at `/guest-trainers`, linked in footer, authentic local images, reduced editorial bios.
+* [x] **Vitest Unit & Integration Tests**: 6 test suites, 53 tests, **100% passing**.
+* [x] **Playwright E2E & Concurrency Suite**: 35/35 tests, **100% passing**.
+* [x] **Production Bundle**: `npm run build` compiled cleanly with 0 type errors across all 43 routes.
 
 
 

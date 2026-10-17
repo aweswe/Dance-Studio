@@ -113,18 +113,43 @@ export async function createStudent(data: CreateStudentData & { name: string; ph
     programmeId = batch.programme_id;
   }
 
-  const { data: inserted, error } = await supabase
+  const { serializeParentInfo } = await import('@/lib/students/parent-info');
+  const serializedParent = d.parentName
+    ? serializeParentInfo(d.parentName, d.parentPhone || '', d.parentRelationship || 'Parent')
+    : null;
+
+  const insertPayload: Record<string, any> = {
+    name: d.name,
+    phone: d.phone,
+    email: d.email || null,
+    programme_id: programmeId,
+    batch_id: d.batchId ?? null,
+    status: d.status,
+    ...(serializedParent ? { display_name: serializedParent } : {}),
+  };
+
+  let { data: inserted, error } = await supabase
     .from('students')
     .insert({
-      name: d.name,
-      phone: d.phone,
-      email: d.email || null,
-      programme_id: programmeId,
-      batch_id: d.batchId ?? null,
-      status: d.status,
-    })
+      ...insertPayload,
+      ...(d.parentName ? {
+        parent_name: d.parentName,
+        parent_phone: d.parentPhone || null,
+        parent_relationship: d.parentRelationship || 'Parent',
+      } : {}),
+    } as any)
     .select('id')
     .single();
+
+  if (error) {
+    const { data: retryData, error: retryError } = await supabase
+      .from('students')
+      .insert(insertPayload as any)
+      .select('id')
+      .single();
+    inserted = retryData;
+    error = retryError;
+  }
 
   if (error) {
     return { success: false, error: error.message };
@@ -231,6 +256,12 @@ export async function updateStudent(studentId: string, data: UpdateStudentData) 
     .single();
 
   const normalizedPhone = d.phone ? normalizeIndianPhone(d.phone) : null;
+  const normalizedParentPhone = d.parentPhone ? normalizeIndianPhone(d.parentPhone) : null;
+
+  const { serializeParentInfo } = await import('@/lib/students/parent-info');
+  const serializedParent = d.parentName !== undefined
+    ? serializeParentInfo(d.parentName, normalizedParentPhone || '', d.parentRelationship || 'Parent')
+    : undefined;
 
   const payload: Record<string, unknown> = {
     name: d.name,
@@ -238,13 +269,29 @@ export async function updateStudent(studentId: string, data: UpdateStudentData) 
     status: d.status,
     programme_id: programmeId,
     batch_id: d.batchId ?? null,
+    ...(serializedParent !== undefined ? { display_name: serializedParent } : {}),
   };
   if (d.email !== undefined) payload.email = d.email || null;
 
-  const { error } = await supabase
+  let { error } = await supabase
     .from('students')
-    .update(payload as any)
+    .update({
+      ...payload,
+      ...(d.parentName !== undefined ? {
+        parent_name: d.parentName,
+        parent_phone: normalizedParentPhone,
+        parent_relationship: d.parentRelationship,
+      } : {}),
+    } as any)
     .eq('id', studentId);
+
+  if (error) {
+    const { error: retryError } = await supabase
+      .from('students')
+      .update(payload as any)
+      .eq('id', studentId);
+    error = retryError;
+  }
   if (error) return { success: false, error: error.message };
 
   const admin = createAdminSupabase();

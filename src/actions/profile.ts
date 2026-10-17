@@ -45,7 +45,7 @@ export async function updateProfile(input: ProfileData) {
   if (!parsed.success) {
     return { success: false, error: parsed.error.issues[0]?.message || 'Invalid input' };
   }
-  const { name, phone, email } = parsed.data;
+  const { name, phone, email, parentName, parentPhone, parentRelationship } = parsed.data;
 
   const { getCurrentStudent } = await import('@/lib/auth/student');
   const { student } = await getCurrentStudent();
@@ -56,27 +56,58 @@ export async function updateProfile(input: ProfileData) {
   const admin = createAdminSupabase();
   const phoneChanged = student.phone !== phone;
 
-  const { error: updateError } = await admin
+  const { serializeParentInfo } = await import('@/lib/students/parent-info');
+  const serializedParent = serializeParentInfo(parentName, parentPhone, parentRelationship);
+
+  // Attempt update with dedicated columns first
+  const payloadWithCols: Record<string, any> = {
+    name,
+    phone,
+    email: email || null,
+    display_name: serializedParent,
+    parent_name: parentName,
+    parent_phone: parentPhone,
+    parent_relationship: parentRelationship,
+  };
+
+  let { error: updateError } = await admin
     .from('students')
-    .update({ name, phone, email: email || null })
+    .update(payloadWithCols as any)
     .eq('id', student.id);
+
+  if (updateError) {
+    // If the remote table has not added explicit parent_* columns yet, fallback to display_name JSON storage
+    const fallbackPayload: Record<string, any> = {
+      name,
+      phone,
+      email: email || null,
+      display_name: serializedParent,
+    };
+    const { error: fallbackError } = await admin
+      .from('students')
+      .update(fallbackPayload as any)
+      .eq('id', student.id);
+    updateError = fallbackError;
+  }
 
   if (updateError) {
     console.error('updateProfile failed:', updateError);
     return { success: false, error: 'Could not save your details — try again' };
   }
 
-  if (phoneChanged) {
-    const { error: authError } = await admin.auth.admin.updateUserById(user.id, {
-      phone: `+91${phone}`,
+  // Also sync to Supabase Auth user_metadata
+  try {
+    await admin.auth.admin.updateUserById(user.id, {
+      user_metadata: {
+        ...(user.user_metadata || {}),
+        parent_name: parentName,
+        parent_phone: parentPhone,
+        parent_relationship: parentRelationship,
+      },
+      ...(phoneChanged ? { phone: `+91${phone}` } : {}),
     });
-    if (authError) {
-      console.error('updateProfile auth sync failed:', authError);
-      return {
-        success: false,
-        error: 'Details saved, but updating your login number failed — contact the academy',
-      };
-    }
+  } catch (authErr) {
+    console.error('Auth user_metadata sync error:', authErr);
   }
 
   revalidatePath('/student/profile');

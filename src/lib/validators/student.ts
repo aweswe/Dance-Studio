@@ -11,6 +11,9 @@ export const updateStudentSchema = z.object({
   programmeId: z.string().uuid("Select a programme").nullable().optional(),
   batchId: z.string().uuid("Select a batch").nullable().optional(),
   status: z.enum(["active", "inactive"]).default("active"),
+  parentName: z.string().optional(),
+  parentPhone: optionalIndianPhoneSchema,
+  parentRelationship: z.string().optional(),
 });
 
 export type UpdateStudentData = z.infer<typeof updateStudentSchema>;
@@ -27,6 +30,9 @@ export const createStudentSchema = z.object({
   batchId: z.string().uuid("Select a batch").nullable().optional(),
   status: z.enum(["active", "inactive"]).default("active"),
   enablePortal: z.boolean().optional(),
+  parentName: z.string().optional(),
+  parentPhone: optionalIndianPhoneSchema,
+  parentRelationship: z.string().optional(),
 });
 
 export type CreateStudentData = z.infer<typeof createStudentSchema>;

@@ -138,9 +138,15 @@ CREATE TABLE IF NOT EXISTS students (
     join_date DATE DEFAULT CURRENT_DATE,
     profile_photo_url TEXT,
     display_name TEXT,
+    parent_name TEXT,
+    parent_phone TEXT,
+    parent_relationship TEXT,
     created_at TIMESTAMPTZ DEFAULT now(),
     updated_at TIMESTAMPTZ DEFAULT now()
 );
+ALTER TABLE students ADD COLUMN IF NOT EXISTS parent_name TEXT;
+ALTER TABLE students ADD COLUMN IF NOT EXISTS parent_phone TEXT;
+ALTER TABLE students ADD COLUMN IF NOT EXISTS parent_relationship TEXT;
 COMMENT ON TABLE students IS 'Student profiles and enrollment details';
 
 -- Trigger for auto-generating student_id_display

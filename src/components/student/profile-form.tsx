@@ -5,6 +5,8 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { updateProfile, uploadProfilePhoto } from "@/actions/profile";
+import { Users, ShieldCheck, AlertCircle } from "lucide-react";
+import { cn } from "@/lib/utils/cn";
 
 interface ProfileFormProps {
   initial: {
@@ -12,6 +14,9 @@ interface ProfileFormProps {
     phone: string;
     email: string;
     photoUrl?: string | null;
+    parentName?: string;
+    parentPhone?: string;
+    parentRelationship?: string;
   };
 }
 
@@ -20,26 +25,68 @@ export function ProfileForm({ initial }: ProfileFormProps) {
   const [phone, setPhone] = useState(initial.phone);
   const [email, setEmail] = useState(initial.email);
   const [photoUrl, setPhotoUrl] = useState(initial.photoUrl || "");
+  const [parentName, setParentName] = useState(initial.parentName || "");
+  const [parentPhone, setParentPhone] = useState(initial.parentPhone || "");
+  const [parentRelationship, setParentRelationship] = useState(initial.parentRelationship || "Mother");
+
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [busy, setBusy] = useState(false);
   const [feedback, setFeedback] = useState<{ ok: boolean; text: string } | null>(null);
 
+  const validate = () => {
+    const errs: Record<string, string> = {};
+    if (!name.trim() || name.trim().length < 2) {
+      errs.name = "Student name must be at least 2 characters";
+    }
+    const cleanPhone = phone.replace(/\D/g, "");
+    if (!/^[6-9]\d{9}$/.test(cleanPhone)) {
+      errs.phone = "Enter a valid 10-digit mobile number (starts with 6-9)";
+    }
+    if (!parentName.trim() || parentName.trim().length < 2) {
+      errs.parentName = "Parent or guardian name is mandatory";
+    }
+    const cleanParentPhone = parentPhone.replace(/\D/g, "");
+    if (!/^[6-9]\d{9}$/.test(cleanParentPhone)) {
+      errs.parentPhone = "Valid 10-digit parent phone number is mandatory (starts with 6-9)";
+    }
+    if (!parentRelationship.trim()) {
+      errs.parentRelationship = "Relationship to student is mandatory";
+    }
+    setErrors(errs);
+    return Object.keys(errs).length === 0;
+  };
+
   const save = async () => {
+    if (!validate()) {
+      setFeedback({ ok: false, text: "Please complete all mandatory fields marked with an asterisk (*)." });
+      return;
+    }
+
     setBusy(true);
     setFeedback(null);
-    const result = await updateProfile({ name, phone, email });
+    const result = await updateProfile({
+      name: name.trim(),
+      phone: phone.replace(/\D/g, ""),
+      email: email.trim(),
+      parentName: parentName.trim(),
+      parentPhone: parentPhone.replace(/\D/g, ""),
+      parentRelationship: parentRelationship.trim(),
+    });
+
     setFeedback(
       result.success
-        ? { ok: true, text: "Profile updated." }
+        ? { ok: true, text: "Profile and parents' information successfully updated." }
         : { ok: false, text: result.error || "Could not save — try again" },
     );
     setBusy(false);
   };
 
   return (
-    <Card className="p-6 md:p-8 max-w-xl">
-      <div className="space-y-5">
+    <Card className="p-6 md:p-8 max-w-xl shadow-xs border-2 border-line">
+      <div className="space-y-6">
+        {/* Photo Upload */}
         <div className="flex items-center gap-4">
-          <div className="w-16 h-16 rounded-full overflow-hidden bg-canvas-muted border border-line flex items-center justify-center text-lg font-display">
+          <div className="w-16 h-16 rounded-full overflow-hidden bg-canvas-muted border border-line flex items-center justify-center text-lg font-display text-ink">
             {photoUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img src={photoUrl} alt="" className="w-full h-full object-cover" />
@@ -47,7 +94,7 @@ export function ProfileForm({ initial }: ProfileFormProps) {
               name.charAt(0) || "?"
             )}
           </div>
-          <label className="text-xs font-semibold uppercase tracking-wider text-bl cursor-pointer">
+          <label className="text-xs font-semibold uppercase tracking-wider text-bl hover:underline cursor-pointer">
             Change photo
             <input
               type="file"
@@ -71,48 +118,164 @@ export function ProfileForm({ initial }: ProfileFormProps) {
             />
           </label>
         </div>
-        <Input
-          id="profile-name"
-          label="Full Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Your name"
-        />
 
-        <div>
+        {/* Student Personal Information */}
+        <div className="space-y-4">
           <Input
-            id="profile-phone"
-            label="Phone Number"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value.replace(/\D/g, "").slice(0, 10))}
-            placeholder="10-digit mobile number"
-            inputMode="numeric"
+            id="profile-name"
+            label="Student Full Name *"
+            value={name}
+            onChange={(e) => {
+              setName(e.target.value);
+              if (errors.name) setErrors((prev) => ({ ...prev, name: '' }));
+            }}
+            placeholder="Student's full name"
+            error={errors.name}
+            required
           />
-          <p className="text-xs text-ink-2 mt-1.5">
-            Changing your number also updates your login — use the new number next time you sign in.
-          </p>
+
+          <div>
+            <Input
+              id="profile-phone"
+              label="Student Phone Number *"
+              value={phone}
+              onChange={(e) => {
+                setPhone(e.target.value.replace(/\D/g, "").slice(0, 10));
+                if (errors.phone) setErrors((prev) => ({ ...prev, phone: '' }));
+              }}
+              placeholder="10-digit mobile number"
+              inputMode="numeric"
+              error={errors.phone}
+              required
+            />
+            <p className="text-xs text-ink-2 mt-1.5">
+              Primary mobile number used for student dashboard sign in.
+            </p>
+          </div>
+
+          <Input
+            id="profile-email"
+            label="Email Address (optional)"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="you@example.com"
+          />
         </div>
 
-        <Input
-          id="profile-email"
-          label="Email (optional)"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="you@example.com"
-        />
+        {/* ═══════════════════════════════════════════════════════════════════
+            MANDATORY PARENT / GUARDIAN INFORMATION SECTION
+        ═══════════════════════════════════════════════════════════════════ */}
+        <div className="p-4 sm:p-5 rounded-md border-2 border-line bg-canvas/40 space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Users size={16} className="text-bl shrink-0" />
+              <h3 className="font-anton text-base uppercase tracking-wide text-ink">
+                Parents / Guardian Information
+              </h3>
+            </div>
+            <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-amber-500/15 text-amber-500 border border-amber-500/30">
+              Mandatory
+            </span>
+          </div>
+          <p className="text-xs text-ink-2 leading-relaxed">
+            Mandatory for academy safety, emergency contacts, fee receipts, and official studio notices.
+          </p>
+
+          <Input
+            id="profile-parent-name"
+            label="Parent / Guardian Full Name *"
+            value={parentName}
+            onChange={(e) => {
+              setParentName(e.target.value);
+              if (errors.parentName) setErrors((prev) => ({ ...prev, parentName: '' }));
+            }}
+            placeholder="e.g. Rajesh Sharma"
+            error={errors.parentName}
+            required
+          />
+
+          <div>
+            <Input
+              id="profile-parent-phone"
+              label="Parent / Guardian Mobile Phone *"
+              value={parentPhone}
+              onChange={(e) => {
+                setParentPhone(e.target.value.replace(/\D/g, "").slice(0, 10));
+                if (errors.parentPhone) setErrors((prev) => ({ ...prev, parentPhone: '' }));
+              }}
+              placeholder="10-digit mobile number"
+              inputMode="numeric"
+              error={errors.parentPhone}
+              required
+            />
+            <p className="text-[11px] text-ink-3 mt-1">
+              Emergency contact and recipient of official WhatsApp fee receipts.
+            </p>
+          </div>
+
+          <div>
+            <label className="text-xs font-medium text-ink-2 mb-1.5 block">
+              Relationship to Student *
+            </label>
+            <div className="flex flex-wrap items-center gap-2 mb-2">
+              {['Mother', 'Father', 'Guardian'].map((rel) => {
+                const isSelected = parentRelationship.toLowerCase() === rel.toLowerCase();
+                return (
+                  <button
+                    key={rel}
+                    type="button"
+                    onClick={() => {
+                      setParentRelationship(rel);
+                      if (errors.parentRelationship) setErrors((prev) => ({ ...prev, parentRelationship: '' }));
+                    }}
+                    className={cn(
+                      "px-3 py-1.5 rounded-md text-xs font-semibold uppercase tracking-wider transition-colors cursor-pointer",
+                      isSelected
+                        ? "bg-bl text-slate-950 font-bold shadow-2xs"
+                        : "bg-surface border border-line text-ink hover:border-ink/40"
+                    )}
+                  >
+                    {rel}
+                  </button>
+                );
+              })}
+            </div>
+            <Input
+              id="profile-parent-relationship"
+              value={parentRelationship}
+              onChange={(e) => {
+                setParentRelationship(e.target.value);
+                if (errors.parentRelationship) setErrors((prev) => ({ ...prev, parentRelationship: '' }));
+              }}
+              placeholder="Or specify (e.g. Aunt, Grandparent)"
+              error={errors.parentRelationship}
+              required
+            />
+          </div>
+        </div>
 
         <Button
           onClick={save}
           disabled={busy}
           isLoading={busy}
-          className="px-8"
+          className="w-full sm:w-auto px-8"
         >
           {busy ? "Saving…" : "Save Changes"}
         </Button>
 
         {feedback && (
-          <p className={`text-sm ${feedback.ok ? "text-green-ink" : "text-danger"}`}>{feedback.text}</p>
+          <div
+            className={cn(
+              "p-3 rounded-md text-xs sm:text-sm font-medium flex items-center gap-2 border",
+              feedback.ok
+                ? "bg-green-500/10 border-green-500/20 text-green-ink"
+                : "bg-danger/10 border-danger/20 text-danger"
+            )}
+          >
+            {feedback.ok ? <ShieldCheck size={16} /> : <AlertCircle size={16} />}
+            <span>{feedback.text}</span>
+          </div>
         )}
       </div>
     </Card>

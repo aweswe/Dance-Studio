@@ -275,6 +275,20 @@ async function runSuite() {
       await page.goto(`${BASE_URL}/student/leave`, { waitUntil: 'domcontentloaded' });
       await page.waitForSelector('body', { timeout: 8000 });
       logPass('Student Portal', 'Student Leave Request management loaded (/student/leave)', tLeave);
+
+      // Verify Student Profile page & mandatory parent/guardian fields
+      const tProfile = Date.now();
+      await page.goto(`${BASE_URL}/student/profile`, { waitUntil: 'domcontentloaded' });
+      await page.waitForSelector('#profile-parent-name', { timeout: 8000 });
+      const parentNameInput = page.locator('#profile-parent-name');
+      const parentPhoneInput = page.locator('#profile-parent-phone');
+      const isParentNameReq = await parentNameInput.getAttribute('required');
+      const isParentPhoneReq = await parentPhoneInput.getAttribute('required');
+      if (isParentNameReq !== null && isParentPhoneReq !== null) {
+        logPass('Student Portal', 'Student Profile renders mandatory parent/guardian information fields (/student/profile)', tProfile);
+      } else {
+        throw new Error('Parent name or phone input missing required attribute on profile form');
+      }
     } catch (err) {
       logFail('Student Portal', 'Student authentication and portal navigation', t0, err);
     } finally {

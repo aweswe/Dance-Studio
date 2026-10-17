@@ -30,6 +30,9 @@ interface StudentActionsProps {
     status: string
     batch_id: string | null
     auth_id: string | null
+    parentName?: string
+    parentPhone?: string
+    parentRelationship?: string
   }
   batches: BatchOption[]
 }
@@ -45,6 +48,9 @@ export function StudentActions({ student, batches }: StudentActionsProps) {
   const [phone, setPhone] = useState(student.phone ?? '')
   const [email, setEmail] = useState(student.email ?? '')
   const [batchId, setBatchId] = useState(student.batch_id ?? '')
+  const [parentName, setParentName] = useState(student.parentName ?? '')
+  const [parentPhone, setParentPhone] = useState(student.parentPhone ?? '')
+  const [parentRelationship, setParentRelationship] = useState(student.parentRelationship ?? 'Parent')
 
   // Deactivate confirmation
   const [isConfirmOpen, setIsConfirmOpen] = useState(false)
@@ -79,6 +85,9 @@ export function StudentActions({ student, batches }: StudentActionsProps) {
         email,
         batchId: batchId || null,
         status: student.status as 'active' | 'inactive',
+        parentName,
+        parentPhone,
+        parentRelationship,
       })
       if (res.success) setIsEditOpen(false)
       return res
@@ -177,6 +186,38 @@ export function StudentActions({ student, batches }: StudentActionsProps) {
               }))}
             />
           </div>
+
+          <div className="p-3.5 bg-canvas-muted/60 rounded-md border border-line space-y-3">
+            <span className="text-[11px] font-mono uppercase tracking-wider text-bl font-bold block">
+              Parent / Guardian Details
+            </span>
+            <div>
+              <label className="block text-xs text-ink-2 mb-1">Parent / Guardian Full Name</label>
+              <Input
+                value={parentName}
+                onChange={(e) => setParentName(e.target.value)}
+                placeholder="e.g. Rajesh Sharma"
+              />
+            </div>
+            <div>
+              <label className="block text-xs text-ink-2 mb-1">Parent Phone (10 digits)</label>
+              <Input
+                value={parentPhone}
+                onChange={(e) => setParentPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
+                placeholder="e.g. 9876543210"
+                inputMode="numeric"
+              />
+            </div>
+            <div>
+              <label className="block text-xs text-ink-2 mb-1">Relationship to Student</label>
+              <Input
+                value={parentRelationship}
+                onChange={(e) => setParentRelationship(e.target.value)}
+                placeholder="e.g. Mother, Father, Guardian"
+              />
+            </div>
+          </div>
+
           <div className="flex gap-3 pt-2">
             <Button onClick={saveEdit} disabled={busy}>
               {busy ? 'Saving...' : 'Save Changes'}

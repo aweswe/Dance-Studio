@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { logOfflinePaymentSchema } from './fees';
 import { updateStudentSchema } from './student';
 import { enrolFormSchema } from './enrol';
+import { profileSchema } from './profile';
 import { enrolHref, parseEnrolIntent } from '@/lib/utils/constants';
 
 const UUID = 'a1b2c3d4-4001-4000-8000-000000000001';
@@ -99,3 +100,37 @@ describe('enrolHref', () => {
     expect(enrolHref()).toBe('/enrol');
   });
 });
+
+describe('profileSchema (mandatory parents information)', () => {
+  const valid = {
+    name: 'Aarav Sharma',
+    phone: '9052980859',
+    email: 'aarav@example.com',
+    parentName: 'Rajesh Sharma',
+    parentPhone: '9876543210',
+    parentRelationship: 'Father',
+  };
+
+  it('accepts complete profile with student and parent details', () => {
+    expect(profileSchema.safeParse(valid).success).toBe(true);
+  });
+
+  it('rejects profile when parentName is missing or too short', () => {
+    expect(profileSchema.safeParse({ ...valid, parentName: '' }).success).toBe(false);
+    expect(profileSchema.safeParse({ ...valid, parentName: 'R' }).success).toBe(false);
+    expect(profileSchema.safeParse({ ...valid, parentName: undefined }).success).toBe(false);
+  });
+
+  it('rejects profile when parentPhone is missing or invalid Indian number', () => {
+    expect(profileSchema.safeParse({ ...valid, parentPhone: '' }).success).toBe(false);
+    expect(profileSchema.safeParse({ ...valid, parentPhone: '12345' }).success).toBe(false);
+    expect(profileSchema.safeParse({ ...valid, parentPhone: '5052980859' }).success).toBe(false);
+    expect(profileSchema.safeParse({ ...valid, parentPhone: undefined }).success).toBe(false);
+  });
+
+  it('rejects profile when parentRelationship is missing', () => {
+    expect(profileSchema.safeParse({ ...valid, parentRelationship: '' }).success).toBe(false);
+    expect(profileSchema.safeParse({ ...valid, parentRelationship: undefined }).success).toBe(false);
+  });
+});
+

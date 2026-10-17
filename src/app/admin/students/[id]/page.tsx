@@ -1,12 +1,13 @@
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { ArrowLeft, Phone, Mail, Calendar, MessageCircle } from 'lucide-react'
+import { ArrowLeft, Phone, Mail, Calendar, MessageCircle, Users } from 'lucide-react'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { createServerSupabase } from '@/lib/supabase/server'
 import { StudentActions } from '@/components/admin/student-actions'
 import { KuchipudiAdmin } from '@/components/admin/kuchipudi-admin'
 import { formatDate, formatCurrency, formatTime, telLink, formatPhone } from '@/lib/utils/format'
+import { parseParentInfo } from '@/lib/students/parent-info'
 
 export default async function StudentDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -16,7 +17,7 @@ export default async function StudentDetailPage({ params }: { params: Promise<{ 
   const { data: studentData } = await supabase
     .from('students')
     .select(`
-      id, name, phone, email, status, join_date, student_id_display, batch_id, auth_id,
+      id, name, phone, email, status, join_date, student_id_display, batch_id, auth_id, display_name,
       programme:programmes(name, slug),
       batch:batches(name, days, time_start, time_end, programme:programmes(name))
     `)
@@ -25,6 +26,7 @@ export default async function StudentDetailPage({ params }: { params: Promise<{ 
 
   if (!studentData) notFound()
   const student = studentData as any
+  const parentInfo = parseParentInfo(student)
 
   // Kuchipudi students get inline module marking. Instructors mark the same
   // progress from their roster for students in their own batches.
@@ -118,6 +120,50 @@ export default async function StudentDetailPage({ params }: { params: Promise<{ 
                 <p className="text-xs text-ink-2">Join Date</p>
               </div>
             </div>
+            {/* Parent / Guardian Information */}
+            <div className="pt-3 border-t border-line-subtle space-y-3">
+              <span className="text-[11px] font-mono uppercase tracking-wider text-bl font-bold block">
+                Parent / Guardian Information
+              </span>
+              <div className="flex items-start gap-3 text-sm">
+                <Users size={16} className="text-ink-2 mt-0.5 shrink-0" />
+                <div>
+                  <p className="font-medium text-ink">
+                    {parentInfo.parentName || 'Not recorded'}
+                    {parentInfo.parentRelationship && ` (${parentInfo.parentRelationship})`}
+                  </p>
+                  <p className="text-xs text-ink-2">Parent / Guardian</p>
+                </div>
+              </div>
+
+              {parentInfo.parentPhone && (
+                <div className="flex items-start gap-3 text-sm">
+                  <Phone size={16} className="text-ink-2 mt-0.5 shrink-0" />
+                  <div>
+                    <p className="font-medium text-ink flex items-center gap-2">
+                      {formatPhone(parentInfo.parentPhone)}
+                      <a
+                        href={telLink(parentInfo.parentPhone)}
+                        className="p-1 rounded text-ink-2 hover:text-bl hover:bg-line-subtle transition-colors focus-visible:focus-ring active:scale-[0.98]"
+                        aria-label="Call parent"
+                      >
+                        <Phone size={13} />
+                      </a>
+                      <a
+                        href={`https://wa.me/91${String(parentInfo.parentPhone).replace(/\D/g, '').replace(/^91/, '')}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="p-1 rounded text-ink-2 hover:text-green hover:bg-line-subtle transition-colors focus-visible:focus-ring active:scale-[0.98]"
+                        aria-label="WhatsApp parent"
+                      >
+                        <MessageCircle size={13} />
+                      </a>
+                    </p>
+                    <p className="text-xs text-ink-2">Parent Phone / Emergency</p>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
 
           <StudentActions
@@ -129,6 +175,9 @@ export default async function StudentDetailPage({ params }: { params: Promise<{ 
               status: student.status,
               batch_id: student.batch_id,
               auth_id: student.auth_id,
+              parentName: parentInfo.parentName,
+              parentPhone: parentInfo.parentPhone,
+              parentRelationship: parentInfo.parentRelationship,
             }}
             batches={(batches ?? []) as any[]}
           />

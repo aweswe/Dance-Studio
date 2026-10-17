@@ -28,6 +28,9 @@ export function AddStudentModal({
     name: '',
     phone: '',
     email: '',
+    parentName: '',
+    parentPhone: '',
+    parentRelationship: 'Parent',
     programmeId: '',
     batchId: '',
     status: 'active' as 'active' | 'inactive',
@@ -43,6 +46,9 @@ export function AddStudentModal({
       name: form.name,
       phone: form.phone,
       email: form.email,
+      parentName: form.parentName,
+      parentPhone: form.parentPhone,
+      parentRelationship: form.parentRelationship,
       programmeId: form.programmeId || null,
       batchId: form.batchId || null,
       status: form.status,
@@ -56,7 +62,18 @@ export function AddStudentModal({
           ? 'Student enrolled and portal access enabled'
           : 'Student enrolled',
       })
-      setForm({ name: '', phone: '', email: '', programmeId: '', batchId: '', status: 'active', enablePortal: false })
+      setForm({
+        name: '',
+        phone: '',
+        email: '',
+        parentName: '',
+        parentPhone: '',
+        parentRelationship: 'Parent',
+        programmeId: '',
+        batchId: '',
+        status: 'active',
+        enablePortal: false,
+      })
       router.refresh()
       // Keep the modal open for rapid consecutive walk-ins; show confirmation inside.
     } else {
@@ -96,6 +113,37 @@ export function AddStudentModal({
               onChange={(e) => set({ email: e.target.value })}
               placeholder="student@example.com"
             />
+          </div>
+
+          <div className="p-3.5 bg-canvas-muted/60 rounded-md border border-line space-y-3">
+            <span className="text-[11px] font-mono uppercase tracking-wider text-bl font-bold block">
+              Parent / Guardian Details
+            </span>
+            <div>
+              <label className="block text-xs text-ink-2 mb-1">Parent / Guardian Full Name</label>
+              <Input
+                value={form.parentName}
+                onChange={(e) => set({ parentName: e.target.value })}
+                placeholder="e.g. Rajesh Sharma"
+              />
+            </div>
+            <div>
+              <label className="block text-xs text-ink-2 mb-1">Parent Phone (10 digits)</label>
+              <Input
+                value={form.parentPhone}
+                onChange={(e) => set({ parentPhone: e.target.value.replace(/\D/g, '').slice(0, 10) })}
+                placeholder="e.g. 9876543210"
+                inputMode="numeric"
+              />
+            </div>
+            <div>
+              <label className="block text-xs text-ink-2 mb-1">Relationship</label>
+              <Input
+                value={form.parentRelationship}
+                onChange={(e) => set({ parentRelationship: e.target.value })}
+                placeholder="e.g. Mother, Father, Guardian"
+              />
+            </div>
           </div>
           <div>
             <label className="block text-sm text-ink-2 mb-1">Programme</label>

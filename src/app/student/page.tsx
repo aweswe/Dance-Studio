@@ -7,6 +7,8 @@ import { MetricStrip } from "@/components/ui/metric-strip";
 import Link from "next/link";
 import { isDue, monthlyAmount } from "@/lib/fees/ledger";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { parseParentInfo } from "@/lib/students/parent-info";
+import { Users } from "lucide-react";
 
 export const metadata = {
   title: "Student Dashboard | Rhythmzz Academy",
@@ -29,9 +31,11 @@ function nextClassLabel(days: string[] | undefined, now: Date) {
 
 export default async function StudentDashboardPage() {
   const supabase = await createServerSupabase();
-  const { student } = await getCurrentStudent();
+  const { student, user } = await getCurrentStudent();
 
   if (!student) redirect(ROUTES.login);
+
+  const parentInfo = parseParentInfo(student, user);
 
   const { data: attendanceSummary } = await (supabase as any)
     .rpc("get_student_attendance_summary", { p_student_id: student.id });
@@ -79,6 +83,28 @@ export default async function StudentDashboardPage() {
   return (
     <div className="space-y-8">
       <PageHeader label={dateLabel} title={studentFirstName} description={description} />
+
+      {!parentInfo.hasParentInfo && (
+        <div className="p-4 rounded-md border-2 border-amber-500/40 bg-amber-500/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xs">
+          <div className="flex items-start sm:items-center gap-3">
+            <div className="p-2 rounded-full bg-amber-500/20 text-amber-500 shrink-0">
+              <Users size={18} />
+            </div>
+            <div>
+              <h4 className="text-sm font-bold text-ink">Action Required: Parents' Information Missing</h4>
+              <p className="text-xs text-ink-2 mt-0.5">
+                Academy safety policies require parent/guardian contact details for all active student profiles.
+              </p>
+            </div>
+          </div>
+          <Link
+            href={`${ROUTES.student}/profile`}
+            className="shrink-0 px-4 py-2 rounded-md bg-amber-500 text-slate-950 font-bold text-xs uppercase tracking-wider hover:bg-amber-400 transition-colors"
+          >
+            Complete Profile
+          </Link>
+        </div>
+      )}
 
       {hasEnrolledBatch && !feePaid && (
         <Card className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
