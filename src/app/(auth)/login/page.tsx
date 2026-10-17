@@ -39,6 +39,7 @@ function LoginForm() {
   const [oauthLoading, setOauthLoading] = useState(false);
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [agreedTerms, setAgreedTerms] = useState(false);
+  const [redirecting, setRedirecting] = useState(false);
   const [isDemoLoading, startDemoTransition] = useTransition();
 
   useEffect(() => {
@@ -64,6 +65,20 @@ function LoginForm() {
       // If user is authenticated but has no phone registered, mandatory phone step is required
       if ((!student || !student.phone) && !cancelled) {
         setStep("phone_prompt");
+        return;
+      }
+
+      // User is fully onboarded — look up their role and auto-redirect
+      if (!cancelled && student?.phone) {
+        const { data: userProfile } = await supabase
+          .from("users")
+          .select("role")
+          .eq("id", data.user.id)
+          .maybeSingle();
+        const role = userProfile?.role || "student";
+        const dest = role === "admin" ? "/admin" : role === "instructor" ? "/instructor" : "/student";
+        setRedirecting(true);
+        router.replace(dest);
       }
     }
 
@@ -214,7 +229,12 @@ function LoginForm() {
         </>
       }
     >
-      {currentUser && step !== "phone_prompt" ? (
+      {redirecting ? (
+        <div className="text-center space-y-4 py-4">
+          <Loader2 size={28} className="animate-spin mx-auto text-bl" />
+          <p className="text-sm text-ink-2">Redirecting to your portal…</p>
+        </div>
+      ) : currentUser && step !== "phone_prompt" ? (
         <div className="text-center space-y-4">
           <div className="w-11 h-11 rounded-full bg-canvas-muted border border-line text-ink flex items-center justify-center mx-auto font-semibold">
             {currentUser.email?.charAt(0).toUpperCase() || "S"}

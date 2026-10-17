@@ -7,9 +7,15 @@ import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Modal } from '@/components/ui/modal'
 import { ConfirmModal } from '@/components/ui/confirm-modal'
-import { Plus, Mail, Phone, Trash2 } from 'lucide-react'
+import { Plus, Mail, Phone, Trash2, Copy, Link2, MessageCircle, CheckCircle2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { createInstructor, linkInstructorAuth, deleteInstructor } from '@/actions/instructors'
+
+const PORTAL_URL = 'https://rhythmzzdance.com/login'
+
+function buildWhatsAppInvite(name: string) {
+  return `Hi ${name}! 👋 Welcome to *Rhythmzz Academy of Dance*!\n\nYou have been onboarded as an instructor on our portal. You can access your assigned classes, daily attendance, and schedule here:\n\n🔗 ${PORTAL_URL}\n\nSign in with your registered email. If you have any questions, feel free to contact the academy administration. 🎶`
+}
 
 export function InstructorManager({ initialInstructors }: { initialInstructors: any[] }) {
   const router = useRouter()
@@ -17,6 +23,8 @@ export function InstructorManager({ initialInstructors }: { initialInstructors: 
   const [busy, setBusy] = useState(false)
   const [feedback, setFeedback] = useState<{ ok: boolean; text: string } | null>(null)
   const [pendingDelete, setPendingDelete] = useState<any | null>(null)
+  const [inviteInfo, setInviteInfo] = useState<{ name: string; phone?: string } | null>(null)
+  const [copied, setCopied] = useState(false)
 
   const [form, setForm] = useState({
     name: '',
@@ -41,13 +49,30 @@ export function InstructorManager({ initialInstructors }: { initialInstructors: 
     })
     setBusy(false)
     if (res.success) {
-      setFeedback({ ok: true, text: 'Instructor added' })
       setIsOpen(false)
+      setInviteInfo({ name: form.name, phone: form.phone })
       setForm({ name: '', role: '', bio: '', certifications: '', email: '', phone: '' })
       router.refresh()
     } else {
       setFeedback({ ok: false, text: res.error ?? 'Could not add instructor' })
     }
+  }
+
+  const copyInvite = async () => {
+    if (!inviteInfo) return
+    await navigator.clipboard.writeText(buildWhatsAppInvite(inviteInfo.name))
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2500)
+  }
+
+  const sendWhatsApp = () => {
+    if (!inviteInfo) return
+    const msg = buildWhatsAppInvite(inviteInfo.name)
+    const phone = inviteInfo.phone?.replace(/[^0-9]/g, '')
+    const url = phone
+      ? `https://wa.me/91${phone}?text=${encodeURIComponent(msg)}`
+      : `https://wa.me/?text=${encodeURIComponent(msg)}`
+    window.open(url, '_blank', 'noopener,noreferrer')
   }
 
   const confirmDelete = async () => {
@@ -78,6 +103,50 @@ export function InstructorManager({ initialInstructors }: { initialInstructors: 
 
       {feedback && (
         <p className={`text-sm ${feedback.ok ? 'text-green-ink' : 'text-danger'}`}>{feedback.text}</p>
+      )}
+
+      {/* WhatsApp Invite Panel — shown after successful instructor creation */}
+      {inviteInfo && (
+        <div className="rounded-xl border-2 border-green/40 bg-green/5 p-4 space-y-3">
+          <div className="flex items-start gap-2">
+            <CheckCircle2 size={16} className="text-green mt-0.5 shrink-0" />
+            <div>
+              <p className="text-sm font-bold text-ink">{inviteInfo.name} added successfully!</p>
+              <p className="text-xs text-ink-2 mt-0.5">Send the portal invite to this instructor via WhatsApp.</p>
+            </div>
+          </div>
+          <div className="bg-canvas-muted border border-line rounded-lg p-3 text-xs text-ink-2 whitespace-pre-line leading-relaxed font-mono">
+            {buildWhatsAppInvite(inviteInfo.name)}
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={copyInvite}
+              className="inline-flex items-center gap-1.5 text-xs font-bold bg-surface border border-line-strong rounded-md px-3 py-2 hover:bg-canvas-muted transition-colors"
+            >
+              {copied ? <CheckCircle2 size={13} className="text-green" /> : <Copy size={13} />}
+              {copied ? 'Copied!' : 'Copy Message'}
+            </button>
+            <button
+              type="button"
+              onClick={sendWhatsApp}
+              className="inline-flex items-center gap-1.5 text-xs font-bold bg-green text-white rounded-md px-3 py-2 hover:bg-green/90 transition-colors"
+            >
+              <MessageCircle size={13} />
+              {inviteInfo.phone ? `Send to ${inviteInfo.phone}` : 'Send on WhatsApp'}
+            </button>
+            <button
+              type="button"
+              onClick={() => setInviteInfo(null)}
+              className="inline-flex items-center gap-1.5 text-xs text-ink-3 hover:text-ink px-2 py-2 transition-colors"
+            >
+              Dismiss
+            </button>
+          </div>
+          <p className="text-[10px] text-ink-3 flex items-center gap-1">
+            <Link2 size={10} /> Portal URL: {PORTAL_URL}
+          </p>
+        </div>
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
