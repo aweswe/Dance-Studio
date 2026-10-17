@@ -290,10 +290,6 @@ function LoginForm() {
                   <Link href="/terms#student-portal" target="_blank" className="text-bl font-semibold underline hover:text-ink">
                     Student Policy
                   </Link>
-                  ,{" "}
-                  <Link href="/instructor-terms" target="_blank" className="text-bl font-semibold underline hover:text-ink">
-                    Instructor Policy
-                  </Link>
                   , and{" "}
                   <Link href="/terms#studio-rules" target="_blank" className="text-bl font-semibold underline hover:text-ink">
                     Studio Policy
