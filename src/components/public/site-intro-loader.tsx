@@ -21,19 +21,19 @@ export function SiteIntroLoader() {
     // Kick off the progress bar fill on the next tick
     const progressTimer = setTimeout(() => {
       setProgress(100);
-    }, 50);
+    }, 40);
 
-    // Exactly 1.5 seconds: begin the smooth fade-out exit
+    // Exactly 1.9 seconds: begin the smooth fade-out exit
     const exitTimer = setTimeout(() => {
       setIsExiting(true);
       document.body.style.overflow = originalOverflow;
-    }, 1500);
+    }, 1900);
 
-    // Allow 600ms exit transition to complete before unmounting from DOM
+    // Allow 600ms exit transition to complete before unmounting from DOM (2.5s total)
     const unmountTimer = setTimeout(() => {
       hasPlayedIntroSession = true;
       setIsMounted(false);
-    }, 2100);
+    }, 2500);
 
     return () => {
       clearTimeout(progressTimer);
@@ -44,12 +44,15 @@ export function SiteIntroLoader() {
   }, []);
 
   const handleSkip = () => {
+    try {
+      sessionStorage.setItem('rhythmzz_intro_seen', '1');
+    } catch {}
     setIsExiting(true);
     document.body.style.overflow = '';
     setTimeout(() => {
       hasPlayedIntroSession = true;
       setIsMounted(false);
-    }, 300);
+    }, 200);
   };
 
   if (!hasPlayedIntroSession && !isMounted) return null;
@@ -112,10 +115,10 @@ export function SiteIntroLoader() {
           <span className="w-1 bg-bl rounded-full animate-pulse h-3" style={{ animationDelay: '200ms' }} />
         </div>
 
-        {/* 2-Second Calibrated Progress Track */}
+        {/* 1.9-Second Calibrated Progress Track */}
         <div className="w-48 sm:w-56 h-1 bg-white/10 rounded-full overflow-hidden relative mt-2 shadow-inner">
           <div
-            className="h-full bg-gradient-to-r from-bl/70 via-bl to-bl-light rounded-full transition-all duration-[1500ms] ease-[cubic-bezier(0.2,0,0.1,1)] shadow-[0_0_12px_#2BB4D8]"
+            className="h-full bg-gradient-to-r from-bl/70 via-bl to-bl-light rounded-full transition-all duration-[1900ms] ease-[cubic-bezier(0.2,0,0.1,1)] shadow-[0_0_12px_#2BB4D8]"
             style={{ width: `${progress}%` }}
           />
         </div>

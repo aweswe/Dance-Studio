@@ -122,7 +122,7 @@ function ReelCard({
         className={cn(
           'group relative aspect-[9/16] overflow-hidden bg-black border border-line hover:border-bl transition-all duration-300 focus-visible:outline-2 focus-visible:outline-bl shadow-xs hover:shadow-md',
           'shrink-0 snap-start w-[200px] sm:w-[240px]',
-          'lg:flex-1 lg:basis-0 lg:min-w-0 lg:w-auto lg:max-w-none lg:snap-align-none',
+          'lg:w-[calc((100%-5*1rem)/6)] lg:min-w-[180px] lg:max-w-[260px] lg:flex-1 lg:basis-0 lg:snap-align-none',
           homepageMediaRadius,
         )}
       >
@@ -148,7 +148,7 @@ function ReelCard({
         <div className="absolute top-2.5 left-2.5 right-2.5 flex items-center justify-between z-10 pointer-events-none">
           <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-black/60 backdrop-blur-xs text-white text-[10px] font-bold tracking-wider uppercase border border-white/10 group-hover:border-bl/50 transition-colors">
             <InstagramIcon className="w-3 h-3 text-[#E1306C]" />
-            <span>Reel</span>
+            <span>{reel.isPlaceholder ? 'Studio Reel' : 'Reel'}</span>
           </span>
           <span className="p-1 rounded-md bg-black/50 text-white/70 group-hover:text-white transition-colors">
             <ExternalLink className="w-3 h-3" />
@@ -184,7 +184,7 @@ function ReelCard({
         className={cn(
           'group relative aspect-[9/16] overflow-hidden bg-black border border-line hover:border-bl transition-all duration-300 shadow-xs hover:shadow-md',
           'shrink-0 snap-start w-[220px] sm:w-[260px]',
-          'lg:flex-1 lg:basis-0 lg:min-w-0 lg:w-auto lg:max-w-none lg:snap-align-none',
+          'lg:w-[calc((100%-5*1rem)/6)] lg:min-w-[180px] lg:max-w-[260px] lg:flex-1 lg:basis-0 lg:snap-align-none',
           homepageMediaRadius,
         )}
       >
@@ -221,7 +221,7 @@ function ReelCard({
       className={cn(
         'group relative aspect-[9/16] overflow-hidden bg-black border border-line hover:border-bl transition-all duration-300 focus-visible:outline-2 focus-visible:outline-bl shadow-xs hover:shadow-md hover:-translate-y-1',
         'shrink-0 snap-start w-[200px] sm:w-[240px]',
-        'lg:flex-1 lg:basis-0 lg:min-w-0 lg:w-auto lg:max-w-none lg:snap-align-none',
+        'lg:w-[calc((100%-5*1rem)/6)] lg:min-w-[180px] lg:max-w-[260px] lg:flex-1 lg:basis-0 lg:snap-align-none',
         homepageMediaRadius,
       )}
     >
@@ -235,7 +235,7 @@ function ReelCard({
       <div className="absolute top-3 left-3 right-3 flex items-center justify-between z-10 pointer-events-none">
         <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-black/60 backdrop-blur-xs text-white text-[10px] font-bold tracking-wider uppercase border border-white/10 group-hover:border-bl/50 transition-colors">
           <InstagramIcon className="w-3 h-3 text-[#E1306C]" />
-          <span>Reel</span>
+          <span>{reel.isPlaceholder ? 'Studio Reel' : 'Reel'}</span>
         </span>
         <ExternalLink className="w-3.5 h-3.5 text-white/60 group-hover:text-white transition-colors" />
       </div>
@@ -292,7 +292,7 @@ export function ReelsStrip({ reels }: { reels: PublicReel[] }) {
             >
               @rhythmzzdance.live
             </Link>
-            <div className="flex items-center gap-0.5 lg:hidden">
+            <div className="flex items-center gap-0.5">
               <button
                 type="button"
                 onClick={() => scrollBy(-1)}
@@ -317,7 +317,7 @@ export function ReelsStrip({ reels }: { reels: PublicReel[] }) {
           ref={trackRef}
           className={cn(
             'flex w-full overflow-x-auto snap-x snap-mandatory scroll-px-0 [scroll-padding-inline:0] overscroll-x-contain no-scrollbar pb-2',
-            'lg:min-w-0 lg:overflow-x-clip lg:snap-none lg:pb-0',
+            'lg:min-w-0 lg:overflow-x-auto lg:snap-x lg:justify-start lg:pb-0',
             sectionGap,
           )}
         >

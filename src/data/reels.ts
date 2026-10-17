@@ -6,10 +6,11 @@ export interface PublicReel {
   title: string;
   videoSrc: string;
   href: string;
+  isPlaceholder?: boolean;
 }
 
 /** Static fallback when DB is empty or Supabase is not configured. */
-const FALLBACK_REELS: PublicReel[] = [
+export const FALLBACK_REELS: PublicReel[] = [
   { id: 'r1', title: 'VIP walk — Divya choreo', videoSrc: '/reels/r1.mp4', href: ACADEMY.socials.instagram },
   { id: 'r2', title: 'Maahi — studio routine', videoSrc: '/reels/r2.mp4', href: ACADEMY.socials.instagram },
   { id: 'r3', title: 'Maha Shivratri — classical offering', videoSrc: '/reels/r3.mp4', href: ACADEMY.socials.instagram },
@@ -17,6 +18,35 @@ const FALLBACK_REELS: PublicReel[] = [
   { id: 'r5', title: 'Freestyle popping', videoSrc: '/reels/r5.mp4', href: ACADEMY.socials.instagram },
   { id: 'r6', title: 'Lights, camera, naach! — bol mitthi with swag', videoSrc: '/reels/r6.mp4', href: ACADEMY.socials.instagram },
 ];
+
+/**
+ * Ensures the homepage reel strip always maintains exactly 6 reels:
+ * - 0 reels in DB: Returns 6 default studio fallback reels.
+ * - 1 reel uploaded: Returns 1 uploaded reel + 5 placeholders (total 6 reels).
+ * - 2 reels uploaded: Returns 2 uploaded reels + 4 placeholders (total 6 reels).
+ * - 3-5 reels uploaded: Supplements remaining slots with placeholders up to 6 reels.
+ * - 6+ reels uploaded: Displays 6 uploaded reels with 0 placeholders.
+ */
+export function populateReelPlaceholders(
+  uploadedReels: PublicReel[],
+  fallbackReels: PublicReel[] = FALLBACK_REELS
+): PublicReel[] {
+  const uploadedCount = uploadedReels.length;
+  if (uploadedCount === 0) return fallbackReels.slice(0, 6);
+
+  const neededPlaceholders = Math.max(0, 6 - uploadedCount);
+
+  if (neededPlaceholders > 0) {
+    const placeholders: PublicReel[] = fallbackReels.slice(0, neededPlaceholders).map((fb, i) => ({
+      ...fb,
+      id: `placeholder-${fb.id}-${i}`,
+      isPlaceholder: true,
+    }));
+    return [...uploadedReels, ...placeholders];
+  }
+
+  return uploadedReels.slice(0, 6);
+}
 
 export async function getHomepageReels(limit = 6): Promise<PublicReel[]> {
   const supabase = getPublicSupabase();
@@ -32,7 +62,7 @@ export async function getHomepageReels(limit = 6): Promise<PublicReel[]> {
 
     if (error || !data?.length) return FALLBACK_REELS;
 
-    return data.map((row, idx) => {
+    const uploadedReels: PublicReel[] = data.map((row, idx) => {
       let videoSrc = row.video_url;
       // Safeguard: Never stream raw MP4s from Supabase Storage CDN to prevent quota breach
       if (videoSrc && videoSrc.includes('supabase.co/storage/v1/object/public/reels/')) {
@@ -45,6 +75,8 @@ export async function getHomepageReels(limit = 6): Promise<PublicReel[]> {
         href: row.href || ACADEMY.socials.instagram,
       };
     });
+
+    return populateReelPlaceholders(uploadedReels);
   } catch {
     return FALLBACK_REELS;
   }

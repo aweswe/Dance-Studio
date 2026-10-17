@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { ShieldCheck, Lock, ArrowRight } from 'lucide-react';
 import { BrandLogo } from '@/components/shared/brand-logo';
 import { HomepageSection } from '@/components/public/homepage-section';
 import { ROUTES, ACADEMY } from '@/lib/utils/constants';
@@ -177,40 +176,6 @@ export function Footer() {
               { href: ROUTES.enrol, label: 'Enrol & pay' },
             ]}
           />
-        </div>
-
-        {/* ═══════════════════════════════════════════════════════════════════════
-            ADMIN & STAFF LOGIN PANEL
-        ═══════════════════════════════════════════════════════════════════════ */}
-        <div className="my-6 p-4 sm:p-5 rounded-lg border border-white/10 bg-white/[0.03] backdrop-blur-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-md bg-white/10 border border-white/15 flex items-center justify-center text-bl shrink-0">
-              <ShieldCheck className="w-5 h-5" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="font-anton text-sm sm:text-base tracking-wide text-white uppercase">
-                  Admin &amp; Staff Portal
-                </span>
-                <span className="px-1.5 py-0.5 rounded text-[9px] font-mono uppercase font-bold tracking-wider bg-bl/15 text-bl border border-bl/30">
-                  Authorized Personnel
-                </span>
-              </div>
-              <p className="text-[11px] text-white/60 mt-0.5">
-                Restricted portal for Rhythmzz Academy instructors, studio operations, and administrative leadership.
-              </p>
-            </div>
-          </div>
-          <div className="flex items-center gap-2.5 w-full sm:w-auto shrink-0">
-            <Link
-              href={ROUTES.adminLogin}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 rounded-md bg-bl text-blk hover:bg-bl/90 text-xs font-bold uppercase tracking-wider transition-all duration-200 shadow-sm"
-            >
-              <Lock className="w-3.5 h-3.5" />
-              <span>Admin Login</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
-          </div>
         </div>
 
         {/* ═══════════════════════════════════════════════════════════════════════
