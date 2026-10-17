@@ -523,7 +523,7 @@ function computeProgrammeFee(
                   {selectedProgramme.name}
                 </h4>
                 <p className="text-xs text-slate-700 font-medium capitalize mt-0.5">
-                  {plan === 'zumba' ? 'Zumba (2 Days/Week)' : plan === 'yoga' ? 'Yoga (1 Day/Week)' : `${plan.replace('-', ' ')} Plan`} · {selectedProgramme.age_group || 'All levels'}
+                  {plan === 'zumba' ? 'Zumba (2 Days/Week)' : plan === 'yoga' ? 'Yoga (1 Day/Week)' : `${plan.replace('-', ' ')} Plan`} · {selectedProgramme.age_group === '5' ? '5+' : (selectedProgramme.age_group || 'All levels')}
                 </p>
               </div>
               {isPay && (
@@ -566,7 +566,7 @@ function computeProgrammeFee(
                     )}
                   >
                     <p className={cn("text-xs font-bold leading-tight", isSelected ? "text-white" : "text-slate-950")}>{p.name}</p>
-                    <p className={cn("text-[10px] mt-0.5", isSelected ? "text-slate-300" : "text-slate-600 font-medium")}>{p.age_group || 'Ask the desk'}</p>
+                    <p className={cn("text-[10px] mt-0.5", isSelected ? "text-slate-300" : "text-slate-600 font-medium")}>{p.age_group === '5' ? '5+' : (p.age_group || 'Ask the desk')}</p>
                     {isPay && (
                       <p className={cn("text-[11px] font-mono font-bold mt-2", isSelected ? "text-[#FDE68A]" : "text-slate-950")}>{formatCurrency(p.fees_monthly)}</p>
                     )}
@@ -641,9 +641,10 @@ function computeProgrammeFee(
           />
           <Input
             type="tel"
-            placeholder="Mobile number (WhatsApp)"
+            placeholder="Mobile number (WhatsApp) *"
             error={errors.phone}
             value={phone}
+            required
             onChange={(e) => {
               setPhone(e.target.value);
               if (errors.phone) setErrors((prev) => ({ ...prev, phone: '' }));

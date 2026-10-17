@@ -14,6 +14,7 @@ export function mergeProgrammeWithDefaults(row: Record<string, unknown>): Progra
     styles_highlight: (row.styles_highlight as string[] | undefined) ?? fallback.styles_highlight,
     batches_info: (row.batches_info as ProgrammeItem['batches_info']) ?? fallback.batches_info,
     description: (row.description as string) || fallback.description,
+    age_group: (row.age_group === '5' ? '5+' : (row.age_group as string | undefined)) ?? fallback.age_group,
     includes: (row.includes as string[] | undefined)?.length
       ? (row.includes as string[])
       : fallback.includes,

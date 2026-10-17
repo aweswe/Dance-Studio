@@ -17,7 +17,7 @@ export default async function StudentLayout({
   if (!user) {
     redirect(ROUTES.login);
   }
-  if (!student) {
+  if (!student || !student.phone) {
     redirect(`${ROUTES.login}?step=phone`);
   }
 

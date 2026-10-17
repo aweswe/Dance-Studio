@@ -111,8 +111,32 @@ async function runSuite() {
       } else {
         throw new Error('Confirmed plan details missing from page text');
       }
+
+      // Verify Gymnastics programme displays "5+" and mandatory phone field
+      const changeBtn = page.locator('button:has-text("Change")');
+      if (await changeBtn.isVisible()) {
+        await changeBtn.click();
+      }
+      await page.waitForSelector('text=Gymnastic', { timeout: 6000 });
+      const pageTextFull = await page.textContent('body');
+      const hasGymnastic = pageTextFull?.includes('Gymnastic');
+      const has5Plus = pageTextFull?.includes('5+');
+      if (hasGymnastic && has5Plus) {
+        logPass('Enrolment Flow', 'Gymnastics age group displays standardized "5+" (UI bug resolved)', t0);
+      } else {
+        throw new Error('Gymnastics age "5+" not found on enrolment selector');
+      }
+
+      // Verify Mobile number input is marked required with asterisk
+      const phoneInput = page.locator('input[placeholder*="Mobile number (WhatsApp) *"]');
+      const isPhoneRequired = await phoneInput.getAttribute('required');
+      if (isPhoneRequired !== null) {
+        logPass('Enrolment Flow', 'Mobile number (WhatsApp) * is strictly mandatory and required on enrolment form', t0);
+      } else {
+        throw new Error('Mobile number input missing required attribute');
+      }
     } catch (err) {
-      logFail('Enrolment Flow', 'Deep-linked Confirmed Plan Card', t0, err);
+      logFail('Enrolment Flow', 'Enrolment form validations (Gymnastics 5+ & required phone)', t0, err);
     } finally {
       await context.close();
     }
@@ -212,6 +236,29 @@ async function runSuite() {
       logPass('Student Portal', 'Student Leave Request management loaded (/student/leave)', tLeave);
     } catch (err) {
       logFail('Student Portal', 'Student authentication and portal navigation', t0, err);
+    } finally {
+      await context.close();
+    }
+  }
+
+  // 4.1.2 Mandatory Phone Signup Prompt (/login?step=phone)
+  {
+    const t0 = Date.now();
+    const context = await browser.newContext();
+    const page = await context.newPage();
+    try {
+      await page.goto(`${BASE_URL}/login?step=phone`, { waitUntil: 'domcontentloaded' });
+      await dismissIntroLoader(page);
+      await page.waitForSelector('text=Mobile Number Required', { timeout: 8000 });
+      const phoneInput = page.locator('input[type="tel"]');
+      const isRequired = await phoneInput.getAttribute('required');
+      if (isRequired !== null) {
+        logPass('Student Auth', 'Mandatory Phone Signup Prompt renders with required mobile input (/login?step=phone)', t0);
+      } else {
+        throw new Error('Mandatory mobile input missing required attribute on phone prompt');
+      }
+    } catch (err) {
+      logFail('Student Auth', 'Mandatory Phone Signup Prompt', t0, err);
     } finally {
       await context.close();
     }
