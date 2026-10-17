@@ -96,6 +96,7 @@ export const ROUTES = {
   blogPost: (slug: string) => `/blog/${slug}`,
   contact: "/contact",
   events: "/events",
+  eventsAchievements: "/events-achievements",
   annualDay: "/events/annual-day",
   syllabus: "/syllabus",
   syllabusKuchipudi: "/syllabus/kuchipudi",

@@ -22,6 +22,20 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: '/events-acheivements',
+        destination: '/events-achievements',
+        permanent: true,
+      },
+      {
+        source: '/events-and-achievements',
+        destination: '/events-achievements',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

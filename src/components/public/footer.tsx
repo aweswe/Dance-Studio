@@ -115,6 +115,7 @@ export function Footer() {
             links={[
               { href: ROUTES.about, label: 'Who we are' },
               { href: `${ROUTES.about}#founders`, label: 'Founders & Team' },
+              { href: ROUTES.eventsAchievements, label: 'Events & Achievements' },
               { href: ROUTES.guestTrainers, label: 'International Guest Trainers' },
               { href: '/teach-with-us', label: 'Teach with us' },
               { href: ROUTES.contact, label: 'Contacts' },
