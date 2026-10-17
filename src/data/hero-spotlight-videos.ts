@@ -14,7 +14,7 @@ export const HERO_SPOTLIGHT_VIDEOS = [
   },
   {
     id: 'spotlight-3',
-    label: 'Advanced Intensive Training',
+    label: 'Advanced Intensive Trainings',
     poster: '/images/canada-workshop-poster.jpg',
     src: '/videos/spotlight-3.mp4',
   },
