@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import Image from 'next/image';
 import { Volume2, VolumeX } from 'lucide-react';
 import { HERO_SPOTLIGHT_VIDEOS } from '@/data/hero-spotlight-videos';
@@ -24,12 +24,39 @@ function SpotlightCard({
   }
   const hasVideo = Boolean(src?.trim()) && !failed;
 
+  const tryPlay = useCallback(() => {
+    const el = videoRef.current;
+    if (!el || !hasVideo) return;
+    el.defaultMuted = true;
+    el.muted = muted;
+    const p = el.play();
+    if (p !== undefined) {
+      p.catch(() => {});
+    }
+  }, [hasVideo, muted]);
+
   useEffect(() => {
     const el = videoRef.current;
     if (!el || !hasVideo) return;
-    el.muted = true;
-    el.play().catch(() => {});
-  }, [hasVideo, src]);
+
+    tryPlay();
+
+    // Auto-play when scrolled into viewport; pause when out
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            tryPlay();
+          } else {
+            el.pause();
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [hasVideo, src, tryPlay]);
 
   const toggleMute = () => {
     const el = videoRef.current;
@@ -37,7 +64,20 @@ function SpotlightCard({
     const next = !muted;
     setMuted(next);
     el.muted = next;
-    if (!next) el.play().catch(() => {});
+    if (!next) {
+      el.play().catch(() => {});
+    }
+  };
+
+  const handleTimeUpdate = () => {
+    const el = videoRef.current;
+    if (!el || !el.duration) return;
+    // Safety: if video is longer than 31s (e.g. cached older video), skip last 3.2s; otherwise loop seamlessly 0.25s before end
+    const cutoff = el.duration > 31 ? el.duration - 3.2 : el.duration - 0.25;
+    if (el.currentTime >= cutoff) {
+      el.currentTime = 0;
+      el.play().catch(() => {});
+    }
   };
 
   return (
@@ -54,6 +94,10 @@ function SpotlightCard({
           preload="auto"
           disablePictureInPicture
           controls={false}
+          onLoadedMetadata={tryPlay}
+          onCanPlay={tryPlay}
+          onEnded={tryPlay}
+          onTimeUpdate={handleTimeUpdate}
           onError={() => setFailed(true)}
         >
           <source src={src} type="video/mp4" />
