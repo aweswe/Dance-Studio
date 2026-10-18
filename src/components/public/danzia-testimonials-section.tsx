@@ -7,6 +7,7 @@ import { homepageCardRadius, homepageFilterPill } from '@/lib/ui/homepage-cta';
 import { sectionGap, sectionPad } from '@/lib/ui/section-layout';
 import { ACADEMY } from '@/lib/utils/constants';
 import { cn } from '@/lib/utils/cn';
+import { GOOGLE_REVIEWS_DATA } from '@/data/testimonials';
 
 function GoogleMark({ className }: { className?: string }) {
   return (
@@ -41,55 +42,63 @@ interface DanziaTestimonial {
   highlight: string;
 }
 
-const TESTIMONIALS: DanziaTestimonial[] = [
-  {
-    id: 'pooja',
-    quote:
-      'Nitish doesn’t let you hide at the back. I came from AS Rao Nagar twice a week and my isolations finally look like isolations.',
-    author: 'Pooja Reddy',
-    role: 'Adults Dance · AS Rao Nagar',
-    category: 'student',
-    image: '/images/class-1.jpg',
-    highlight: 'Technique',
-  },
-  {
-    id: 'suresh',
-    quote:
-      'Our daughter was seven and would not talk in class. By the recital she pulled the other kids into the formation. We live in Sainikpuri — the drive is nothing.',
-    author: 'Suresh & Deepa',
-    role: 'Parents · Kids Dance · Sainikpuri',
-    category: 'parent',
-    image: '/images/class-2.jpg',
-    highlight: 'Confidence',
-  },
-  {
-    id: 'ananya',
-    quote:
-      'Srusti will stop the class for a hasta. That is why I stayed. Friday 6:30, every week.',
-    author: 'Ananya Sharma',
-    role: 'Kuchipudi Classical · Malkajgiri',
-    category: 'student',
-    image: '/images/kuchipudi/kuchipudi-traditional-standing.jpg',
-    highlight: 'Classical',
-  },
+const REVIEW_FALLBACK_IMAGES = [
+  '/images/class-1.jpg',
+  '/images/class-2.jpg',
+  '/images/urban-hero.jpg',
+  '/images/kuchipudi/kuchipudi-traditional-standing.jpg',
+  '/images/studio-rental/studio-1.jpg',
+  '/images/studio-training/studio-training-01.jpg',
 ];
+
+const TESTIMONIALS: DanziaTestimonial[] = GOOGLE_REVIEWS_DATA.map((item, idx) => ({
+  id: `rev-${idx}`,
+  quote: item.quote,
+  author: item.name,
+  role: item.programme,
+  category: item.category,
+  image: REVIEW_FALLBACK_IMAGES[idx % REVIEW_FALLBACK_IMAGES.length],
+  highlight: item.highlight,
+}));
 
 export function DanziaTestimonialsSection({
   quotes,
 }: {
-  quotes?: { name?: string; quote?: string; programme?: string }[];
+  quotes?: {
+    name?: string;
+    quote?: string;
+    programme?: string;
+    category?: 'parent' | 'student';
+    highlight?: string;
+  }[];
 }) {
   const mapped: DanziaTestimonial[] =
     quotes && quotes.length > 0
-      ? quotes.map((q, i) => ({
-          id: `q-${i}`,
-          quote: q.quote || '',
-          author: q.name || 'Rhythmzz family',
-          role: q.programme || 'Secunderabad',
-          category: (q.programme || '').toLowerCase().includes('kid') ? 'parent' : 'student',
-          image: TESTIMONIALS[i % TESTIMONIALS.length].image,
-          highlight: q.programme || 'Studio',
-        }))
+      ? quotes.map((q, i) => {
+          const cat =
+            q.category ||
+            ((q.programme || '').toLowerCase().includes('kid') ||
+            (q.programme || '').toLowerCase().includes('parent')
+              ? 'parent'
+              : 'student');
+          return {
+            id: `q-${i}`,
+            quote: q.quote || '',
+            author: q.name || 'Rhythmzz family',
+            role: q.programme || 'Secunderabad',
+            category: cat,
+            image: REVIEW_FALLBACK_IMAGES[i % REVIEW_FALLBACK_IMAGES.length],
+            highlight:
+              q.highlight ||
+              (cat === 'parent'
+                ? 'Kids Dance'
+                : (q.programme || '').toLowerCase().includes('classical')
+                ? 'Classical'
+                : (q.programme || '').toLowerCase().includes('fitness')
+                ? 'Fitness'
+                : 'Adults Dance'),
+          };
+        })
       : TESTIMONIALS;
 
   const [filter, setFilter] = useState<'all' | 'parent' | 'student'>('all');
@@ -126,7 +135,7 @@ export function DanziaTestimonialsSection({
                 </span>
               </h2>
               <p className="mt-2.5 text-sm text-ink-2 leading-relaxed">
-                Google has 480 of these. Here are three we hear in the parking lot.
+                Over 150+ verified Google Reviews from our dancers, parents, and studio community.
               </p>
             </header>
 
@@ -207,7 +216,7 @@ export function DanziaTestimonialsSection({
 
               <div className="flex items-center gap-2">
                 <span className="text-xs font-mono text-ink-2 mr-1">
-                  0{activeIndex + 1} / 0{filteredList.length}
+                  {String(activeIndex + 1).padStart(2, '0')} / {String(filteredList.length).padStart(2, '0')}
                 </span>
                 <button
                   onClick={prev}
