@@ -143,8 +143,8 @@ export function Footer() {
             links={[
               { href: ROUTES.adminLogin, label: 'Admin & Staff Login' },
               { href: ROUTES.privacy, label: 'Privacy policy' },
-              { href: ROUTES.terms, label: 'Student & Studio Terms' },
-              { href: ROUTES.refund, label: 'Refund policy' },
+              { href: ROUTES.terms, label: 'Terms & conditions' },
+              { href: ROUTES.refund, label: 'Refund & return policy' },
               { href: ROUTES.shipping, label: 'Shipping & delivery' },
             ]}
           />
