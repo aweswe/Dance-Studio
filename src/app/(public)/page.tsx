@@ -25,7 +25,6 @@ import { ReelsStrip } from '@/components/public/reels-strip';
 import {
   ReelsStripSkeleton,
   HomepageEcomSkeleton,
-  DanziaTestimonialsSkeleton,
   FAQSectionSkeleton,
 } from '@/components/public/homepage-skeletons';
 import { DEFAULT_STATS, getHomepageContentBundle } from '@/data/content';
@@ -53,15 +52,7 @@ async function AsyncEcomSection() {
   return <HomepageEcomSection mode={contentBundle.storefrontMode} products={products} />;
 }
 
-/** Async Streamed Section: Student & Parent Testimonials (Lazy Loaded) */
-async function AsyncTestimonialsSection() {
-  const content = await getHomepageContentBundle();
-  return (
-    <DanziaTestimonialsSection
-      quotes={Array.isArray(content.testimonials) ? content.testimonials : []}
-    />
-  );
-}
+
 
 /** Async Streamed Section: Frequently Asked Questions (Lazy Loaded) */
 async function AsyncFAQSection() {
@@ -92,10 +83,8 @@ export default async function HomePage(props: {
       <DanziaGallerySection />
       <HomepageAboutSection stats={DEFAULT_STATS} />
 
-      {/* ── LAZY-LOADED BELOW-THE-FOLD SECTIONS WITH MATCHING SKELETONS ── */}
-      <Suspense fallback={<DanziaTestimonialsSkeleton />}>
-        <AsyncTestimonialsSection />
-      </Suspense>
+      {/* ── EMBEDDED TESTIMONIALS: 100% PURE NEXT.JS (ZERO BACKEND / DB) ── */}
+      <DanziaTestimonialsSection />
 
       <CorporateCollaborationsStrip />
 

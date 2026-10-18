@@ -71,7 +71,7 @@ export function DanziaTestimonialsSection({
     category?: 'parent' | 'student';
     highlight?: string;
   }[];
-}) {
+} = {}) {
   const mapped: DanziaTestimonial[] =
     quotes && quotes.length > 0
       ? quotes.map((q, i) => {
