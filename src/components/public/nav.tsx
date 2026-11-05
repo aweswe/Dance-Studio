@@ -45,7 +45,7 @@ type NavLink = { name: string; href: string; hint?: string };
 const PRIMARY_LINKS: NavLink[] = [
   { name: 'Programmes', href: ROUTES.programmes },
   { name: 'Schedule', href: ROUTES.schedule },
-  { name: 'Gear', href: ROUTES.gear },
+  // { name: 'Gear', href: ROUTES.gear },
   { name: 'Studio Rental', href: ROUTES.studioRental },
   { name: 'Contact', href: ROUTES.contact },
 ];
@@ -74,7 +74,7 @@ const DISCOVER_GROUPS: { label: string; links: NavLink[] }[] = [
     links: [
       { name: 'Pricing & Plans', href: ROUTES.pricing, hint: 'Transparent studio tuition' },
       { name: 'About', href: ROUTES.about, hint: 'Our story & team' },
-      { name: 'Gear Store', href: ROUTES.gear, hint: 'Official studio dancewear' },
+      // { name: 'Gear Store', href: ROUTES.gear, hint: 'Official studio dancewear' },
       { name: 'Gallery', href: ROUTES.gallery, hint: 'Stage & studio archive' },
       { name: 'Blog', href: ROUTES.blog, hint: 'News & stories' },
     ],
@@ -98,7 +98,7 @@ const MOBILE_SECTIONS: { id: string; title: string; links: NavLink[] }[] = [
     id: 'studio',
     title: 'Studio & Contact',
     links: [
-      { name: 'Rhythmzz Gear', href: ROUTES.gear, hint: 'Wear the brand' },
+      // { name: 'Rhythmzz Gear', href: ROUTES.gear, hint: 'Wear the brand' },
       { name: 'Studio Rental', href: ROUTES.studioRental, hint: 'Book the space' },
       { name: 'Schedule', href: ROUTES.schedule, hint: 'Weekly timetable' },
       { name: 'Contact', href: ROUTES.contact, hint: 'Visit or call us' },
