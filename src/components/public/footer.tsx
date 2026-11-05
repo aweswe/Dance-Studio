@@ -153,7 +153,7 @@ export function Footer() {
             title="Services"
             links={[
               { href: ROUTES.pricing, label: 'Pricing & Plans' },
-              { href: ROUTES.gear, label: 'Rhythmzz Gear' },
+              // { href: ROUTES.gear, label: 'Rhythmzz Gear' },
               { href: ROUTES.schedule, label: 'Schedule' },
               { href: ROUTES.studioRental, label: 'Studio Rental' },
               { href: ROUTES.programmes, label: 'Programmes' },

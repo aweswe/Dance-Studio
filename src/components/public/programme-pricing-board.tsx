@@ -1410,7 +1410,7 @@ function ProgrammePricingBoardInner({ initialProgramme }: { initialProgramme?: s
 
       {/* ── FOOTER DISCLAIMER ── */}
       <p className="text-xs text-neutral-600 font-medium text-center mt-8 pb-2 leading-relaxed">
-        Fees due by 7th of each month. · No-questions-asked 7-day refund on your first plan · All prices include studio access · Gear available separately
+        Fees due by 7th of each month. · No-questions-asked 7-day refund on your first plan · All prices include studio access{/* · Gear available separately */}
       </p>
 
       {/* ── REAL INTERACTIVE WAITLIST MODAL ── */}
