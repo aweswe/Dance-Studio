@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
+import { redirect } from 'next/navigation';
 import { SITE_URL, ACADEMY } from '@/lib/utils/constants';
-import { getProducts } from '@/data/products';
-import { getStorefrontStatus } from '@/actions/products';
-import { GearStorefront } from '@/components/public/gear-storefront';
-import { StructuredData } from '@/components/shared/structured-data';
+// import { getProducts } from '@/data/products';
+// import { getStorefrontStatus } from '@/actions/products';
+// import { GearStorefront } from '@/components/public/gear-storefront';
+// import { StructuredData } from '@/components/shared/structured-data';
 
 export const metadata: Metadata = {
   title: 'Rhythmzz Gear — Wear The Brand | Official Dancewear & Merch',
@@ -22,6 +23,8 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic';
 
 export default async function GearPage() {
+  redirect('/');
+  /*
   const [products, storefrontMode] = await Promise.all([
     getProducts(),
     getStorefrontStatus(),
@@ -33,4 +36,5 @@ export default async function GearPage() {
       <GearStorefront initialProducts={products} storefrontMode={storefrontMode} />
     </div>
   );
+  */
 }

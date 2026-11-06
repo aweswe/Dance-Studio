@@ -20,16 +20,16 @@ import { StructuredData } from '@/components/shared/structured-data';
 // Dynamic Streamed Sections with Lazy Loading Skeletons
 import { DanziaTestimonialsSection } from '@/components/public/danzia-testimonials-section';
 import { FAQSection } from '@/components/public/faq-section';
-import { HomepageEcomSection } from '@/components/public/homepage-ecom-section';
+// import { HomepageEcomSection } from '@/components/public/homepage-ecom-section';
 import { ReelsStrip } from '@/components/public/reels-strip';
 import {
   ReelsStripSkeleton,
-  HomepageEcomSkeleton,
+  // HomepageEcomSkeleton,
   FAQSectionSkeleton,
 } from '@/components/public/homepage-skeletons';
 import { DEFAULT_STATS, getHomepageContentBundle } from '@/data/content';
 import { getHomepageReels } from '@/data/reels';
-import { getProducts } from '@/data/products';
+// import { getProducts } from '@/data/products';
 
 export const metadata: Metadata = {
   alternates: { canonical: SITE_URL },
@@ -43,7 +43,8 @@ async function AsyncReelsSection() {
   return <ReelsStrip reels={reels} />;
 }
 
-/** Async Streamed Section: Studio Gear & Merch Store (Lazy Loaded) */
+/** Async Streamed Section: Studio Gear & Merch Store (Lazy Loaded - Temporarily Commented Out) */
+/*
 async function AsyncEcomSection() {
   const [products, contentBundle] = await Promise.all([
     getProducts(),
@@ -51,6 +52,7 @@ async function AsyncEcomSection() {
   ]);
   return <HomepageEcomSection mode={contentBundle.storefrontMode} products={products} />;
 }
+*/
 
 
 
@@ -88,9 +90,11 @@ export default async function HomePage(props: {
 
       <CorporateCollaborationsStrip />
 
+      {/* Temporarily commented out until studio gear launch
       <Suspense fallback={<HomepageEcomSkeleton />}>
         <AsyncEcomSection />
       </Suspense>
+      */}
 
       <Suspense fallback={<FAQSectionSkeleton />}>
         <AsyncFAQSection />
