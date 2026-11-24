@@ -97,3 +97,75 @@ export function serializeParentInfo(parentName: string, parentPhone: string, rel
     updated_at: new Date().toISOString(),
   });
 }
+
+export interface ProgrammeLike {
+  slug?: string | null;
+  name?: string | null;
+  age_group?: string | null;
+}
+
+export interface BatchLike {
+  name?: string | null;
+}
+
+/**
+ * Returns true when the programme/batch is strictly an adult class (13+ years),
+ * such as Adults Dance or Mind & Body Fitness (Yoga / Zumba).
+ */
+export function isAdultProgramme(
+  programme?: ProgrammeLike | null,
+  batch?: BatchLike | null,
+): boolean {
+  const slug = (programme?.slug || '').toLowerCase();
+  const progName = (programme?.name || '').toLowerCase();
+  const ageGroup = (programme?.age_group || '').toLowerCase();
+  const batchName = (batch?.name || '').toLowerCase();
+
+  if (batchName.includes('kid')) return false;
+
+  if (
+    slug === 'adults-dance' ||
+    slug === 'mind-body-fitness' ||
+    slug.includes('adult') ||
+    progName.includes('adult') ||
+    progName.includes('mind & body') ||
+    progName.includes('zumba') ||
+    progName.includes('yoga') ||
+    batchName.includes('adult') ||
+    batchName.includes('zumba') ||
+    batchName.includes('yoga')
+  ) {
+    return true;
+  }
+
+  // Strictly "13+ Years" without kids
+  if (ageGroup.includes('13+') && !ageGroup.includes('kid') && !ageGroup.includes('3.5')) {
+    return true;
+  }
+
+  return false;
+}
+
+/**
+ * Returns true when the programme/batch is strictly a kids' class,
+ * where parent/guardian contact details are mandatory.
+ */
+export function isKidsProgramme(
+  programme?: ProgrammeLike | null,
+  batch?: BatchLike | null,
+): boolean {
+  if (isAdultProgramme(programme, batch)) return false;
+
+  const slug = (programme?.slug || '').toLowerCase();
+  const progName = (programme?.name || '').toLowerCase();
+  const batchName = (batch?.name || '').toLowerCase();
+
+  return (
+    slug === 'kids-dance' ||
+    slug === 'gymnastics' ||
+    slug.includes('kid') ||
+    progName.includes('kid') ||
+    progName.includes('gymnastic') ||
+    batchName.includes('kid')
+  );
+}

@@ -7,7 +7,7 @@ import { createServerSupabase } from '@/lib/supabase/server'
 import { StudentActions } from '@/components/admin/student-actions'
 import { KuchipudiAdmin } from '@/components/admin/kuchipudi-admin'
 import { formatDate, formatCurrency, formatTime, telLink, formatPhone } from '@/lib/utils/format'
-import { parseParentInfo } from '@/lib/students/parent-info'
+import { parseParentInfo, isAdultProgramme } from '@/lib/students/parent-info'
 
 export default async function StudentDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -27,6 +27,7 @@ export default async function StudentDetailPage({ params }: { params: Promise<{ 
   if (!studentData) notFound()
   const student = studentData as any
   const parentInfo = parseParentInfo(student)
+  const isAdultClass = isAdultProgramme(student.programme, student.batch)
 
   // Kuchipudi students get inline module marking. Instructors mark the same
   // progress from their roster for students in their own batches.
@@ -120,7 +121,8 @@ export default async function StudentDetailPage({ params }: { params: Promise<{ 
                 <p className="text-xs text-ink-2">Join Date</p>
               </div>
             </div>
-            {/* Parent / Guardian Information */}
+            {/* Parent / Guardian Information (hidden for adult classes unless recorded) */}
+            {(!isAdultClass || parentInfo.hasParentInfo) && (
             <div className="pt-3 border-t border-line-subtle space-y-3">
               <span className="text-[11px] font-mono uppercase tracking-wider text-bl font-bold block">
                 Parent / Guardian Information
@@ -169,6 +171,7 @@ export default async function StudentDetailPage({ params }: { params: Promise<{ 
                 </div>
               )}
             </div>
+            )}
           </div>
 
           <StudentActions

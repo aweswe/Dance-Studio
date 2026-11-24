@@ -42,8 +42,20 @@ export async function sendWhatsAppTemplate(
     if (provider === "interakt") {
       return await sendViaInterakt(params);
     }
+    // NOTE: WATI automation is disabled in favor of manual WhatsApp Business support.
+    // Kept commented out for future reference — do not remove.
+    /*
     if (provider === "wati") {
       return await sendViaWati(params);
+    }
+    */
+    if (provider === "wati") {
+      console.log("[WhatsApp WATI disabled]", params.templateName, params.phone);
+      return {
+        success: false,
+        mocked: true,
+        error: "WATI automation is currently commented out/disabled in favor of manual WhatsApp Business help.",
+      };
     }
     console.warn(`Unknown WhatsApp provider: ${provider}. Logging message.`);
     return {
@@ -98,6 +110,11 @@ async function sendViaInterakt(params: SendTemplateParams): Promise<SendResult> 
   }
 }
 
+/*
+// ============================================================================
+// WATI API Implementation (COMMENTED OUT — DO NOT REMOVE)
+// Retained for reference. Outbound messaging is shifted to manual WhatsApp Business.
+// ============================================================================
 async function sendViaWati(params: SendTemplateParams): Promise<SendResult> {
   const apiKey = process.env.WHATSAPP_API_KEY!;
   const baseUrl = (process.env.WHATSAPP_API_URL || "https://live-mt-server.wati.io").replace(/\/+$/, "");
@@ -171,4 +188,5 @@ async function sendViaWati(params: SendTemplateParams): Promise<SendResult> {
     clearTimeout(timer);
   }
 }
+*/
 

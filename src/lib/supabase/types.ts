@@ -484,6 +484,7 @@ export type Database = {
           notes: string | null
           paid_at: string | null
           payment_order_id: string | null
+          phonepe_transaction_id: string | null
           razorpay_payment_id: string | null
           receipt_number: string | null
           receipt_url: string | null
@@ -499,6 +500,7 @@ export type Database = {
           notes?: string | null
           paid_at?: string | null
           payment_order_id?: string | null
+          phonepe_transaction_id?: string | null
           razorpay_payment_id?: string | null
           receipt_number?: string | null
           receipt_url?: string | null
@@ -514,6 +516,7 @@ export type Database = {
           notes?: string | null
           paid_at?: string | null
           payment_order_id?: string | null
+          phonepe_transaction_id?: string | null
           razorpay_payment_id?: string | null
           receipt_number?: string | null
           receipt_url?: string | null
@@ -797,7 +800,9 @@ export type Database = {
           batch_id: string | null
           created_at: string | null
           currency: string | null
+          gateway_provider: string | null
           id: string
+          phonepe_transaction_id: string | null
           plan: string | null
           programme_id: string | null
           razorpay_order_id: string | null
@@ -814,7 +819,9 @@ export type Database = {
           batch_id?: string | null
           created_at?: string | null
           currency?: string | null
+          gateway_provider?: string | null
           id?: string
+          phonepe_transaction_id?: string | null
           plan?: string | null
           programme_id?: string | null
           razorpay_order_id?: string | null
@@ -831,7 +838,9 @@ export type Database = {
           batch_id?: string | null
           created_at?: string | null
           currency?: string | null
+          gateway_provider?: string | null
           id?: string
+          phonepe_transaction_id?: string | null
           plan?: string | null
           programme_id?: string | null
           razorpay_order_id?: string | null
@@ -1172,7 +1181,7 @@ export type Database = {
       attendance_status: "present" | "absent" | "leave"
       batch_status: "active" | "paused" | "full"
       gallery_type: "photo" | "video"
-      payment_source: "razorpay" | "cash" | "upi_offline"
+      payment_source: "phonepe" | "razorpay" | "cash" | "upi_offline"
       rental_status: "pending" | "confirmed" | "cancelled"
       user_role: "admin" | "instructor" | "student"
     }
@@ -1305,7 +1314,7 @@ export const Constants = {
       attendance_status: ["present", "absent", "leave"],
       batch_status: ["active", "paused", "full"],
       gallery_type: ["photo", "video"],
-      payment_source: ["razorpay", "cash", "upi_offline"],
+      payment_source: ["phonepe", "razorpay", "cash", "upi_offline"],
       rental_status: ["pending", "confirmed", "cancelled"],
       user_role: ["admin", "instructor", "student"],
     },

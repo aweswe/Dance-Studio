@@ -1,7 +1,11 @@
 import { z } from "zod";
-import { indianPhoneSchema } from "./phone";
+import { indianPhoneSchema, optionalIndianPhoneSchema } from "./phone";
 
-/** Student self-service profile edits from /student/profile. */
+/**
+ * Student self-service profile edits from /student/profile.
+ * Parent/guardian details are optional at the schema level and strictly
+ * enforced for kids' classes via `kidsProfileSchema`.
+ */
 export const profileSchema = z.object({
   name: z
     .string()
@@ -9,6 +13,21 @@ export const profileSchema = z.object({
     .max(100, "Student name is too long"),
   phone: indianPhoneSchema,
   email: z.string().email("Enter a valid email address").optional().or(z.literal("")),
+  parentName: z
+    .string()
+    .max(100, "Parent or guardian name is too long")
+    .optional()
+    .or(z.literal("")),
+  parentPhone: optionalIndianPhoneSchema,
+  parentRelationship: z
+    .string()
+    .max(50, "Relationship is too long")
+    .optional()
+    .or(z.literal("")),
+});
+
+/** Strict profile validator when the student is enrolled in a kids' class. */
+export const kidsProfileSchema = profileSchema.extend({
   parentName: z
     .string()
     .min(2, "Parent or guardian name is mandatory")
@@ -21,4 +40,3 @@ export const profileSchema = z.object({
 });
 
 export type ProfileData = z.infer<typeof profileSchema>;
-

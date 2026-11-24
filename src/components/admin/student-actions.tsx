@@ -13,6 +13,7 @@ import {
   updateStudent,
   enablePortalAccess,
 } from '@/actions/students'
+import { isAdultProgramme, isKidsProgramme } from '@/lib/students/parent-info'
 
 interface BatchOption {
   id: string
@@ -54,6 +55,10 @@ export function StudentActions({ student, batches }: StudentActionsProps) {
 
   // Deactivate confirmation
   const [isConfirmOpen, setIsConfirmOpen] = useState(false)
+
+  const selectedBatch = batches.find((b) => b.id === batchId)
+  const isAdultClass = isAdultProgramme(selectedBatch?.programme, selectedBatch)
+  const isKidsClass = isKidsProgramme(selectedBatch?.programme, selectedBatch)
 
   const run = async (fn: () => Promise<{ success: boolean; error?: string }>, okText: string) => {
     setBusy(true)
@@ -187,47 +192,51 @@ export function StudentActions({ student, batches }: StudentActionsProps) {
             />
           </div>
 
-          <div className="p-3.5 bg-canvas-muted/60 rounded-md border border-line space-y-3">
-            <span className="text-[11px] font-mono uppercase tracking-wider text-bl font-bold block">
-              Parent / Guardian Details
-            </span>
-            <div>
-              <label className="block text-xs text-ink-2 mb-1">Parent / Guardian Full Name</label>
-              <Input
-                value={parentName}
-                onChange={(e) => setParentName(e.target.value)}
-                placeholder="e.g. Rajesh Sharma"
-              />
-            </div>
-            <div>
-              <div className="flex items-center justify-between mb-1">
-                <label className="block text-xs text-ink-2">Parent Phone (10 digits)</label>
-                {phone && (
-                  <button
-                    type="button"
-                    onClick={() => setParentPhone(phone.replace(/\D/g, '').slice(0, 10))}
-                    className="text-[11px] font-semibold text-bl hover:underline cursor-pointer"
-                  >
-                    Same as student phone
-                  </button>
-                )}
+          {!isAdultClass && (
+            <div className="p-3.5 bg-canvas-muted/60 rounded-md border border-line space-y-3">
+              <span className="text-[11px] font-mono uppercase tracking-wider text-bl font-bold block">
+                {isKidsClass ? 'Parent / Guardian Details (Mandatory for Kids)' : 'Parent / Guardian Details (Optional for Adults)'}
+              </span>
+              <div>
+                <label className="block text-xs text-ink-2 mb-1">Parent / Guardian Full Name</label>
+                <Input
+                  value={parentName}
+                  onChange={(e) => setParentName(e.target.value)}
+                  placeholder="e.g. Rajesh Sharma"
+                />
               </div>
-              <Input
-                value={parentPhone}
-                onChange={(e) => setParentPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
-                placeholder="e.g. 9876543210"
-                inputMode="numeric"
-              />
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-xs text-ink-2">
+                    {isKidsClass ? 'Parent Phone (10 digits) *' : 'Parent Phone (10 digits)'}
+                  </label>
+                  {phone && (
+                    <button
+                      type="button"
+                      onClick={() => setParentPhone(phone.replace(/\D/g, '').slice(0, 10))}
+                      className="text-[11px] font-semibold text-bl hover:underline cursor-pointer"
+                    >
+                      Same as student phone
+                    </button>
+                  )}
+                </div>
+                <Input
+                  value={parentPhone}
+                  onChange={(e) => setParentPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
+                  placeholder="e.g. 9876543210"
+                  inputMode="numeric"
+                />
+              </div>
+              <div>
+                <label className="block text-xs text-ink-2 mb-1">Relationship to Student</label>
+                <Input
+                  value={parentRelationship}
+                  onChange={(e) => setParentRelationship(e.target.value)}
+                  placeholder="e.g. Mother, Father, Guardian"
+                />
+              </div>
             </div>
-            <div>
-              <label className="block text-xs text-ink-2 mb-1">Relationship to Student</label>
-              <Input
-                value={parentRelationship}
-                onChange={(e) => setParentRelationship(e.target.value)}
-                placeholder="e.g. Mother, Father, Guardian"
-              />
-            </div>
-          </div>
+          )}
 
           <div className="flex gap-3 pt-2">
             <Button onClick={saveEdit} disabled={busy}>

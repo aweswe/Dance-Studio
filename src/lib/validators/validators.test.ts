@@ -1,8 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import { logOfflinePaymentSchema } from './fees';
 import { updateStudentSchema } from './student';
-import { enrolFormSchema } from './enrol';
-import { profileSchema } from './profile';
+import { enrolFormSchema, kidsEnrolFormSchema } from './enrol';
+import { profileSchema, kidsProfileSchema } from './profile';
+import { isAdultProgramme, isKidsProgramme } from '@/lib/students/parent-info';
 import { enrolHref, parseEnrolIntent } from '@/lib/utils/constants';
 
 const UUID = 'a1b2c3d4-4001-4000-8000-000000000001';
@@ -101,7 +102,7 @@ describe('enrolHref', () => {
   });
 });
 
-describe('profileSchema (mandatory parents information)', () => {
+describe('profileSchema & kidsProfileSchema (parent phone mandatory ONLY for kids)', () => {
   const valid = {
     name: 'Aarav Sharma',
     phone: '9052980859',
@@ -111,55 +112,59 @@ describe('profileSchema (mandatory parents information)', () => {
     parentRelationship: 'Father',
   };
 
-  it('accepts complete profile with student and parent details', () => {
-    expect(profileSchema.safeParse(valid).success).toBe(true);
-  });
-
-  it('rejects profile when parentName is missing or too short', () => {
-    expect(profileSchema.safeParse({ ...valid, parentName: '' }).success).toBe(false);
-    expect(profileSchema.safeParse({ ...valid, parentName: 'R' }).success).toBe(false);
-    expect(profileSchema.safeParse({ ...valid, parentName: undefined }).success).toBe(false);
-  });
-
-  it('rejects profile when parentPhone is missing or invalid Indian number', () => {
-    expect(profileSchema.safeParse({ ...valid, parentPhone: '' }).success).toBe(false);
-    expect(profileSchema.safeParse({ ...valid, parentPhone: '12345' }).success).toBe(false);
-    expect(profileSchema.safeParse({ ...valid, parentPhone: '5052980859' }).success).toBe(false);
-    expect(profileSchema.safeParse({ ...valid, parentPhone: undefined }).success).toBe(false);
-  });
-
-  it('rejects profile when parentRelationship is missing', () => {
-    expect(profileSchema.safeParse({ ...valid, parentRelationship: '' }).success).toBe(false);
-    expect(profileSchema.safeParse({ ...valid, parentRelationship: undefined }).success).toBe(false);
-  });
-
-  it('accepts student using their own number as guardian phone (no need for two numbers)', () => {
-    const singleNumberProfile = {
-      ...valid,
-      parentPhone: valid.phone, // Same as student phone
-    };
-    const res = profileSchema.safeParse(singleNumberProfile);
-    expect(res.success).toBe(true);
-    if (res.success) {
-      expect(res.data.parentPhone).toBe(res.data.phone);
-    }
-  });
-
-  it('accepts adult student marking Self as guardian with their own name and phone', () => {
-    const adultSelfProfile = {
+  it('allows adult students to save profile WITHOUT parent phone or parent name', () => {
+    const adultProfile = {
       name: 'Rohan Varma',
       phone: '9876543210',
       email: 'rohan@example.com',
-      parentName: 'Rohan Varma',
-      parentPhone: '9876543210',
-      parentRelationship: 'Self',
+      parentName: '',
+      parentPhone: '',
+      parentRelationship: '',
     };
-    const res = profileSchema.safeParse(adultSelfProfile);
-    expect(res.success).toBe(true);
-    if (res.success) {
-      expect(res.data.parentRelationship).toBe('Self');
-      expect(res.data.parentPhone).toBe(adultSelfProfile.phone);
-    }
+    expect(profileSchema.safeParse(adultProfile).success).toBe(true);
+    expect(profileSchema.safeParse({ name: 'Rohan Varma', phone: '9876543210' }).success).toBe(true);
+  });
+
+  it('rejects adult profile only if an invalid parentPhone is manually typed', () => {
+    expect(profileSchema.safeParse({ ...valid, parentPhone: '12345' }).success).toBe(false);
+  });
+
+  it('requires complete parent details for kidsProfileSchema', () => {
+    expect(kidsProfileSchema.safeParse(valid).success).toBe(true);
+    expect(kidsProfileSchema.safeParse({ ...valid, parentName: '' }).success).toBe(false);
+    expect(kidsProfileSchema.safeParse({ ...valid, parentPhone: '' }).success).toBe(false);
+    expect(kidsProfileSchema.safeParse({ ...valid, parentPhone: '12345' }).success).toBe(false);
+    expect(kidsProfileSchema.safeParse({ ...valid, parentPhone: undefined }).success).toBe(false);
+    expect(kidsProfileSchema.safeParse({ ...valid, parentRelationship: '' }).success).toBe(false);
+  });
+
+  it('distinguishes adult vs kids programmes accurately', () => {
+    expect(isAdultProgramme({ slug: 'adults-dance', name: 'Adults Dance', age_group: '13+ Years' })).toBe(true);
+    expect(isKidsProgramme({ slug: 'adults-dance', name: 'Adults Dance', age_group: '13+ Years' })).toBe(false);
+
+    expect(isAdultProgramme({ slug: 'mind-body-fitness', name: 'Mind & Body Fitness', age_group: '13+ Years' })).toBe(true);
+    expect(isKidsProgramme({ slug: 'mind-body-fitness', name: 'Mind & Body Fitness', age_group: '13+ Years' })).toBe(false);
+
+    expect(isKidsProgramme({ slug: 'kids-dance', name: 'Kids Dance', age_group: 'Kids: 3.5–12 years' })).toBe(true);
+    expect(isAdultProgramme({ slug: 'kids-dance', name: 'Kids Dance', age_group: 'Kids: 3.5–12 years' })).toBe(false);
+
+    expect(isKidsProgramme({ slug: 'gymnastics', name: 'Gymnastics & Tumbling', age_group: 'Kids: 3.5–12 years' })).toBe(true);
+    expect(isKidsProgramme({ slug: 'kuchipudi', name: 'Kuchipudi', age_group: 'Kids: 3.5–12 yrs & Adults: 13+ yrs' })).toBe(false);
+  });
+
+  it('enforces parentName on kidsEnrolFormSchema but not on adult enrolFormSchema', () => {
+    const baseEnrol = {
+      childName: 'Rohan Varma',
+      parentName: '',
+      age: '25',
+      phone: '9876543210',
+      email: '',
+      programmeId: UUID,
+      batchId: UUID,
+    };
+    expect(enrolFormSchema.safeParse(baseEnrol).success).toBe(true);
+    expect(kidsEnrolFormSchema.safeParse(baseEnrol).success).toBe(false);
+    expect(kidsEnrolFormSchema.safeParse({ ...baseEnrol, age: '8', parentName: 'Rajesh Varma' }).success).toBe(true);
   });
 });
 

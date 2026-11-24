@@ -1,5 +1,5 @@
 /** Canonical production origin — used for absolute URLs (WhatsApp links, OG, canonicals) */
-export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://rhythmzz.in";
+export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.rhythmzzdance.com";
 
 /** Academy contact information */
 export const ACADEMY = {

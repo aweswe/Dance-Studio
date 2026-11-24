@@ -20,6 +20,34 @@ export function PayNowButton({ amount }: PayNowButtonProps) {
     setBusy(true);
     setError('');
     try {
+      const activeGateway = process.env.NEXT_PUBLIC_PAYMENT_GATEWAY || 'phonepe';
+
+      if (activeGateway === 'phonepe') {
+        const res = await fetch('/api/phonepe/initiate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ next: '/student/fees' }), // portal flow — server derives student + programme
+        });
+        const data = await res.json().catch(() => ({}));
+
+        if (!res.ok) {
+          setError(
+            data.message || data.error || 'Could not start PhonePe payment. Please contact the studio.',
+          );
+          setBusy(false);
+          return;
+        }
+
+        if (data.success && data.redirectUrl) {
+          window.location.href = data.redirectUrl;
+          return;
+        }
+
+        setError('Payment link could not be generated.');
+        setBusy(false);
+        return;
+      }
+
       const res = await fetch('/api/razorpay/create-order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

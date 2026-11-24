@@ -4,6 +4,7 @@
 // Auth: Bearer CRON_SECRET. Silent skip when no WhatsApp key is configured.
 import { createAdminSupabase } from '@/lib/supabase/server';
 import { WHATSAPP_TEMPLATES } from '@/lib/whatsapp/templates';
+import { SITE_URL } from '@/lib/utils/constants';
 
 export const dynamic = 'force-dynamic';
 
@@ -81,7 +82,7 @@ export async function GET(request: Request) {
           studentName: s.name,
           amount,
           dueDate: `7th ${monthName}`,
-          paymentLink: `https://rhythmzz.in/student/fees`,
+          paymentLink: `${SITE_URL}/student/fees`,
         }),
       };
     });

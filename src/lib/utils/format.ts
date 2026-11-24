@@ -103,10 +103,28 @@ export function formatPhone(phone?: string | null): string {
 }
 
 /**
- * Generate a WhatsApp link with pre-filled message
+ * Generate a WhatsApp link to the Academy desk with pre-filled message
  */
 export function whatsappLink(message: string): string {
   return `https://wa.me/919052980859?text=${encodeURIComponent(message)}`;
+}
+
+/**
+ * Generate a direct WhatsApp link to a specific student/parent number with a pre-filled message
+ */
+export function whatsappDirectLink(phone: string | null | undefined, message: string): string {
+  const digits = String(phone || "").replace(/\D/g, "");
+  const normalized =
+    digits.length === 10
+      ? `91${digits}`
+      : digits.length === 12 && digits.startsWith("91")
+      ? digits
+      : digits.slice(-10)
+      ? `91${digits.slice(-10)}`
+      : "";
+  return normalized
+    ? `https://wa.me/${normalized}?text=${encodeURIComponent(message)}`
+    : `https://wa.me/?text=${encodeURIComponent(message)}`;
 }
 
 /** Click-to-call tel: link for any Indian phone format. */

@@ -9,6 +9,8 @@ import { Users, ShieldCheck, AlertCircle, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 
 interface ProfileFormProps {
+  isAdultClass?: boolean;
+  isKidsClass?: boolean;
   initial: {
     name: string;
     phone: string;
@@ -20,7 +22,7 @@ interface ProfileFormProps {
   };
 }
 
-export function ProfileForm({ initial }: ProfileFormProps) {
+export function ProfileForm({ isAdultClass = false, isKidsClass = false, initial }: ProfileFormProps) {
   const [name, setName] = useState(initial.name);
   const [phone, setPhone] = useState(initial.phone);
   const [email, setEmail] = useState(initial.email);
@@ -49,16 +51,24 @@ export function ProfileForm({ initial }: ProfileFormProps) {
     if (!/^[6-9]\d{9}$/.test(cleanPhone)) {
       errs.phone = "Enter a valid 10-digit mobile number (starts with 6-9)";
     }
-    if (!parentName.trim() || parentName.trim().length < 2) {
-      errs.parentName = "Parent or guardian name is mandatory";
+
+    if (!isAdultClass) {
+      const cleanParentPhone = parentPhone.replace(/\D/g, "");
+      if (isKidsClass) {
+        if (!parentName.trim() || parentName.trim().length < 2) {
+          errs.parentName = "Parent or guardian name is mandatory";
+        }
+        if (!/^[6-9]\d{9}$/.test(cleanParentPhone)) {
+          errs.parentPhone = "Valid 10-digit parent phone number is mandatory (starts with 6-9)";
+        }
+        if (!parentRelationship.trim()) {
+          errs.parentRelationship = "Relationship to student is mandatory";
+        }
+      } else if (cleanParentPhone && !/^[6-9]\d{9}$/.test(cleanParentPhone)) {
+        errs.parentPhone = "Enter a valid 10-digit Indian mobile number";
+      }
     }
-    const cleanParentPhone = parentPhone.replace(/\D/g, "");
-    if (!/^[6-9]\d{9}$/.test(cleanParentPhone)) {
-      errs.parentPhone = "Valid 10-digit parent phone number is mandatory (starts with 6-9)";
-    }
-    if (!parentRelationship.trim()) {
-      errs.parentRelationship = "Relationship to student is mandatory";
-    }
+
     setErrors(errs);
     return Object.keys(errs).length === 0;
   };
@@ -75,14 +85,19 @@ export function ProfileForm({ initial }: ProfileFormProps) {
       name: name.trim(),
       phone: phone.replace(/\D/g, ""),
       email: email.trim(),
-      parentName: parentName.trim(),
-      parentPhone: parentPhone.replace(/\D/g, ""),
-      parentRelationship: parentRelationship.trim(),
+      parentName: isAdultClass ? "" : parentName.trim(),
+      parentPhone: isAdultClass ? "" : parentPhone.replace(/\D/g, ""),
+      parentRelationship: isAdultClass ? "" : parentRelationship.trim(),
     });
 
     setFeedback(
       result.success
-        ? { ok: true, text: "Profile and parents' information successfully updated." }
+        ? {
+            ok: true,
+            text: isAdultClass
+              ? "Profile successfully updated."
+              : "Profile information successfully updated.",
+          }
         : { ok: false, text: result.error || "Could not save — try again" },
     );
     setBusy(false);
@@ -176,8 +191,10 @@ export function ProfileForm({ initial }: ProfileFormProps) {
         </div>
 
         {/* ═══════════════════════════════════════════════════════════════════
-            MANDATORY PARENT / GUARDIAN INFORMATION SECTION
+            PARENT / GUARDIAN INFORMATION SECTION (hidden for adult classes;
+            mandatory only for kids' classes)
         ═══════════════════════════════════════════════════════════════════ */}
+        {!isAdultClass && (
         <div className="p-4 sm:p-5 rounded-md border-2 border-line bg-canvas/40 space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -186,18 +203,25 @@ export function ProfileForm({ initial }: ProfileFormProps) {
                 Parents / Guardian Information
               </h3>
             </div>
-            <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-amber-500/15 text-amber-500 border border-amber-500/30">
-              Mandatory
-            </span>
+            {isKidsClass ? (
+              <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-amber-500/15 text-amber-500 border border-amber-500/30">
+                Mandatory
+              </span>
+            ) : (
+              <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-canvas-muted text-ink-2 border border-line">
+                Optional
+              </span>
+            )}
           </div>
           <p className="text-xs text-ink-2 leading-relaxed">
-            Mandatory for academy safety, emergency contacts, fee receipts, and official studio notices.
-            No need for a second number — students or adult learners can mark their own mobile number as guardian contact.
+            {isKidsClass
+              ? "Mandatory for kids' classes — used for emergency contacts, fee receipts, and official studio notices."
+              : "Optional emergency / parent contact details (only mandatory for kids under 13)."}
           </p>
 
           <Input
             id="profile-parent-name"
-            label="Parent / Guardian Full Name *"
+            label={isKidsClass ? "Parent / Guardian Full Name *" : "Parent / Guardian Full Name (optional)"}
             value={parentName}
             onChange={(e) => {
               setParentName(e.target.value);
@@ -205,13 +229,13 @@ export function ProfileForm({ initial }: ProfileFormProps) {
             }}
             placeholder="e.g. Rajesh Sharma"
             error={errors.parentName}
-            required
+            required={isKidsClass}
           />
 
           <div>
             <div className="flex items-center justify-between gap-2 mb-1.5">
               <label htmlFor="profile-parent-phone" className="text-xs font-medium text-ink-2">
-                Parent / Guardian Mobile Phone *
+                {isKidsClass ? "Parent / Guardian Mobile Phone *" : "Parent / Guardian Mobile Phone (optional)"}
               </label>
               <label className="inline-flex items-center gap-1.5 cursor-pointer text-xs font-semibold text-bl hover:text-bl/80 select-none group">
                 <input
@@ -246,7 +270,7 @@ export function ProfileForm({ initial }: ProfileFormProps) {
               placeholder="10-digit mobile number"
               inputMode="numeric"
               error={errors.parentPhone}
-              required
+              required={isKidsClass}
             />
             {sameAsStudentPhone && (
               <div className="flex items-center gap-1.5 text-[11px] text-bl font-medium bg-bl/10 border border-bl/20 rounded px-2.5 py-1 mt-1.5">
@@ -255,13 +279,13 @@ export function ProfileForm({ initial }: ProfileFormProps) {
               </div>
             )}
             <p className="text-[11px] text-ink-3 mt-1">
-              Emergency contact and recipient of official WhatsApp fee receipts. No need for two separate numbers if you share or use your own mobile.
+              Emergency contact and recipient of official WhatsApp fee receipts.
             </p>
           </div>
 
           <div>
             <label className="text-xs font-medium text-ink-2 mb-1.5 block">
-              Relationship to Student *
+              {isKidsClass ? "Relationship to Student *" : "Relationship to Student (optional)"}
             </label>
             <div className="flex flex-wrap items-center gap-2 mb-2">
               {['Mother', 'Father', 'Guardian', 'Self'].map((rel) => {
@@ -304,10 +328,11 @@ export function ProfileForm({ initial }: ProfileFormProps) {
               }}
               placeholder="Or specify (e.g. Aunt, Grandparent)"
               error={errors.parentRelationship}
-              required
+              required={isKidsClass}
             />
           </div>
         </div>
+        )}
 
         <Button
           onClick={save}

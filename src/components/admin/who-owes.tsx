@@ -1,10 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import { Button } from '@/components/ui/button'
 import { Phone, MessageCircle } from 'lucide-react'
-import { sendFeeReminder } from '@/actions/fees'
-import { formatCurrency, telLink } from '@/lib/utils/format'
+import { formatCurrency, telLink, whatsappDirectLink } from '@/lib/utils/format'
+import { SITE_URL } from '@/lib/utils/constants'
 
 export interface WhoOwesStudent {
   id: string
@@ -15,9 +14,14 @@ export interface WhoOwesStudent {
 }
 
 /** Students whose current month is uncovered — the honest "who owes" list,
- *  with one-tap call and WhatsApp reminder. */
+ *  with one-tap call and manual WhatsApp Business reminder link. */
 export function WhoOwes({ students }: { students: WhoOwesStudent[] }) {
-  const [state, setState] = useState<Record<string, string>>({})
+  const [reminded, setReminded] = useState<Record<string, boolean>>({})
+
+  const currentMonth = new Date().toLocaleDateString('en-IN', {
+    month: 'long',
+    year: 'numeric',
+  })
 
   return (
     <div className="bg-surface rounded-card border-2 border-slate-200 overflow-hidden shadow-2xs">
@@ -44,49 +48,38 @@ export function WhoOwes({ students }: { students: WhoOwesStudent[] }) {
               </tr>
             </thead>
             <tbody className="divide-y divide-line-subtle">
-              {students.map((s) => (
-                <tr key={s.id} className="hover:bg-canvas-muted transition-colors">
-                  <td className="px-3 sm:px-6 py-2.5 sm:py-3 font-medium text-ink">{s.name}</td>
-                  <td className="px-3 sm:px-6 py-2.5 sm:py-3 text-sm text-ink-2">{s.programmeName}</td>
-                  <td className="px-3 sm:px-6 py-2.5 sm:py-3 font-medium text-ink tabular-nums">{formatCurrency(s.amount)}</td>
-                  <td className="px-3 sm:px-6 py-2.5 sm:py-3">
-                    <div className="flex items-center gap-2">
-                      <a
-                        href={telLink(s.phone)}
-                        className="inline-flex items-center gap-1 text-xs font-semibold text-bl hover:underline whitespace-nowrap"
-                      >
-                        <Phone size={13} /> {s.phone}
-                      </a>
-                      <Button
-                        variant="outline"
-                        className="text-xs shrink-0"
-                        disabled={!!state[s.id]}
-                        onClick={async () => {
-                          setState((m) => ({ ...m, [s.id]: 'sending' }))
-                          const res = await sendFeeReminder(s.id)
-                          const next = res.mocked
-                            ? 'mocked'
-                            : res.success
-                              ? 'sent'
-                              : 'failed'
-                          setState((m) => ({ ...m, [s.id]: next }))
-                        }}
-                      >
-                        <MessageCircle size={14} className="mr-1.5" />
-                        {state[s.id] === 'sending'
-                          ? 'Sending…'
-                          : state[s.id] === 'sent'
-                            ? '✓ Sent'
-                            : state[s.id] === 'mocked'
-                              ? 'Logged (not sent)'
-                              : state[s.id] === 'failed'
-                                ? 'Retry'
-                                : 'Remind'}
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+              {students.map((s) => {
+                const message = `Hi ${s.name}! Gentle reminder from Rhythmzz Academy of Dance: Your ${s.programmeName} fee of ${formatCurrency(s.amount)} for ${currentMonth} is due by the 7th. You can pay online anytime via PhonePe on your Student Portal: ${SITE_URL}/student/fees — let us know if you need any help!`
+                const waUrl = whatsappDirectLink(s.phone, message)
+
+                return (
+                  <tr key={s.id} className="hover:bg-canvas-muted transition-colors">
+                    <td className="px-3 sm:px-6 py-2.5 sm:py-3 font-medium text-ink">{s.name}</td>
+                    <td className="px-3 sm:px-6 py-2.5 sm:py-3 text-sm text-ink-2">{s.programmeName}</td>
+                    <td className="px-3 sm:px-6 py-2.5 sm:py-3 font-medium text-ink tabular-nums">{formatCurrency(s.amount)}</td>
+                    <td className="px-3 sm:px-6 py-2.5 sm:py-3">
+                      <div className="flex items-center gap-2">
+                        <a
+                          href={telLink(s.phone)}
+                          className="inline-flex items-center gap-1 text-xs font-semibold text-bl hover:underline whitespace-nowrap"
+                        >
+                          <Phone size={13} /> {s.phone}
+                        </a>
+                        <a
+                          href={waUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={() => setReminded((m) => ({ ...m, [s.id]: true }))}
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-green/40 bg-green/10 text-green-ink hover:bg-green/20 text-xs font-semibold whitespace-nowrap transition-colors"
+                        >
+                          <MessageCircle size={14} />
+                          {reminded[s.id] ? '✓ Opened WhatsApp' : 'WhatsApp Remind'}
+                        </a>
+                      </div>
+                    </td>
+                  </tr>
+                )
+              })}
             </tbody>
           </table>
         </div>

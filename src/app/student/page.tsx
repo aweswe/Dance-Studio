@@ -7,7 +7,7 @@ import { MetricStrip } from "@/components/ui/metric-strip";
 import Link from "next/link";
 import { isDue, monthlyAmount } from "@/lib/fees/ledger";
 import { createServerSupabase } from "@/lib/supabase/server";
-import { parseParentInfo } from "@/lib/students/parent-info";
+import { parseParentInfo, isKidsProgramme } from "@/lib/students/parent-info";
 import { Users } from "lucide-react";
 
 export const metadata = {
@@ -36,6 +36,7 @@ export default async function StudentDashboardPage() {
   if (!student) redirect(ROUTES.login);
 
   const parentInfo = parseParentInfo(student, user);
+  const requiresParentInfo = isKidsProgramme(student.programme, student.batch);
 
   const { data: attendanceSummary } = await (supabase as any)
     .rpc("get_student_attendance_summary", { p_student_id: student.id });
@@ -84,14 +85,14 @@ export default async function StudentDashboardPage() {
     <div className="space-y-8">
       <PageHeader label={dateLabel} title={studentFirstName} description={description} />
 
-      {!parentInfo.hasParentInfo && (
+      {requiresParentInfo && !parentInfo.hasParentInfo && (
         <div className="p-4 rounded-md border-2 border-amber-500/40 bg-amber-500/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xs">
           <div className="flex items-start sm:items-center gap-3">
             <div className="p-2 rounded-full bg-amber-500/20 text-amber-500 shrink-0">
               <Users size={18} />
             </div>
             <div>
-              <h4 className="text-sm font-bold text-ink">Action Required: Parents' Information Missing</h4>
+              <h4 className="text-sm font-bold text-ink">Action Required: Parents&apos; Information Missing</h4>
               <p className="text-xs text-ink-2 mt-0.5">
                 Academy safety policies require parent/guardian contact details for all active student profiles.
               </p>

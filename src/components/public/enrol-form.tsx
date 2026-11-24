@@ -15,14 +15,22 @@ import {
 import { cn } from '@/lib/utils/cn';
 import { homepageCtaBrand, homepageCtaOutlineLight, homepageCtaPairButton, homepageCtaWhatsApp } from '@/lib/ui/homepage-cta';
 import { ACADEMY, enrolHref, type EnrolIntent, ROUTES } from '@/lib/utils/constants';
-import { enrolFormSchema } from '@/lib/validators/enrol';
+import { enrolFormSchema, kidsEnrolFormSchema } from '@/lib/validators/enrol';
+import { isAdultProgramme, isKidsProgramme } from '@/lib/students/parent-info';
 import { formatCurrency, formatTime, whatsappLink, normalizeIndianPhone } from '@/lib/utils/format';
 import { loadRazorpayScript, openRazorpayCheckout } from '@/lib/razorpay/checkout';
 import { submitEnrolLead } from '@/actions/enquiries';
 import { Spinner } from '@/components/ui/skeleton';
 import { Input } from '@/components/ui/input';
 
-const PAYMENTS_ENABLED = Boolean(process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID);
+const PAYMENTS_ENABLED = Boolean(
+  process.env.NEXT_PUBLIC_PAYMENT_GATEWAY === 'phonepe' ||
+  process.env.NEXT_PUBLIC_PHONEPE_MERCHANT_ID ||
+  process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID ||
+  true
+);
+
+const ACTIVE_GATEWAY = process.env.NEXT_PUBLIC_PAYMENT_GATEWAY || 'phonepe';
 
 interface EnrolFormProps {
   programmes?: any[];
@@ -180,12 +188,19 @@ function computeProgrammeFee(
   const customFeeNum = isInitialPlanAndProg && defaultFee ? Number(defaultFee) : null;
   const fee = customFeeNum || computeProgrammeFee(selectedProgramme, plan);
 
+  const isAdultClass = isAdultProgramme(selectedProgramme, selectedBatch);
+  const isKidsClass = isKidsProgramme(selectedProgramme, selectedBatch);
+  const parsedAge = parseFloat(age);
+  const requiresParent =
+    isKidsClass || (!isAdultClass && Number.isFinite(parsedAge) && parsedAge > 0 && parsedAge < 13);
+  const showParentField = !isAdultClass && (isKidsClass || !Number.isFinite(parsedAge) || parsedAge < 13);
+
   const waMessage = [
     isPay
       ? "Hi Rhythmzz! I'd like to enrol and pay."
       : "Hi Rhythmzz! I'd like to book a free trial class.",
     `Student: ${childName}`,
-    parentName ? `Parent: ${parentName}` : null,
+    !isAdultClass && parentName ? `Parent: ${parentName}` : null,
     age ? `Age: ${age}` : null,
     `Programme: ${selectedProgramme?.name ?? ''}`,
     `Batch: ${batchLabel(selectedBatch)}`,
@@ -213,7 +228,7 @@ function computeProgrammeFee(
   async function saveLead(mode: EnrolIntent) {
     return submitEnrolLead({
       childName: childName.trim(),
-      parentName: parentName.trim() || undefined,
+      parentName: isAdultClass ? undefined : (parentName.trim() || undefined),
       age: age.trim() || undefined,
       phone: normalizedPhone,
       email: email.trim() || undefined,
@@ -228,9 +243,10 @@ function computeProgrammeFee(
 
     const batchToUse = selectedBatchId || filteredBatches[0]?.id || '';
 
-    const validation = enrolFormSchema.safeParse({
+    const activeSchema = requiresParent ? kidsEnrolFormSchema : enrolFormSchema;
+    const validation = activeSchema.safeParse({
       childName: childName.trim(),
-      parentName: parentName.trim(),
+      parentName: isAdultClass ? '' : parentName.trim(),
       age: age.trim(),
       phone: normalizedPhone,
       email: email.trim(),
@@ -270,6 +286,44 @@ function computeProgrammeFee(
       if (!PAYMENTS_ENABLED) {
         setIsPaidOnline(false);
         setStatus('success');
+        return;
+      }
+
+      if (ACTIVE_GATEWAY === 'phonepe') {
+        const res = await fetch('/api/phonepe/initiate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            programmeId: selectedProgrammeId || selectedProgramme?.id,
+            batchId: batchToUse,
+            name: childName.trim(),
+            phone: normalizedPhone,
+            email: email.trim(),
+            plan,
+          }),
+        });
+
+        const data = await res.json().catch(() => ({}));
+
+        if (!res.ok) {
+          if (res.status === 503 || data.error === 'PAYMENTS_UNAVAILABLE') {
+            setIsPaidOnline(false);
+            setStatus('success');
+            return;
+          }
+          setStatus('error');
+          setErrorMsg(data.message || data.error || 'Could not start PhonePe payment. Please try again.');
+          return;
+        }
+
+        if (data.success && data.redirectUrl) {
+          // Direct user to PhonePe Hosted Checkout Page
+          window.location.href = data.redirectUrl;
+          return;
+        }
+
+        setStatus('error');
+        setErrorMsg('Failed to generate PhonePe payment link.');
         return;
       }
 
@@ -631,16 +685,18 @@ function computeProgrammeFee(
               if (errors.childName) setErrors((prev) => ({ ...prev, childName: '' }));
             }}
           />
-          <Input
-            type="text"
-            placeholder="Parent / guardian name *"
-            error={errors.parentName}
-            value={parentName}
-            onChange={(e) => {
-              setParentName(e.target.value);
-              if (errors.parentName) setErrors((prev) => ({ ...prev, parentName: '' }));
-            }}
-          />
+          {showParentField && (
+            <Input
+              type="text"
+              placeholder={requiresParent ? "Parent / guardian name *" : "Parent / guardian name (for kids under 13)"}
+              error={errors.parentName}
+              value={parentName}
+              onChange={(e) => {
+                setParentName(e.target.value);
+                if (errors.parentName) setErrors((prev) => ({ ...prev, parentName: '' }));
+              }}
+            />
+          )}
           <Input
             type="text"
             placeholder="Age (years) *"

@@ -1,6 +1,6 @@
 'use server';
 import { createServerSupabase, createAdminSupabase } from '@/lib/supabase/server';
-import { profileSchema, type ProfileData } from '@/lib/validators/profile';
+import { profileSchema, kidsProfileSchema, type ProfileData } from '@/lib/validators/profile';
 import { normalizeIndianPhone } from '@/lib/utils/format';
 import { revalidatePath } from 'next/cache';
 
@@ -41,33 +41,43 @@ export async function updateProfile(input: ProfileData) {
     return { success: false, error: 'Not signed in' };
   }
 
-  const parsed = profileSchema.safeParse(input);
-  if (!parsed.success) {
-    return { success: false, error: parsed.error.issues[0]?.message || 'Invalid input' };
-  }
-  const { name, phone, email, parentName, parentPhone, parentRelationship } = parsed.data;
-
   const { getCurrentStudent } = await import('@/lib/auth/student');
   const { student } = await getCurrentStudent();
   if (!student) {
     return { success: false, error: 'Student record not found' };
   }
 
+  const { serializeParentInfo, isKidsProgramme, isAdultProgramme } = await import('@/lib/students/parent-info');
+  const requiresParent = isKidsProgramme(student.programme, student.batch);
+  const isAdult = isAdultProgramme(student.programme, student.batch);
+
+  const schema = requiresParent ? kidsProfileSchema : profileSchema;
+  const parsed = schema.safeParse(input);
+  if (!parsed.success) {
+    return { success: false, error: parsed.error.issues[0]?.message || 'Invalid input' };
+  }
+  const { name, phone, email } = parsed.data;
+  const parentName = isAdult ? '' : (parsed.data.parentName || '').trim();
+  const parentPhone = isAdult ? '' : (parsed.data.parentPhone || '').trim();
+  const parentRelationship = isAdult ? '' : (parsed.data.parentRelationship || '').trim();
+
   const admin = createAdminSupabase();
   const phoneChanged = student.phone !== phone;
 
-  const { serializeParentInfo } = await import('@/lib/students/parent-info');
-  const serializedParent = serializeParentInfo(parentName, parentPhone, parentRelationship);
+  const hasParentValues = Boolean(parentName || parentPhone);
+  const serializedParent = hasParentValues
+    ? serializeParentInfo(parentName, parentPhone, parentRelationship)
+    : null;
 
   // Attempt update with dedicated columns first
   const payloadWithCols: Record<string, any> = {
     name,
     phone,
     email: email || null,
-    display_name: serializedParent,
-    parent_name: parentName,
-    parent_phone: parentPhone,
-    parent_relationship: parentRelationship,
+    ...(serializedParent !== null ? { display_name: serializedParent } : isAdult ? { display_name: null } : {}),
+    parent_name: parentName || null,
+    parent_phone: parentPhone || null,
+    parent_relationship: parentRelationship || null,
   };
 
   let { error: updateError } = await admin

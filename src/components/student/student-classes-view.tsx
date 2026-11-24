@@ -13,7 +13,10 @@ import { ACADEMY } from '@/lib/utils/constants';
 import { loadRazorpayScript, openRazorpayCheckout } from '@/lib/razorpay/checkout';
 import { joinWaitlist, requestBatchSwitch, cancelBatchSwitchRequest } from '@/actions/enrollment';
 
-const PAYMENTS_ENABLED = Boolean(process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID);
+const PAYMENTS_ENABLED =
+  process.env.NEXT_PUBLIC_PAYMENT_GATEWAY === 'razorpay'
+    ? Boolean(process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID)
+    : true;
 
 export interface LiveBatch {
   id: string;
@@ -129,6 +132,40 @@ export function StudentClassesView({ currentStudent, feePaid, programmes, pendin
     setBusy('pay');
     setMessage(null);
     try {
+      const activeGateway = process.env.NEXT_PUBLIC_PAYMENT_GATEWAY || 'phonepe';
+
+      if (activeGateway === 'phonepe') {
+        const res = await fetch('/api/phonepe/initiate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            programmeId: selectedProgramme.id,
+            batchId: selectedBatch.id,
+            plan: 'monthly',
+            next: '/student/classes',
+          }),
+        });
+        const data = await res.json().catch(() => ({}));
+
+        if (!res.ok) {
+          setMessage({
+            type: 'err',
+            text: data.message || data.error || 'Could not start PhonePe payment. Try WhatsApp or contact the studio.',
+          });
+          setBusy('');
+          return;
+        }
+
+        if (data.success && data.redirectUrl) {
+          window.location.assign(data.redirectUrl);
+          return;
+        }
+
+        setMessage({ type: 'err', text: 'Failed to generate PhonePe payment link.' });
+        setBusy('');
+        return;
+      }
+
       const res = await fetch('/api/razorpay/create-order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

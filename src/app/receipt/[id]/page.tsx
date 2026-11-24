@@ -43,7 +43,14 @@ export default async function ReceiptPage({ params }: { params: Promise<{ id: st
     }
   }
 
-  const sourceLabel = p.source === "razorpay" ? "Razorpay (Online)" : p.source === "upi_offline" ? "UPI" : "Cash";
+  const sourceLabel =
+    p.source === "phonepe"
+      ? "PhonePe (Online)"
+      : p.source === "razorpay"
+      ? "Razorpay (Online)"
+      : p.source === "upi_offline"
+      ? "UPI"
+      : "Cash";
 
   return (
     <main className="min-h-screen bg-slate-100 py-12 px-4 print:py-0 print:px-0 print:bg-white">

@@ -8,6 +8,7 @@ import { Modal } from '@/components/ui/modal'
 import { UserPlus } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { createStudent } from '@/actions/students'
+import { isAdultProgramme, isKidsProgramme } from '@/lib/students/parent-info'
 
 interface ProgrammeOption { id: string; name: string }
 interface BatchOption { id: string; name: string | null; programme: { name: string } | null }
@@ -39,16 +40,27 @@ export function AddStudentModal({
 
   const set = (patch: Partial<typeof form>) => setForm((f) => ({ ...f, ...patch }))
 
+  const selectedProg = programmes.find((p) => p.id === form.programmeId)
+  const selectedBatch = batches.find((b) => b.id === form.batchId)
+  const effectiveProg = selectedProg || (selectedBatch?.programme ? { name: selectedBatch.programme.name } : null)
+  const isAdultClass = isAdultProgramme(effectiveProg, selectedBatch)
+  const isKidsClass = isKidsProgramme(effectiveProg, selectedBatch)
+
   const submit = async () => {
+    if (isKidsClass && !/^[6-9]\d{9}$/.test(form.parentPhone.replace(/\D/g, ''))) {
+      setFeedback({ ok: false, text: "Parent's 10-digit phone number is mandatory for kids' classes." })
+      return
+    }
+
     setBusy(true)
     setFeedback(null)
     const res = await createStudent({
       name: form.name,
       phone: form.phone,
       email: form.email,
-      parentName: form.parentName,
-      parentPhone: form.parentPhone,
-      parentRelationship: form.parentRelationship,
+      parentName: isAdultClass ? '' : form.parentName,
+      parentPhone: isAdultClass ? '' : form.parentPhone,
+      parentRelationship: isAdultClass ? '' : form.parentRelationship,
       programmeId: form.programmeId || null,
       batchId: form.batchId || null,
       status: form.status,
@@ -115,47 +127,6 @@ export function AddStudentModal({
             />
           </div>
 
-          <div className="p-3.5 bg-canvas-muted/60 rounded-md border border-line space-y-3">
-            <span className="text-[11px] font-mono uppercase tracking-wider text-bl font-bold block">
-              Parent / Guardian Details
-            </span>
-            <div>
-              <label className="block text-xs text-ink-2 mb-1">Parent / Guardian Full Name</label>
-              <Input
-                value={form.parentName}
-                onChange={(e) => set({ parentName: e.target.value })}
-                placeholder="e.g. Rajesh Sharma"
-              />
-            </div>
-            <div>
-              <div className="flex items-center justify-between mb-1">
-                <label className="block text-xs text-ink-2">Parent Phone (10 digits)</label>
-                {form.phone && (
-                  <button
-                    type="button"
-                    onClick={() => set({ parentPhone: form.phone.replace(/\D/g, '').slice(0, 10) })}
-                    className="text-[11px] font-semibold text-bl hover:underline cursor-pointer"
-                  >
-                    Same as student phone
-                  </button>
-                )}
-              </div>
-              <Input
-                value={form.parentPhone}
-                onChange={(e) => set({ parentPhone: e.target.value.replace(/\D/g, '').slice(0, 10) })}
-                placeholder="e.g. 9876543210"
-                inputMode="numeric"
-              />
-            </div>
-            <div>
-              <label className="block text-xs text-ink-2 mb-1">Relationship</label>
-              <Input
-                value={form.parentRelationship}
-                onChange={(e) => set({ parentRelationship: e.target.value })}
-                placeholder="e.g. Mother, Father, Guardian"
-              />
-            </div>
-          </div>
           <div>
             <label className="block text-sm text-ink-2 mb-1">Programme</label>
             <Select
@@ -177,6 +148,52 @@ export function AddStudentModal({
               }))}
             />
           </div>
+
+          {!isAdultClass && (
+            <div className="p-3.5 bg-canvas-muted/60 rounded-md border border-line space-y-3">
+              <span className="text-[11px] font-mono uppercase tracking-wider text-bl font-bold block">
+                {isKidsClass ? 'Parent / Guardian Details (Mandatory for Kids)' : 'Parent / Guardian Details (Optional for Adults)'}
+              </span>
+              <div>
+                <label className="block text-xs text-ink-2 mb-1">Parent / Guardian Full Name</label>
+                <Input
+                  value={form.parentName}
+                  onChange={(e) => set({ parentName: e.target.value })}
+                  placeholder="e.g. Rajesh Sharma"
+                />
+              </div>
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-xs text-ink-2">
+                    {isKidsClass ? 'Parent Phone (10 digits) *' : 'Parent Phone (10 digits)'}
+                  </label>
+                  {form.phone && (
+                    <button
+                      type="button"
+                      onClick={() => set({ parentPhone: form.phone.replace(/\D/g, '').slice(0, 10) })}
+                      className="text-[11px] font-semibold text-bl hover:underline cursor-pointer"
+                    >
+                      Same as student phone
+                    </button>
+                  )}
+                </div>
+                <Input
+                  value={form.parentPhone}
+                  onChange={(e) => set({ parentPhone: e.target.value.replace(/\D/g, '').slice(0, 10) })}
+                  placeholder="e.g. 9876543210"
+                  inputMode="numeric"
+                />
+              </div>
+              <div>
+                <label className="block text-xs text-ink-2 mb-1">Relationship</label>
+                <Input
+                  value={form.parentRelationship}
+                  onChange={(e) => set({ parentRelationship: e.target.value })}
+                  placeholder="e.g. Mother, Father, Guardian"
+                />
+              </div>
+            </div>
+          )}
           <div>
             <label className="block text-sm text-ink-2 mb-1">Status</label>
             <Select

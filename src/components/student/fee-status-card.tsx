@@ -9,7 +9,10 @@ import { PayNowButton } from "@/components/student/pay-now-button";
 import { reportUpiPayment } from "@/actions/fees";
 import { ACADEMY } from "@/lib/utils/constants";
 
-const PAYMENTS_ENABLED = Boolean(process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID);
+const PAYMENTS_ENABLED =
+  process.env.NEXT_PUBLIC_PAYMENT_GATEWAY === 'razorpay'
+    ? Boolean(process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID)
+    : true;
 
 interface FeeStatusCardProps {
   status: "Paid" | "Due" | "Overdue" | "Pending Verification";
@@ -80,7 +83,17 @@ export function FeeStatusCard({ status, amountDue, dueDate, hasPending }: FeeSta
 
       {!isPaid && !isPendingVerif && (
         PAYMENTS_ENABLED ? (
-          <PayNowButton amount={amountDue} />
+          <div className="flex flex-col gap-2 items-stretch sm:items-end">
+            <PayNowButton amount={amountDue} />
+            <a
+              href={whatsappLink(payMessage)}
+              target="_blank"
+              rel="noreferrer"
+              className="text-xs font-medium text-ink-2 hover:text-ink underline underline-offset-2 text-center sm:text-right"
+            >
+              Need help paying? Chat on WhatsApp
+            </a>
+          </div>
         ) : (
           <div className="flex flex-col gap-2 items-stretch w-full md:w-auto md:min-w-[14rem]">
             {upiLink && (

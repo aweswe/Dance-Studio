@@ -5,8 +5,11 @@ import { SITE_URL } from '@/lib/utils/constants';
 import { coverageMonths } from '@/lib/fees/ledger';
 
 export interface FulfillOrderParams {
-  razorpayOrderId: string;
+  orderId?: string; // PhonePe merchantTransactionId or Razorpay orderId
+  razorpayOrderId?: string; // backwards compatibility alias
   paymentId?: string | null;
+  phonepeTransactionId?: string | null;
+  gatewayProvider?: 'phonepe' | 'razorpay';
   webhookPayload?: unknown;
 }
 
@@ -27,16 +30,28 @@ function digitsPhone(value: string | null | undefined): string {
 export async function provisionStudentFromOrder(
   params: FulfillOrderParams,
 ): Promise<FulfillOrderResult> {
-  const { razorpayOrderId, paymentId = null, webhookPayload = null } = params;
+  const targetOrderId = params.orderId || params.razorpayOrderId;
+  if (!targetOrderId) {
+    return { fulfilled: false, reason: 'ORDER_NOT_FOUND' };
+  }
+
+  const { paymentId = null, webhookPayload = null } = params;
   const supabase = createAdminSupabase();
+
+  const isPhonePe = params.gatewayProvider === 'phonepe';
+  const phonepeTxnId = params.phonepeTransactionId || (isPhonePe ? paymentId : null);
+
+  const updateData: Record<string, unknown> = {
+    status: 'webhook_processed',
+    webhook_payload: webhookPayload,
+  };
+  if (phonepeTxnId) updateData.phonepe_transaction_id = phonepeTxnId;
+  if (params.gatewayProvider) updateData.gateway_provider = params.gatewayProvider;
 
   const { data: claimed } = await (supabase as any)
     .from('payment_orders')
-    .update({
-      status: 'webhook_processed',
-      webhook_payload: webhookPayload,
-    })
-    .eq('razorpay_order_id', razorpayOrderId)
+    .update(updateData)
+    .or(`razorpay_order_id.eq.${targetOrderId},phonepe_transaction_id.eq.${targetOrderId},id.eq.${targetOrderId}`)
     .neq('status', 'webhook_processed')
     .select('*')
     .maybeSingle();
@@ -45,7 +60,7 @@ export async function provisionStudentFromOrder(
     const { data: existing } = await supabase
       .from('payment_orders')
       .select('status')
-      .eq('razorpay_order_id', razorpayOrderId)
+      .or(`razorpay_order_id.eq.${targetOrderId},phonepe_transaction_id.eq.${targetOrderId},id.eq.${targetOrderId}`)
       .maybeSingle();
     if ((existing as any)?.status === 'webhook_processed') {
       return { fulfilled: true, alreadyProcessed: true };
@@ -133,12 +148,18 @@ export async function provisionStudentFromOrder(
 
   if (student) {
     const perMonth = Math.round(Number(order.amount) / months.length);
+    const isPhonePe = order.gateway_provider === 'phonepe' || params.gatewayProvider === 'phonepe';
+    const source: 'phonepe' | 'razorpay' = isPhonePe ? 'phonepe' : 'razorpay';
+    const finalPhonePeTxnId = params.phonepeTransactionId || (isPhonePe ? paymentId : null);
+    const finalRazorpayPaymentId = isPhonePe ? null : paymentId;
+
     for (const for_month of months) {
       const { error: feeErr } = await (supabase as any).from('fee_payments').insert({
         student_id: student.id,
         amount: perMonth,
-        source: 'razorpay',
-        razorpay_payment_id: paymentId,
+        source,
+        razorpay_payment_id: finalRazorpayPaymentId,
+        phonepe_transaction_id: finalPhonePeTxnId,
         payment_order_id: order.id,
         for_month,
         status: 'confirmed',

@@ -119,6 +119,7 @@ export function FeeTable({
               { label: 'All Sources', value: 'all' },
               { label: 'Cash', value: 'cash' },
               { label: 'UPI (Offline)', value: 'upi_offline' },
+              { label: 'PhonePe', value: 'phonepe' },
               { label: 'Razorpay', value: 'razorpay' },
             ]}
           />
@@ -160,8 +161,8 @@ export function FeeTable({
                   <td className="px-3 sm:px-6 py-3 sm:py-4 font-medium text-ink">{p.student?.name || '—'}</td>
                   <td className="px-3 sm:px-6 py-3 sm:py-4 font-medium tabular-nums">{formatCurrency(p.amount)}</td>
                   <td className="px-3 sm:px-6 py-3 sm:py-4">
-                    <Badge variant={p.source === 'razorpay' ? 'green' : p.source === 'upi_offline' ? 'blue' : 'default'}>
-                      {p.source === 'upi_offline' ? 'UPI' : p.source.toUpperCase()}
+                    <Badge variant={p.source === 'phonepe' || p.source === 'razorpay' ? 'green' : p.source === 'upi_offline' ? 'blue' : 'default'}>
+                      {p.source === 'upi_offline' ? 'UPI' : p.source === 'phonepe' ? 'PhonePe' : p.source.toUpperCase()}
                     </Badge>
                   </td>
                   <td className="px-3 sm:px-6 py-3 sm:py-4">

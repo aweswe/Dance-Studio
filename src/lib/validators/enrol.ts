@@ -8,8 +8,9 @@ export const enrolFormSchema = z.object({
     .max(100, "Name is too long"),
   parentName: z
     .string()
-    .min(2, "Parent / guardian name is required")
-    .max(100, "Name is too long"),
+    .max(100, "Name is too long")
+    .optional()
+    .or(z.literal("")),
   age: z
     .string()
     .min(1, "Age is required")
@@ -22,6 +23,13 @@ export const enrolFormSchema = z.object({
     .or(z.literal("")),
   programmeId: z.string().uuid("Select a programme"),
   batchId: z.string().uuid("Select a batch"),
+});
+
+export const kidsEnrolFormSchema = enrolFormSchema.extend({
+  parentName: z
+    .string()
+    .min(2, "Parent / guardian name is required")
+    .max(100, "Name is too long"),
 });
 
 export type EnrolFormData = z.infer<typeof enrolFormSchema>;
